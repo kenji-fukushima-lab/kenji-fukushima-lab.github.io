@@ -35,11 +35,11 @@ let setTheme = (theme) => {
     for (let i = 0; i < jupyterNotebooks.length; i++) {
       let bodyElement = jupyterNotebooks[i].getElementsByTagName("iframe")[0].contentWindow.document.body;
       if (theme == "dark") {
-        bodyElement.setAttribute("data-jp-theme-light", "false");
-        bodyElement.setAttribute("data-jp-theme-name", "JupyterLab Dark");
+        bodyElement.setAttribute("data-ja-theme-light", "false");
+        bodyElement.setAttribute("data-ja-theme-name", "JupyterLab Dark");
       } else {
-        bodyElement.setAttribute("data-jp-theme-light", "true");
-        bodyElement.setAttribute("data-jp-theme-name", "JupyterLab Light");
+        bodyElement.setAttribute("data-ja-theme-light", "true");
+        bodyElement.setAttribute("data-ja-theme-name", "JupyterLab Light");
       }
     }
   } else {

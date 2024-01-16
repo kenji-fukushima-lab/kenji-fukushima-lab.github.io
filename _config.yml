@@ -236,7 +236,7 @@ sass:
 # multi language settings
 default_locale_in_subfolder: false
 exclude_from_localizations: ["assets"]
-languages: ["en", "pt-br"]
+languages: ["en", "ja"]
 
 # -----------------------------------------------------------------------------
 # Jekyll Minifier
@@ -392,8 +392,8 @@ medium_zoom:
 jekyll_get_json:
   - data: resume_en
     json: assets/json/resume_en.json # it can also be an url
-  - data: resume_pt-br
-    json: assets/json/resume_pt-br.json # it can also be an url
+  - data: resume_ja
+    json: assets/json/resume_ja.json # it can also be an url
 jsonresume:
   - basics
   - work
