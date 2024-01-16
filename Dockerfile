@@ -25,6 +25,7 @@ ENV LANG=en_US.UTF-8 \
 
 # install jekyll and dependencies
 RUN gem install jekyll bundler
+RUN gem install jekyll-multiple-languages-plugin
 
 RUN mkdir /srv/jekyll
 
