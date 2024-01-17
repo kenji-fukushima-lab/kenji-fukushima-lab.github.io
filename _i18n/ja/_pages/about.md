@@ -1,5 +1,1 @@
-Escreva sua biografia aqui. Diga ao mundo sobre você. Adicione o link para o seu [subreddit](http://reddit.com) favorito. Você pode colocar uma foto também. O código já está dentro, basta nomear sua foto como `prof_pic.jpg` e colocá-la na pasta `img/`.
-
-Coloque seu endereço / caixa postal / outras informações logo abaixo da sua foto. Você também pode desabilitar qualquer um desses elementos editando a propriedade `profile` do cabeçalho YAML do seu `_pages/about.md`. Edite `_bibliography/papers.bib` e o Jekyll renderizará sua [página de publicações](/multi-language-al-folio/publications/) automaticamente.
-
-Adicione links para seus perfis de mídias sociais também. Este tema está configurado para usar [Font Awesome icons](https://fontawesome.com/) e [Academicons](https://jpswalsh.github.io/academicons/), como os visto abaixo. Adicione seu Facebook, Twitter, LinkedIn, Google Scholar ou simplesmente desative todos eles.
+進化の果てにうまれる生物の構造や機能は、ときとして信じられないほど複雑精緻なものになります。我々のミッションは、こうした革新的形質に通底する進化の仕組みを解明することです。目的達成のため、私たちはバイオインフォマティクスと実験的アプローチを統合し、さまざまな生物、特に植物に焦点を当てて研究を進めています。特に、動物を「食べて」しまう食虫植物を起点に、収斂進化、転用進化、前適応、劇的な形態変化、表現型可塑性、生物間相互作用、全ゲノム重複など、進化生物学の鍵となる現象の解明を進めています。
