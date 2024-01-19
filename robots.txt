@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://kenji-fukushima-lab.github.io/sitemap.xml
+Sitemap: https://george-gca.github.io/multi-language-al-folio/sitemap.xml
