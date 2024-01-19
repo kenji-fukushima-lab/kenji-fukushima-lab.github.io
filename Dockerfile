@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 ENV DEBIAN_FRONTEND noninteractive
 
-Label MAINTAINER Amir Pourmand
+Label MAINTAINER George Araújo
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     locales \
@@ -25,7 +25,6 @@ ENV LANG=en_US.UTF-8 \
 
 # install jekyll and dependencies
 RUN gem install jekyll bundler
-RUN gem install jekyll-multiple-languages-plugin
 
 RUN mkdir /srv/jekyll
 
