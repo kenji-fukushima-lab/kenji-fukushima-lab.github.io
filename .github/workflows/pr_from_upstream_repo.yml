@@ -17,4 +17,4 @@ jobs:
         with:
           github_token: ${{ secrets.LAB_WEBSITE_WORKFLOW_TOKEN }}
           source_repo_path: george-gca/multi-language-al-folio
-          upstream_branch: master
+          upstream_branch: main
