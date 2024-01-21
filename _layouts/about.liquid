@@ -17,7 +17,7 @@ layout: default
   <article>
     {% assign profile_image_path = '/assets/img/00_tiles.png' %}
     {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
-    {% capture sizes %}(min-width: {{site.max_width}}) {{ site.max_width }}px, (min-width: 576px) 30vw, 95vw"{% endcapture %}
+    {% capture sizes %}(min-width: {{site.max_width}}) {{ site.max_width }}px, (min-width: 576px) 95vw, 95vw"{% endcapture %}
     {% include figure.liquid path = profile_image_path class = profile_image_class sizes = sizes alt = page.profile.image %}
 
     <div class="clearfix">{{ content }}</div>
