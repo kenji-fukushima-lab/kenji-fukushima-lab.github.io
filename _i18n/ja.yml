@@ -4,9 +4,8 @@ not_found:
 main:
   contact_note: Since 2018, at the University of Würzburg in Germany. Since 2024, at the National Institute of Genetics in Japan.
   footer_text: > # the ">" symbol means to ignore newlines until "titles:"
-    Desenvolvido em <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> com o tema <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a>.
-    Hospedado por <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
-    Fotos do <a href="https://unsplash.com" target="_blank">Unsplash</a>.
+    Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a> theme.
+    Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
   more_info: <p>植物を基軸に驚異の進化を解き明かす</p>
   subtitle: 植物進化研究室 <a href="https://www.nig.ac.jp/nig/ja" target="_blank">国立遺伝学研究所</a>
 titles:
@@ -36,7 +35,7 @@ descriptions:
   join: 当研究室への参加を希望される方は、以下の案内をご参照ください。
   profiles: 当研究室のメンバー一覧です。
   projects: 当研究室で取り組む研究プロジェクトの一部です。進行中のものに加えて、一旦終了し再開可能なプロジェクトも含まれています。
-  publications: 当研究室から発表した論文を、最新のものから順にリストしています。
+  publications: '当研究室から発表した論文を、最新のものから順にリストしています。†: 共筆頭著者. *: (共)責任著者.'
   repositories: 当研究室で開発したソフトウェアの一覧です。
   teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.

@@ -2,11 +2,10 @@ not_found:
   message: You will be redirected to the main page within 3 seconds. If not redirected, please go back to the
   main_page: home page
 main:
-  contact_note: Since 2018, at the University of Würzburg in Germany. Since 2024, at the National Institute of Genetics in Japan.
+  contact_note: Kenji Fukushima lab. Since 2018, at the University of Würzburg in Germany. Since 2024, at the National Institute of Genetics in Japan.
   footer_text: > # the ">" symbol means to ignore newlines until "titles:"
     Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a> theme.
     Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
-    Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
   more_info: >
     <p>Unraveling evolutionary marvels in plants and beyond</p>
   subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank">National Institute of Genetics</a> in Japan
@@ -37,7 +36,7 @@ descriptions:
   join: Joining Fukushima lab
   profiles: Current lab members
   projects: A growing collection of research projects
-  publications: Publications from Fukushima lab
+  publications: 'Publications from Fukushima lab. †: co-first authors. *: (co-)corresponding authors.'
   repositories: List of computational programs developed by Fukushima lab
   teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.
