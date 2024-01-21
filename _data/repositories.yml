@@ -1,13 +1,10 @@
-github_users:
-  - torvalds
-  - alshedivat
+#github_users:
+#  - kfuku52
 
 github_repos:
-  - george-gca/multi-language-al-folio
-  - alshedivat/al-folio
-  - twbs/bootstrap
-  - jekyll/jekyll
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - jpswalsh/academicons
-  - mathjax/MathJax
+  - kfuku52/csubst
+  - kfuku52/amalgkit
+  - kfuku52/RADTE
+  - kfuku52/cdskit
+  - kfuku52/nwkit
+  - kfuku52/averagers

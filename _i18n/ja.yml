@@ -11,8 +11,10 @@ main:
   subtitle: 植物進化研究室 <a href="https://www.nig.ac.jp/nig/ja" target="_blank">国立遺伝学研究所</a>
 titles:
   about: 概要
+  access: アクセス
   blog: ブログ
-  cv: 履歴書
+  cv: REMOVED_BY_KF
+  join: 人材募集
   latest_posts: 最新の記事
   news: ニュース
   profiles: メンバー
@@ -20,25 +22,27 @@ titles:
   publications: 論文
   repositories: リポジトリ
   selected_publications: 代表的な論文
-  teaching: 授業等
+  teaching: REMOVED_BY_KF
   submenus: その他
   unk: page not found
 descriptions:
-  about: A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+  about: NOT_USED
+  access: 当研究室へのアクセス方法です。
   archive-category: an archive of posts in this category
   archive-tag: an archive of posts with this tag
   archive-year: an archive of posts from this year
-  blog: a simple whitespace theme for academics
-  cv: This is a description of the page. You can modify it in '_pages/cv.md'. You can also change or remove the top pdf download button.
-  profiles: Members of the research group or lab.
-  projects: A growing collection of your cool projects.
-  publications: 当研究室から発表した論文を、最新のものからリストしています。
-  repositories: Edit the `_data/repositories.yml` and change the `github_users` and `github_repos` lists to include your own GitHub profile and repositories.
-  teaching: Materials for courses you taught. Replace this text with your description.
+  blog: 当研究室のブログポストです。
+  cv: REMOVED_BY_KF
+  join: 当研究室への参加を希望される方は、以下の案内をご参照ください。
+  profiles: 当研究室のメンバー一覧です。
+  projects: 当研究室で取り組む研究プロジェクトの一部です。進行中のものに加えて、一旦終了し再開可能なプロジェクトも含まれています。
+  publications: 当研究室から発表した論文を、最新のものから順にリストしています。
+  repositories: 当研究室で開発したソフトウェアの一覧です。
+  teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.
 blog:
-  description: a simple whitespace theme for academics
-  name: al-folio blog in english # blog_name will be displayed in your blog page
+  description:
+  name:
   nav_title: blog # your blog must have a title for it to be displayed in the nav bar
   related_posts:
     description: "Here are some more articles you might like to read next:"

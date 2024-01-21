@@ -4,7 +4,7 @@ title: titles.publications
 description: descriptions.publications
 permalink: /publications/
 nav: true
-nav_order: 2
+nav_order: 3
 ---
 
 <!-- _pages/publications.md -->
