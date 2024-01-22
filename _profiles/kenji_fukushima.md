@@ -14,6 +14,7 @@ google_scholar: https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user
 github: kfuku52
 linkedin: kenji-fukushima-80a6258b
 twitter: kfuku0502
+researchgate: Kenji-Fukushima-3
 amazon_author: https://www.amazon.co.jp/stores/%E7%A6%8F%E5%B3%B6-%E5%81%A5%E5%85%90/author/B09S6DYLF1
 instagram: 
 facebook: 

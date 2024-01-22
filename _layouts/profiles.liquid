@@ -53,6 +53,9 @@ layout: page
                 {% if profile.twitter %}
                   <a href="https://twitter.com/{{ profile.twitter }}" title="Twitter" style="margin-right: 8px;"><i class="fab fa-twitter"></i></a>
                 {% endif %}
+                {% if profile.researchgate %}
+                  <a href="https://www.researchgate.net/profile/{{ profile.researchgate }}" title="ResearchGate" style="margin-right: 8px;"><i class="fab fa-researchgate"></i></a>
+                {% endif %}
                 {% if profile.amazon_author %}
                   <a href="{{ profile.amazon_author }}" title="Amazon author" style="margin-right: 8px;"><i class="fab fa-amazon"></i></a>
                 {% endif %}
