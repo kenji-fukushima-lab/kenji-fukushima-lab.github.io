@@ -10,7 +10,7 @@ email: kfuku52@gmail.com
 keywords: # add your own keywords or leave empty
 
 lang: en # the main language of your site (for example: en, fr, cn, ru, etc.)
-icon: ⚛️ # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
+icon: 🌱️ # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
 url: https://kenji-fukushima-lab.github.io # the base hostname & protocol for your site
 baseurl: # the subpath of your site, e.g. /blog/. Leave blank for root
@@ -165,6 +165,9 @@ collections:
   projects:
     output: true
     permalink: /projects/:path/
+  profiles:
+    output: true
+    permalink: /profiles/:path/
 
 announcements:
   enabled: true
