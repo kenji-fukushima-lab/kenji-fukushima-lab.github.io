@@ -1,0 +1,22 @@
+---
+align: left
+name: Kenji Fukushima
+name_native: 福島 健児（ふくしま けんじ）
+position_key: associate_professor
+image: people/kenji_fukushima.jpg
+content: 
+image_circular: false # crops the image to make it circular
+more_info: 
+email: kfuku52@gmail.com
+website: https://sites.google.com/site/kfuku52/
+orcid: 0000-0002-2353-9274
+google_scholar: https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
+github: kfuku52
+linkedin: kenji-fukushima-80a6258b
+twitter: kfuku0502
+amazon_author: https://www.amazon.co.jp/stores/%E7%A6%8F%E5%B3%B6-%E5%81%A5%E5%85%90/author/B09S6DYLF1
+instagram: 
+facebook: 
+youtube: 
+researchmap: kenji_fukushima
+---

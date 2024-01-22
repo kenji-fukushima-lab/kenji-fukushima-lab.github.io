@@ -3,35 +3,77 @@ layout: page
 ---
 <div class="post">
   <article>
-    {% if page.profiles %}
-      {% for profile in page.profiles %}
-        <hr>
-        <div class="profile float-{% if profile.align == 'left' %}left{% else %}right{% endif %}">
-          {% if profile.image %}
-            {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
-            {% if profile.image_circular %}
-              {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
-            {% else %}
-              {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
-            {% endif %}
-            {% capture sizes %}(min-width: {{site.max_width}}) {{ site.max_width | minus: 30 | times: 0.05}}px, (min-width: 576px) 10vw, 10vw"{% endcapture %}
-            {% include figure.liquid path = profile_image_path class = profile_image_class sizes = sizes alt = profile.image %}
-          {% endif %}
-          {% if profile.more_info %}
-            <div class="more-info">{{ profile.more_info }}</div>
-          {% endif %}
-          {% if profile.twitter %}
-            <a href="https://twitter.com/{{ profile.twitter }}" class="card-link" target="_blank"><i class="fab fa-twitter"></i></a>
-          {% endif %}
-        </div>
-
-        <div class="clearfix">
-          {% if profile.content %}
-            {% capture profile_content %}{% translate_file profile.content %}{% endcapture %}
-            {{ profile_content | markdownify }}
-          {% endif %}
-        </div>
+    {% assign ordered_positions = page.position_order %}
+    {% assign sorted_profiles = site.profiles | sort: 'position_key' %}
+    {% for position in ordered_positions %}
+      {% for profile in sorted_profiles %}
+        {% if profile.position_key == position %}
+          <hr>
+          <div class="profile-row" style="display: flex; align-items: start; margin-bottom: 2em;">
+            <div class="profile-image" style="flex: 0 0 auto; width: 20%; margin-right: 2em;">
+              {% if profile.image %}
+                {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
+                {% if profile.image_circular %}
+                  {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+                {% else %}
+                  {% assign profile_image_class = 'img-fluid z-depth-1' %}
+                {% endif %}
+                {% include figure.liquid path = profile_image_path class = profile_image_class alt = profile.name %}
+              {% endif %}
+            </div>
+            <div class="profile-info" style="flex: 1 1 auto;">
+              <h2>{{ profile.name }}</h2>
+              {% if profile.name_native %}
+                <h3 style="font-size: 0.85em;">{{ profile.name_native }}</h3>
+              {% endif %}
+              {% assign position_key = profile.position_key %}
+              {% assign i18n_key = 'position.' | append: position_key %}
+              <p class="position">{% t i18n_key %}</p>
+              <p>{{ profile.content | markdownify }}</p>
+              <!-- Social Links -->
+              <div class="social-links" style="font-size: 1.5em;"> <!-- Increase icon size here -->
+                {% if profile.email %}
+                  <a href="mailto:{{ profile.email }}" title="Email" style="margin-right: 8px;"><i class="fas fa-envelope"></i></a>
+                {% endif %}
+                {% if profile.website %}
+                  <a href="{{ profile.website }}" title="Website" style="margin-right: 8px;"><i class="fas fa-globe"></i></a>
+                {% endif %}
+                {% if profile.github %}
+                  <a href="https://github.com/{{ profile.github }}" title="GitHub" style="margin-right: 8px;"><i class="fab fa-github"></i></a>
+                {% endif %}
+                {% if profile.orcid %}
+                  <a href="https://orcid.org/{{ profile.orcid }}" title="ORCID" style="margin-right: 8px;"><i class="ai ai-orcid"></i></a>
+                {% endif %}
+                {% if profile.google_scholar %}
+                  <a href="{{ profile.google_scholar }}" title="Google Scholar" style="margin-right: 8px;"><i class="ai ai-google-scholar"></i></a>
+                {% endif %}
+                {% if profile.linkedin %}
+                  <a href="https://linkedin.com/in/{{ profile.linkedin }}" title="LinkedIn" style="margin-right: 8px;"><i class="fab fa-linkedin"></i></a>
+                {% endif %}
+                {% if profile.twitter %}
+                  <a href="https://twitter.com/{{ profile.twitter }}" title="Twitter" style="margin-right: 8px;"><i class="fab fa-twitter"></i></a>
+                {% endif %}
+                {% if profile.amazon_author %}
+                  <a href="{{ profile.amazon_author }}" title="Amazon author" style="margin-right: 8px;"><i class="fab fa-amazon"></i></a>
+                {% endif %}
+                {% if profile.instagram %}
+                  <a href="https://instagram.com/{{ profile.instagram }}" title="Instagram" style="margin-right: 8px;"><i class="fab fa-instagram"></i></a>
+                {% endif %}
+                {% if profile.facebook %}
+                  <a href="https://facebook.com/{{ profile.facebook }}" title="Facebook" style="margin-right: 8px;"><i class="fab fa-facebook"></i></a>
+                {% endif %}
+                {% if profile.youtube %}
+                  <a href="https://youtube.com/{{ profile.youtube }}" title="YouTube" style="margin-right: 8px;"><i class="fab fa-youtube"></i></a>
+                {% endif %}
+                {% if profile.researchmap %}
+                  <a href="https://researchmap.jp/{{ profile.researchmap }}" title="Researchmap" style="margin-right: 8px;"><i class="fas fa-flask"></i></a>
+                {% endif %}
+              </div>
+              <!-- End Social Links -->
+            </div>
+          </div>
+        {% endif %}
       {% endfor %}
-    {% endif %}
+    {% endfor %}
   </article>
 </div>

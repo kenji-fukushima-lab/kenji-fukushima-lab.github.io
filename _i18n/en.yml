@@ -156,3 +156,23 @@ cv:
   username: Username
   volunteer: Volunteer
   work: Work
+position:
+    professor: Professor
+    associate_professor: Associate Professor
+    assistant_professor: Assistant Professor
+    lecturer: Lecturer
+    secretary: Secretary
+    lab_manager: Lab Manager
+    postdoc: Postdoctoral Researcher
+    phd: PhD Student
+    master: Master Student
+    intern: Intern
+    undergraduate: Undergraduate Student
+    technician: Technical assistant
+    tech_staff: Technical staff
+    staff: Staff
+    alumni: Alumni
+    visiting: Visiting Researcher
+    collaborator: Collaborator
+    other: Other
+    future: Future Member

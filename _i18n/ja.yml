@@ -155,3 +155,23 @@ cv:
   username: Username
   volunteer: Volunteer
   work: Work
+position:
+    professor: 教授
+    associate_professor: 准教授
+    assistant_professor: 助教
+    lecturer: 講師
+    secretary: 秘書
+    lab_manager: ラボマネージャー
+    postdoc: 研究員
+    phd: 博士課程学生
+    master: 修士課程学生
+    intern: インターン
+    undergraduate: 学部生
+    technician: 技術支援員
+    tech_staff: 技術職員
+    staff: 職員
+    alumni: 過去の在籍者
+    visiting: 訪問研究者
+    collaborator: 共同研究者
+    other: その他
+    future: 未来の在籍者
