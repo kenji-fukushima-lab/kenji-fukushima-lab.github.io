@@ -161,31 +161,31 @@
 
     <!-- Links/Buttons -->
     <div class="links">
-      {% if entry.abstract %}
+      {% if entry.abstract and entry.abstract != blank %}
         <a class="abstract btn btn-sm z-depth-0" role="button">ABSTRACT</a>
       {% endif %}
-      {% if entry.url %}
+      {% if entry.url and entry.url != blank %}
         <a href="{{ entry.url }}" class="btn btn-sm z-depth-0" role="button">URL</a>
       {% endif %}
-      {% if entry.preprint %}
+      {% if entry.preprint and entry.preprint != blank %}
         <a href="{{ entry.preprint }}" class="btn btn-sm z-depth-0" role="button">PREPRINT</a>
       {% endif %}
-      {% if entry.pmid %}
+      {% if entry.pmid and entry.pmid != blank %}
         <a href="https://pubmed.ncbi.nlm.nih.gov/{{ entry.pmid }}" class="btn btn-sm z-depth-0" role="button">PUBMED</a>
       {% endif %}
-      {% if entry.arxiv %}
-        <a href="http://arxiv.org/abs/{{ entry.arxiv }}" class="btn btn-sm z-depth-0" role="button">arXiv</a>
+      {% if entry.feature_article %}
+        <a href="{{ entry.feature_article and entry.feature_article != blank }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
       {% endif %}
-      {% if entry.correction %}
+      {% if entry.press_release and entry.press_release != blank %}
+        <a href="{{ entry.press_release }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
+      {% endif %}
+      {% if entry.correction and entry.correction != blank %}
         <a href="{{ entry.correction }}" class="btn btn-sm z-depth-0" role="button">CORRECTION</a>
       {% endif %}
       {% if entry.bibtex_show %}
         <a class="bibtex btn btn-sm z-depth-0" role="button">Bib</a>
       {% endif %}
-      {% if entry.html %}
-        <a href="{{ entry.html }}" class="btn btn-sm z-depth-0" role="button">HTML</a>
-      {% endif %}
-      {% if entry.pdf %}
+      {% if entry.pdf and entry.pdf != blank %}
         {% if entry.pdf contains '://' %}
           <a href="{{ entry.pdf }}" class="btn btn-sm z-depth-0" role="button">PDF</a>
         {% else %}
