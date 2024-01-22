@@ -20,14 +20,15 @@ layout: page
           {% if profile.more_info %}
             <div class="more-info">{{ profile.more_info }}</div>
           {% endif %}
+          {% if profile.twitter %}
+            <a href="https://twitter.com/{{ profile.twitter }}" class="card-link" target="_blank"><i class="fab fa-twitter"></i></a>
+          {% endif %}
         </div>
 
         <div class="clearfix">
           {% if profile.content %}
             {% capture profile_content %}{% translate_file profile.content %}{% endcapture %}
             {{ profile_content | markdownify }}
-          {% else %}
-            {% t content %}
           {% endif %}
         </div>
       {% endfor %}
