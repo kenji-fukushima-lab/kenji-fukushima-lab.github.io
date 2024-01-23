@@ -9,10 +9,9 @@
 {% endcomment %}
 
 {% if site.lang == 'en' %}
-  {% t month %}
-  {{ day }}, {{ year }}
+  {% t month %} {{ day }}, {{ year }}
 {% elsif site.lang == 'ja' %}
-  {{ day }} de {% t month %}, {{ year }}
+  {% t month %} {{ day }}, {{ year }}
 {% else %}
   {{ day }}
   {% t month %}
