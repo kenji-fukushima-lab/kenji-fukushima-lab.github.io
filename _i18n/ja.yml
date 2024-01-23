@@ -35,7 +35,7 @@ descriptions:
   join: 当研究室への参加を希望される方は、以下の案内をご参照ください。
   profiles: 当研究室のメンバー一覧です。
   projects: 当研究室で取り組む研究プロジェクトの一部です。進行中のものに加えて、一旦終了し再開可能なプロジェクトも含まれています。
-  publications: '当研究室から発表した論文を、最新のものから順にリストしています。†: 共筆頭著者. *: (共)責任著者.'
+  publications: '当研究室から発表した論文を、最新のものから順にリストしています。当研究室のメンバーとして論文に貢献した著者を<strong>太字</strong>で示しています。†: 共筆頭著者. *: (共)責任著者.'
   repositories: 当研究室で開発したソフトウェアの一覧です。
   teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.

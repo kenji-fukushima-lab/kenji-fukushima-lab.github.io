@@ -1,5 +1,6 @@
 ---
 ---
+
 <div class="row">
   {% if site.enable_publication_thumbnails %}
     <div class="col-sm-2 {% if entry.preview %}preview{% else %}abbr{% endif %}">
@@ -50,9 +51,22 @@
         {% assign author_array_limit = site.max_author_limit %}
       {% endif %}
 
+      {% assign highlighted_authors = entry.highlight | split: " and " %}
+      {% assign highlighted_authors_formatted = "" %}
+      {% assign highlighted_authors_array = "" | split: "," %}  <!-- New array to store formatted names -->
+
+      {% for highlighted_author in highlighted_authors %}
+        {% assign name_parts = highlighted_author | split: ", " %}
+        {% assign formatted_name = name_parts[1] | append: " " | append: name_parts[0] %}
+        {% assign highlighted_authors_array = highlighted_authors_array | push: formatted_name %} <!-- Add to array -->
+      {% endfor %}
+
       {% for author in entry.author_array limit: author_array_limit %}
         {% assign author_is_self = false %}
+        {% assign author_full_name = author.first | append: " " | append: author.last %}
         {% assign author_last_name = author.last | remove: '¶' | remove: '&' | remove: '*' | remove: '†' | remove: '^' %}
+        {% assign author_full_name_no_symbol = author.first | append: " " | append: author_last_name %}
+
         {% if site.scholar.last_name contains author_last_name %}
           {% if site.scholar.first_name contains author.first %}
             {% assign author_is_self = true %}
@@ -79,14 +93,17 @@
             {{ author.last -}}
           </em>
         {% else %}
-          {% if coauthor_url %}
-            <a href="{{coauthor_url}}">
-              {{- author.first }}
-              {{ author.last -}}
-            </a>
+          {% assign author_to_display = author.first | append: " " | append: author.last %}
+          {% if highlighted_authors_array contains author_full_name_no_symbol %}
+            <strong>{{ author.first | append: " " | append: author.last }}</strong>
           {% else %}
-            {{ author.first }}
-            {{ author.last }}
+            {% if coauthor_url %}
+              <a href="{{coauthor_url}}">
+                {{ author_to_display }}
+              </a>
+            {% else %}
+              {{ author_to_display }}
+            {% endif %}
           {% endif %}
         {% endif %}
       {% endfor %}
