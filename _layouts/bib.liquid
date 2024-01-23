@@ -190,8 +190,8 @@
       {% if entry.pmid and entry.pmid != blank %}
         <a href="https://pubmed.ncbi.nlm.nih.gov/{{ entry.pmid }}" class="btn btn-sm z-depth-0" role="button">PUBMED</a>
       {% endif %}
-      {% if entry.feature_article %}
-        <a href="{{ entry.feature_article and entry.feature_article != blank }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
+      {% if entry.feature_article and entry.feature_article != blank %}
+        <a href="{{ entry.feature_article }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
       {% endif %}
       {% if entry.press_release and entry.press_release != blank %}
         <a href="{{ entry.press_release }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
