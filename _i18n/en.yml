@@ -20,7 +20,7 @@ titles:
   profiles: people
   projects: projects
   publications: publications
-  repositories: repositories
+  resources: resources
   selected_publications: selected publications
   teaching: REMOVED_BY_KF
   submenus: submenus
@@ -37,7 +37,7 @@ descriptions:
   profiles: Current lab members
   projects: A growing collection of research projects
   publications: 'Publications from Fukushima lab. Authors who contributed as a Fukushima lab member are indicated in <strong>bold</strong>. †: co-first authors. *: (co-)corresponding authors.'
-  repositories: List of computational programs developed by Fukushima lab
+  resources: List of research resources developed by Fukushima lab
   teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.
 blog:
@@ -102,9 +102,10 @@ projects:
   categories:
     fun: fun
     work: work
-repositories:
-  users: GitHub Users
-  repos: GitHub Repositories
+resources:
+  github_users: GitHub Users
+  github_repos: GitHub Repositories
+  genome: Genomes
 cv:
   address: Address
   area: Area
