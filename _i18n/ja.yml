@@ -43,6 +43,9 @@ blog:
   description:
   name:
   nav_title: blog # your blog must have a title for it to be displayed in the nav bar
+  release_date: 公開日
+  last_updated: 最終更新日
+  author: 著者
   related_posts:
     description: "Here are some more articles you might like to read next:"
     title: Enjoy Reading This Article?

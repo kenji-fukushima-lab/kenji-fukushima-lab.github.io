@@ -18,8 +18,13 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">{{ page.title }}</h1>
     <p class="post-meta">
-      {% include date_format.liquid format='long' date_from=page %}
-      {% if page.author %}• {{ page.author }}{% endif %}
+      {% t blog.release_date %}: {% include date_format.liquid format='long' date_from=page %}
+      {% if page.last_updated == blank %}
+        • {% t blog.last_updated %}: {% include date_format.liquid format='long' date_from=page %}
+      {% else %}
+        • {% t blog.last_updated %}: {% include date_format_from_string.liquid format='long' date_string=page.last_updated %}
+      {% endif %}
+      {% if page.author %}• {% t blog.author %}: {{ page.author }}{% endif %}
       {% if page.meta %}• {{ page.meta }}{% endif %}
     </p>
     <p class="post-tags">
