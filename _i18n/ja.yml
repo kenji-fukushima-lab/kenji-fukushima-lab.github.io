@@ -108,6 +108,9 @@ resources:
   github_users: GitHubユーザー
   github_repos: GitHubリポジトリ
   genome: ゲノム
+  internal: 内部リソース
+  kflab: "研究室のタスク管理のためのプライベートリポジトリです。ここでは、試薬管理から実験計画の議論、そして研究の進捗報告まで、メンバー間で様々な調整が行われます。新メンバーはGitHubアカウントを作成して、福島に招待を依頼してください。"
+  gfe_pipeline: "この内製ツールはもともと、Apptainer/Singularityコンテナを使用して遺伝子族進化(**g**ene **f**amily **e**volution)の解析のために開発しました。現在では、遺伝子族の解析にとどまらず、トランスクリプトームアセンブリー、遺伝子アノテーション、種系統樹推定、SNV分析、シンテニー分析など、多くのバイオインフォマティクスツールを含むよう拡張されています。例えば、[Fukushima and Pollock (2020)](https://www.nature.com/articles/s41467-020-18090-8)、[Fukushima and Pollock (2023)](https://www.nature.com/articles/s41559-022-01932-7)、[Saul et al. (2023)](https://www.nature.com/articles/s41477-023-01562-2)で示したデータの大部分はgfe_pipelineを利用して生成しました。利用にはコマンドライン操作が必要です。アクセスを希望するラボメンバーは福島に申し出てください。"
 cv:
   address: Address
   area: Area
