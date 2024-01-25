@@ -10,7 +10,7 @@ position_order:
   - associate_professor
   - assistant_professor
   - lecturer
-  - secretary
+  - tech_staff
   - lab_manager
   - postdoc
   - phd
@@ -18,7 +18,7 @@ position_order:
   - intern
   - undergraduate
   - technician
-  - tech_staff
+  - secretary
   - staff
   - alumni
   - visiting

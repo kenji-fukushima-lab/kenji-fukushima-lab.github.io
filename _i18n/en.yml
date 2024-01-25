@@ -168,7 +168,7 @@ position:
     associate_professor: Associate Professor
     assistant_professor: Assistant Professor
     lecturer: Lecturer
-    secretary: Secretary
+    tech_staff: Technical staff
     lab_manager: Lab Manager
     postdoc: Postdoctoral Researcher
     phd: PhD Student
@@ -176,7 +176,7 @@ position:
     intern: Intern
     undergraduate: Undergraduate Student
     technician: Technical assistant
-    tech_staff: Technical staff
+    secretary: Secretary
     staff: Staff
     alumni: Alumni
     visiting: Visiting Researcher
