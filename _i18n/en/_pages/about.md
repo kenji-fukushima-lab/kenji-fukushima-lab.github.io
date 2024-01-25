@@ -1,4 +1,4 @@
-# <font color="orange">The laboratory is set to officially launch at NIG on April 1, 2024. Please be aware that the information on this website remains provisional until that date.</font>
+# <font color="orange">This laboratory is set to officially launch at NIG on April 1, 2024. Please be aware that the information on this website remains provisional until that date.</font>
 
 Evolution has led to remarkable innovations in the structures and functions of organisms, sometimes reaching levels that seem almost unbelievable. Our research aims to demystify these evolutionary marvels. We integrate computational and experimental approaches to study a wide range of organisms, particularly focusing on plants. 
 
