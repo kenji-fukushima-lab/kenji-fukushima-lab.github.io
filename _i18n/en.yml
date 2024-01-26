@@ -18,7 +18,7 @@ titles:
   latest_posts: latest posts
   news: news
   profiles: people
-  projects: projects
+  projects: research
   publications: publications
   resources: resources
   selected_publications: selected publications
@@ -35,7 +35,7 @@ descriptions:
   cv: REMOVED_BY_KF
   join: Joining Fukushima lab
   profiles: Current lab members
-  projects: A growing collection of research projects
+  projects: Our research
   publications: 'Publications from Fukushima lab. Authors who contributed as a Fukushima lab member are indicated in <strong>bold</strong>. Preview images are attached to papers in which members of our laboratory serve as either the lead or corresponding authors. †: co-first authors. *: (co-)corresponding authors.'
   resources: List of research resources developed by Fukushima lab
   teaching: REMOVED_BY_KF
@@ -89,22 +89,21 @@ pagination:
   page: page
 projects:
   titles:
-    project1: Project 1
-    project2: Project 2
-    project3: Project 3
-    project4: Project 4
-    project5: Project 5
-    project6: Project 6
+    project1: Interests
+    project2: Organisms
+    project3: Experiments
+    project4: Bioinformatics
+    project5: Facilities
+    project6: Collaborations
   descriptions:
-    project1: a project with a background image
-    project2: a project with a background image and giscus comments
-    project3: a project that redirects to another website
-    project4: another without an image
-    project5: a project with a background image
-    project6: a project with no image
+    project1: ''
+    project2: ''
+    project3: ''
+    project4: ''
+    project5: ''
+    project6: ''
   categories:
-    fun: fun
-    work: work
+    work: research
 resources:
   github_users: GitHub Users
   github_repos: GitHub Repositories

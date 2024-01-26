@@ -17,7 +17,7 @@ titles:
   latest_posts: 最新の記事
   news: ニュース
   profiles: メンバー
-  projects: プロジェクト
+  projects: 研究
   publications: 論文
   resources: リソース
   selected_publications: 代表的な論文
@@ -34,7 +34,7 @@ descriptions:
   cv: REMOVED_BY_KF
   join: 当研究室への参加を希望される方は、以下の案内をご参照ください。
   profiles: 当研究室のメンバー一覧です。
-  projects: 当研究室で取り組む研究プロジェクトの一部です。進行中のものに加えて、一旦終了し再開可能なプロジェクトも含まれています。
+  projects: 当研究室で取り組む研究の紹介です。
   publications: '当研究室から発表した論文を、最新のものから順にリストしています。当研究室のメンバーとして論文に貢献した著者を<b>太字</b>で示しています。当研究室のメンバーが筆頭あるいは責任著者を務める論文にはプレビュー画像を付しています。†: 共筆頭著者. *: (共)責任著者.'
   resources: 当研究室で提供している研究リソースの一覧です。
   teaching: REMOVED_BY_KF
@@ -88,22 +88,21 @@ pagination:
   page: page
 projects:
   titles:
-    project1: Project 1
-    project2: Project 2
-    project3: Project 3
-    project4: Project 4
-    project5: Project 5
-    project6: Project 6
+    project1: 興味の対象
+    project2: 取り扱う生物種
+    project3: 実験技術
+    project4: バイオインフォマティクス
+    project5: 研究設備
+    project6: 共同研究
   descriptions:
-    project1: a project with a background image
-    project2: a project with a background image and giscus comments
-    project3: a project that redirects to another website
-    project4: another without an image
-    project5: a project with a background image
-    project6: a project with no image
+    project1: ''
+    project2: ''
+    project3: ''
+    project4: ''
+    project5: ''
+    project6: ''
   categories:
-    fun: fun
-    work: work
+    work: 研究
 resources:
   github_users: GitHubユーザー
   github_repos: GitHubリポジトリ

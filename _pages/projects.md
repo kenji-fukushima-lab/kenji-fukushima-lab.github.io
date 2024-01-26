@@ -2,10 +2,10 @@
 layout: page
 title: titles.projects
 description: descriptions.projects
-permalink: /projects/
+permalink: /research/
 nav: true
 nav_order: 4
-display_categories: [work, fun]
+display_categories: [work]
 horizontal: false
 ---
 

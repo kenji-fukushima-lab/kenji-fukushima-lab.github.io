@@ -2,10 +2,10 @@
 layout: page
 title: projects.titles.project4
 description: projects.descriptions.project4
-img: assets/img/3.jpg
-importance: 2
+img: assets/img/12.jpg
+importance: 4
 category: work
-giscus_comments: true
+related_publications: true
 ---
 
-{% translate_file _projects/bioinformatics.md %}
+{% translate_file _projects/4_project.md %}
