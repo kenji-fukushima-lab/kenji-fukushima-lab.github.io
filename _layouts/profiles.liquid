@@ -69,7 +69,10 @@ layout: page
                   <a href="https://youtube.com/{{ profile.youtube }}" title="YouTube" style="margin-right: 8px;"><i class="fab fa-youtube"></i></a>
                 {% endif %}
                 {% if profile.researchmap %}
-                  <a href="https://researchmap.jp/{{ profile.researchmap }}" title="Researchmap" style="margin-right: 8px;"><i class="fas fa-flask"></i></a>
+                  <a href="https://researchmap.jp/{{ profile.researchmap }}" title="Researchmap" style="margin-right: 8px;"><img src="https://researchmap.jp/favicon.ico" alt="Researchmap" style="height: 1em;"></a>
+                {% endif %}
+                {% if profile.tayo %}
+                  <a href="{{ profile.tayo }}" title="tayo" style="margin-right: 8px;"><img src="https://tayo.jp/public/assets/favicon.ico" alt="tayo" style="height: 1em;"></a>
                 {% endif %}
               </div>
               <!-- End Social Links -->

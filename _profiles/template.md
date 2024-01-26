@@ -20,4 +20,5 @@ instagram: # Your Instagram account.
 facebook: # Your Facebook account. 
 youtube: # Your YouTube account.
 researchmap: # Your ResearchMap account. e.g., kenji_fukushima
+tayo: # Your tayo URL. e.g., https://tayo.jp/users/XPAZgh46EfUd9vCMIGNz8isozCu1
 ---

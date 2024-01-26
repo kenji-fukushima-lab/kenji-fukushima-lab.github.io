@@ -20,4 +20,5 @@ instagram:
 facebook: 
 youtube: 
 researchmap: kenji_fukushima
+tayo: https://tayo.jp/users/XPAZgh46EfUd9vCMIGNz8isozCu1
 ---
