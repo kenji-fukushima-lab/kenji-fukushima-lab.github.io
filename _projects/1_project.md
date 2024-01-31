@@ -5,7 +5,7 @@ description: projects.descriptions.project1
 img: assets/img/12.jpg
 importance: 1
 category: work
-related_publications: true
+related_publications: false
 ---
 
 {% translate_file _projects/1_project.md %}

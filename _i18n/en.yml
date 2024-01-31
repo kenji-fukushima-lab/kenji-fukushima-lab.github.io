@@ -90,11 +90,11 @@ pagination:
 projects:
   titles:
     project1: Interests
-    project2: Organisms
-    project3: Experiments
-    project4: Bioinformatics
-    project5: Facilities
-    project6: Collaborations
+    project2: Approaches
+    project3: Organisms
+    project4: Facilities
+    project5:
+    project6:
   descriptions:
     project1: ''
     project2: ''
@@ -110,7 +110,7 @@ resources:
   genome: Genomes
   internal: Internal Resources
   kflab: "This repository is designed as the primary platform for coordinating laboratory activities within the Kenji Fukushima lab. Our focus here extends beyond programming code, encompassing a broad spectrum of discussions relevant to our research. These include logistics like lab supply management, strategic considerations in experimental design, and updates on research progress. New members should create a GitHub account and request an invitation from Kenji Fukushima."
-  gfe_pipeline: "**gfe_pipeline** is an in-house tool that was originally developed for analyzing **g**ene **f**amily **e**volution using an in-house [Apptainer/Singularity](https://apptainer.org/) container, **gfe**. Currently, **gfe_pipeline** has expanded to include many bioinformatics tools beyond gene family analysis. These include transcriptome assembly, gene annotation, species tree inference, SNV analysis, synteny analysis, and more. For example, a significant portion of the data presented in the studies by [Fukushima and Pollock (2020)](https://www.nature.com/articles/s41467-020-18090-8), [Fukushima and Pollock (2023)](https://www.nature.com/articles/s41559-022-01932-7), and [Saul et al. (2023)](https://www.nature.com/articles/s41477-023-01562-2) was generated using the gfe_pipeline. Lab members who wish to obtain access rights should make a request to Kenji Fukushima."
+  gfe_pipeline: "**gfe_pipeline** is an in-house tool that was originally developed for analyzing **g**ene **f**amily **e**volution using an in-house [Apptainer/Singularity](https://apptainer.org/) container, **gfe**. Currently, **gfe_pipeline** has expanded to include many bioinformatics tools beyond gene family analysis. These include transcriptome assembly, gene annotation, species tree inference, SNV analysis, synteny analysis, and more. For example, a significant portion of the data presented in the studies by [Fukushima & Pollock (2020)](https://www.nature.com/articles/s41467-020-18090-8), [Fukushima & Pollock (2023)](https://www.nature.com/articles/s41559-022-01932-7), and [Saul et al. (2023)](https://www.nature.com/articles/s41477-023-01562-2) was generated using the gfe_pipeline. Lab members who wish to obtain access rights should make a request to Kenji Fukushima."
 cv:
   address: Address
   area: Area

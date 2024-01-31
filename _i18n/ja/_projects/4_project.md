@@ -1,5 +1,15 @@
-## Carnivory
-Carnivorous plants are our most favorite organisms to study evolutionary innovations. They attract, trap, and kill prey animals and eventually absorb and reuse degraded nutrients, requiring multiple phenotypes to evolve to be functional. For details, see [here]().
+#### 実験設備
 
-## Other innovative traits
-Mainly through collaborations, we participate in the analysis of fascinating traits in both plant and non-plant lineages. Examples include cleistogamy ([Suetsugu et al., 2023](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18495)) and dioecy ([Saul et al., 2023](https://www.nature.com/articles/s41477-023-01563-1)).
+当研究室では、特に植物に特化した分子生物学実験が可能です。また、国立遺伝学研究所の豊富な[共通機器](https://www.nig.ac.jp/nig/ja/research-infrastructure-collaboration/common-equipment)にアクセスできます。
+
+#### 計算機
+
+ラボメンバーには個人用のコンピュータが支給されます。大規模な解析には、[遺伝研スーパーコンピュータシステム](https://sc.ddbj.nig.ac.jp/)を利用しています。
+
+#### 栽培設備
+
+培養室や人工気象器が研究室内に設置されています。多くの食虫植物は、無菌培養体として系統を維持しています。
+
+#### デスク
+
+ラボメンバーには専用のデスクが割り当てられます。

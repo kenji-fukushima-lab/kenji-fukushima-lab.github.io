@@ -17,7 +17,7 @@ titles:
   latest_posts: 最新の記事
   news: ニュース
   profiles: メンバー
-  projects: 研究
+  projects: 研究内容
   publications: 論文
   resources: リソース
   selected_publications: 代表的な論文
@@ -88,12 +88,12 @@ pagination:
   page: page
 projects:
   titles:
-    project1: 興味の対象
-    project2: 取り扱う生物種
-    project3: 実験技術
-    project4: バイオインフォマティクス
-    project5: 研究設備
-    project6: 共同研究
+    project1: 研究興味
+    project2: 研究分野
+    project3: 生物種
+    project4: 研究設備
+    project5:
+    project6:
   descriptions:
     project1: ''
     project2: ''
