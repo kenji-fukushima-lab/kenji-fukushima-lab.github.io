@@ -4,7 +4,7 @@ permalink: /blog/
 title: titles.blog
 description: descriptions.blog
 nav: true
-nav_order: 6
+nav_order: 7
 pagination:
   enabled: true
   collection: posts

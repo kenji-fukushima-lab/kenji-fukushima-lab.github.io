@@ -21,6 +21,7 @@ titles:
   projects: research
   publications: publications
   resources: resources
+  outreach: outreach
   selected_publications: selected publications
   teaching: REMOVED_BY_KF
   submenus: submenus
@@ -38,6 +39,7 @@ descriptions:
   projects: Our research
   publications: 'Publications from Fukushima lab. Authors who contributed as a Fukushima lab member are indicated in <strong>bold</strong>. Preview images are attached to papers in which members of our laboratory serve as either the lead or corresponding authors. †: co-first authors. *: (co-)corresponding authors.'
   resources: List of research resources developed by Fukushima lab
+  outreach: Outreach activities by lab members
   teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.
 blog:

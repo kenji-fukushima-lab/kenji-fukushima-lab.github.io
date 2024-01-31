@@ -20,6 +20,7 @@ titles:
   projects: 研究内容
   publications: 論文
   resources: リソース
+  outreach: アウトリーチ
   selected_publications: 代表的な論文
   teaching: REMOVED_BY_KF
   submenus: その他
@@ -37,6 +38,7 @@ descriptions:
   projects: 当研究室で取り組む研究の紹介です。
   publications: '当研究室から発表した論文を、最新のものから順にリストしています。当研究室のメンバーとして論文に貢献した著者を<b>太字</b>で示しています。当研究室のメンバーが筆頭あるいは責任著者を務める論文にはプレビュー画像を付しています。†: 共筆頭著者. *: (共)責任著者.'
   resources: 当研究室で提供している研究リソースの一覧です。
+  outreach: 当研究室で取り組んだアウトリーチ活動です。
   teaching: REMOVED_BY_KF
   unk: Looks like there has been a mistake. Nothing exists here.
 blog:
