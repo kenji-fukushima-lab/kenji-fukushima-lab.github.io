@@ -2,7 +2,7 @@ not_found:
   message: You will be redirected to the main page within 3 seconds. If not redirected, please go back to the
   main_page: home page
 main:
-  contact_note: Kenji Fukushima lab. Since 2018, at the University of Würzburg in Germany. Since 2024, at the National Institute of Genetics in Japan.
+  contact_note: Fukushima lab. 2018-2024 at the University of Würzburg in Germany. 2024-now at the National Institute of Genetics in Japan.
   footer_text: > # the ">" symbol means to ignore newlines until "titles:"
     Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a> theme.
     Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.

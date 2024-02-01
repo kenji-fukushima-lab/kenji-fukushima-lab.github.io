@@ -9,3 +9,7 @@ Our laboratory features cultivation rooms and plant incubators. We maintain a di
 
 #### Office
 Individual desks are provided for all lab members.
+
+#### Conference participation
+
+For researchers presenting work from our laboratory at conferences, travel expenses will be provided.
