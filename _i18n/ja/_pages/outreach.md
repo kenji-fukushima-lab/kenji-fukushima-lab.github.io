@@ -9,7 +9,7 @@
 #### テレビ出演
 
 [NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution](https://www3.nhk.or.jp/nhkworld/en/tv/scienceview/20210817/2015217/)
-2021年にヴュルツブルク大学にて撮影された研究紹介映像がNHK WORLD-JAPANにて放送されました。
+2020年にヴュルツブルク大学にて撮影された研究紹介映像がNHK WORLD-JAPANにて放送されました。
 
 <div style="margin-top: 30px;"></div>
 
