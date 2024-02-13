@@ -1,6 +1,6 @@
 Our primary focus is on the analysis of carnivorous plants, with the aim of exploring a variety of topics within evolutionary biology. Key areas of research include the following.
 
-#### Phenotypic innovations
+#### Evolutionary innovations
 
 The trapping leaves of carnivorous plants originated from ordinary leaves specialized in photosynthesis. Despite being leaves, they possess the ability to attract and capture small insects and digest and assimilate nutrients, much like the digestive systems of animals. By studying these innovative traits, we aim to push the boundaries of evolutionary biology.
 
