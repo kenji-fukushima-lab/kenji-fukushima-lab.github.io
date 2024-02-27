@@ -63,7 +63,7 @@
 ゲノムに刻まれた膨大な情報は、生物の由来や特徴を理解するための重要な手がかりとなります。全ゲノム配列を解読し、遺伝子の構造を予測し、その遺伝子がどのような機能を持つかを推測することは、ゲノムから生物学的な発見をするための重要な下準備です。PacBioやOxford Nanoporeのようなロングリードシークエンサーと染色体立体配座捕捉法(Hi-C法)を組み合わせることで、染色体スケールのゲノムアセンブリーを取得可能です。配列取得までは分子生物学実験が必要になり、その後は生命情報科学の手法が中心となります。
 
 <div align="center">
-    <img src="/assets/img/projects/dna-sequencing-concept-illustration.jpg" alt="Genomics" width="300"/>
+    <img src="/assets/img/projects/plant-gene-from-herbs-leaves-generative-ai_small.jpg" alt="Genomics" width="300"/>
 </div>
 
 <div style="margin-top: 30px;"></div>

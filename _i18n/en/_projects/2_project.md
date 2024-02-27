@@ -69,7 +69,7 @@ A more attainable goal may involve mutating Arabidopsis proteins to mirror those
 The immense wealth of data contained within genomes provides key insights into the origins and traits of living organisms. Decoding the complete genomic sequences, predicting gene structures, and inferring their functions represent foundational steps in unlocking biological discoveries from genomic data. The advent of long-read sequencing technologies, such as those offered by PacBio and Oxford Nanopore, in conjunction with the Hi-C chromosome conformation capture methods, enables us to achieve genome assemblies at a chromosomal level. 
 
 <div align="center">
-    <img src="/assets/img/projects/dna-sequencing-concept-illustration.jpg" alt="Genomics" width="300"/>
+    <img src="/assets/img/projects/plant-gene-from-herbs-leaves-generative-ai_small.jpg" alt="Genomics" width="300"/>
 </div>
 
 <div style="margin-top: 30px;"></div>
