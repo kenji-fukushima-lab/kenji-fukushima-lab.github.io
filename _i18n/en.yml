@@ -50,8 +50,8 @@ blog:
   last_updated: Last updated
   author: Author
   related_posts:
-    description: "Here are some more articles you might like to read next:"
-    title: Enjoy Reading This Article?
+    description:
+    title: Related articles
 months:
   long:
     january: January

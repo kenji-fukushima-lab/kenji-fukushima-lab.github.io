@@ -49,8 +49,8 @@ blog:
   last_updated: 最終更新日
   author: 著者
   related_posts:
-    description: "Here are some more articles you might like to read next:"
-    title: Enjoy Reading This Article?
+    description:
+    title: 関連記事
 months:
   long:
     january: January
