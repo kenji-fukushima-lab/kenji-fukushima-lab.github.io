@@ -1,7 +1,7 @@
 ---
 align: left
 name: Sakiko Teramoto
-name_native: 寺本　咲子（てらもと　さきこ）
+name_native: 寺本 咲子（てらもと さきこ）
 position_key: secretary
 image: people/sakiko_teramoto.jpg
 content: 

@@ -1,7 +1,7 @@
 ---
 align: left # Do not change this
 name: Shunsuke Kanamori # Replace it with your name
-name_native: 金森 駿介 # if you have a name in a non-latin script, put it here
+name_native: 金森 駿介（かなもり しゅんすけ） # if you have a name in a non-latin script, put it here
 position_key: postdoc # Choose this from "position" in _i18n/en.yml
 image: people/shunsuke_kanamori.jpg # Your profile picture in /assets/images/people/
 content: # Leave it blank

@@ -1,7 +1,7 @@
 ---
 align: left # Do not change this
 name: Yoshino Hashimoto
-name_native: 橋本　礼乃　(はしもと　よしの)
+name_native: 橋本 礼乃　(はしもと よしの)
 position_key: technician
 image: people/default.png # Your profile picture in /assets/images/people/
 content: # Leave it blank
