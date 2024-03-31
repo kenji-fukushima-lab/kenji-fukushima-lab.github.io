@@ -1,8 +1,8 @@
 ---
 align: left # Do not change this
-name: FOO BAR # Replace it with your name
-name_native: # if you have a name in a non-latin script, put it here
-position_key: technician # Choose this from "position" in _i18n/en.yml
+name: Yoshino Hashimoto
+name_native: 橋本　礼乃　(はしもと　よしの)
+position_key: technician
 image: people/default.png # Your profile picture in /assets/images/people/
 content: # Leave it blank
 image_circular: false # Do not change this
