@@ -13,7 +13,7 @@ orcid: 0000-0001-8232-1999 # Your ORCID ID. e.g., 0000-0002-2353-9274
 google_scholar: https://scholar.google.co.jp/citations?hl=ja&user=qg0MP8cAAAAJ # Your Google Scholar page. e.g., https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
 github: Shunsuke-Kanamori # Your GitHub account. e.g., kfuku52
 linkedin: # Your LinkedIn account. e.g., kenji-fukushima-80a6258b
-twitter: @anolis_shunsuke # Your Twitter account. e.g., kfuku0502
+twitter: anolis_shunsuke # Your Twitter account. e.g., kfuku0502
 researchgate: Shunsuke-Kanamori # Your ResearchGate account. e.g., Kenji-Fukushima-3
 amazon_author: # Your Amazon Author URL. e.g., https://www.amazon.co.jp/stores/%E7%A6%8F%E5%B3%B6-%E5%81%A5%E5%85%90/author/B09S6DYLF1
 instagram: # Your Instagram account.
