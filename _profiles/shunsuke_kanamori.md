@@ -10,7 +10,7 @@ more_info: # Leave it blank
 email: kanamori.shunsuke@gmail.com # Your email address. e.g., kfuku52@gmail.com
 website: # Your website URL. e.g., https://sites.google.com/site/kfuku52/
 orcid: 0000-0001-8232-1999 # Your ORCID ID. e.g., 0000-0002-2353-9274
-google_scholar: https://scholar.google.co.jp/citations?hl=ja&user=qg0MP8cAAAAJ # Your Google Scholar page. e.g., https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
+google_scholar: https://scholar.google.co.jp/citations?user=QgQk-xAAAAAJ&hl=ja # Your Google Scholar page. e.g., https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
 github: Shunsuke-Kanamori # Your GitHub account. e.g., kfuku52
 linkedin: # Your LinkedIn account. e.g., kenji-fukushima-80a6258b
 twitter: anolis_shunsuke # Your Twitter account. e.g., kfuku0502
