@@ -11,8 +11,5 @@
 
 [遺伝研へのアクセス](https://www.nig.ac.jp/nig/ja/about-nig/access_ja)
 
-### 電話番号
-000-000-0000
-
 ### Eメールアドレス
-kfuku52@gmail.com
+kenji.fukushima@nig.ac.jp

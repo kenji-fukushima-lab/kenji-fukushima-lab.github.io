@@ -7,7 +7,7 @@ image: people/kenji_fukushima.jpg
 content: 
 image_circular: false # crops the image to make it circular
 more_info: 
-email: kfuku52@gmail.com
+email: kenji.fukushima@nig.ac.jp
 website: https://sites.google.com/site/kfuku52/
 orcid: 0000-0002-2353-9274
 google_scholar: https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ

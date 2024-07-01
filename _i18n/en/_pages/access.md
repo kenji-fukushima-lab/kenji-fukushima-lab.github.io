@@ -10,8 +10,5 @@ Plant Evolution Laboratory (C-6F)
 
 [Access to NIG](https://www.nig.ac.jp/nig/about-nig/access)
 
-### Phone number
-+81-00-000-0000
-
 ### E-mail address
-kfuku52@gmail.com
+kenji.fukushima@nig.ac.jp
