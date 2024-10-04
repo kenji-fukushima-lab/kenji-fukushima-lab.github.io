@@ -5,8 +5,7 @@ services:
     image: georgegca/multi-language-al-folio:latest
     build: .
     ports:
-      - 8080:4000
+      - 8080:8080
       - 35729:35729
     volumes:
       - .:/srv/jekyll
-    command: jekyll serve --watch --port 4000 --host 0.0.0.0

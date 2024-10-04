@@ -232,7 +232,6 @@ defaults:
       path: "assets"
     values:
       sitemap: false
-      title: "Default Title"
 
 sass:
   style: compressed
