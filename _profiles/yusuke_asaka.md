@@ -1,7 +1,7 @@
 ---
 align: left # Do not change this
 name: Yusuke Asaka # Replace it with your name
-name_native: 淺賀　裕介（あさか　ゆうすけ）# if you have a name in a non-latin script, put it here
+name_native: 淺賀 裕介（あさか ゆうすけ） # if you have a name in a non-latin script, put it here
 position_key: technician # Choose this from "position" in _i18n/en.yml
 image: people/yusuke_asaka.png # Your profile picture in /assets/images/people/
 content: # Leave it blank
