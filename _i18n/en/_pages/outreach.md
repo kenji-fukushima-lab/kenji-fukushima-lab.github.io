@@ -1,1 +1,0 @@
-For outreach actiities, see [here](https://researchmap.jp/kenji_fukushima/social_contribution?lang=en).
