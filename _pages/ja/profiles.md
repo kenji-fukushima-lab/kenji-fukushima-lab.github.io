@@ -42,6 +42,21 @@ profiles:
     image_circular: false # crops the image to make it circular
 
   - align: left
+    image: people/naoto_inui.png
+    content: people_pages/naoto_inui.md
+    image_circular: false # crops the image to make it circular
+
+  - align: left
+    image: people/katsuhiro_yoneoka.png
+    content: people_pages/katsuhiro_yoneoka.md
+    image_circular: false # crops the image to make it circular
+
+  - align: left
+    image: people/tomoya_nishiguchi.png
+    content: people_pages/tomoya_nishiguchi.md
+    image_circular: false # crops the image to make it circular
+
+  - align: left
     image: people/yuhan_guo.jpg
     content: people_pages/yuhan_guo.md
     image_circular: false # crops the image to make it circular
