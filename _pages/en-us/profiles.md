@@ -41,7 +41,7 @@ profiles:
     content: people_pages/shunsuke_kanamori.md
     image_circular: false # crops the image to make it circular
 
- - align: left
+  - align: left
     image: people/naoto_inui.png
     content: people_pages/naoto_inui.md
     image_circular: false # crops the image to make it circular
