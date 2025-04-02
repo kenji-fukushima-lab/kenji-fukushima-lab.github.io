@@ -2,7 +2,7 @@
 
 寺本 咲子（てらもと さきこ）
 
-Secretary  
+secretary  
 
 <div style="display: flex; gap: 10px;">
 <!-- Email -->
