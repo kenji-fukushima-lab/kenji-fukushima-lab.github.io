@@ -2,7 +2,7 @@
 page_id: resources
 layout: page
 permalink: /resources/
-title: resorces
+title: resources
 description: List of research resources developed by Fukushima lab
 nav: true
 nav_order: 5
