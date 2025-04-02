@@ -2,7 +2,7 @@
 
 米岡 克啓（よねおか かつひろ）
 
-postdoc
+Postdoctoral Researcher
 
 <div style="display: flex; gap: 10px;">
 <!-- Email -->
