@@ -2,7 +2,7 @@
 
 淺賀 裕介（あさか ゆうすけ）  
 
-technician  
+Technician  
 
 <div style="display: flex; gap: 10px;">
 
