@@ -2,7 +2,7 @@
 
 白井 紗世子　(しらい さよこ)  
 
-technician  
+Technician  
 
 <div style="display: flex; gap: 10px;">
 
