@@ -2,7 +2,7 @@
 
 乾 直人（いぬい なおと）
 
-postdoc
+Postdoctoral Researcher
 
 <div style="display: flex; gap: 10px;">
 <!-- Email -->
