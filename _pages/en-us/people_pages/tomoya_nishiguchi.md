@@ -2,7 +2,7 @@
 
 西口 智也（にしぐち ともや）
 
-other
+Researcher
 
 <div style="display: flex; gap: 10px;">
 <!-- Email -->
