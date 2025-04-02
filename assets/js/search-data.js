@@ -41,8 +41,8 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/projects/";
           },
-        },{id: "nav-resorces",
-          title: "resorces",
+        },{id: "nav-resources",
+          title: "resources",
           description: "List of research resources developed by Fukushima lab",
           section: "Navigation menu",
           handler: () => {
