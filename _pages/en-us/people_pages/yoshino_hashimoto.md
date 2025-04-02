@@ -2,7 +2,7 @@
 
 橋本 礼乃　(はしもと よしの)  
 
-technician  
+Technician  
 
 <div style="display: flex; gap: 10px;">
 
