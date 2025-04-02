@@ -1,4 +1,1 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://kenji-fukushima-lab.github.io/ja/sitemap.xml
+User-agent: * Disallow: Sitemap: https://kenji-fukushima-lab.github.io/sitemap.xml
