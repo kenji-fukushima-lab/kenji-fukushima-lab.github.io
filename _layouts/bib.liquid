@@ -61,6 +61,17 @@
         {% assign author_is_self = false %}
         {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
         {%- assign author_last_html = author.last | regex_replace: '([*∗†‡§¶‖&^]+)', '<sup>\1</sup>' -%}
+
+{% comment %}
+[added at 2025.5.2] below block is added for highlight function
+{% endcomment %}
+        {%- assign highlight_list = entry.highlight | split: ' and ' -%}
+        {%- assign full_name = author.first | append: ', ' | append: author_last_name -%}
+        {%- assign should_highlight = false -%}
+        {%- if highlight_list contains full_name -%}
+          {%- assign should_highlight = true -%}
+        {%- endif -%}
+
         {% if site.scholar.last_name contains author_last_name %}
           {% if site.scholar.first_name contains author.first %}
             {% assign author_is_self = true %}
@@ -77,6 +88,24 @@
           {% endfor %}
         {%- endif -%}
 
+{% comment %}
+[added at 2025.5.2] below block is added for highlight function
+{% endcomment %}
+        {%- assign highlight_list = entry.highlight | downcase | strip | split: ' and ' -%}
+
+        {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
+        {%- assign author_first_clean = author.first | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
+        {%- assign full_name = author_last_name | append: ', ' | append: author_first_clean -%}
+        {%- assign full_name_normalized = full_name | downcase | strip -%}
+        {%- assign should_highlight = false -%}
+
+        {%- if highlight_list contains full_name_normalized -%}
+          {%- assign should_highlight = true -%}
+        {%- endif -%}
+
+{% comment %}
+[added at 2025.5.2] below block is added for highlight function
+this is a original block
         {%- if forloop.length > 1 -%}
           {% if forloop.first == false %},&nbsp;{% endif %}
           {%- if forloop.last and author_array_limit == author_array_size %}
@@ -99,6 +128,40 @@
             {{ author_last_html -}}
           {% endif %}
         {%- endif -%}
+{% endcomment %}
+        {%- if forloop.length > 1 -%}
+          {% if forloop.first == false %},&nbsp;{% endif %}
+          {%- if forloop.last and author_array_limit == author_array_size %}
+            {{ site.data[site.active_lang].strings.bibliography.last_author_prefix }}&nbsp;
+          {% endif -%}
+        {% endif %}
+
+        {%- if author_is_self -%}
+          <em>
+            {% if should_highlight %}
+              <strong>{{- author.first }} {{ author_last_html -}}</strong>
+            {% else %}
+              {{- author.first }} {{ author_last_html -}}
+            {% endif %}
+          </em>
+        {%- else -%}
+          {%- if coauthor_url -%}
+            <a href="{{ coauthor_url }}">
+              {% if should_highlight %}
+                <strong>{{- author.first }} {{ author_last_html -}}</strong>
+              {% else %}
+                {{- author.first }} {{ author_last_html -}}
+              {% endif %}
+            </a>
+          {%- else -%}
+            {% if should_highlight %}
+              <strong>{{- author.first }} {{ author_last_html -}}</strong>
+            {% else %}
+              {{- author.first }} {{ author_last_html -}}
+            {% endif %}
+          {% endif %}
+        {%- endif -%}
+
       {% endfor %}
       {%- assign more_authors = author_array_size | minus: author_array_limit -%}
 
@@ -202,47 +265,47 @@
           {%- if entry.award_name %}{{ entry.award_name }}{% else %}{{ site.data[site.active_lang].strings.bibliography.awarded }}{% endif -%}
         </a>
       {% endif %}
-      {% if entry.abstract %}
+      {% if entry.abstract and entry.abstract != '' and entry.abstract != '{}' %}
         <a class="abstract btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.abstract }}</a>
       {% endif %}
-      {% if entry.doi %}
+      {% if entry.doi and entry.doi != '' and entry.doi != '{}' %}
         <a href="https://doi.org/{{ entry.doi }}" class="btn btn-sm z-depth-0" role="button">DOI</a>
       {% endif %}
-      {% if entry.arxiv %}
+      {% if entry.arxiv and entry.arxiv != '' and entry.arxiv != '{}' %}
         <a href="http://arxiv.org/abs/{{ entry.arxiv }}" class="btn btn-sm z-depth-0" role="button">arXiv</a>
       {% endif %}
 
-      {% if entry.url %}
+      {% if entry.url and entry.url != '' and entry.url != '{}' %}
         <a href="{{ entry.url }}" class="btn btn-sm z-depth-0" role="button">URL</a>
       {% endif %}
-      {% if entry.preprint %}
+      {% if entry.preprint and entry.preprint != '' and entry.preprint != '{}' %}
         <a href="{{ entry.preprint }}" class="btn btn-sm z-depth-0" role="button">PREPRINT</a>
       {% endif %}
-      {% if entry.pmid %}
+      {% if entry.pmid and entry.pmid != '' and entry.pmid != '{}' %}
         <a href="https://pubmed.ncbi.nlm.nih.gov/{{ entry.pmid }}" class="btn btn-sm z-depth-0" role="button">PUBMED</a>
       {% endif %}
-      {% if entry.correction %}
+      {% if entry.correction and entry.correction != '' and entry.correction != '{}' %}
         <a href="{{ entry.correction }}" class="btn btn-sm z-depth-0" role="button">CORRECTION</a>
       {% endif %}
 
-      {% if entry.bibtex_show %}
+      {% if entry.bibtex_show and entry.bibtex_show != '' and entry.bibtex_show != '{}' %}
         <a class="bibtex btn btn-sm z-depth-0" role="button">Bib</a>
       {% endif %}
-      {% if entry.html %}
+      {% if entry.html and entry.html != '' and entry.html != '{}' %}
         {% if entry.html contains '://' %}
           <a href="{{ entry.html }}" class="btn btn-sm z-depth-0" role="button">HTML</a>
         {% else %}
           <a href="{{ entry.html | prepend: '/assets/html/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">HTML</a>
         {% endif %}
       {% endif %}
-      {% if entry.pdf %}
+      {% if entry.pdf and entry.pdf != '' and entry.pdf != '{}' %}
         {% if entry.pdf contains '://' %}
           <a href="{{ entry.pdf }}" class="btn btn-sm z-depth-0" role="button">PDF</a>
         {% else %}
           <a href="{{ entry.pdf | prepend: '/assets/pdf/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">PDF</a>
         {% endif %}
       {% endif %}
-      {% if entry.supp %}
+      {% if entry.supp and entry.supp != '' and entry.supp != '{}' %}
         {% if entry.supp contains '://' %}
           <a href="{{ entry.supp }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.supp }}</a>
         {% else %}
@@ -251,18 +314,18 @@
           </a>
         {% endif %}
       {% endif %}
-      {% if entry.video and site.enable_video_embedding %}
+      {% if entry.video and site.enable_video_embedding and entry.video != '' and entry.video != '{}' and site.enable_video_embedding != '' and site.enable_video_embedding != '{}' %}
         <a class="abstract btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.video }}</a>
-      {% elsif entry.video %}
+      {% elsif entry.video and entry.video != '' and entry.video != '{}' %}
         <a href="{{ entry.video }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.video }}</a>
       {% endif %}
-      {% if entry.blog %}
+      {% if entry.blog and entry.blog != '' and entry.blog != '{}' %}
         <a href="{{ entry.blog }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.blog }}</a>
       {% endif %}
-      {% if entry.code %}
+      {% if entry.code and entry.code != '' and entry.code != '{}' %}
         <a href="{{ entry.code }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.code }}</a>
       {% endif %}
-      {% if entry.poster %}
+      {% if entry.poster and entry.poster != '' and entry.poster != '{}' %}
         {% if entry.poster contains '://' %}
           <a href="{{ entry.poster }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.poster }}</a>
         {% else %}
@@ -271,7 +334,7 @@
           </a>
         {% endif %}
       {% endif %}
-      {% if entry.slides %}
+      {% if entry.slides and entry.slides != '' and entry.slides != '{}' %}
         {% if entry.slides contains '://' %}
           <a href="{{ entry.slides }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.slides }}</a>
         {% else %}
@@ -280,7 +343,7 @@
           </a>
         {% endif %}
       {% endif %}
-      {% if entry.website %}
+      {% if entry.website and entry.website != '' and entry.website != '{}' %}
         <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.website }}</a>
       {% endif %}
     </div>
