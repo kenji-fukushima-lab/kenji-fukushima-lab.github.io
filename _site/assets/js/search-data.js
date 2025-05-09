@@ -41,8 +41,8 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/projects/";
           },
-        },{id: "nav-resorces",
-          title: "resorces",
+        },{id: "nav-resources",
+          title: "resources",
           description: "List of research resources developed by Fukushima lab",
           section: "Navigation menu",
           handler: () => {
@@ -306,7 +306,7 @@ ninja.data = [{
         title: 'Google Scholar',
         section: 'Socials',
         handler: () => {
-          window.open("https://scholar.google.com/citations?user=YrrVuIEAAAAJ", "_blank");
+          window.open("https://scholar.google.com/citations?user=qYrrVuIEAAAAJ", "_blank");
         },
       },{
         id: 'social-x',
