@@ -158,3 +158,25 @@ search:
   theme: Theme
 selected_publications: selected publications
 site_description: A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+# [add] added at 2025-5-14
+positions:
+  professor: Professor
+  associate_professor: Associate Professor
+  assistant_professor: Assistant Professor
+  lecturer: Lecturer
+  tech_staff: Technical staff
+  lab_manager: Lab Manager
+  postdoc: Postdoctoral Researcher
+  researcher: Researcher
+  phd: PhD Student
+  master: Master Student
+  intern: Intern
+  undergraduate: Undergraduate Student
+  technician: Technical assistant
+  secretary: Secretary
+  staff: Staff
+  alumni: Alumni
+  visiting: Visiting Researcher
+  collaborator: Collaborator
+  other: Other
+  future: Future Member

@@ -1,6 +1,71 @@
 ---
 layout: page
 ---
+
+<div class="post">
+  <article>
+    {% assign position_order = page.position_order %}
+    {% assign profiles = site.profiles %}
+    {% assign sorted_profiles = "" | split: "" %}
+
+    {% for position in position_order %}
+      {% for profile in profiles %}
+        {% if profile.position_key == position %}
+          {% assign sorted_profiles = sorted_profiles | push: profile %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+
+    {% assign lang = page.lang | default: site.lang | default: 'en-us' %}
+
+    {% for profile in sorted_profiles %}
+      <div class="media mb-5" style="padding: 1rem; border-bottom: 1px solid #ddd;">
+        {% if profile.image %}
+          <img src="{{ profile.image | prepend: '/assets/img/' }}" class="mr-4 rounded" style="width:280px; height:auto;" alt="{{ profile.name }}">
+        {% endif %}
+        <div class="media-body">
+          <h3 style="margin-bottom: 0.4rem; font-size:1.6rem;">{{ profile.name }}</h3>
+          {% if profile.name_native %}
+            <div style="font-size: 1.1rem; color: #555; margin-bottom: 0.6rem;">
+              {{ profile.name_native }}
+            </div>
+          {% endif %}
+
+          {% assign position = site.data[lang].strings.positions[profile.position_key] %}
+          {% if position %}
+            <p style="font-size: 1.2rem; color: #333;">{{ position }}</p>
+          {% endif %}
+
+          <div class="social-icons" style="margin-top: 0.5rem;">
+            {% if profile.email %}<a href="mailto:{{ profile.email }}"><i class="fas fa-envelope"></i></a>{% endif %}
+            {% if profile.website %}<a href="{{ profile.website }}"><i class="fas fa-globe"></i></a>{% endif %}
+            {% if profile.orcid %}<a href="{{ profile.orcid }}"><i class="ai ai-orcid"></i></a>{% endif %}
+            {% if profile.google_scholar %}<a href="{{ profile.google_scholar }}"><i class="ai ai-google-scholar"></i></a>{% endif %}
+            {% if profile.github %}<a href="https://github.com/{{ profile.github }}"><i class="fab fa-github"></i></a>{% endif %}
+            {% if profile.linkedin %}<a href="{{ profile.linkedin }}"><i class="fab fa-linkedin"></i></a>{% endif %}
+            {% if profile.twitter %}<a href="{{ profile.twitter }}"><i class="fab fa-x-twitter"></i></a>{% endif %}
+            {% if profile.researchgate %}<a href="{{ profile.researchgate }}"><i class="fab fa-researchgate"></i></a>{% endif %}
+            {% if profile.amazon %}<a href="{{ profile.amazon }}"><i class="fab fa-amazon"></i></a>{% endif %}
+            {% if profile.researchmap %}<a href="{{ profile.researchmap }}"><img src="https://researchmap.jp/favicon.ico" alt="Researchmap" style="height: 1em;"></a>{% endif %}
+            {% if profile.tayo %}<a href="{{ profile.tayo }}"><img src="https://tayo.jp/public/assets/favicon.ico" alt="Tayo" style="height: 1em;"></a>{% endif %}
+          </div>
+
+          <div style="margin-top: 0.7rem;">
+            {{ profile.content | markdownify }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </article>
+</div>
+
+{% comment %}
+[changed] changed at 2025/5/14 to manage the profiles of laboratory members in a single database
+---
+layout: page
+---
+
+changed at 2025.5.14, this is previous content of this file. 
 <div class="post">
   <article>
     {% if page.profiles %}
@@ -34,3 +99,4 @@ layout: page
     {% endif %}
   </article>
 </div>
+{% endcomment %}

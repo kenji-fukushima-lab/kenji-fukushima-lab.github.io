@@ -6,6 +6,7 @@ title: メンバー
 description: 当研究室のメンバー一覧です。
 nav: true
 nav_order: 2
+lang: ja
 position_order:
   - professor
   - associate_professor
@@ -14,6 +15,7 @@ position_order:
   - tech_staff
   - lab_manager
   - postdoc
+  - researcher
   - phd
   - master
   - intern
@@ -26,8 +28,17 @@ position_order:
   - collaborator
   - other
   - future
+---
 
+{% for profile in site.profiles %}
+  <div class="profile">
+    <img src="{{ profile.image }}" alt="{{ profile.title }}">
+    <h2>{{ profile.title }}</h2>
+    <!-- Add other profile details here -->
+  </div>
+{% endfor %}
 
+<!-- [changed] changed at 2025/5/14 to manage the profiles of laboratory members in a single database
 profiles:
   # if you want to include more than one profile, just replicate the following block
   # and create one content file for each profile inside _pages/
@@ -82,6 +93,7 @@ profiles:
     image_circular: false # crops the image to make it circular
 
 ---
+-->
 <!--profiles:
   # if you want to include more than one profile, just replicate the following block
   # and create one content file for each profile inside _pages/
