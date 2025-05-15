@@ -3,7 +3,7 @@ page_id: publications
 layout: page
 permalink: /publications/
 title: publications
-description: Publications from Fukushima lab in reversed chronological order.
+description: "Publications from Fukushima lab. Authors who contributed as a Fukushima lab member are indicated in bold. Preview images are attached to papers in which members of our laboratory serve as either the lead or corresponding authors. †: co-first authors. *: (co-)corresponding authors."
 nav: true
 nav_order: 3
 ---
