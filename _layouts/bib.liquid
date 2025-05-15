@@ -346,6 +346,25 @@ this is a original block
       {% if entry.website and entry.website != '' and entry.website != '{}' %}
         <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.website }}</a>
       {% endif %}
+{% comment %}
+[added at 2025.5.2] below block is added for highlight function
+{% endcomment %}
+      {% if entry.feature_article and entry.feature_article != '' and entry.feature_article != '{}' %}
+        {% if entry.feature_article contains '://' %}
+          <a href="{{ entry.feature_article }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
+        {% else %}
+          <a href="{{ entry.feature_article | prepend: '/assets/feature/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
+        {% endif %}
+      {% endif %}
+
+      {% if entry.press_release and entry.press_release != '' and entry.press_release != '{}' %}
+        {% if entry.press_release contains '://' %}
+          <a href="{{ entry.press_release }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
+        {% else %}
+          <a href="{{ entry.press_release | prepend: '/assets/press/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
+        {% endif %}
+      {% endif %}
+
     </div>
     {% if site.enable_publication_badges %}
       {% assign entry_has_altmetric_badge = false %}
