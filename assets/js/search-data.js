@@ -29,7 +29,7 @@ ninja.data = [{
           },
         },{id: "nav-publications",
           title: "publications",
-          description: "Publications from Fukushima lab in reversed chronological order.",
+          description: "Publications from Fukushima lab. Authors who contributed as a Fukushima lab member are indicated in bold. Preview images are attached to papers in which members of our laboratory serve as either the lead or corresponding authors. †: co-first authors. *: (co-)corresponding authors.",
           section: "Navigation menu",
           handler: () => {
             window.location.href = "/publications/";
