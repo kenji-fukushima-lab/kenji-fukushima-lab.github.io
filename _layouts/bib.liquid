@@ -46,8 +46,26 @@
 
   <!-- Entry bib key -->
   <div id="{{ entry.key }}" class="{% if site.enable_publication_thumbnails %}col-sm-8{% else %}col-sm-10{% endif %}">
+{% comment %}
+[changed at 2025.5.14] below block is changed for label
     <!-- Title -->
     <div class="title">{{ entry.title }}</div>
+{% endcomment %}
+    <!-- Title -->
+    <div class="publication-title">
+      {% if entry.article_type %}
+        {% case entry.article_type %}
+          {% when 'original' %}
+            <span class="badge badge-type-original">Original</span>
+          {% when 'preprint' %}
+            <span class="badge badge-type-preprint">Preprint</span>
+          {% else %}
+            <span class="badge badge-type-other">{{ entry.article_type | capitalize }}</span>
+        {% endcase %}
+      {% endif %}
+      <span class="title">{{ entry.title }}</span>
+    </div>
+
     <!-- Author -->
     <div class="author">
       {% assign author_array_size = entry.author_array | size %}
