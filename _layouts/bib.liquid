@@ -302,8 +302,20 @@ this is a original block
       {% if entry.pmid and entry.pmid != '' and entry.pmid != '{}' %}
         <a href="https://pubmed.ncbi.nlm.nih.gov/{{ entry.pmid }}" class="btn btn-sm z-depth-0" role="button">PUBMED</a>
       {% endif %}
+{% comment %}
+[added at 2025.5.22] below block is replaced for a multiple feature button function
       {% if entry.correction and entry.correction != '' and entry.correction != '{}' %}
         <a href="{{ entry.correction }}" class="btn btn-sm z-depth-0" role="button">CORRECTION</a>
+      {% endif %}
+{% endcomment %}
+      {% if entry.correction %}
+        {% assign corrections = entry.correction | split: ',' %}
+        {% for url in corrections %}
+          {% assign url_clean = url | strip %}
+          {% if url_clean != '' and url_clean != '{}' %}
+            <a href="{{ url_clean }}" class="btn btn-sm z-depth-0" role="button">CORRECTION</a>
+          {% endif %}
+        {% endfor %}
       {% endif %}
 
       {% if entry.bibtex_show and entry.bibtex_show != '' and entry.bibtex_show != '{}' %}
@@ -365,8 +377,7 @@ this is a original block
         <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.website }}</a>
       {% endif %}
 {% comment %}
-[added at 2025.5.2] below block is added for highlight function
-{% endcomment %}
+[added at 2025.5.2] below block is added for a highlight function
       {% if entry.feature_article and entry.feature_article != '' and entry.feature_article != '{}' %}
         {% if entry.feature_article contains '://' %}
           <a href="{{ entry.feature_article }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
@@ -374,13 +385,38 @@ this is a original block
           <a href="{{ entry.feature_article | prepend: '/assets/feature/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
         {% endif %}
       {% endif %}
+{% endcomment %}
+{% comment %}
+[added at 2025.5.22] below block is added for a multiple feature button function
+{% endcomment %}
+      {% if entry.feature_article %}
+        {% assign features = entry.feature_article | split: ',' %}
+        {% for url in features %}
+          {% assign url_clean = url | strip %}
+          {% if url_clean != '' and url_clean != '{}' %}
+            <a href="{{ url_clean }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
+{% comment %}
+[added at 2025.5.22] below block is replaced for a multiple feature button function
       {% if entry.press_release and entry.press_release != '' and entry.press_release != '{}' %}
         {% if entry.press_release contains '://' %}
           <a href="{{ entry.press_release }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
         {% else %}
           <a href="{{ entry.press_release | prepend: '/assets/press/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
         {% endif %}
+      {% endif %}
+{% endcomment %}
+      {% if entry.press_release %}
+        {% assign releases = entry.press_release | split: ',' %}
+        {% for url in releases %}
+          {% assign url_clean = url | strip %}
+          {% if url_clean != '' and url_clean != '{}' %}
+            <a href="{{ url_clean }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
+          {% endif %}
+        {% endfor %}
       {% endif %}
 
     </div>
