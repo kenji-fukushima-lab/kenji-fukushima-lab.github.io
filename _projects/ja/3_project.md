@@ -59,26 +59,39 @@ related_publications: false
 <div style="margin-top: 30px;"></div>
 
 #### シロイヌナズナなどのモデル植物
-食虫植物ばかり見ていては進化の真髄には手が届きません。比較は科学の根幹であり、食虫植物との対比のために、シロイヌナズナやトマトといったモデル植物を取り扱っています。
+食虫植物ばかり見ていては進化の真髄には手が届きません。比較は科学の根幹であり、食虫植物との対比のために、シロイヌナズナやベンサミアナタバコといったモデル植物を取り扱っています。
 
-<div align="center">
-    <img src="/assets/img/projects/arabidopsis_IMG_20210318_124305_4-3_downsize.jpg" alt="Arabidopsis thaliana" width="450"/>
+<div style="display: flex; justify-content: space-around;">
+    <img src="/assets/img/projects/arabidopsis_IMG_20210318_124305_4-3_downsize.jpg" alt="Arabidopsis thaliana" style="width: 45%; max-width: 450px;"/>
+    <img src="/assets/img/projects/nicotiana_benthamiana.jpg" alt="Nicotiana benthamiana" style="width: 45%; max-width: 450px;"/>
 </div>
-
 <div style="margin-top: 30px;"></div>
 
-#### 大腸菌
-分子生物学の基礎を支えるバクテリアです。遺伝子配列を単離したり、組み換えたり、増幅したり、発現させたり、その機能を解析するための頼もしい相棒になります。
+#### ラボメンバーが独自に持ち込んだ実験生物１：シダ植物
+
+シダ植物は、単相世代（配偶体）と複相世代（胞子体）がいずれも独立栄養体として生活するユニークな生活史をもっています。陸上植物の生殖や発生の進化を探る上で鍵となる研究材料です。
+
+<div align="center">
+    <img src="/assets/img/projects/hymenasplenium_murakami-hatanakae.jpeg" alt="Hymenasplenium murakami-hatanakae" width="450"/>
+</div>
+<div style="margin-top: 30px;"></div>
+
+
+#### ラボメンバーが独自に持ち込んだ実験生物２：等脚目甲殻類
+
+水中生活性の祖先からの「陸上進出」は動植物を問わず様々な生物系統で生じています。グソクムシ・フナムシ・ワラジムシ・ダンゴムシといった等脚目甲殻類は、陸上進出の秘密を探るのに適した研究材料です。
+
+<div align="center">
+    <img src="/assets/img/projects/ligia_sp.jpg" alt="Ligia sp." width="450"/>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### 大腸菌・アグロバクテリウム
+分子生物学の基礎を支えるバクテリアたちです。大腸菌は、遺伝子配列を単離したり、組み換えたり、増幅したり、発現させたり、その機能を解析するための頼もしい相棒になります。アグロバクテリウムは、DNAを植物細胞へ運び、ゲノムに組み込むスーパーパワーをもった土壌細菌です。植物の性質を改変するのになくてはならない存在です。
 
 <div align="center">
     <img src="/assets/img/projects/ecoli_3d-representation-microscopic-pathogens.jpg" alt="Escherichia coli" width="450"/>
 </div>
-
-<div style="margin-top: 30px;"></div>
-
-#### アグロバクテリウム
-植物細胞へDNAを運び、そのゲノムに組み込むスーパーパワーをもった土壌細菌です。植物の性質を改変するのになくてはならない存在です。
-
 <div style="margin-top: 30px;"></div>
 
 #### 新しい実験生物

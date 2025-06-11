@@ -20,16 +20,16 @@ Among these, we focus on several carnivorous plant lineages, including _Nepenthe
 <div style="margin-top: 30px;"></div>
 
 #### _Arabidopsis_ and other model plants
-To fully understand evolution, it is not sufficient to only study carnivorous plants. Comparative analysis is crucial in scientific research. Therefore, we utilize model plants like _Arabidopsis_ and tomato to provide a contrasting perspective to our studies on carnivorous plants.
+To fully understand evolution, it is not sufficient to only study carnivorous plants. Comparative analysis is crucial in scientific research. Therefore, we utilize model plants like _Arabidopsis_ and tobacco to provide a contrasting perspective to our studies on carnivorous plants.
 
-<div align="center">
-    <img src="/assets/img/projects/arabidopsis_IMG_20210318_124305_4-3_downsize.jpg" alt="Arabidopsis thaliana" width="450"/>
+<div style="display: flex; justify-content: space-around;">
+    <img src="/assets/img/projects/arabidopsis_IMG_20210318_124305_4-3_downsize.jpg" alt="Arabidopsis thaliana" style="width: 45%; max-width: 450px;"/>
+    <img src="/assets/img/projects/nicotiana_benthamiana.jpg" alt="Nicotiana benthamiana" style="width: 45%; max-width: 450px;"/>
 </div>
-
 <div style="margin-top: 30px;"></div>
 
-#### _Escherichia coli_
-_E. coli_ is a cornerstone in molecular biology. This bacterium is a dependable resource for various genetic techniques, including gene isolation, recombination, amplification, expression, and functional analysis.
+#### _Escherichia coli_ and Agrobacterium
+_E. coli_ is a cornerstone in molecular biology. This bacterium is a dependable resource for various genetic techniques, including gene isolation, recombination, amplification, expression, and functional analysis. Agrobacterium is a remarkable soil bacterium, known for its unique ability to transfer DNA into plant cells and integrate it into the plant genomes. This ability makes it an essential tool for modifying plant characteristics.
 
 <div align="center">
     <img src="/assets/img/projects/ecoli_3d-representation-microscopic-pathogens.jpg" alt="Escherichia coli" width="450"/>
@@ -37,5 +37,18 @@ _E. coli_ is a cornerstone in molecular biology. This bacterium is a dependable 
 
 <div style="margin-top: 30px;"></div>
 
-#### Agrobacterium
-Agrobacterium is a remarkable soil bacterium, known for its unique ability to transfer DNA into plant cells and integrate it into the plant genomes. This ability makes it an essential tool for modifying plant characteristics.
+#### Organisms brought in by lab members
+
+Ferns
+
+<div align="center">
+    <img src="/assets/img/projects/hymenasplenium_murakami-hatanakae.jpeg" alt="Hymenasplenium murakami-hatanakae" width="450"/>
+</div>
+<div style="margin-top: 30px;"></div>
+
+Isopods
+
+<div align="center">
+    <img src="/assets/img/projects/ligia_sp.jpg" alt="Ligia sp." width="450"/>
+</div>
+<div style="margin-top: 30px;"></div>
