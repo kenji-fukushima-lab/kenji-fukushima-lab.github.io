@@ -9,16 +9,16 @@ image_circular: false # crops the image to make it circular
 more_info: 
 email: kenji.fukushima@nig.ac.jp
 website: https://sites.google.com/site/kfuku52/
-orcid: 0000-0002-2353-9274
+orcid: https://orcid.org/0000-0002-2353-9274
 google_scholar: https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
 github: kfuku52
-linkedin: kenji-fukushima-80a6258b
-twitter: kfuku0502
-researchgate: Kenji-Fukushima-3
+linkedin: https://jp.linkedin.com/in/kenji-fukushima-80a6258b
+twitter: https://x.com/kfuku0502
+researchgate: https://www.researchgate.net/profile/Kenji-Fukushima-3
 amazon_author: https://www.amazon.co.jp/stores/%E7%A6%8F%E5%B3%B6-%E5%81%A5%E5%85%90/author/B09S6DYLF1
 instagram: 
 facebook: 
 youtube: 
-researchmap: kenji_fukushima
+researchmap: https://researchmap.jp/kenji_fukushima
 tayo: https://tayo.jp/users/XPAZgh46EfUd9vCMIGNz8isozCu1
 ---

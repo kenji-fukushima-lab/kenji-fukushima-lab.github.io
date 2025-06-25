@@ -9,7 +9,7 @@ image_circular:
 more_info: 
 email: guo.yuhan@nig.ac.jp
 website: 
-orcid: 0000-0001-5843-7596
+orcid: https://orcid.org/0000-0001-5843-7596
 google_scholar: 
 github: gyhxpy
 linkedin: 
