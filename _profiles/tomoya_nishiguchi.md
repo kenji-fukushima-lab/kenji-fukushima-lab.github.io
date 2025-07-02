@@ -2,7 +2,7 @@
 align: left # Do not change this
 name: Tomoya Nishiguchi
 name_native: 西口 智也（にしぐち ともや）
-position_key: researcher
+position_key: postdoc
 image: people/tomoya_nishiguchi.jpeg # Your profile picture in /assets/images/people/
 content: # Leave it blank
 image_circular: false # Do not change this
