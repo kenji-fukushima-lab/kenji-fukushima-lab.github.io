@@ -288,11 +288,6 @@ ninja.data = [{
           description: "",
           section: "",handler: () => {
               window.location.href = "/ja/profiles/yuhan_guo/";
-            },},{id: "profiles-yusuke-asaka",
-          title: 'Yusuke_asaka',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/yusuke_asaka/";
             },},{id: "projects-研究興味",
           title: '研究興味',
           description: "",
