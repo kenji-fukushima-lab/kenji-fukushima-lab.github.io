@@ -220,6 +220,10 @@ defaults:
       path: "assets"
     values:
       sitemap: false
+  - scope:
+      path: _profiles/alumni
+    values:
+      published: false
 
 sass:
   sourcemap: never
