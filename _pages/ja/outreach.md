@@ -14,12 +14,22 @@ nav_order: 6
     <img src="/assets/img/book_covers/fukushima2022.jpg" alt="食虫植物：進化の迷宮をゆく" width="100"/>
 </a>
 
-[![]()]()
+<div style="margin-top: 30px;"></div>
 
 #### テレビ出演
 
-[NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution](https://www3.nhk.or.jp/nhkworld/en/tv/scienceview/20210817/2015217/)
+NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution  
 2020年にヴュルツブルク大学にて撮影された研究紹介映像がNHK WORLD-JAPANにて放送されました。
+
+<div style="margin-top: 30px;"></div>
+
+<div style="margin-top: 30px;"></div>
+
+#### ラジオ出演
+
+[ＦＭみしま・かんなみ（ボイス・キュー）](https://777fm.com/)のラジオ番組「きゅんです！サイエンス」で研究の話をしています。
+
+[出演回のアーカイブ](https://www.youtube.com/@Iden-chan/search?query=%E7%A6%8F%E5%B3%B6%E5%81%A5%E5%85%90)
 
 <div style="margin-top: 30px;"></div>
 
