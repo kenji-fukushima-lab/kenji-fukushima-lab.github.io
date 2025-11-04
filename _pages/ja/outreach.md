@@ -50,5 +50,11 @@ NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution
 
 <div style="margin-top: 40px;"></div>
 
+#### インタビュー
+
+[国立遺伝学研究所 教員インタビュー](https://www.nig.ac.jp/nig/ja/research/interviews/faculty-interviews)
+
+<div style="margin-top: 40px;"></div>
+
 #### その他
 [こちら](https://researchmap.jp/kenji_fukushima/social_contribution)に過去のアウトリーチ活動をリストしています。
