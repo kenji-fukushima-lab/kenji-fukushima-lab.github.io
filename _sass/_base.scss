@@ -405,23 +405,24 @@ ul.task-list input[type="checkbox"] {
   text-align: center;
 
   .contact-icons {
-    font-size: 4rem;
+    /* Reduced icon size for social icons on home page */
+    font-size: 2.2rem;
 
     a {
       img {
-        width: 3.2rem;
-        height: 3.2rem;
-        margin-bottom: 1rem;
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: 0.6rem;
       }
 
       svg {
-        width: 3.5rem;
-        height: 4rem;
-        margin-bottom: 0.5rem;
+        width: 2rem;
+        height: 2.2rem;
+        margin-bottom: 0.4rem;
 
         image {
-          width: 3.5rem;
-          height: 3.5rem;
+          width: 2rem;
+          height: 2rem;
         }
       }
 
@@ -733,8 +734,7 @@ footer.sticky-bottom {
     li {
       margin-bottom: 1rem;
 
-      .preview {
-      }
+  /* .preview intentionally removed: no styles needed */
 
       .abbr {
         margin-bottom: 0.5rem;
