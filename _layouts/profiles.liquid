@@ -21,7 +21,7 @@ layout: page
     {% for profile in sorted_profiles %}
       <div class="media mb-5" style="padding: 1rem; border-bottom: 1px solid #ddd;">
         {% if profile.image %}
-          <img src="{{ profile.image | prepend: '/assets/img/' }}" class="mr-4 rounded" style="width:280px; height:auto;" alt="{{ profile.name }}">
+          <img src="{{ profile.image | prepend: '/assets/img/' }}" class="mr-4 rounded" style="width:140px; height:auto;" alt="{{ profile.name }}">
         {% endif %}
         <div class="media-body">
           <h3 style="margin-bottom: 0.4rem; font-size:1.6rem;">{{ profile.name }}</h3>
