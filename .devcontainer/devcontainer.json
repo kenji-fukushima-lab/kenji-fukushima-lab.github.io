@@ -12,8 +12,11 @@
     "ghcr.io/devcontainers-contrib/features/prettier:1": {}
   },
 
+  // Set working directory to ensure scripts run correctly
+  "workspaceFolder": "/workspaces/kenji-fukushima-lab.github.io",
+
   // Optionally: run jekyll serve automatically on container entering using the Docker entrypoint
-  "postAttachCommand": "./bin/entry_point.sh",
+  "postAttachCommand": "bash ./bin/entry_point.sh",
 
   "customizations": {
     "vscode": {
