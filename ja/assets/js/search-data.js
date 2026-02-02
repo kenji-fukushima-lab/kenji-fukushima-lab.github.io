@@ -222,22 +222,6 @@ ninja.data = [{
     },{id: "news-a-simple-inline-announcement",
           title: 'A simple inline announcement.',
           description: "",
-          section: "ニュース",},{id: "news-um-anúncio-simples-em-uma-linha",
-          title: 'Um anúncio simples em uma linha.',
-          description: "",
-          section: "ニュース",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
-          description: "",
-          section: "ニュース",handler: () => {
-              window.location.href = "/ja/news/announcement_2/";
-            },},{id: "news-um-anúncio-longo-com-detalhes",
-          title: 'Um anúncio longo com detalhes',
-          description: "",
-          section: "ニュース",handler: () => {
-              window.location.href = "/ja/news/announcement_2.md-14-06-31-761/";
-            },},{id: "news-um-anúncio-simples-em-uma-linha-com-markdown-emoji-sparkles-smile",
-          title: 'Um anúncio simples em uma linha com Markdown emoji! :sparkles: :smile:',
-          description: "",
           section: "ニュース",},{id: "profiles-katsuhiro-yoneoka",
           title: 'Katsuhiro_yoneoka',
           description: "",
