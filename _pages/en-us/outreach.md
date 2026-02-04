@@ -3,8 +3,8 @@ page_id: outreach
 layout: page
 permalink: /outreach/
 title: outreach
-description: 
-nav: true
+description:
+nav: false
 nav_order: 6
 ---
 
