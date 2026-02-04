@@ -1,0 +1,758 @@
+a9aa198f Update Google Scholar citations
+68eb6290 Update Google Scholar citations
+5c82c6b6 Added date information to the book example to display the year archive correctly
+6da4de0f Updated INSTALL pt-br version
+397f2ffb Auto update markdown TOC
+3a2b4e74 Updated jekyll-archives-v2 (#3460)
+1433ddfb Revert "Refactor: Use Liquid filter to find home page title" (#3451)
+08591c68 Refactor: Use Liquid filter to find home page title (#3448)
+3885bab7 ⚡ Optimize Google Scholar Citations Regex Definition (#3449)
+d110d370 Update Google Scholar citations
+d161a8aa Auto update markdown TOC
+07f7f1ab Updated install readme in pt-br
+de139da7 Merge branch 'al-folio-main'
+514533c5 Updated deps to fix issue with jekyll-socials (#3447)
+c9e55cad Fixed dates in book-shelf (#3446)
+2bbc8ad5 Fixed dates in book-shelf (#3446)
+8f901a9e Auto update markdown TOC
+0ac52998 Fixed issue with jekyll-socials plugin
+ac885eb4 Merge branch 'al-folio-main'
+cfed3b02 Auto update markdown TOC
+7c75a156 Updated deps and deploy version (#3440)
+43ec3db0 Changed to use jekyll-socials plugin (#3439)
+53bff0a2 Auto update markdown TOC
+07470bf1 Updated pt-br docker version in INSTALL
+c92b7592 Merge branch 'al-folio-main'
+f8c558b5 Auto update markdown TOC
+17b0251c Update deps (#3437)
+23159973 Merge branch 'al-folio-main'
+7249c6ef Changed to use cache bust plugin (#3436)
+70d07e61 Changed code to use plugin to handle 3rd party libraries downloads (#3435)
+90eb8f48 Add zhoji.github.io to User community in README.md (#3433)
+c35956ee Updated CUSTOMIZE sections about creating collections
+351f6630 Merge branch 'al-folio-main'
+039027e9 Improved collections section in CUSTOMIZE guide (#3431)
+a5993100 Add HAL button (#3404)
+53dfb118 add filtered BibTeX keywords (#3403)
+47fbf37a Add j1yoo.github.io to User community (#3427)
+8287d649 Add link to personal GitHub page on academics section in README (#3424)
+e6b488db Remove link to sam-bieberich.github.io (#3425)
+08023f0d Auto update markdown TOC
+67bd1b62 Make external service URLs configurable for repository page (#3422)
+6956be8c Update Google Scholar citations
+1f9e2b22 Merge branch 'al-folio-main'
+e10739af Fix typo in Bootstrap small column class usage (#3421)
+46202f7f Added pt-br README to broken links exclusion
+94663351 Auto update markdown TOC
+8a9c2a5d Updated prettier version
+b3782b25 Merge branch 'al-folio-main'
+586a0ffd Updated prettier (#3420)
+48e02811 Fixed prettier complaints
+90376051 Changed maintainers urls to https
+0e994ae3 Auto update markdown TOC
+283126bf Changed maintainers urls to https
+3b7b80eb Fixed some url check issues
+c7df3c11 Created projects 7, 8, and 9 in language dirs
+da67a234 Fixed issue with collections links
+a22aeeca Auto update markdown TOC
+c9b1b93a Updated pt-br readme files
+34894231 Created UPGRADING readme for pt-br
+87a7863b Auto update markdown TOC
+a7b27a04 Started translating README files to pt-br
+7ae3f681 Added books to pt-br dropdown
+710ec32f Fixed issue with cv_pdf social
+6ab3ea5d Updated agents instructions to support multilingual features
+79b0ef3e Updated CodeWiki and DeepWiki links to multi language repo
+e076bd5e Merge branch 'al-folio-main'
+b4d1f412 Added new line to README badges
+b19d1e93 Auto update markdown TOC
+e5082443 Update deps (#3418)
+1a45b5ba Add auto-orient flag to Imagemagick config (#3409)
+f0f262cf Add link to personal GitHub page on academics section in README (#3400)
+81c0556c Added support for default categories and tags for external posts (#3417)
+71640bbd Fixed 1 px first load issue (#3416)
+f521c0ae Fix: bibliography month persists to subsequent entries without month (#3391)
+6023fd80 Fix bib / code layout bug (#3387)
+4589f3ce Auto update markdown TOC
+f4426aa1 Added support for helping agents (#3379)
+e07d23b7 Updated dependencies
+25f7462c Update Google Scholar citations
+eff0c8c8 Update Google Scholar citations
+7aaf5689 Add personal webpage link to user community section in README (#3382)
+a66d975b Refactor docker-slim workflow configuration
+4250d156 Auto update markdown TOC
+7549180b Update dependencies (#3377)
+5c207c77 Avoid crashing when feedjira fails to parse xml feed (#3376)
+07a7af3d Refactor TOC conditionals (#3358)
+cef2ac09 Add link to personal academic website in README (#3364)
+25b52474 Update README.md (#3360)
+339a81fc Fix quoteblk color in dark mode (#3357)
+fa93875e  Fix MathJax long-formula overflow on X-axis in mobile  and small screens view. (#3302)
+33017e79 Add cv PDF link to social icons (#3240)
+8086c57b fix code flow overflow and add responsive design fix (#3229)
+4086784b add: arXiv social (#3191)
+723bc9f0 Clarify enabling of mermaid feature (#3148)
+fe1303ab Auto update markdown TOC
+1f349ffd Adapt mechanism for citiation count (#3177)
+c38d33b5 Background color of active dropdown menu items in navbar (#3250)
+dc33b748 chore: add a link to the stars badge (#3307)
+b72ceeed changed wrong loop variable (#3342)
+d7e1feb4 Auto update markdown TOC
+cfbc6886 Update CUSTOMIZE.md (#3340)
+729f136f Add offset option to scrollspy initialization (#3354)
+0d07f7ca Bump nokogiri from 1.18.8 to 1.18.9 (#3356)
+2a7e2a09 Add Al-Folio Academics Star - Siddharth Sule (#3337)
+332fbeb2 Bump lycheeverse/lychee-action from 1.9.0 to 2.0.2 in /.github/workflows (#3285)
+d92eb99f Bump rexml from 3.4.1 to 3.4.2 (#3306)
+db2a1d1b Socials icons: Check if rss_icon: false (#3282)
+859a245f Revert duplicate Google Analytics (#3287)
+cf8e02f9 Make Giscus light and dark themes configurable via _config.yml (#3270)
+109d3944 Upadate README.md to add my personal website (#3276)
+a007f789 Fix Prettier Feature DevContainer Link (#3196)
+11e9a4b6 README: add freifrauvonbleifrei's hp (#3265)
+829e7b71 Add Academia.edu support to social media integrations (#3157)
+a7f486fa keep dark mode inside the (site.enable_darkmode) conditional (#3233)
+9cda66f5 Update README.md with my personal website (#3245)
+f05d31bf Update README.md (#3234)
+47b982bd Add sidenote examples, related posts and giscus to distill posts (#3103)
+2247ec3b Fix socials (#3241)
+f9d8ab34 Update CONTRIBUTING.md with adding social media info
+f1406c47 Fix last row line number overflow issue in diff2html block (#3199)
+72eb0a34 Add HAL id to socials (#3206)
+2b97d463 updated README.md by adding  bullab page to labss (#3183)
+ae741aaa Fix toc issue (#3192)
+d7ba3c20 Update README.md (#3186)
+2dc1c4bd Update README.md (#3185)
+bc0404c2 Added my academic website to the community pages. (#3184)
+693c3bea Update docker image version in docker-compose.yml
+169d0c2e Update INSTALL.md docker version
+e82520e4 Updated libraries versions (#3179)
+5a5bb9e5 Auto update markdown TOC
+71969cce Fix: Improve footnote and citation colors in Distill posts (#3172)
+dad01a8a Bump nokogiri from 1.18.5 to 1.18.8 (#3149)
+d6477e88 Remove unnecessary rss_icon line from _config.yml (#3154)
+659e1a39 Update README.md (#3162)
+ac99061b Auto update markdown TOC
+4f7da1d3 Removed link from header in FAQ.md
+8a70f13c Auto update markdown TOC
+55510343 Update INSTALL.md layout
+a864cdca Update CUSTOMIZE.md layout
+c98d596e Auto update markdown TOC
+5878b5c7 Update FAQ.md layout
+58f4e02a Changed order of params for gh-md-toc
+78fdace2 Update update-tocs.yml
+c5bdfebd Fixed tocs (#3133)
+e4d5b06d Using fork of gh-md-toc
+b963b565 Auto update markdown TOC
+cc140ddc Update FAQ.md
+dfe4091c Auto update markdown TOC
+91a2b63c Created GitHub action to update TOCs (#3132)
+15fad29f added my homepage (Dian Jiao). (#3128)
+d730fb3c Added my website to the community pages. (#3119)
+4f36e0ed Fixed prettier complaints
+e2b85625 Only create some scripts from _scripts to main language
+81bd1309 Changed broken-links to only run in the main repo
+ee0c4895 Added pt-br readmes to exclude
+f34f0134 Merge branch 'al-folio-main'
+301132d2 Changed broken-links action to only run on main repo (#3118)
+351dcb98 Fixed liquid variables in some js files (#3117)
+9767d8c5 Fixed some links in README
+041b8056 Fixed prettier issues
+6023da32 Created FAQ and INSTALL pt-br versions
+bb67ac3e Added CUSTOMIZE and CONTRIBUTING pt-br version
+2e407e79 Create pt-br README
+1a34cf60 Update badges
+fea4b7c5 Fix "comma and and" before last author in publication list (#3107)
+9f2ab113 Added missing plotly post
+f19fd82e Moved new posts to their correct location
+8728cde7 Merge branch 'al-folio-main'
+f68e88c5 Added support for plotly js (#3097)
+d5798f46 Fixed spacing between copyright and year in footer
+a7385879 Fix INSTALL.md
+159ef176 Merge branch 'al-folio-main'
+81b3c60f Updated dependencies (#3091)
+a7b1f8c1 Re-add ability to exclude posts from search (#3089)
+485e22fd Add link to a new academic's website (#3075)
+3abdf17c Update CUSTOMIZE.md url
+663ab557 Merge branch 'al-folio-main'
+93aeb6d6 Update INSTALL.md (#3074)
+1dc670b0 Fix typo in CUSTOMIZE.md (#3070)
+66530f74 Merge branch 'al-folio-main'
+9e837d6d Bump json from 2.10.1 to 2.10.2 (#3066)
+6d97ca3f Fixed prettier complaints
+b1cba5a2 Fixed references to archive.liquid in CUSTOMIZE and UPGRADING
+22aee285 Updated dependencies
+aecc5d65 Fixed archive layout and books collection
+5b752110 Merge branch 'al-folio-main'
+afc34968 Fixed docs (#3059)
+802eda10 Merge branch 'al-folio-main'
+82b2ad38 Fix scrollbar color (#3058)
+d53297f2 Fix zoom in bibliography images (#3057)
+74beacb2 Refactor footer content (#3041)
+6625f239 Digital Bookshelf V2 (#2866)
+14aaf472 Re-Enable exclusions of jekyll minifier (#3038)
+6b00edc4 Fix typo in -> on (#3029)
+977872f0 Bump nokogiri from 1.18.1 to 1.18.3 (#3026)
+9272d231 make abbr color inside bibliography a variable (#3017)
+d41233f4 Merge branch 'al-folio-main'
+854598e1 Moved comment in repo.liquid
+cbe03ec3 Moved comment in repo_user.liquid
+7719863e fix language-not-found issues on repo page with simplified and traditional Chinese (#3015)
+10d007a9 Allows for standard Jekyll code highlighting with distill template (#3002)
+552925be Updated CUSTOMIZE
+c96b72f9 Merge branch 'al-folio-main'
+e3f029dc Added sass changes to trigger deploy action
+beeff21e Updated scripts for correctly using gtag. (#2962)
+d45f27a0 Merge branch 'al-folio-main'
+caf99761 Add link to set workflow permissions
+16edfe9c Add my website to readme under academics--alexiglad.github.io (#2987)
+0b3f19df Moved specific information from config to about (#2985)
+4f28b9b9 fix: typo in file name gitattributes (#2972)
+b50db2e7 fixed indexing of external posts (#2983)
+15fc779e Fix external link svg size in related posts
+8266accd Fix related external posts (#2980)
+d3402d03 Bump license year to 2025
+cb0926f8 Updated socials info in CUSTOMIZE.md
+a685d623 Fixed changing language from search
+1537d513 Fixed search translations
+7eb9cdd2 Fixed missing french translations
+8e961a11 Merge branch 'al-folio-main'
+c5d0e92d Update docker version on  INSTALL.md
+8d1ca80b Update docker version on docker-compose.yml
+82611b4b Updated dependencies for next release (#2958)
+da320345 Fix issue causing no color inversion when rendering equations (#2956)
+4896e3aa Fixed references to pages in CUSTOMIZE
+f5b8b56e Fixed merge issues in cv.liquid
+bed71772 Merge branch 'al-folio-main'
+c2cc2148 Fix resume custom reference link bug (#2941)
+70c5ccf9 Fixed prettier complaints
+36e0bfda Fixed prettier complaints
+a3fbf89e Merge branch 'al-folio-main'
+67c8b4c5 Added fr-ca language to config
+c7d1f30b Add French dictionary and missing translations (#40)
+9ca1d52c Added another option to remove content
+f233233e Remove internal copy of jekyll-terser (#2945)
+1da2e64e Updated FAQ.md. (#2937)
+c4a9f172 Howto remove pages (#2933)
+4f405ba9 Fix Line Ending Issues for Shell Scripts in Docker for Windows 10 (#2932)
+a3396b6c Updated ffi, changed base docker image, added observer and ostruct (#2931)
+bd58936f Update README.md - remove my website link (#2926)
+3795438a Updated dependencies (#2925)
+1c27220f Security fixes for download-3rd-party.rb
+8d544860 Security fixes for download-3rd-party
+e9916adb Create codeql.yml
+c91c0ee5 Revert padding from #2617 for CV tables (#2920)
+2bcfcccc Fixed repo version on INSTALL.md
+af3929c2 Merge branch 'al-folio-main'
+807629dd Update docker-compose.yml image version
+ae7b3c92 Update INSTALL.md repo version
+1a6b566a Merge branch 'al-folio-main'
+cecd16d2 Added missing newsletter components (#2913)
+91ff4a68 Merge branch 'al-folio-main'
+0dbab217 Update CUSTOMIZE.md
+6e1226d5 Update INSTALL.md
+05eb46ac Replaced jekyll-minifier that uses uglifier by terser (#2571)
+ec7d7c34 explicitly install imagemagick to support ubuntu-latest (>=24.04) in Github actions (#2906)
+cc0cb3c4 Fixed #2903
+736bb0d8 Fixed docker-compose.yml image version
+158caf09 Fixed bugs in socials search
+e9401d26 Merge branch 'al-folio-main'
+c5101bea Fixed socials in search (#2895)
+4421ce1c Merge branch 'al-folio-main'
+3cdb9e49 Fixed missing updated references to socials (#2894)
+00249b93 Update social.liquid: ensure social[1] is used (#2891)
+5bc4703a Fix google scholar citations (#2893)
+b968de85 Update bib.liquid: google scholar citation count (#2892)
+97ee5ea9 Merge branch 'al-folio-main'
+ae4412ef Updated dependencies (#2887)
+8d20dc5e Update docker-compose.yml image version
+a9da28e2 Renamed `repo-img-` to `only-` to allow setting images for only one theme (#2886)
+e452f1a6 Moved socials config to `_data/socials.yml` (#2885)
+84cf4aff Update Font Awesome and Tabler Icons (#2884)
+f23e35e0 New image components (image galleries) (#2877)
+8121ad02 Fix apostrophe in news title for search (#2879)
+957dc2c3 Add features to distill template (#2840)
+a340b603 Update the INSTALL.md file to include steps for deploying al-folio on Netlify. (#2798)
+c5d484ec Support for Resume/CV Links (#2826)
+b37758a5 Add .lycheeignore file with linkedin to stop error on workflow Linkcheck (#2868)
+8babc442 Fix to display references in order of citation (#2855)
+a09f15fd Fix prettier complaints
+dc8770f3 Merge branch 'al-folio-main'
+7c22e480 Fixed bug in header
+b0d70d4d Bump rexml from 3.3.8 to 3.3.9 (#2814)
+1c1632c8 Page permalink can be an outside url (#2863)
+f5a086ab Removed older and newer translations
+6ed692a0 Merge branch 'al-folio-main'
+c170eaf2 Bluesky URL prefix should not be appended (#2856)
+9674cfc8 [FIX] Blog Page Navigation (#2841) (#2846)
+b7ee2668 Support for openpanel.dev for analytics (#2822)
+587f03a2 fix: Misfunction of wechat_qr in Social Integration (#2831)
+3d8b29c6 Update README.md (#2819)
+4a685fb3 Update GitHub release version
+91ac7ec8 Merge branch 'al-folio-main'
+d2441878 Added my academic profile website to the README.md (#2815)
+47ed26fb Update docker-compose.yml to use tag
+89f7ca7b Update docker-compose.yml
+75b3f9f1 Update version (#2800)
+e64e2f8e Merge branch 'al-folio-main'
+d1b38ee1 Removed hidden char from figure.liquid (#2804)
+752a0000 Fixed wrong reference in custom-blockquotes post
+d6164f14 Merge branch 'al-folio-main'
+eae72d87 Standardized spaces for liquid tags (#2802)
+a4849dd8 Merge branch 'al-folio-main'
+4184a06a Added commented code about docker permissions, organized Dockerfile (#2801)
+613be397 Fix docker compose issue (#2799)
+6a795aff Add Image Version to Docker-Compose to pull the relevant image (#2740)
+b3f19684 Fix .webp SrcSet Creation Filter (#2761)
+de2b3b87 Renamed all references to master branch to main (#2793)
+a88c9f11 Removed mini_racer dependency, updated dependencies and tabler-icons (#2791)
+6053d3f7 Added setup-python step to build (#2792)
+533f2c4f Add my website to the "Academics" list (#2790)
+ab72cca4 Merge branch 'al-folio-main'
+0af4aecf Removed sync from template from INSTALL.md (#2781)
+edcb8533 Merge branch 'alshedivat:master' into main
+977a47cb Add DOI field button to bibliography (#2729)
+332a6dfc Update README.md (#2768)
+7639ee82 update dockerfile to render jupyter notebook equations (#2758)
+587b27e4 Update README.md (#2771)
+13572dfb Adding a star-link for an academic website. (#2780)
+900941df Merge branch 'alshedivat:master' into main
+421bdf86 fix: do not included downloaded assets in jekyll-minifier (#2749)
+67eadd90 Merge branch 'alshedivat:master' into main
+b74b292c Update bug report with running with docker options
+c0d53e63 Change Run to use bundle exec instead of normal exec jekyll
+caddec2f feature: figure support url. (#2586)
+32f56517 Merge branch 'alshedivat:master' into main
+c20074c8 Fix `entry_point.sh` docker backward compatibility problem (#2728)
+16e390cd Merge branch 'alshedivat:master' into main
+6265269b Update entry_point.sh (#2707)
+3e2eef02 Updated dependencies
+cd26ae62 Merge branch 'al-folio-main'
+bdf4ce32 Updated dependencies (#2715)
+411fae5a Bump webrick from 1.8.1 to 1.8.2 (#32)
+4ab7fc83 Merge branch 'alshedivat:master' into main
+fdaed74d Fixed bug when search result is inside description of external post (#2710)
+daa402f7 Update README.md (#2708)
+d33213e0 Bump google-protobuf from 4.27.3 to 4.27.5 (#2709)
+71eda96a Merge branch 'al-folio-main'
+04654598 Fixed .webp src creation for svg and other files (#2698)
+8e9cf03e Support `_styles` in page layout as in post and distill (#2694)
+92dbc393 Added my portfolio website to README (#2695)
+8e1891af Merge branch 'al-folio-main'
+b30b3f4e Increased number of columns to 24 for contributors image
+66607c1f Fixed "All contributors not showing on README.md" (#2688)
+f0eb5875 Fix conditional rendering of tag and category section (#2678)
+b7e39b10 Merge branch 'al-folio-main'
+5ca14d52 Added schedule posts support for localized posts
+7203eb16 Update CUSTOMIZE.md scheduled info
+66320740 Update schedule-posts.txt
+07692b66 Merge branch 'al-folio-main'
+44437699 Add my webpage to community list (#2684)
+d50cdf6b Schedule Posts Workflow (#2672)
+97f78e5f Update about.md (#2679)
+93f64b68 Merge branch 'al-folio-main'
+cd3f4d6b Fixed bug when external posts title is composed of non-ascii chars
+6c6932f1 Removed inexistent input from lighthouse-badger.yml
+eaa7a904 Merge branch 'alshedivat:master' into main
+de4e89d1 Update README.md (#2661)
+fbad5083 Added gh-pages Formatter (#2649)
+debb1822 Bump rexml from 3.3.4 to 3.3.6 (#2654)
+905028a9 Merge branch 'alshedivat:master' into main
+ebf2fc9c Update INSTALL.md link to video tutorial
+cd59ca39 Added video tutorial to install instructions (#2653)
+9945080b Merge branch 'al-folio-main'
+c45c7675 Update INSTALL.md with running time of actions
+c753284f Update INSTALL.md
+c5c162cf Update INSTALL.md recommended approach
+56e8a3b5 Applied repositories update to localized version
+52b2dff2 Merge branch 'al-folio-main'
+9b6decce Fix no github_users titling in repositories.md (#2647)
+03f429f9 Update _config.yml to add a filtered bibtex keyword (#2648)
+4a147a48 Merge branch 'alshedivat:master' into main
+853adefc Adding own github-page to README.md (#2645)
+1e66e8c3 Update README.md (#2644)
+dfc7453e [Feature] InspireHEP social and citation count badge (#2638)
+d55215a3 Merge branch 'alshedivat:master' into main
+3ff7579a added personal website for Beryl Sui (#2628)
+bde496fc Updated pt-br tables post
+f337af5a Merge branch 'al-folio-main'
+04ab383c Fixed prettier complaints on FAQ.md
+5c5c81cd [Bug-fix] Make custom blockquote font coloring consistent (#2622)
+610f42bf Update Prettier information on FAQ.md
+3be24f6b Alon Kellner portfolio link (#2627)
+1d4ce5a3 [bug-fix] Add padding to default markdown table cells (#2617)
+e46a7941 Updated dependencies (#2613)
+a3635c4f Removed github metadata posts
+5d61348e Merge branch 'al-folio-main'
+e14f5723 Added customizing css to CUSTOMIZE.md (#2602)
+e7da32f0 Lighthouse Badger token as secret (#2589)
+b5247d9e Remove github-metadata post (#2599)
+965eb793 Merge branch 'alshedivat:master' into main
+2db33ea9 Add user link to user community (#2592)
+c799e2bf Merge branch 'alshedivat:master' into main
+fc15dd6c Fixed prettier complaints on FAQ
+2ebbb801 Expliciting how to handle wrong theme for site in FAQ.md
+71006683 Added example of site with css and js not loaded
+c3ac1729 Improved FAQ readability
+5a20e012 Merge branch 'alshedivat:master' into main
+015a4778 Fix typo in entry associated to award button (#2583)
+753abd18 Merge branch 'al-folio-main'
+75ab2823 Updated dependencies (#2582)
+d9ea1b3d Updated to font awesome 6.6.0 (#2581)
+2a50a963 Merge branch 'alshedivat:master' into main
+aef552f0 Remove 'version's as it's obsolete; Update docker-compose files (#2574)
+710b6b5b Merge branch 'al-folio-main'
+8ffd34c9 Fixed error in bibsearch.js
+49ada3ea Update collections permalinks in _config.yml
+83e8a64d fix: search_enabled -> bib_search (#2560)
+c4f20b88 Make publication badges always visible (#2565)
+667083d8 Merge branch 'alshedivat:master' into main
+d904c521 Fixed search for multiline news
+ec295166 Merge branch 'al-folio-main'
+607ff6af Fixed spacing between {{}} in bib.liquid
+2543f009 Merge branch 'al-folio-main'
+d019fc0f Fixed mathjax hash
+e7d5c2f3 Fixed title search and truncating if larger than 13 words (#2561)
+cb0375c1 Aggregated search code inside search.liquid (#2558)
+0e0ee215 Fix search in Distill style post (#2555)
+16cee9c7 Avoid broken links check for video blog post
+f8335998 Fix space before some bib commas (#2552)
+0a40a227 feat: simple filtering / searching on bibliography (#2523)
+92d67840 Merge branch 'al-folio-main'
+ad8104b4 Add linux x86-64 to Gemfile.lock (#2549)
+369f0b74 Update README.md
+1d67b48c Fixed prettier complaints
+591213a4 Added newsletter localization
+26c97e57 Merge branch 'al-folio-main'
+f4a6e184 Fix repo card heigth for different repo descriptions (#2525)
+fefa2470 Fix Altmetric badge not correctly set when Altmetric id is provided (#2522)
+cd020aff Update CUSTOMIZE.md for Newsletter support (#2521)
+8d82670f Changes to deploy-docker-tag.yml now trigger action
+acdc9ff5 Changes to deploy-image.yml now trigger action
+fb67d309 Changes to docker-slim.yml now trigger action
+1569966c Bib changes now trigger build action
+fbad870c Add example use of annotation and superscripts in bibtex (#2520)
+b723e7d9 Fixed docker-slim.yml issue
+0ac9e447 Added support for a newsletter (#2517)
+a25df791 Support superscripts in bibtex author names (#2512)
+b4b79936 Merge branch 'alshedivat:master' into main
+3b1c1084 fix: blog highlighted in nav for child pages (#2516)
+dc35803a Merge branch 'alshedivat:master' into main
+5d3d3ff6 Fixed external post symbol on search (#2515)
+f327bbb6 Merge branch 'alshedivat:master' into main
+ec3bff6b Support pirsch.io for analytics (#2513)
+31943439 Merge branch 'al-folio-main'
+20c3b087 Added SRaf.ir to README.md (#2510)
+be52a965 fix: remove 'index.html' in pagination (#2509)
+a433cdca Merge branch 'al-folio-main'
+1a7fddec Fix code blocks not changing to plots and others (#2497)
+b861b015 Fixed issue with vega
+a04e2065 Update README.md (#2493)
+1bee4d15 [Tweak] Add bottom padding to project card (#2492)
+180ae316 [Tweak] Update "search filters" displayed on the blog's front page (#2480)
+87fac579 Merge branch 'alshedivat:master' into main
+5beffc31 Update README.md (#2479)
+87395009 Merge branch 'al-folio-main'
+b4f90ff4 Fixes external blog posts in search (#2470)
+afc56cc9 Feature: Dynamically sets the search shortcut key based on the user's platform (#2461)
+b35450e4 Update search.liquid (#2466)
+1ef1621b Bugfix: Collapse the navbar on mobile when the user selects search (#2462)
+4a2984a4 Fix: date pill position on CV (#2455)
+351eb127 Bugfix: Updates ninja keys text input color so it is always visible (#2463)
+c4040b7b Merge branch 'al-folio-main'
+d004837e Enable specifying explicit list of external posts to display (#2059)
+12745817 Delete extra space ; Update post.liquid (#2452)
+eaec1d1d Merge branch 'al-folio-main'
+50a2f674 Add back-to-top to distill layout (#2451)
+c0763fff Fixed news titles in search (#2450)
+da448650 Update docker-slim.yml (#2449)
+c7265a9b Delete extra space ; Update blog.md (#2444)
+e17c8a26 Fixed news collection name in search
+24efe24d Fixed news titles in search
+c2f33731 Merge branch 'al-folio-main'
+e8a2a40a feat: search.liquid over all collections (#2447)
+96c4e613 Add NEU ESL to README.md (#2441)
+03f3636e Translated search modal footer
+1ccacda5 Localized search (#27)
+8a6ad2d5 Moved search data inside search.liquid (#2439)
+9e59ab8d Fix: Add back-to-top button (#2433)
+92cebc9b Added support for search (#2415)
+eef62a37 Updated tikzjax hash
+3b13b957 Merge branch 'al-folio-main'
+b80a694b feat: add back-to-top button (#2427)
+0b7ee411 Added netlify status to README
+314ae2a7 Merge branch 'alshedivat:master' into main
+8fe4bee5 Remove lsi command (#2428)
+d2853f28 Added lsi option to _config.yml
+5e49ece2 Added verification to check if third_party_libraries key exists in _config.yml
+066fc099 Bump rexml from 3.2.6 to 3.2.8 (#2423)
+e8f224c1 Changing Gemfile now triggers page build
+560d044a Moved new posts to correct locations
+8bab97da Adding requirements.txt for testing on Netlify
+9f585cd8 Merge branch 'alshedivat:master' into main
+e954d772 Fix offline leaflet (#2420)
+70e14701 Merge branch 'alshedivat:master' into main
+0a80d5ed Bump nokogiri from 1.16.4 to 1.16.5 (#2417)
+97946818 Merge branch 'alshedivat:master' into main
+36bc24f7 Fixed link to last FAQ question
+a18142d6 Merge branch 'alshedivat:master' into main
+a299c95e Fixed projects page layout
+7f687857 Fixed typo in pagination.liquid
+da9aaf90 Merge branch 'alshedivat:master' into main
+37dbff08 Added prettier link to FAQ
+aac6a163 Merge branch 'alshedivat:master' into main
+32deb389 Added information about GitHub workflows to FAQ (#2404)
+caacda7e Updated Gemfile.lock
+d22f3c5c Merge branch 'al-folio-main'
+1d07bc75 Updated dependencies (#2402)
+b22416cc Merge branch 'al-folio-main'
+134dc884 Fix docker image building (#2400)
+ad2a793a Fixed card padding bottom
+0e54bf64 Fix dependency (#2396)
+cb0db65d Updated docker slim action
+f88dd704 Add Gemfile.lock (#2390)
+3e486157 Merge branch 'alshedivat:master' into main
+a17cda43 Added website link to README, Academics (#2388)
+b6ba3358 Merge branch 'al-folio-main'
+1c416dba Added support for jekyll-tabs (#2380)
+7271917c Merge branch 'al-folio-main'
+ba53f899 Added support for Google Typograms (#2379)
+04bf52e1 fix(style): remove whitespace before comma (#2378)
+f283cad8 Translated post citation
+641e27f3 Merge branch 'al-folio-main'
+37d75d03 Added post citation (#2377)
+86a6b032 Fix bib preview mobile (#2359)
+85deecb4 Merge branch 'al-folio-main'
+492c5096 Set user agent for lychee (#2368)
+df1d99a4 Fixed prettier complaints
+b7f9b396 Changed how date format is created
+c5111bdc Added last updated date to vega lite pt-br post
+b13d10ab Added new post strings, sorted strings
+940d9277 Merge branch 'al-folio-main'
+a29e24a4 add last updated date to posts (#2341)
+b119b96d Reproduced changes to en-us pages to pt-br ones
+67343c62 Merge branch 'al-folio-main'
+06ca08cb Fixed security issue with download 3rd party plugin (#2365)
+b315315f Fixed security issue with download 3rd party plugin (#2364)
+0aa38213 Feat reworked project layout (closing #2246) (#2357)
+9e5f64d5 Merge branch 'al-folio-main'
+c4c06650 Feat bib preview (closes #1162) (#2352)
+154179bc  Update work.liquid to show the location of work experience under cv … (#2349)
+2910cd3e Update CONTRIBUTING.md
+c812fda8 Fixed reference to commit in CONTRIBUTING.md
+1613560a Update CONTRIBUTING.md with prettier information
+065cf08b Fix docker compose command using the slimmed docker image (#2351)
+c2799777 Merge branch 'alshedivat:master' into main
+9ab73913 adding null check to external-posts.rb to avoid parsing failure (#2347)
+0d9ad6b6 Merge branch 'al-folio-main'
+363f277a Update work.liquid to show the location of work experience under cv page (#2298)
+b20b41d9 New website using al-folio added to README.md (#2345)
+09006281 feat: vscode devcontainer (#2335)
+d0d6002b feat: make video embeddings optional. (#2337)
+a03b2e78 feat: make video embeddings optional. (#2337)
+96e6159d Moved new post to language dir
+6840f1a7 Merge branch 'al-folio-main'
+d6a08c8c Added `pseudocode.js` support (#2344)
+dd51e7ea Merge branch 'al-folio-main'
+dba48c2b Update FAQ.md with layout error information
+0f46f808 feat: bib -> acceptance, acceptance_rate, location, cve_score (#2325)
+0b6135e0 Use JEKYLL_ENV=development in Docker Compose setup (#2336)
+90444e86 Updated links in UPGRADING.md
+305dcd13 Merge branch 'al-folio-main'
+08d562a1 Offline mode (closes #1181) (#2312)
+876d287c Feature: added "award" for publications (#2324)
+1e00eb05 feat: added IEEE and ACM social (#2321)
+83a8f488 Update README.md with deployment word
+02eee8da Remove bootstrap-table from archive tables (#2306)
+252cf61b Update docker-compose-slim.yml
+67fe0de6 Merge branch 'alshedivat:master' into main
+00fdc13d Added Bluesky social (#2314)
+8b90b023 Added post about why write a blog
+5e93407d Merge branch 'al-folio-main'
+096310ef Added links to jekyll docs in CUSTOMIZE.md
+b81d4a36 Added permalink info to CUSTOMIZE.md
+9ac08fe6 Update FAQ.md with sqrt error message
+7f4e3f62 Add academic community example (#2300)
+d086cf2a Merge branch 'al-folio-main'
+088ba7e5 add flickr to social integration (#2286)
+6d3e6ef2 Merge branch 'al-folio-main'
+a69f374c Add academic community example (#2289)
+0e1a1e32 Update INSTALL.md (#2285)
+d8563526 fix links (#2278)
+7cf3696c Merge branch 'al-folio-main'
+c788a302 Added "follow system" option to theme toggle (#2261)
+6cf110a6 Update INSTALL.md
+d104b287 Make clear that you should not touch `gh-pages` branch
+eddef2e4 Make clear that you should not touch `gh-pages` branch
+bab1a65a Merge branch 'al-folio-main'
+4dceac70 Delete assets/img/pagespeed.svg
+e10c45cd Delete assets/img/pagespeed.svg
+1c70e33e Update CUSTOMIZE.md img path
+a37de22b Merge branch 'al-folio-main'
+95280482 Fixed image paths in readme
+5ba4173d Removed *.yml from _config.yml
+9a4a9257 Merge branch 'al-folio-main'
+6e1bc787 Exclude more files from site (#2257)
+ed2ac965 Delete reports directory
+85cf807e Merge branch 'al-folio-main'
+a3a02d92 Add option for local HTML files (#2245)
+7bd5236e Merge branch 'al-folio-main'
+21bc463b Replace `polyfill.io` (#2241)
+ca130ff6 Merge branch 'al-folio-main'
+82e73254 Correct config variable for enabling latest_posts on about page (#2243)
+324d21d8 Merge branch 'al-folio-main'
+4dd3d6f4 Updated information about lsi
+8cacee6f Update INSTALL.md (#2237)
+1802f792 Fixed reading time in pt-br
+c4617e5f Fixed reading time in pt-br
+901582b7 Update release.yml with breaking changes
+84540610 Merge branch 'al-folio-main'
+c1f16847 Add functionality to open external links in jupyter notebooks in new tab (#2233)
+bb5219b9 Merge branch 'al-folio-main'
+70ad4ceb Emphasized more how the name of the repository must be
+3605b5a4 Updated deploy and broken-links workflows
+5bb365a8 Fixed news and projects localized urls
+799d10f4 Lighthouse-Badger[bot]: Results Added
+1d8909b7 Fixed site description metadata
+68d7483f Lighthouse-Badger[bot]: Results Added
+6858f91c Disabled parallel localization
+bee6a863 Changed `jekyll-multiple-languages-plugin` for `polyglot` (#18)
+8f1528a4 Fixed math post in pt-br
+94ce2399 Merge branch 'al-folio-main'
+b607e580 Fixed broken latex in _posts/2015-10-20-math.md (#2219)
+9f4d6d26 Fixed coauthors examples in CUSTOMIZE
+72104963 Fixed language en repository information
+e817a79a Lighthouse-Badger[bot]: Results Added
+cc2af005 Lighthouse-Badger[bot]: Results Added
+4caface9 Added loading eager to some images in projects and posts
+3fb1d53e Merge branch 'al-folio-main'
+e430a894 Lighthouse-Badger[bot]: Results Added
+6e215a1c Lighthouse fixes (#2199)
+b316653f Lighthouse-Badger[bot]: Results Added
+79f192aa Lighthouse-Badger[bot]: Results Added
+a56913ea Merge branch 'al-folio-main'
+0b84a123 Added/Improved Formatting for Checkboxes (#2191)
+dc552d6d Merge branch 'al-folio-main'
+5df7a6aa Changed lazy loading in _config.yml
+f067edc6 Changed lazy loading in figure.liquid
+40b22ff2 fix author spacing (#2197)
+2a056fe6 Implement Default Lazy Loading for Images with Configurable Option (#2183)
+26fad311 remove the space in names of "site" (#2188)
+80df9bce Fixed news title translation
+436e6099 Fixed dropdown width
+e66422c4 Merge branch 'al-folio-main'
+0f0feb17 Fixed related publications appearing in toc (#2196)
+9794c625 Add academic community example (#2195)
+b4e42328 Fixed bug when number has , on scholar citations
+a0bcaaf1 Added support for google scholar citations (#2193)
+16bd1405 Merge branch 'al-folio-main'
+007b5042 Update README.md (#2187)
+ef647a6e Update README.md (#2182)
+c2451368 Merge branch 'al-folio-main'
+7c2e1c2c Fix Image Dimension Styles for Better Responsiveness (#2166)
+1ce58650 center footer text by default (#2165)
+e76d5ce9 Merge branch 'al-folio-main'
+4cf657eb Added jekyll-diagrams error to FAQ (#2162)
+c39df67d Updated FAQ with old repository information (#2161)
+7b8ccd18 Fixed prettier complaints
+991c2b58 Fixed bug in post with redirect
+bdece4f1 Merge branch 'al-folio-main'
+ae0c1a62 improved redirect mapping (#2157)
+943ec7c4 Added country image screenshot in README and CUSTOMIZE
+eb8e09a7 Fixed missing change in broken-links workflow
+d8bd118c Fixed prettier complaints
+eb762fbd Added support for countries flags instead of language initials
+b0f2b772 Added missing renamed _data dir
+feb186b4 Added giscus translation
+8a57d675 Renamed en to en-us in all references
+ccac4c36 Merge branch 'al-folio-main'
+18f7307e Fixed axe workflow (#2149)
+85222336 Adding link to chromium version endpoint
+fe4315ed Changed chromium version used in axe
+efdf264b Printing chromium version
+228f5652 Testing force chromium version for chromedriver
+663b829f Testing chrome installation for axe action
+390cd4b7 Testing chrome installation for axe action
+f8a372d3 Fixed axe workflow
+d6aacc50 Install chrome before running axe
+6ce78189 Removed content write permission from broken-links-site workflow
+b6d8a69b Removed content write permission from axe workflow
+e977319d Added link to jekyll docs about post file naming
+65b2d009 Merge branch 'al-folio-main'
+fa5b411b Adding display swap to Google Fonts
+4931e716 Lighthouse-Badger[bot]: Results Added
+f3d3efa0 Lighthouse-Badger[bot]: Results Added
+87907296 Merge branch 'al-folio-main'
+53379841 Removing lighthouse_results from broken-links trigger
+2356aea6 Removing lighthouse results from deploy trigger
+a7d36328 Lighthouse-Badger[bot]: Results Added
+3c80fdb6 Lighthouse-Badger[bot]: Results Added
+9a2d1cc0 Fixed merge bugs
+d221de64 Fixed pt-br equivalent posts
+b9c12d7c Added pt-br new posts
+d345811f Merge branch 'al-folio-main'
+1935a2ac Avoid deploying site when changes are in README files
+43a3dd9e Update FAQ.md with Prettier info
+06bc3676 Move libs versions to config (#2139)
+ef847825 Support for diff2html (#2133)
+8e93db5b Advanced image viewers (#2132)
+2492ab38 Workflow fix (#2136)
+f69d99a2 Closing #2122 (#2135)
+53fb0116 Added leaflet reference to 2024-01-26-geojson-map.md
+f6bb6b5d Vega lite support (#2131)
+1492cb9c GeoJSON support (#2130)
+4f6fe1a2 Added Echarts support (#2129)
+3ec0ff4a Added integrity check to mermaid.js
+a7d6b37d Added support for Chart.js (#2126)
+8eabb50a Fixed prettier complaints
+fb34d7b5 Lighthouse-Badger[bot]: Results Added
+17c045a6 Fixed bug in lighthouse action
+1d84621f Lighthouse-Badger[bot]: Results Added
+3b6aeec6 Merge branch 'al-folio-main'
+7638547a Updated checkout step in lighthouse-badger.yml
+006fdf9c Updated to use lighthouse action from al-folio
+8df1310f Merge branch 'al-folio-main'
+479bcc97 Merge branch 'al-folio-main'
+0c082372 Fixed urls in 1_bug_report.yml
+c99a453a Fixed urls in 2_feature_request.yml
+7d861cbd Fixed url in config.yml
+fc238601 Updated links in issue template config.yml
+6fcc2833 Updated links in 2_feature_request.yml
+2fa8141f Updated links in 1_bug_report.yml
+5a6356eb Removed al-folio template lighthouse results
+1ada286b Merge branch 'al-folio-main'
+b0b19a12 Removed 0 from bug report
+ec9571a8 Improved issues templates (#2110)
+8dd678cd Added lighthouse_results to .prettierignore
+10507a88 Added anchor to category sections (#2006)
+25eac655 Fixed lighthouse html viewer links
+05100313 Lighthouse-Badger[bot]: Results Added
+b83a0e38 Added Lighthouse test GitHub action (#2084)
+1e8f9f24 Finished prettier on PR code
+435ddf97 Updated prettier workflows
+b2ee83a2 Updated prettier comment on pr
+fe12d21f Changed to use read-file-action
+d3663a4a Updated actions versions on lighthouse action
+2c3893c2 Fixed artifacts paths on prettier-comment-on-pr
+4f34c140 Testing new prettier on PR
+db0a92b8 Moved prettier comment on PR to its own action (#2114)
+4b4a7964 Merge branch 'al-folio-main'
+bbaae0af Fixed prettier actions (#2113)
+84dff576 Merge branch 'al-folio-main'
+27d2fa09 Changed how prettier comments on PR works (#2112)
+7ed8f49e Update prettier-on-pr.yml permissions
+8af6b73f Prettier check now generates a diff comment on PR (#2085)
+39272006 Added diff tools to INSTALL.md
+65c5c8a0 Added acknowledge section to feature_request.md
+30f7ab0f Added one more researcher using al-folio (#2105)
+04624b4e Merge branch 'al-folio-main'
+711af76a Fixed dark mode not working after purgecss
+6477dfeb Added lighthouse action and its results to be ignored by broken-links action
+db204a6b Added lighthouse_results to ignore on build
+4b290ce3 Merge branch 'al-folio-main'
+bbbea367 Replaced template.v2.js
+2a1cae85 Fixed prettier complaints
+d8b77fd0 Merge branch 'al-folio-main'
+7c617d80 Update INSTALL.md (#2091)
+67000003 Downgrade ruby version (#2098)
+04f7b041 Changed conditions of running GitHub actions (#2082)
