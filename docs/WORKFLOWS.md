@@ -17,6 +17,7 @@ The repository uses several GitHub Actions workflows to maintain code quality, a
 **File**: `.github/workflows/axe.yml`
 
 **When it runs**:
+
 - On every push to `main` or `master` branches
 - On every pull request to `main` or `master` branches
 - Manually via workflow_dispatch
@@ -32,13 +33,13 @@ Runs axe-core accessibility tests against the deployed website to ensure WCAG 2.
 
 ### Common violations and fixes
 
-| Violation | Description | Fix |
-|-----------|-------------|-----|
-| `color-contrast` | Text contrast too low | Adjust text/background colors to meet WCAG AA standards (4.5:1 ratio) |
-| `image-alt` | Images missing alt text | Add descriptive `alt` attributes to all `<img>` tags |
-| `label` | Form inputs missing labels | Add `<label>` elements or `aria-label` attributes |
-| `link-name` | Links missing accessible names | Ensure links have descriptive text (not just icons) |
-| `heading-order` | Heading levels skipped | Use proper heading hierarchy (h1 → h2 → h3, don't skip levels) |
+| Violation        | Description                    | Fix                                                                   |
+| ---------------- | ------------------------------ | --------------------------------------------------------------------- |
+| `color-contrast` | Text contrast too low          | Adjust text/background colors to meet WCAG AA standards (4.5:1 ratio) |
+| `image-alt`      | Images missing alt text        | Add descriptive `alt` attributes to all `<img>` tags                  |
+| `label`          | Form inputs missing labels     | Add `<label>` elements or `aria-label` attributes                     |
+| `link-name`      | Links missing accessible names | Ensure links have descriptive text (not just icons)                   |
+| `heading-order`  | Heading levels skipped         | Use proper heading hierarchy (h1 → h2 → h3, don't skip levels)        |
 
 ### Manual testing
 
@@ -75,6 +76,7 @@ If you need to disable accessibility checks temporarily (not recommended):
 **File**: `.github/workflows/prettier.yml`
 
 **When it runs**:
+
 - On every pull request
 - Comments on the PR if formatting issues are found
 
@@ -108,6 +110,7 @@ Review the PR comment for specific files and lines that need formatting changes.
 ### Prettier configuration
 
 Settings are in `.prettierrc`:
+
 ```json
 {
   "overrides": [
@@ -124,6 +127,7 @@ Settings are in `.prettierrc`:
 ### Ignoring files
 
 To exclude files from Prettier checking, add them to `.prettierignore`:
+
 ```
 _site/
 .jekyll-cache/
@@ -138,6 +142,7 @@ vendor/
 **File**: `.github/workflows/codeql.yml`
 
 **When it runs**:
+
 - On every push to `main` or `master`
 - On every pull request
 - On a schedule (weekly)
@@ -158,13 +163,13 @@ Analyzes code for security vulnerabilities using GitHub's CodeQL engine. Scans J
 
 ### Common security issues
 
-| Alert Type | Description | Fix |
-|------------|-------------|-----|
-| **Cross-site scripting (XSS)** | User input rendered without sanitization | Use Liquid's `escape` filter or `{{ var \| escape }}` |
-| **Path traversal** | File paths constructed from user input | Validate and sanitize file paths, use allowlists |
-| **SQL injection** | SQL queries with unsanitized input | Use parameterized queries (not applicable for Jekyll) |
-| **Command injection** | Shell commands with user input | Avoid `system()` calls with user input, validate strictly |
-| **Sensitive data exposure** | API keys or credentials in code | Move to environment variables, never commit secrets |
+| Alert Type                     | Description                              | Fix                                                       |
+| ------------------------------ | ---------------------------------------- | --------------------------------------------------------- |
+| **Cross-site scripting (XSS)** | User input rendered without sanitization | Use Liquid's `escape` filter or `{{ var \| escape }}`     |
+| **Path traversal**             | File paths constructed from user input   | Validate and sanitize file paths, use allowlists          |
+| **SQL injection**              | SQL queries with unsanitized input       | Use parameterized queries (not applicable for Jekyll)     |
+| **Command injection**          | Shell commands with user input           | Avoid `system()` calls with user input, validate strictly |
+| **Sensitive data exposure**    | API keys or credentials in code          | Move to environment variables, never commit secrets       |
 
 ### Dismissing false positives
 
@@ -267,4 +272,4 @@ Generates performance, accessibility, and SEO badges using Lighthouse. Results a
 
 ---
 
-*Last updated: 2026-02-04 (Phase 2A implementation)*
+_Last updated: 2026-02-04 (Phase 2A implementation)_
