@@ -58,7 +58,7 @@ cv:
   present: Present
   profiles: Profiles
   projects: Projects
-  publications: 'Publications from Fukushima lab. †: co-first authors. *: (co-)corresponding authors.'
+  publications: "Publications from Fukushima lab. †: co-first authors. *: (co-)corresponding authors."
   publisher: Publisher
   reference: Reference
   references: References

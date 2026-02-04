@@ -17,7 +17,7 @@ twitter: # Your Twitter account. e.g., kfuku0502
 researchgate: # Your ResearchGate account. e.g., Kenji-Fukushima-3
 amazon_author: # Your Amazon Author URL. e.g., https://www.amazon.co.jp/stores/%E7%A6%8F%E5%B3%B6-%E5%81%A5%E5%85%90/author/B09S6DYLF1
 instagram: # Your Instagram account.
-facebook: # Your Facebook account. 
+facebook: # Your Facebook account.
 youtube: # Your YouTube account.
 researchmap: # Your ResearchMap account. e.g., kenji_fukushima
 tayo: # Your tayo URL. e.g., https://tayo.jp/users/XPAZgh46EfUd9vCMIGNz8isozCu1

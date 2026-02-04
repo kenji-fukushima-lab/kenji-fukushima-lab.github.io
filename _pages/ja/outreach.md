@@ -3,7 +3,7 @@ page_id: outreach
 layout: page
 permalink: /outreach/
 title: アウトリーチ
-description: 
+description:
 nav: true
 nav_order: 6
 ---
@@ -34,6 +34,7 @@ NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution
 <div style="margin-top: 60px;"></div>
 
 #### 解説動画
+
 ゆるふわ生物学チャンネルに呼んでいただいて、研究内容や食虫植物モチーフのポケモンについて解説した動画です。
 
 <div class="row mt-3">
@@ -57,4 +58,5 @@ NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution
 <div style="margin-top: 40px;"></div>
 
 #### その他
+
 [こちら](https://researchmap.jp/kenji_fukushima/social_contribution)に過去のアウトリーチ活動をリストしています。

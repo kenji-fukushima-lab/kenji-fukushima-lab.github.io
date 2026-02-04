@@ -9,6 +9,7 @@ related_publications: false
 ---
 
 #### Equipment
+
 Our laboratory is equipped for plant molecular biology experiments. We also have access to the [common equipment](https://www.nig.ac.jp/nig/ja/research-infrastructure-collaboration/common-equipment) available at NIG.
 
 <div style="display: flex; justify-content: space-around;">
@@ -23,6 +24,7 @@ Our laboratory is equipped for plant molecular biology experiments. We also have
 <div style="margin-top: 30px;"></div>
 
 #### Computers
+
 Each lab member is equipped with a personal computer. For extensive analyses, we utilize the [NIG Supercomputer](https://sc.ddbj.nig.ac.jp/en/). In addition, the following compute servers installed in the laboratory are also available:
 
 - GPU server "audrey1"
@@ -38,6 +40,7 @@ Each lab member is equipped with a personal computer. For extensive analyses, we
 <div style="margin-top: 30px;"></div>
 
 #### Cultivation space
+
 Our laboratory features cultivation rooms and plant incubators. We maintain a diverse collection of carnivorous plants in sterile cultures.
 
 <div style="display: flex; justify-content: space-around;">
@@ -52,6 +55,7 @@ Our laboratory features cultivation rooms and plant incubators. We maintain a di
 <div style="margin-top: 30px;"></div>
 
 #### Office & bench
+
 Individual desks and benches are provided for all lab members.
 
 <div style="display: flex; justify-content: space-around;">

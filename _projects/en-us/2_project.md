@@ -33,6 +33,7 @@ Molecular biology, with its emphasis on nucleic acids and proteins, underpins mu
 <div style="margin-top: 30px;"></div>
 
 #### Evo-Devo
+
 The complex structure of carnivorous trapping leaves presents a fascinating puzzle regarding their evolution. The complexity of these specialized organs doesn't appear all at once but is progressively layered on during the development process. Intriguingly, at the onset of development, there is little to distinguish between the incipient forms of normal and trapping leaves, both of which start simple and remarkably similar. By closely observing the divergence in development between these two types of leaves over time, we can deduce the critical evolutionary milestones that led to the unique morphology of trapping leaves.
 
 <div align="center">
@@ -54,6 +55,7 @@ Characteristics beyond mere appearance are of paramount importance. For example,
 <div style="margin-top: 30px;"></div>
 
 #### Biochemistry & Protein engineering
+
 The capacity to synthesize and modify proteins in vitro opens up a significant pathway for obtaining detailed insights into biological evolution. Through biochemistry and protein engineering have the opportunity to simulate and scrutinize evolutionary pathways, illuminating the processes by which proteins have adapted and diversified to fulfill new roles and acquire novel characteristics.
 
 <div align="center">
@@ -76,7 +78,7 @@ A more attainable goal may involve mutating Arabidopsis proteins to mirror those
 
 #### Genomics
 
-The immense wealth of data contained within genomes provides key insights into the origins and traits of living organisms. Decoding the complete genomic sequences, predicting gene structures, and inferring their functions represent foundational steps in unlocking biological discoveries from genomic data. The advent of long-read sequencing technologies, such as those offered by PacBio and Oxford Nanopore, in conjunction with the Hi-C chromosome conformation capture methods, enables us to achieve genome assemblies at a chromosomal level. 
+The immense wealth of data contained within genomes provides key insights into the origins and traits of living organisms. Decoding the complete genomic sequences, predicting gene structures, and inferring their functions represent foundational steps in unlocking biological discoveries from genomic data. The advent of long-read sequencing technologies, such as those offered by PacBio and Oxford Nanopore, in conjunction with the Hi-C chromosome conformation capture methods, enables us to achieve genome assemblies at a chromosomal level.
 
 <div align="center">
     <img src="/assets/img/projects/plant-gene-from-herbs-leaves-generative-ai_small.jpg" alt="Genomics" width="300"/>
@@ -96,7 +98,7 @@ In the exploration of complex biological phenomena, bioinformatics emerges as a 
 
 #### Phylogenetics
 
-Phylogenetics stands as a foundational pillar within bioinformatics, providing essential methodologies for engaging in comparative genomics. Beyond merely utilizing molecular phylogeny to delineate relationships among organisms, our laboratory frequently employs phylogenetic comparative methods. These methods enable us to deduce the evolutionary pathways of gene expression levels and other various traits within the context of phylogenetic trees. 
+Phylogenetics stands as a foundational pillar within bioinformatics, providing essential methodologies for engaging in comparative genomics. Beyond merely utilizing molecular phylogeny to delineate relationships among organisms, our laboratory frequently employs phylogenetic comparative methods. These methods enable us to deduce the evolutionary pathways of gene expression levels and other various traits within the context of phylogenetic trees.
 
 <div align="center">
     <img src="/assets/img/projects/ou.jpg" alt="Ornstein-Uhlenbeck models" width="300"/>

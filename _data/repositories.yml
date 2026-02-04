@@ -1,4 +1,4 @@
-# * * * * * * * * * * * * [2025.3.7 Changed] * * * * * * * * * * * * 
+# * * * * * * * * * * * * [2025.3.7 Changed] * * * * * * * * * * * *
 #github_users:
 #  - torvalds
 #  - alshedivat
@@ -6,24 +6,24 @@
 #repo_description_lines_max: 2
 
 github_repos:
-# * * * * * * * * * * * * [2025.3.7 Changed] * * * * * * * * * * * * 
-#  - george-gca/multi-language-al-folio
-#  - alshedivat/al-folio
-#  - jekyll/jekyll
-#  - twbs/bootstrap
-#  - jquery/jquery
-#  - FortAwesome/Font-Awesome
-#  - mathjax/MathJax
-#  - jpswalsh/academicons
+  # * * * * * * * * * * * * [2025.3.7 Changed] * * * * * * * * * * * *
+  #  - george-gca/multi-language-al-folio
+  #  - alshedivat/al-folio
+  #  - jekyll/jekyll
+  #  - twbs/bootstrap
+  #  - jquery/jquery
+  #  - FortAwesome/Font-Awesome
+  #  - mathjax/MathJax
+  #  - jpswalsh/academicons
 
-#  - george-gca/multi-language-al-folio
-#  - alshedivat/al-folio
-#  - twbs/bootstrap
-#  - jekyll/jekyll
-#  - jquery/jquery
-#  - FortAwesome/Font-Awesome
-#  - jpswalsh/academicons
-#  - mathjax/MathJax
+  #  - george-gca/multi-language-al-folio
+  #  - alshedivat/al-folio
+  #  - twbs/bootstrap
+  #  - jekyll/jekyll
+  #  - jquery/jquery
+  #  - FortAwesome/Font-Awesome
+  #  - jpswalsh/academicons
+  #  - mathjax/MathJax
 
   - kfuku52/csubst
   - kfuku52/amalgkit

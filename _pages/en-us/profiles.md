@@ -31,6 +31,7 @@ position_order:
 ---
 
 {% for profile in site.profiles %}
+
   <div class="profile">
     <img src="{{ profile.image }}" alt="{{ profile.title }}">
     <h2>{{ profile.title }}</h2>

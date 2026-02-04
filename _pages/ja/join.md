@@ -36,6 +36,7 @@ nav_order: 8
 候補者と福島の興味が一致する場合は、新しい研究テーマであっても福島側で研究費を申請することも可能です。しかし、準備開始から採択まで、通常一年以上の時間を要することにご留意ください。
 
 過去のポスドク募集案内の一部：
+
 - [2018 ポスドク募集PDF Sofja Kovalevskaja project](/assets/pdf/jobad_2018SKA.pdf)
 - [2021 ポスドク募集PDF DFG project](/assets/pdf/jobad_2021DFG.pdf)
 - [2021 ポスドク募集PDF HFSP project](/assets/pdf/jobad_2021HFSP.pdf)

@@ -57,11 +57,11 @@
 
   <!-- Entry bib key -->
   <div id="{{ entry.key }}" class="{% if site.enable_publication_thumbnails %}col-sm-8{% else %}col-sm-10{% endif %}">
-{% comment %}
-[changed at 2025.5.14] below block is changed for label
-    <!-- Title -->
-    <div class="title">{{ entry.title }}</div>
-{% endcomment %}
+    {% comment %}
+      [changed at 2025.5.14] below block is changed for label
+          <!-- Title -->
+          <div class="title">{{ entry.title }}</div>
+    {% endcomment %}
     <!-- Title -->
     <div class="publication-title">
       {% if entry.article_type %}
@@ -77,7 +77,7 @@
       <span class="title">{{ entry.title }}</span>
     </div>
 
-{% comment %}[changed at 2025.8.4] below　<!-- Author --> block is modified for " , " problem{% endcomment %}
+    {% comment %}[changed at 2025.8.4] below　<!-- Author --> block is modified for " , " problem{% endcomment %}
     <!-- Author -->
     <div class="author">
       {% assign author_array_size = entry.author_array | size %}
@@ -87,7 +87,6 @@
       {% endif %}
 
       {%- for author in entry.author_array limit: author_array_limit -%}
-
         {%- if forloop.first == false -%}
           {%- if forloop.last -%}
             , and&nbsp;
@@ -189,7 +188,7 @@
                   clearInterval(textAdder);
                 }
             }, '{{ site.more_authors_animation_delay }}');
-            "
+          "
         >
           {{- more_authors_hide -}}
         </span>
@@ -206,7 +205,6 @@
         </i>
       {% endif %}
     </div>
-
 
     <!-- Journal/Book title and date -->
     {% assign proceedings = 'inproceedings,incollection' | split: ',' %}
@@ -284,12 +282,12 @@
       {% if entry.pmid and entry.pmid != '' and entry.pmid != '{}' %}
         <a href="https://pubmed.ncbi.nlm.nih.gov/{{ entry.pmid }}" class="btn btn-sm z-depth-0" role="button">PUBMED</a>
       {% endif %}
-{% comment %}
-[added at 2025.5.22] below block is replaced for a multiple feature button function
-      {% if entry.correction and entry.correction != '' and entry.correction != '{}' %}
-        <a href="{{ entry.correction }}" class="btn btn-sm z-depth-0" role="button">CORRECTION</a>
-      {% endif %}
-{% endcomment %}
+      {% comment %}
+        [added at 2025.5.22] below block is replaced for a multiple feature button function
+              {% if entry.correction and entry.correction != '' and entry.correction != '{}' %}
+                <a href="{{ entry.correction }}" class="btn btn-sm z-depth-0" role="button">CORRECTION</a>
+              {% endif %}
+      {% endcomment %}
       {% if entry.correction %}
         {% assign corrections = entry.correction | split: ',' %}
         {% for url in corrections %}
@@ -326,7 +324,13 @@
           </a>
         {% endif %}
       {% endif %}
-      {% if entry.video and site.enable_video_embedding and entry.video != '' and entry.video != '{}' and site.enable_video_embedding != '' and site.enable_video_embedding != '{}' %}
+      {% if entry.video
+        and site.enable_video_embedding
+        and entry.video != ''
+        and entry.video != '{}'
+        and site.enable_video_embedding != ''
+        and site.enable_video_embedding != '{}'
+      %}
         <a class="abstract btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.video }}</a>
       {% elsif entry.video and entry.video != '' and entry.video != '{}' %}
         <a href="{{ entry.video }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.video }}</a>
@@ -358,19 +362,19 @@
       {% if entry.website and entry.website != '' and entry.website != '{}' %}
         <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.website }}</a>
       {% endif %}
-{% comment %}
-[added at 2025.5.2] below block is added for a highlight function
-      {% if entry.feature_article and entry.feature_article != '' and entry.feature_article != '{}' %}
-        {% if entry.feature_article contains '://' %}
-          <a href="{{ entry.feature_article }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
-        {% else %}
-          <a href="{{ entry.feature_article | prepend: '/assets/feature/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
-        {% endif %}
-      {% endif %}
-{% endcomment %}
-{% comment %}
-[added at 2025.5.22] below block is added for a multiple feature button function
-{% endcomment %}
+      {% comment %}
+        [added at 2025.5.2] below block is added for a highlight function
+              {% if entry.feature_article and entry.feature_article != '' and entry.feature_article != '{}' %}
+                {% if entry.feature_article contains '://' %}
+                  <a href="{{ entry.feature_article }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
+                {% else %}
+                  <a href="{{ entry.feature_article | prepend: '/assets/feature/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">FEATURE ARTICLE</a>
+                {% endif %}
+              {% endif %}
+      {% endcomment %}
+      {% comment %}
+        [added at 2025.5.22] below block is added for a multiple feature button function
+      {% endcomment %}
       {% if entry.feature_article %}
         {% assign features = entry.feature_article | split: ',' %}
         {% for url in features %}
@@ -381,16 +385,16 @@
         {% endfor %}
       {% endif %}
 
-{% comment %}
-[added at 2025.5.22] below block is replaced for a multiple feature button function
-      {% if entry.press_release and entry.press_release != '' and entry.press_release != '{}' %}
-        {% if entry.press_release contains '://' %}
-          <a href="{{ entry.press_release }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
-        {% else %}
-          <a href="{{ entry.press_release | prepend: '/assets/press/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
-        {% endif %}
-      {% endif %}
-{% endcomment %}
+      {% comment %}
+        [added at 2025.5.22] below block is replaced for a multiple feature button function
+              {% if entry.press_release and entry.press_release != '' and entry.press_release != '{}' %}
+                {% if entry.press_release contains '://' %}
+                  <a href="{{ entry.press_release }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
+                {% else %}
+                  <a href="{{ entry.press_release | prepend: '/assets/press/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">PRESS RELEASE</a>
+                {% endif %}
+              {% endif %}
+      {% endcomment %}
       {% if entry.press_release %}
         {% assign releases = entry.press_release | split: ',' %}
         {% for url in releases %}
@@ -400,7 +404,6 @@
           {% endif %}
         {% endfor %}
       {% endif %}
-
     </div>
     {% if site.enable_publication_badges %}
       {% assign entry_has_altmetric_badge = false %}

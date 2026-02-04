@@ -49,7 +49,7 @@ socials_in_search: true
 bib_search: true
 
 # Dimensions
-max_width: 950px # * * * * * * * * * * [change 2025.3.12] change from 1000px along with the original site * * * * * * * * * * 
+max_width: 950px # * * * * * * * * * * [change 2025.3.12] change from 1000px along with the original site * * * * * * * * * *
 
 # TODO: add layout settings (single page vs. multi-page)
 
@@ -108,7 +108,7 @@ giscus:
   emit_metadata: 0
 
 # Disqus comments (DEPRECATED)
-# disqus_shortname: multi-language-al-folio # put your disqus shortname 
+# disqus_shortname: multi-language-al-folio # put your disqus shortname
 # https://help.disqus.com/en/articles/1717111-what-s-a-shortname
 
 # External sources.
@@ -144,7 +144,7 @@ collections:
   projects:
     output: true
     permalink: /:collection/:title/
-# [add] added at 2025-5-14 
+  # [add] added at 2025-5-14
   profiles:
     output: false
 
@@ -261,9 +261,9 @@ jekyll-archives:
     tag: "/blog/tag/:name/"
     category: "/blog/category/:name/"
 
-# * * * * * * * * * * [change 2025.3.12] change from ["formatting", "images", "links", "math", "code", "blockquotes"] to blanke * * * * * * * * * * 
+# * * * * * * * * * * [change 2025.3.12] change from ["formatting", "images", "links", "math", "code", "blockquotes"] to blanke * * * * * * * * * *
 display_tags: [] # these tags will be displayed on the front page of your blog
-# * * * * * * * * * * [change 2025.3.12] change from ["external-services"] to blanke * * * * * * * * * * 
+# * * * * * * * * * * [change 2025.3.12] change from ["external-services"] to blanke * * * * * * * * * *
 display_categories: [] # these categories will be displayed on the front page of your blog
 
 # -----------------------------------------------------------------------------
@@ -306,8 +306,7 @@ enable_publication_badges:
   inspirehep: true # Inspire HEP badge (https://help.inspirehep.net/knowledge-base/citation-metrics/)
 
 # Filter out certain bibtex entry keywords used internally from the bib output
-filtered_bibtex_keywords:
-  [
+filtered_bibtex_keywords: [
     abbr,
     abstract,
     additional_info,
@@ -331,7 +330,7 @@ filtered_bibtex_keywords:
     video,
     website
     url,
-    preprint
+    preprint,
   ]
 
 # Maximum number of authors to be shown for each publication (more authors are visible on click)
@@ -356,8 +355,8 @@ external_links:
 # Jekyll Polyglot
 # -----------------------------------------------------------------------------
 
-languages: ["en-us", "ja"] # * * * * * * * * * * * * [2025.3.6 Changed] ["en-us", "ja", "fr-ca"] * * * * * * * * * * * * 
-default_lang: "en-us" #   
+languages: ["en-us", "ja"] # * * * * * * * * * * * * [2025.3.6 Changed] ["en-us", "ja", "fr-ca"] * * * * * * * * * * * *
+default_lang: "en-us" #
 exclude_from_localization: ["assets"]
 lang_from_path: true
 country_flag: false # set true for allowing flag symbol in language toggle

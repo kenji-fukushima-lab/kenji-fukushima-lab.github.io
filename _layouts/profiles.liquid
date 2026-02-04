@@ -1,12 +1,11 @@
 ---
 layout: page
 ---
-
 <div class="post">
   <article>
     {% assign position_order = page.position_order %}
     {% assign profiles = site.profiles %}
-    {% assign sorted_profiles = "" | split: "" %}
+    {% assign sorted_profiles = '' | split: '' %}
 
     {% for position in position_order %}
       {% for profile in profiles %}
@@ -37,17 +36,39 @@ layout: page
           {% endif %}
 
           <div class="social-icons" style="margin-top: 0.5rem;">
-            {% if profile.email %}<a href="mailto:{{ profile.email }}"><i class="fas fa-envelope"></i></a>{% endif %}
-            {% if profile.website %}<a href="{{ profile.website }}"><i class="fas fa-globe"></i></a>{% endif %}
-            {% if profile.orcid %}<a href="{{ profile.orcid }}"><i class="ai ai-orcid"></i></a>{% endif %}
-            {% if profile.google_scholar %}<a href="{{ profile.google_scholar }}"><i class="ai ai-google-scholar"></i></a>{% endif %}
-            {% if profile.github %}<a href="https://github.com/{{ profile.github }}"><i class="fab fa-github"></i></a>{% endif %}
-            {% if profile.linkedin %}<a href="{{ profile.linkedin }}"><i class="fab fa-linkedin"></i></a>{% endif %}
-            {% if profile.twitter %}<a href="{{ profile.twitter }}"><i class="fab fa-x-twitter"></i></a>{% endif %}
-            {% if profile.researchgate %}<a href="{{ profile.researchgate }}"><i class="fab fa-researchgate"></i></a>{% endif %}
-            {% if profile.amazon %}<a href="{{ profile.amazon }}"><i class="fab fa-amazon"></i></a>{% endif %}
-            {% if profile.researchmap %}<a href="{{ profile.researchmap }}"><img src="https://researchmap.jp/favicon.ico" alt="Researchmap" style="height: 1em;"></a>{% endif %}
-            {% if profile.tayo %}<a href="{{ profile.tayo }}"><img src="https://tayo.jp/public/assets/favicon.ico" alt="Tayo" style="height: 1em;"></a>{% endif %}
+            {% if profile.email -%}
+              <a href="mailto:{{ profile.email }}"><i class="fas fa-envelope"></i></a>
+            {%- endif %}
+            {% if profile.website -%}
+              <a href="{{ profile.website }}"><i class="fas fa-globe"></i></a>
+            {%- endif %}
+            {% if profile.orcid -%}
+              <a href="{{ profile.orcid }}"><i class="ai ai-orcid"></i></a>
+            {%- endif %}
+            {% if profile.google_scholar -%}
+              <a href="{{ profile.google_scholar }}"><i class="ai ai-google-scholar"></i></a>
+            {%- endif %}
+            {% if profile.github -%}
+              <a href="https://github.com/{{ profile.github }}"><i class="fab fa-github"></i></a>
+            {%- endif %}
+            {% if profile.linkedin -%}
+              <a href="{{ profile.linkedin }}"><i class="fab fa-linkedin"></i></a>
+            {%- endif %}
+            {% if profile.twitter -%}
+              <a href="{{ profile.twitter }}"><i class="fab fa-x-twitter"></i></a>
+            {%- endif %}
+            {% if profile.researchgate -%}
+              <a href="{{ profile.researchgate }}"><i class="fab fa-researchgate"></i></a>
+            {%- endif %}
+            {% if profile.amazon -%}
+              <a href="{{ profile.amazon }}"><i class="fab fa-amazon"></i></a>
+            {%- endif %}
+            {% if profile.researchmap -%}
+              <a href="{{ profile.researchmap }}"><img src="https://researchmap.jp/favicon.ico" alt="Researchmap" style="height: 1em;"></a>
+            {%- endif %}
+            {% if profile.tayo -%}
+              <a href="{{ profile.tayo }}"><img src="https://tayo.jp/public/assets/favicon.ico" alt="Tayo" style="height: 1em;"></a>
+            {%- endif %}
           </div>
 
           <div style="margin-top: 0.7rem;">
@@ -60,43 +81,43 @@ layout: page
 </div>
 
 {% comment %}
-[changed] changed at 2025/5/14 to manage the profiles of laboratory members in a single database
----
-layout: page
----
+  [changed] changed at 2025/5/14 to manage the profiles of laboratory members in a single database
+  ---
+  layout: page
+  ---
 
-changed at 2025.5.14, this is previous content of this file. 
-<div class="post">
-  <article>
-    {% if page.profiles %}
-      {% for profile in page.profiles %}
-        <hr>
-        <div class="profile float-{% if profile.align == 'left' %}left{% else %}right{% endif %}">
-          {% if profile.image %}
-            {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
-            {% if profile.image_circular %}
-              {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
-            {% else %}
-              {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+  changed at 2025.5.14, this is previous content of this file.
+  <div class="post">
+    <article>
+      {% if page.profiles %}
+        {% for profile in page.profiles %}
+          <hr>
+          <div class="profile float-{% if profile.align == 'left' %}left{% else %}right{% endif %}">
+            {% if profile.image %}
+              {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
+              {% if profile.image_circular %}
+                {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+              {% else %}
+                {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+              {% endif %}
+              {% capture sizes %}(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"{% endcapture %}
+              {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=profile.image %}
             {% endif %}
-            {% capture sizes %}(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"{% endcapture %}
-            {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=profile.image %}
-          {% endif %}
-          {% if profile.more_info %}
-            <div class="more-info">{{ profile.more_info }}</div>
-          {% endif %}
-        </div>
+            {% if profile.more_info %}
+              <div class="more-info">{{ profile.more_info }}</div>
+            {% endif %}
+          </div>
 
-        <div class="clearfix">
-          {% if profile.content %}
-            {% capture profile_content %}{% include_relative {{ profile.content }} %}{% endcapture %}
-            {{ profile_content | markdownify }}
-          {% else %}
-            {{ content }}
-          {% endif %}
-        </div>
-      {% endfor %}
-    {% endif %}
-  </article>
-</div>
+          <div class="clearfix">
+            {% if profile.content %}
+              {% capture profile_content %}{% include_relative {{ profile.content }} %}{% endcapture %}
+              {{ profile_content | markdownify }}
+            {% else %}
+              {{ content }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </article>
+  </div>
 {% endcomment %}
