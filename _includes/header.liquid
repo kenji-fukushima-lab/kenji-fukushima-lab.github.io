@@ -137,9 +137,9 @@
                 {% if site.active_lang == site.default_lang %}
                   <a class="nav-link" {% static_href -%} href="{{ site.baseurl }}/{{ other_language }}{{ page.url }}" {%- endstatic_href %}>
                     {% if site.country_flag %}
-                      {% if other_language contains "en" %}
+                      {% if other_language contains 'en' %}
                         🇬🇧
-                      {% elsif other_language == "ja" %}
+                      {% elsif other_language == 'ja' %}
                         🇯🇵
                       {% else %}
                         {{ other_language | upcase }}
@@ -151,9 +151,9 @@
                 {% else %}
                   <a class="nav-link" {% static_href -%} href="{{ site.baseurl }}{{ page.url }}" {%- endstatic_href %}>
                     {% if site.country_flag %}
-                      {% if site.default_lang contains "en" %}
+                      {% if site.default_lang contains 'en' %}
                         🇬🇧
-                      {% elsif site.default_lang == "ja" %}
+                      {% elsif site.default_lang == 'ja' %}
                         🇯🇵
                       {% else %}
                         {{ site.default_lang | upcase }}
@@ -176,9 +176,9 @@
                   aria-expanded="false"
                 >
                   {% if site.country_flag %}
-                    {% if site.active_lang contains "en" %}
+                    {% if site.active_lang contains 'en' %}
                       🇬🇧
-                    {% elsif site.active_lang == "ja" %}
+                    {% elsif site.active_lang == 'ja' %}
                       🇯🇵
                     {% else %}
                       {{- site.active_lang | upcase }}
@@ -200,9 +200,9 @@
                       {% if l == site.default_lang %}
                         <a class="dropdown-item" {% static_href -%} href="{{ site.baseurl }}{{ page.url }}" {%- endstatic_href %}>
                           {% if site.country_flag %}
-                            {% if l contains "en" %}
+                            {% if l contains 'en' %}
                               🇬🇧
-                            {% elsif l == "ja" %}
+                            {% elsif l == 'ja' %}
                               🇯🇵
                             {% else %}
                               {{ l | upcase }}
@@ -214,9 +214,9 @@
                       {% else %}
                         <a class="dropdown-item" {% static_href -%} href="{{ site.baseurl }}/{{ l }}{{ page.url }}" {%- endstatic_href %}>
                           {% if site.country_flag %}
-                            {% if l contains "en" %}
+                            {% if l contains 'en' %}
                               🇬🇧
-                            {% elsif l == "ja" %}
+                            {% elsif l == 'ja' %}
                               🇯🇵
                             {% else %}
                               {{ l | upcase }}
