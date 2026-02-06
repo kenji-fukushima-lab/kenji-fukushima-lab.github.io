@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bundle exec jekyll build:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(grep:*)",
+      "Bash(git -C /workspaces/kenji-fukushima-lab.github.io log --oneline --all)",
+      "Bash(git log:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(git remote add:*)",
+      "Bash(git fetch:*)",
+      "Bash(bundle update:*)",
+      "Bash(bundle exec jekyll:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nPhase 1: Update dependencies and critical bug fixes\n\nDependency Updates:\n- Jekyll: 4.3.4 → 4.4.1 \\(security and stability\\)\n- jekyll-polyglot: 1.8.1 → 1.12.0 \\(multi-language improvements\\)\n- jekyll-scholar: 7.1.3 → 7.3.0 \\(bibliography enhancements\\)\n- csl: 1.6.0 → 2.2.1 \\(citation style updates\\)\n- csl-styles: 1.0.1.11 → 2.0.2\n- citeproc-ruby: 1.1.14 → 2.1.8\n- jekyll-minifier: 0.1.10 → 0.2.0\n- feedjira: 3.2.4 → 4.0.1\n- httparty: 0.22.0 → 0.24.2\n- terser: 1.2.4 → 1.2.6\n- css_parser: 1.21.0 → 1.21.1\n- ostruct: 0.6.1 → 0.6.3\n- jekyll-terser: 0.2.2 → 0.2.3\n\nCherry-picked Bug Fixes from Upstream:\n- f521c0ae: Fix bibliography month persisting to subsequent entries\n- 6023fd80: Fix bib/code layout bug\n- fa93875e: Fix MathJax long-formula overflow on mobile screens\n- 8086c57b: Fix code flow overflow and responsive design\n\nTesting:\n- Build successful \\(6.5 seconds\\)\n- All custom features verified:\n  * Profiles system working \\(12 members\\)\n  * Publications page with badges \\(212K\\)\n  * Navigation customizations preserved\n  * Multi-language support intact \\(en-us, ja\\)\n\nPhase 2 \\(deferred\\): Plugin migrations, new features, workflow updates\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(kill:*)",
+      "Bash(curl:*)",
+      "Bash(git merge --no-ff feature/upstream-sync-2024-2026 -m \"$\\(cat <<''EOF''\nMerge Phase 1: Upstream sync with critical updates\n\nThis merge brings Phase 1 of the upstream synchronization from\nthe multi-language-al-folio repository \\(Jan 2024 - Feb 2026\\).\n\nKey Updates:\n- Jekyll 4.3.4 → 4.4.1 \\(security & stability\\)\n- jekyll-polyglot 1.8.1 → 1.12.0 \\(multi-language improvements\\)\n- jekyll-scholar 7.1.3 → 7.3.0 \\(bibliography enhancements\\)\n- 13 total dependency security updates\n\nBug Fixes:\n- Fixed bibliography month persistence \\(#3391\\)\n- Fixed bib/code layout \\(#3387\\)\n- Fixed MathJax overflow on mobile \\(#3302\\)\n- Fixed code responsive design \\(#3229\\)\n\nTesting:\n- Build verified \\(6.5s\\)\n- All custom features working\n- Navigation customizations preserved\n- Multi-language support intact\n\nDocumentation: See SYNC_HISTORY.md for full details\n\nPhase 2 \\(deferred\\): Plugin migrations, new features\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git ls-tree:*)",
+      "Bash(tee:*)",
+      "Bash(bundle install:*)",
+      "Bash(git rm:*)",
+      "Bash(tar:*)",
+      "Bash(sudo mv:*)",
+      "Bash(lychee:*)",
+      "Bash(gh run list:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prettier:*)",
+      "Bash(pkill:*)",
+      "Bash(xargs -I {} sh -c 'echo \"\"Checking: {}\"\" && grep -o \"\"href=\\\\\"\"[^\\\\\"\"]*\\\\\"\"\"\" {} | grep -v \"\"http\"\" | grep -v \"\"mailto\"\" | head -3')",
+      "Bash(find:*)",
+      "Bash(xargs -I {} sh -c 'grep -o \"\"src=\\\\\"\"[^\\\\\"\"]*\\\\\"\"\"\" {} | head -5')"
+    ]
+  }
+}

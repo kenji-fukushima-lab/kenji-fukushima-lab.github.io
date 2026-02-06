@@ -3,7 +3,7 @@ align: left # Do not change this
 name: Sayoko Shirai
 name_native: 白井 紗世子　(しらい さよこ)
 position_key: technician
-image: people/default.png # Your profile picture in /assets/images/people/
+image: people/sayoko_shirai.jpg
 content:
 image_circular: false # Do not change this
 more_info:
