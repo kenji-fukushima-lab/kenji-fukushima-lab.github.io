@@ -40,14 +40,15 @@ NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution
 [ＦＭみしま・かんなみ（ボイス・キュー）](https://777fm.com/)のラジオ番組「きゅんです！サイエンス」で研究の話をしています。
 
 {% assign radio_archive_video_ids = site.data.outreach.radio_archive_latest_video_ids %}
-{% assign radio_embed_base = "https://www.youtube.com/embed/" %}
+{% assign youtube_domain = "https://www.youtube.com" %}
+{% assign youtube_embed_prefix = "/embed/" %}
 
 [出演回のアーカイブ（最新３本を表示）](https://www.youtube.com/@Iden-chan/search?query=%E7%A6%8F%E5%B3%B6%E5%81%A5%E5%85%90)
 
 <div class="row mt-3">
     {% for video_id in radio_archive_video_ids limit: 3 %}
         <div class="col-sm mt-3 mt-md-0">
-            {% assign radio_embed_url = radio_embed_base | append: video_id %}
+            {% assign radio_embed_url = youtube_domain | append: youtube_embed_prefix | append: video_id %}
             {% include video.liquid path=radio_embed_url class="img-fluid rounded z-depth-1" %}
         </div>
     {% endfor %}
