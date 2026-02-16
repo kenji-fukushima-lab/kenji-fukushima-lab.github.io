@@ -50,7 +50,7 @@ jobs:
           fail: true
           # removed md files that include liquid tags
           args: >-
-            --base-url https://kenji-fukushima-lab.github.io
+            --base https://kenji-fukushima-lab.github.io
             --max-retries 3
             --user-agent 'curl/7.54'
             --exclude-path README.md
