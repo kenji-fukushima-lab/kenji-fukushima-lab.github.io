@@ -49,4 +49,30 @@ jobs:
         with:
           fail: true
           # removed md files that include liquid tags
-          args: --user-agent 'curl/7.54' --exclude-path README.md --exclude-path _pages/en-us/404.md --exclude-path _pages/pt-br/404.md --exclude-path _pages/en-us/blog.md --exclude-path _pages/pt-br/blog.md --exclude-path _posts/en-us/2018-12-22-distill.md --exclude-path _posts/pt-br/2018-12-22-distill.md --exclude-path _posts/en-us/2023-04-24-videos.md --exclude-path _posts/pt-br/2023-04-24-videos.md --exclude-path _books/en-us/the_godfather.md --exclude-path _books/pt-br/the_godfather.md --verbose --no-progress './**/*.md' './**/*.html'
+          args: >-
+            --base-url https://kenji-fukushima-lab.github.io
+            --max-retries 3
+            --user-agent 'curl/7.54'
+            --exclude-path README.md
+            --exclude-path CUSTOMIZE.md
+            --exclude-path FAQ.md
+            --exclude-path CONTRIBUTING.md
+            --exclude-path UPGRADING.md
+            --exclude-path _pages/en-us/404.md
+            --exclude-path _pages/pt-br/404.md
+            --exclude-path _pages/en-us/blog.md
+            --exclude-path _pages/pt-br/blog.md
+            --exclude-path _pages/ja/blog.md
+            --exclude-path _pages/en-us/people.md
+            --exclude-path _pages/ja/people.md
+            --exclude-path _pages/en-us/profiles.md
+            --exclude-path _pages/ja/profiles.md
+            --exclude-path _pages/en-us/publications.md
+            --exclude-path _pages/ja/publications.md
+            --exclude-path _posts/en-us/2018-12-22-distill.md
+            --exclude-path _posts/pt-br/2018-12-22-distill.md
+            --exclude-path _posts/en-us/2023-04-24-videos.md
+            --exclude-path _posts/pt-br/2023-04-24-videos.md
+            --exclude-path _books/en-us/the_godfather.md
+            --exclude-path _books/pt-br/the_godfather.md
+            --verbose --no-progress './**/*.md' './**/*.html'
