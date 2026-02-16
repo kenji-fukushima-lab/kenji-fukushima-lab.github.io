@@ -5,3 +5,7 @@ https://www.researchgate.net/.*
 https://([a-z0-9-]+\.)?onlinelibrary\.wiley\.com/.*
 https://royalsocietypublishing.org/.*
 https://evolve2-ml.jimdofree.com/.*
+https://www\.amazon\.co\.jp/dp/4000297104
+https://www\.amazon\.co\.jp/stores/.*
+https://www\.ncbi\.nlm\.nih\.gov/datasets/genome/GCA_001972305\.1/
+https://www\.ncbi\.nlm\.nih\.gov/datasets/genome/GCA_033239525\.1/
