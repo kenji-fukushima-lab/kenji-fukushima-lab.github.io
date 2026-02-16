@@ -40,19 +40,43 @@ nav_order: 5
 
 ## GitHub Repositories
 
-<div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
+<div class="repositories repo-list-compact d-flex flex-column align-items-stretch">
   {% for repo in site.data.repositories.github_repos %}
     {% include repository/repo.liquid repository=repo %}
   {% endfor %}
 </div>
+<div style="margin-top: 18px;"></div>
 {% endif %}
   
 ## Genomes
 
-| Species                 | NCBI Genome                                                                      | CoGe (OrganismView for genome browser)                           | Publication                                                                |
-| ----------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Cephalotus follicularis | [GCA_001972305.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001972305.1/) | [29002](https://genomevolution.org/coge/GenomeInfo.pl?gid=29002) | [Fukushima et al. (2017)](https://www.nature.com/articles/s41559-016-0059) |
-| Nepenthes gracilis      | [GCA_033239525.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_033239525.1/) | [61566](https://genomevolution.org/coge/GenomeInfo.pl?gid=61566) | [Saul et al. (2023)](https://www.nature.com/articles/s41477-023-01562-2)   |
+<p>The embedded viewers below use NCBI's official API and show representative scaffolds for each assembly (initial loading may take a few seconds).</p>
+
+<script src="https://www.ncbi.nlm.nih.gov/projects/sviewer/js/sviewer.js" id="autoload"></script>
+
+<div class="ncbi-genome-embed">
+  <h4>
+    Cephalotus follicularis
+    (<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001972305.1/" target="_blank" rel="noopener noreferrer">NCBI</a>
+    / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=29002" target="_blank" rel="noopener noreferrer">CoGe</a>
+    / <a href="https://www.nature.com/articles/s41559-016-0059" target="_blank" rel="noopener noreferrer">Publication</a>)
+  </h4>
+  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" data-autoload>
+    <a href="?embedded=true&id=BDDD01000001.1&assm_context=GCA_001972305.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
+  </div>
+</div>
+
+<div class="ncbi-genome-embed">
+  <h4>
+    Nepenthes gracilis
+    (<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_033239525.1/" target="_blank" rel="noopener noreferrer">NCBI</a>
+    / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=61566" target="_blank" rel="noopener noreferrer">CoGe</a>
+    / <a href="https://www.nature.com/articles/s41477-023-01562-2" target="_blank" rel="noopener noreferrer">Publication</a>)
+  </h4>
+  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" data-autoload>
+    <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
+  </div>
+</div>
 
 <div style="margin-top: 30px;"></div>
   

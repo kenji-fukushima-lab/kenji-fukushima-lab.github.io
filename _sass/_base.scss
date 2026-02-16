@@ -544,8 +544,87 @@ footer.sticky-bottom {
 // Repositories
 
 @media (min-width: 768px) {
-  .repo {
-    max-width: 50%;
+  .repositories:not(.repo-list-compact) {
+    .repo {
+      max-width: 50%;
+    }
+  }
+}
+
+.repositories.repo-list-compact {
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.repositories.repo-list-compact .repo-compact {
+  width: 100%;
+  max-width: 100%;
+}
+
+.repo-compact {
+  border: 1px solid var(--global-divider-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.repo-compact-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--global-theme-color);
+  font-weight: 600;
+  text-decoration: none;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.repo-compact-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  img {
+    height: 18px;
+  }
+}
+
+.ncbi-genome-embed {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 8px;
+  background-color: var(--global-card-bg-color);
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 0.35rem;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .SeqViewerApp {
+    min-height: 200px;
   }
 }
 

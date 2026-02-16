@@ -133,13 +133,13 @@ pagination:
 post:
   created_in: 投稿日
   created_by: 投稿者
-  last_updated: 最終更新
+  last_updated: 最終更新日
 
 references: 参考文献
 
 related_posts:
-  description: 関連記事をご紹介します：
-  title: このページを読んで気に入りましたか？
+  description: ""
+  title: 関連記事：
 
 search:
   dark_theme:

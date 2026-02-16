@@ -25,11 +25,35 @@ NHK WORLD-JAPAN Science View: The Mystery of Carnivorous Plant Evolution
 
 <div style="margin-top: 60px;"></div>
 
+#### 講演
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include video.liquid path="https://www.youtube.com/embed/diSNh5Ym_Dk?start=3883" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
+<div style="margin-top: 60px;"></div>
+
 #### ラジオ出演
 
 [ＦＭみしま・かんなみ（ボイス・キュー）](https://777fm.com/)のラジオ番組「きゅんです！サイエンス」で研究の話をしています。
 
-[出演回のアーカイブ](https://www.youtube.com/@Iden-chan/search?query=%E7%A6%8F%E5%B3%B6%E5%81%A5%E5%85%90)
+{% assign radio_archive_url = site.data.outreach.radio_archive_url | default: "https://www.youtube.com/@Iden-chan/search?query=%E7%A6%8F%E5%B3%B6%E5%81%A5%E5%85%90" %}
+{% assign radio_archive_video_ids = site.data.outreach.radio_archive_latest_video_ids %}
+
+[出演回のアーカイブ（最新３本を表示）]({{ radio_archive_url }})
+
+<div class="row mt-3">
+    {% for video_id in radio_archive_video_ids limit: 3 %}
+        <div class="col-sm mt-3 mt-md-0">
+            {% capture radio_embed_url %}https://www.youtube.com/embed/{{ video_id }}{% endcapture %}
+            {% include video.liquid path=radio_embed_url class="img-fluid rounded z-depth-1" %}
+        </div>
+    {% endfor %}
+</div>
+
+[出演回のアーカイブ]({{ radio_archive_url }})
 
 <div style="margin-top: 60px;"></div>
 

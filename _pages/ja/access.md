@@ -18,6 +18,18 @@ nav_order: 9
 〒411−8540  
 静岡県三島市谷田1111
 
+<div style="margin: 1rem 0;">
+  <iframe
+    title="Google Map"
+    src="https://www.google.com/maps?q=国立遺伝学研究所+静岡県三島市谷田1111&output=embed"
+    width="100%"
+    height="360"
+    style="border:0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+
 [Googleマップでみる](https://maps.app.goo.gl/5GbRsZsXAX4KVE55A)
 
 [遺伝研へのアクセス](https://www.nig.ac.jp/nig/ja/about-nig/access_ja)
