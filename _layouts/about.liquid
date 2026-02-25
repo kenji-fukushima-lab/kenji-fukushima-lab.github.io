@@ -79,9 +79,6 @@ layout: default
         </article>
       </div>
       <p class="home-lab-stats-meta">
-        <span>
-          {%- if is_ja %}集計ルール: すべての年の論文を集計{% else %}Rule: Publications from all years are counted{% endif -%}
-        </span>
         {% if lab_stats.generated_at %}
           <span>
             {%- if is_ja %}最終集計:{% else %}Last aggregated:{% endif %}
