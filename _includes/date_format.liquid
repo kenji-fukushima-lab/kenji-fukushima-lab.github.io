@@ -17,7 +17,8 @@
   {{ day }}
   {{ month }}, {{ year }}
 {%- elsif site.active_lang == 'ja' -%}
-  {{ year }}年{{ month }}{{ day_no_pad }}日
+  {{ year }}年{{ month -}}
+  {{- day_no_pad }}日
 {%- else -%}
   {{ day }}
   {{ month }}

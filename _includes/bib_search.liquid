@@ -17,10 +17,18 @@
         placeholder="{% if is_ja %}キーワードで検索{% else %}Search publications{% endif %}"
       >
       <select id="pub-sort" class="pub-select" aria-label="{% if is_ja %}並び替え{% else %}Sort publications{% endif %}">
-        <option value="newest">{% if is_ja %}新着順{% else %}Newest{% endif %}</option>
-        <option value="citations">{% if is_ja %}被引用順{% else %}Citations{% endif %}</option>
-        <option value="altmetric">{% if is_ja %}Altmetric順{% else %}Altmetric{% endif %}</option>
-        <option value="lab">{% if is_ja %}Lab貢献度順{% else %}Lab contribution{% endif %}</option>
+        <option value="newest">
+          {% if is_ja %}新着順{% else %}Newest{% endif %}
+        </option>
+        <option value="citations">
+          {% if is_ja %}被引用順{% else %}Citations{% endif %}
+        </option>
+        <option value="altmetric">
+          {% if is_ja %}Altmetric順{% else %}Altmetric{% endif %}
+        </option>
+        <option value="lab">
+          {% if is_ja %}Lab貢献度順{% else %}Lab contribution{% endif %}
+        </option>
       </select>
       <button type="button" id="pub-reset-filters" class="pub-button">
         {% if is_ja %}絞り込みを解除{% else %}Reset filters{% endif %}
@@ -28,19 +36,27 @@
     </div>
     <div class="publications-controls-facets">
       <label class="pub-facet-label" for="facet-year">
-        <span>{% if is_ja %}year{% else %}year{% endif %}</span>
+        <span>
+          {%- if is_ja %}year{% else %}year{% endif -%}
+        </span>
         <select id="facet-year" class="pub-select facet-select"></select>
       </label>
       <label class="pub-facet-label" for="facet-article-type">
-        <span>{% if is_ja %}article type{% else %}article type{% endif %}</span>
+        <span>
+          {%- if is_ja %}article type{% else %}article type{% endif -%}
+        </span>
         <select id="facet-article-type" class="pub-select facet-select"></select>
       </label>
       <label class="pub-facet-label" for="facet-first-author">
-        <span>{% if is_ja %}first author{% else %}first author{% endif %}</span>
+        <span>
+          {%- if is_ja %}first author{% else %}first author{% endif -%}
+        </span>
         <select id="facet-first-author" class="pub-select facet-select"></select>
       </label>
       <label class="pub-facet-label" for="facet-corresponding">
-        <span>{% if is_ja %}corresponding author{% else %}corresponding author{% endif %}</span>
+        <span>
+          {%- if is_ja %}corresponding author{% else %}corresponding author{% endif -%}
+        </span>
         <select id="facet-corresponding" class="pub-select facet-select"></select>
       </label>
     </div>
@@ -56,7 +72,9 @@
   <section class="publications-dashboard" id="publications-dashboard">
     <div class="publications-dashboard-grid">
       <article class="publications-dashboard-card">
-        <h4>{% if is_ja %}年ごとの本数推移{% else %}Publications by year{% endif %}</h4>
+        <h4>
+          {% if is_ja %}年ごとの本数推移{% else %}Publications by year{% endif %}
+        </h4>
         <canvas id="pub-chart-year" aria-label="Publications by year chart"></canvas>
       </article>
     </div>

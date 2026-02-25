@@ -44,7 +44,19 @@ layout: page
           {% assign position = site.data[lang].strings.positions[profile.position_key] %}
           {% assign profile_name = profile.name | strip %}
           {% assign has_social_links = false %}
-          {% if profile.email or profile.website or profile.orcid or profile.google_scholar or profile.github or profile.linkedin or profile.twitter or profile.researchgate or profile.amazon or profile.amazon_author or profile.researchmap or profile.tayo %}
+          {% if profile.email
+            or profile.website
+            or profile.orcid
+            or profile.google_scholar
+            or profile.github
+            or profile.linkedin
+            or profile.twitter
+            or profile.researchgate
+            or profile.amazon
+            or profile.amazon_author
+            or profile.researchmap
+            or profile.tayo
+          %}
             {% assign has_social_links = true %}
           {% endif %}
 
@@ -64,24 +76,36 @@ layout: page
                   <a href="{{ profile.orcid }}" aria-label="ORCID profile of {{ profile_name }}"><i class="ai ai-orcid" aria-hidden="true"></i></a>
                 {%- endif %}
                 {% if profile.google_scholar -%}
-                  <a href="{{ profile.google_scholar }}" aria-label="Google Scholar profile of {{ profile_name }}"><i class="ai ai-google-scholar" aria-hidden="true"></i></a>
+                  <a href="{{ profile.google_scholar }}" aria-label="Google Scholar profile of {{ profile_name }}"
+                    ><i class="ai ai-google-scholar" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.github -%}
-                  <a href="https://github.com/{{ profile.github }}" aria-label="GitHub profile of {{ profile_name }}"><i class="fab fa-github" aria-hidden="true"></i></a>
+                  <a href="https://github.com/{{ profile.github }}" aria-label="GitHub profile of {{ profile_name }}"
+                    ><i class="fab fa-github" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.linkedin -%}
-                  <a href="{{ profile.linkedin }}" aria-label="LinkedIn profile of {{ profile_name }}"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+                  <a href="{{ profile.linkedin }}" aria-label="LinkedIn profile of {{ profile_name }}"
+                    ><i class="fab fa-linkedin" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.twitter -%}
                   <a href="{{ profile.twitter }}" aria-label="X profile of {{ profile_name }}"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
                 {%- endif %}
                 {% if profile.researchgate -%}
-                  <a href="{{ profile.researchgate }}" aria-label="ResearchGate profile of {{ profile_name }}"><i class="fab fa-researchgate" aria-hidden="true"></i></a>
+                  <a href="{{ profile.researchgate }}" aria-label="ResearchGate profile of {{ profile_name }}"
+                    ><i class="fab fa-researchgate" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.amazon -%}
-                  <a href="{{ profile.amazon }}" aria-label="Amazon profile of {{ profile_name }}"><i class="fab fa-amazon" aria-hidden="true"></i></a>
+                  <a href="{{ profile.amazon }}" aria-label="Amazon profile of {{ profile_name }}"
+                    ><i class="fab fa-amazon" aria-hidden="true"></i
+                  ></a>
                 {%- elsif profile.amazon_author -%}
-                  <a href="{{ profile.amazon_author }}" aria-label="Amazon author page of {{ profile_name }}"><i class="fab fa-amazon" aria-hidden="true"></i></a>
+                  <a href="{{ profile.amazon_author }}" aria-label="Amazon author page of {{ profile_name }}"
+                    ><i class="fab fa-amazon" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.researchmap -%}
                   <a href="{{ profile.researchmap }}" aria-label="researchmap profile of {{ profile_name }}">
@@ -90,7 +114,15 @@ layout: page
                 {%- endif %}
                 {% if profile.tayo -%}
                   <a href="{{ profile.tayo }}" aria-label="Tayo profile of {{ profile_name }}">
-                    <img src="https://tayo.jp/public/assets/favicon.ico" alt="" aria-hidden="true" loading="lazy" decoding="async" width="14" height="14">
+                    <img
+                      src="https://tayo.jp/public/assets/favicon.ico"
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      decoding="async"
+                      width="14"
+                      height="14"
+                    >
                   </a>
                 {%- endif %}
               </div>

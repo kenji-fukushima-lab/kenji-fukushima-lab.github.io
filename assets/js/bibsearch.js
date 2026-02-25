@@ -52,9 +52,7 @@ const i18n = {
   badgeError: isJapanesePage ? "外部バッジの読み込みに失敗しました。" : "Failed to load external badges.",
   citationHydrating: isJapanesePage ? "被引用数を更新中..." : "Refreshing citation counts...",
   citationHydrated: isJapanesePage ? "被引用数を更新しました。" : "Citation counts refreshed.",
-  leadRoleLabel: isJapanesePage
-    ? "lab memberがfirst/co-first/corresponding"
-    : "Lab member as first/co-first/corresponding",
+  leadRoleLabel: isJapanesePage ? "lab memberがfirst/co-first/corresponding" : "Lab member as first/co-first/corresponding",
   otherRoleLabel: isJapanesePage ? "それ以外" : "Other",
   labMemberFacetOption: "lab member",
   otherFacetOption: "other",
@@ -550,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
           observer.disconnect();
         }
       },
-      { rootMargin: "120px 0px" },
+      { rootMargin: "120px 0px" }
     );
     observer.observe(firstBadgeRow);
   };
@@ -581,7 +579,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Ignore individual DOI fetch failures and continue.
           }
         }
-      }),
+      })
     ).finally(() => {
       setBadgeStatus(badgeState, i18n.citationHydrated);
     });
