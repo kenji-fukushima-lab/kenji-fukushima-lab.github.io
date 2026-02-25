@@ -223,6 +223,16 @@ ninja.data = [{
           description: "",
           section: "",handler: () => {
               window.location.href = "/profiles/naoto_inui/";
+            },},{id: "profiles-jiawei-li",
+          title: 'Jiawei_li',
+          description: "",
+          section: "",handler: () => {
+              window.location.href = "/profiles/prospective_members/jiawei_li/";
+            },},{id: "profiles-yukiho-toyama",
+          title: 'Yukiho_toyama',
+          description: "",
+          section: "",handler: () => {
+              window.location.href = "/profiles/prospective_members/yukiho_toyama/";
             },},{id: "profiles-sakiko-teramoto",
           title: 'Sakiko_teramoto',
           description: "",
