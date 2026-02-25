@@ -3,7 +3,7 @@ align: left # Do not change this
 name: Katsuhiro Yoneoka
 name_native: 米岡 克啓（よねおか かつひろ）
 position_key: postdoc
-image: people/katsuhiro_yoneoka.png # Your profile picture in /assets/images/people/
+image: people/katsuhiro_yoneoka.jpg # Your profile picture in /assets/images/people/
 content: # Leave it blank
 image_circular: false # Do not change this
 more_info: # Leave it blank

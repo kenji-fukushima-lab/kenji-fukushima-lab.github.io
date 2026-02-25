@@ -3,7 +3,7 @@ align: left
 name: Naoto Inui
 name_native: 乾 直人（いぬい なおと）
 position_key: postdoc
-image: people/naoto_inui.png
+image: people/naoto_inui.jpg
 content:
 image_circular: false # crops the image to make it circular
 more_info:

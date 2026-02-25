@@ -54,12 +54,12 @@ profiles:
     image_circular: false # crops the image to make it circular
 
   - align: left
-    image: people/naoto_inui.png
+    image: people/naoto_inui.jpg
     content: people_pages/naoto_inui.md
     image_circular: false # crops the image to make it circular
 
   - align: left
-    image: people/katsuhiro_yoneoka.png
+    image: people/katsuhiro_yoneoka.jpg
     content: people_pages/katsuhiro_yoneoka.md
     image_circular: false # crops the image to make it circular
 
