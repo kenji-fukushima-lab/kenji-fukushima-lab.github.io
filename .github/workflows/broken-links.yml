@@ -54,6 +54,7 @@ jobs:
             --max-retries 3
             --accept '100..=103,200..=299,429'
             --user-agent 'curl/7.54'
+            --exclude 'https://scholar\\.google\\.[^/]+/citations.*'
             --exclude-path README.md
             --exclude-path CUSTOMIZE.md
             --exclude-path FAQ.md
