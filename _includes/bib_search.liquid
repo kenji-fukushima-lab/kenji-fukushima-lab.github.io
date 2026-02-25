@@ -20,8 +20,11 @@
         <option value="newest">
           {% if is_ja %}新着順{% else %}Newest{% endif %}
         </option>
-        <option value="citations">
-          {% if is_ja %}被引用順{% else %}Citations{% endif %}
+        <option value="crossref-citations">
+          {% if is_ja %}被引用順（Crossref）{% else %}Crossref citations{% endif %}
+        </option>
+        <option value="dimensions-citations">
+          {% if is_ja %}被引用順（Dimensions）{% else %}Dimensions citations{% endif %}
         </option>
         <option value="altmetric">
           {% if is_ja %}Altmetric順{% else %}Altmetric{% endif %}

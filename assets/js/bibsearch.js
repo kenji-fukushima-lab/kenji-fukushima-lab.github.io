@@ -1,6 +1,12 @@
 import { highlightSearchTerm } from "./highlight-search-term.js";
 
 const normalize = (value) => (value ?? "").toString().trim().toLowerCase();
+const normalizeDoi = (value) =>
+  normalize(value)
+    .replace(/^https?:\/\/(dx\.)?doi\.org\//, "")
+    .replace(/^doi:\s*/, "");
+const CONTACT_EMAIL = "kenji.fukushima@nig.ac.jp";
+const CROSSREF_WORKS_ENDPOINT = "https://api.crossref.org/works";
 
 const parseNumber = (value) => {
   const normalized = (value ?? "").toString().replace(/,/g, "");
@@ -28,11 +34,6 @@ const nameForDisplay = (value) => {
   return normalized.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-const typeForDisplay = (value) =>
-  normalize(value)
-    .replace(/\s+/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-
 const createElement = (tag, className = "") => {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -42,6 +43,16 @@ const createElement = (tag, className = "") => {
 const isJapanesePage = document.documentElement.lang.toLowerCase().startsWith("ja");
 const LAB_MEMBER_FACET_VALUE = "__lab_member__";
 const OTHER_FACET_VALUE = "__other__";
+const ARTICLE_TYPE_ORIGINAL = "__article_type_original__";
+const ARTICLE_TYPE_PREPRINT = "__article_type_preprint__";
+const ARTICLE_TYPE_REVIEW_OTHERS = "__article_type_review_others__";
+
+const articleTypeFacetValue = (value) => {
+  const normalized = normalize(value);
+  if (normalized === "original") return ARTICLE_TYPE_ORIGINAL;
+  if (normalized === "preprint") return ARTICLE_TYPE_PREPRINT;
+  return ARTICLE_TYPE_REVIEW_OTHERS;
+};
 
 const i18n = {
   all: isJapanesePage ? "すべて" : "All",
@@ -60,6 +71,10 @@ const i18n = {
   paperCountAxisLabel: isJapanesePage ? "論文数" : "Number of publications",
   labMemberFacetOption: "lab member",
   otherFacetOption: "other",
+  crossrefSortLabel: isJapanesePage ? "Crossref被引用順" : "Crossref citations",
+  dimensionsSortLabel: isJapanesePage ? "Dimensions被引用順" : "Dimensions citations",
+  altmetricSortLabel: "Altmetric",
+  labSortLabel: isJapanesePage ? "Lab貢献度" : "Lab contribution",
   altmetricHint: isJapanesePage
     ? "Altmetric順は`altmetric_score`がある論文を優先して並び替えます。"
     : "Altmetric sort prioritizes publications with `altmetric_score` metadata.",
@@ -88,7 +103,16 @@ const trackAnalyticsEvent = (eventName, params = {}) => {
 
 const defaultFacetConfig = [
   { id: "facet-year", key: "year", labeler: (value) => value.toString() },
-  { id: "facet-article-type", key: "articleType", labeler: typeForDisplay },
+  {
+    id: "facet-article-type",
+    key: "articleType",
+    labeler: (value) => value,
+    fixedOptions: [
+      { value: ARTICLE_TYPE_ORIGINAL, label: "Original" },
+      { value: ARTICLE_TYPE_PREPRINT, label: "Preprint" },
+      { value: ARTICLE_TYPE_REVIEW_OTHERS, label: "Review & others" },
+    ],
+  },
   {
     id: "facet-first-author",
     key: "firstAuthor",
@@ -138,10 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const corresponding = splitDelimited(publicationEntry.dataset.corresponding);
       const coFirst = splitDelimited(publicationEntry.dataset.coFirst);
       const labMembers = splitDelimited(publicationEntry.dataset.labMembers);
-      const articleType = normalize(publicationEntry.dataset.articleType);
-      const citationCount = parseNumber(publicationEntry.dataset.citationCount);
+      const articleType = articleTypeFacetValue(publicationEntry.dataset.articleType);
+      const citationCount = parseNumber(publicationEntry.dataset.crossrefCount ?? publicationEntry.dataset.citationCount);
+      const dimensionsCitationCount = parseNumber(publicationEntry.dataset.dimensionsCount);
       const altmetricScore = parseNumber(publicationEntry.dataset.altmetricScore);
-      const doi = normalize(publicationEntry.dataset.doi);
+      const doi = normalizeDoi(publicationEntry.dataset.doi);
 
       const labMemberSet = new Set(labMembers);
       let contributionScore = labMembers.length;
@@ -167,6 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
         coFirst,
         labMembers,
         citationCount,
+        dimensionsCitationCount,
         altmetricScore,
         contributionScore,
         leadRole: hasLeadLabMemberRole,
@@ -174,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     })
     .filter(Boolean);
+  const hasExternalAltmetricEmbeds = entries.some((entry) => Boolean(entry.listItem.querySelector(".altmetric-embed")));
 
   const availableYears = entries.map((entry) => entry.year).filter((year) => Number.isInteger(year) && year > 0);
   const minYear = availableYears.length ? Math.min(...availableYears) : new Date().getFullYear();
@@ -186,14 +213,27 @@ document.addEventListener("DOMContentLoaded", () => {
   publicationsRoot.appendChild(resultsContainer);
 
   let currentSort = sortSelect?.value || "newest";
+  if (currentSort === "citations") {
+    currentSort = "crossref-citations";
+    if (sortSelect) sortSelect.value = "crossref-citations";
+  }
   let badgeState = "idle";
   let badgeLoadPromise = null;
+  let altmetricRefreshTimerId = null;
+  let altmetricRefreshAttempts = 0;
+  let altmetricCallbackHooked = false;
   let citationHydrationStarted = false;
+  let citationSeedPromise = null;
   let citationHydrationPromise = null;
   let inputDebounceId = null;
   let lastTrackedSearch = "";
   let chartsReadyAttempts = 0;
   let charts = { byYear: null };
+
+  if (!hasExternalAltmetricEmbeds) {
+    if (badgeLoadButton) badgeLoadButton.style.display = "none";
+    if (badgeStatusNode) badgeStatusNode.style.display = "none";
+  }
 
   const setBadgeStatus = (status, forceText = "") => {
     badgeState = status;
@@ -291,11 +331,30 @@ document.addEventListener("DOMContentLoaded", () => {
     return a.index - b.index;
   };
 
+  const isCrossrefCitationSort = (sortValue) => sortValue === "crossref-citations" || sortValue === "citations";
+
+  const sortLabelForDisplay = (sortValue) => {
+    if (isCrossrefCitationSort(sortValue)) return i18n.crossrefSortLabel;
+    if (sortValue === "dimensions-citations") return i18n.dimensionsSortLabel;
+    if (sortValue === "altmetric") return i18n.altmetricSortLabel;
+    if (sortValue === "lab") return i18n.labSortLabel;
+    return i18n.newest;
+  };
+
   const sortEntries = (filteredEntries) => {
     const next = [...filteredEntries];
-    if (currentSort === "citations") {
+    if (isCrossrefCitationSort(currentSort)) {
       next.sort((a, b) => {
         if (b.citationCount !== a.citationCount) return b.citationCount - a.citationCount;
+        return compareByNewest(a, b);
+      });
+      return next;
+    }
+    if (currentSort === "dimensions-citations") {
+      next.sort((a, b) => {
+        if (b.dimensionsCitationCount !== a.dimensionsCitationCount) {
+          return b.dimensionsCitationCount - a.dimensionsCitationCount;
+        }
         return compareByNewest(a, b);
       });
       return next;
@@ -347,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const heading = createElement("h2", "bibliography pub-sorted-heading");
-    heading.textContent = `${i18n.sortedResults} (${currentSort === "citations" ? "Citations" : currentSort === "altmetric" ? "Altmetric" : "Lab contribution"})`;
+    heading.textContent = `${i18n.sortedResults} (${sortLabelForDisplay(currentSort)})`;
     const list = createElement("ol", "bibliography");
     sortedEntries.forEach((entry) => list.appendChild(entry.listItem));
     resultsContainer.append(heading, list);
@@ -519,6 +578,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  const seedCitationCountsFromStatic = () => {
+    if (citationSeedPromise) return citationSeedPromise;
+    citationSeedPromise = fetch("/assets/data/citation-counts.json", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        const counts = payload?.counts;
+        if (!counts || typeof counts !== "object") return;
+        let hasUpdate = false;
+        entries.forEach((entry) => {
+          const key = normalizeDoi(entry.doi);
+          if (!key) return;
+          const staticCount = parseNumber(counts[key]);
+          if (staticCount > entry.citationCount) {
+            entry.citationCount = staticCount;
+            hasUpdate = true;
+          }
+        });
+        if (hasUpdate && isCrossrefCitationSort(currentSort)) {
+          applyFiltersAndRender();
+        }
+      })
+      .catch(() => {
+        // Keep runtime fetch path even if local cache is unavailable.
+      });
+    return citationSeedPromise;
+  };
+
   const injectScript = (id, src) =>
     new Promise((resolve, reject) => {
       const existing = document.getElementById(id);
@@ -539,33 +625,121 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof window._altmetric_embed_init === "function") {
       window._altmetric_embed_init();
     }
-    if (window.__dimensions_embed && typeof window.__dimensions_embed.addBadges === "function") {
-      window.__dimensions_embed.addBadges();
+  };
+
+  const extractAltmetricScore = (badge) => {
+    if (!badge) return 0;
+
+    const candidates = [
+      badge.getAttribute("data-score"),
+      badge.getAttribute("data-altmetric-score"),
+      badge.getAttribute("aria-label"),
+      badge.getAttribute("title"),
+      badge.dataset?.score,
+      badge.textContent,
+      ...Array.from(badge.querySelectorAll("a, span, img")).map((node) => {
+        if (node.tagName === "IMG") return node.getAttribute("alt");
+        return `${node.getAttribute("aria-label") || ""} ${node.textContent || ""}`.trim();
+      }),
+    ];
+
+    for (const candidate of candidates) {
+      const score = parseNumber(candidate);
+      if (score > 0) return score;
     }
+    return 0;
+  };
+
+  const updateAltmetricScoreFromPayload = (payload) => {
+    if (!payload || typeof payload !== "object") return false;
+    const score = parseNumber(payload.score);
+    if (score <= 0) return false;
+
+    const payloadDoi = normalizeDoi(payload.doi);
+    const payloadAltmetricId = normalize(payload.altmetric_id);
+    let hasUpdate = false;
+
+    entries.forEach((entry) => {
+      const badge = entry.listItem.querySelector(".altmetric-embed");
+      const badgeDoi = normalizeDoi(badge?.dataset?.doi || badge?.getAttribute("data-doi"));
+      const badgeAltmetricId = normalize(badge?.dataset?.altmetricId || badge?.getAttribute("data-altmetric-id"));
+      const doiMatches = payloadDoi && (entry.doi === payloadDoi || badgeDoi === payloadDoi);
+      const altmetricIdMatches = payloadAltmetricId && badgeAltmetricId && payloadAltmetricId === badgeAltmetricId;
+
+      if (!doiMatches && !altmetricIdMatches) return;
+      if (score > entry.altmetricScore) {
+        entry.altmetricScore = score;
+        hasUpdate = true;
+      }
+    });
+
+    return hasUpdate;
   };
 
   const parseAltmetricFromDom = () => {
+    let hasUpdate = false;
     entries.forEach((entry) => {
       const badge = entry.listItem.querySelector(".altmetric-embed");
       if (!badge) return;
-      const scoreText = badge.textContent || "";
-      const score = parseNumber(scoreText.replace(/[^\d.]/g, ""));
+      const score = extractAltmetricScore(badge);
       if (score > entry.altmetricScore) {
         entry.altmetricScore = score;
+        hasUpdate = true;
       }
     });
+    return hasUpdate;
+  };
+
+  const scheduleAltmetricParseRefresh = () => {
+    clearTimeout(altmetricRefreshTimerId);
+    altmetricRefreshAttempts = 0;
+
+    const poll = () => {
+      altmetricRefreshAttempts += 1;
+      const hasUpdate = parseAltmetricFromDom();
+      if (hasUpdate && currentSort === "altmetric") {
+        applyFiltersAndRender();
+      }
+
+      if (altmetricRefreshAttempts >= 20) return;
+      const delay = altmetricRefreshAttempts < 6 ? 400 : 1000;
+      altmetricRefreshTimerId = setTimeout(poll, delay);
+    };
+
+    altmetricRefreshTimerId = setTimeout(poll, 250);
+  };
+
+  const hookAltmetricEmbedCallback = () => {
+    if (altmetricCallbackHooked) return;
+    const callback = window._altmetric?.embed_callback;
+    if (typeof callback !== "function") return;
+
+    window._altmetric.embed_callback = (...args) => {
+      const hasPayloadUpdate = updateAltmetricScoreFromPayload(args[0]);
+      const result = callback.apply(window._altmetric, args);
+      const hasDomUpdate = parseAltmetricFromDom();
+      if ((hasPayloadUpdate || hasDomUpdate) && currentSort === "altmetric") {
+        applyFiltersAndRender();
+      }
+      return result;
+    };
+    altmetricCallbackHooked = true;
   };
 
   const loadExternalBadges = () => {
+    if (!hasExternalAltmetricEmbeds) {
+      setBadgeStatus("loaded");
+      badgeLoadPromise = Promise.resolve();
+      return badgeLoadPromise;
+    }
     if (badgeLoadPromise) return badgeLoadPromise;
     setBadgeStatus("loading");
-    badgeLoadPromise = Promise.all([
-      injectScript("pub-altmetric-script", "https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"),
-      injectScript("pub-dimensions-script", "https://badge.dimensions.ai/badge.js"),
-    ])
+    badgeLoadPromise = injectScript("pub-altmetric-script", "https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js")
       .then(() => {
+        hookAltmetricEmbedCallback();
         refreshBadgeEmbeds();
         parseAltmetricFromDom();
+        scheduleAltmetricParseRefresh();
         setBadgeStatus("loaded");
         trackAnalyticsEvent("publications_badges_loaded", {
           publication_count: entries.length,
@@ -582,6 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const observeBadgesInViewport = () => {
+    if (!hasExternalAltmetricEmbeds) return;
     if (!("IntersectionObserver" in window)) return;
     const firstBadgeRow = entries.find((entry) => entry.listItem.querySelector(".badges"))?.listItem;
     if (!firstBadgeRow) return;
@@ -597,7 +772,18 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(firstBadgeRow);
   };
 
+  const fetchCrossrefCitationCount = async (doi) => {
+    const response = await fetch(
+      `${CROSSREF_WORKS_ENDPOINT}/${encodeURIComponent(doi)}?mailto=${encodeURIComponent(CONTACT_EMAIL)}`
+    );
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const count = Number.parseInt(payload?.message?.["is-referenced-by-count"], 10);
+    return Number.isFinite(count) ? count : null;
+  };
+
   const hydrateCitationCounts = async () => {
+    await seedCitationCountsFromStatic();
     if (citationHydrationPromise) return citationHydrationPromise;
     const candidates = entries.filter((entry) => entry.doi && entry.citationCount <= 0);
     if (!candidates.length) return Promise.resolve();
@@ -612,12 +798,14 @@ document.addEventListener("DOMContentLoaded", () => {
           cursor += 1;
           const target = candidates[currentIndex];
           try {
-            const response = await fetch(`https://api.crossref.org/works/${encodeURIComponent(target.doi)}`);
-            if (!response.ok) continue;
-            const payload = await response.json();
-            const count = Number.parseInt(payload?.message?.["is-referenced-by-count"], 10);
-            if (Number.isFinite(count)) {
-              target.citationCount = count;
+            let nextCount = target.citationCount;
+            const crossrefCount = await fetchCrossrefCitationCount(target.doi);
+            if (Number.isFinite(crossrefCount) && crossrefCount > nextCount) {
+              nextCount = crossrefCount;
+            }
+
+            if (nextCount > target.citationCount) {
+              target.citationCount = nextCount;
             }
           } catch {
             // Ignore individual DOI fetch failures and continue.
@@ -719,20 +907,27 @@ document.addEventListener("DOMContentLoaded", () => {
       currentSort = sortSelect.value;
       applyFiltersAndRender();
 
-      if (currentSort === "citations") {
+      if (isCrossrefCitationSort(currentSort)) {
+        seedCitationCountsFromStatic().finally(() => {
+          if (isCrossrefCitationSort(currentSort)) applyFiltersAndRender();
+        });
         if (!citationHydrationStarted) {
           citationHydrationStarted = true;
           hydrateCitationCounts();
         }
         if (citationHydrationPromise) {
           citationHydrationPromise.finally(() => {
-            if (currentSort === "citations") applyFiltersAndRender();
+            if (isCrossrefCitationSort(currentSort)) applyFiltersAndRender();
           });
         }
-      } else if (currentSort === "altmetric" && badgeState !== "loaded") {
+      } else if (currentSort === "altmetric" && hasExternalAltmetricEmbeds && badgeState !== "loaded") {
         loadExternalBadges().finally(() => {
           if (currentSort === "altmetric") applyFiltersAndRender();
         });
+      } else if (currentSort === "altmetric" && hasExternalAltmetricEmbeds) {
+        parseAltmetricFromDom();
+        scheduleAltmetricParseRefresh();
+        applyFiltersAndRender();
       }
 
       trackAnalyticsEvent("publications_sort_change", {
@@ -755,6 +950,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setBadgeStatus("idle");
   initializeFacets();
   initializeFromHash();
+  seedCitationCountsFromStatic();
   applyFiltersAndRender();
   observeBadgesInViewport();
 });

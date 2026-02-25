@@ -245,8 +245,42 @@
   padding-right: 0;
 }
 
-.publications .publication-entry .badges .altmetric-embed,
-.publications .publication-entry .badges .__dimensions_badge_embed__ {
+.publications .publication-entry .badges .citation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.24rem;
+  min-height: 19px;
+  padding: 0.08rem 0.36rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--global-bg-color) 92%, var(--global-theme-color));
+  line-height: 1;
+}
+
+.publications .publication-entry .badges a.citation-badge {
+  text-decoration: none;
+}
+
+.publications .publication-entry .badges a.citation-badge:hover {
+  text-decoration: none;
+  opacity: 0.92;
+}
+
+.publications .publication-entry .badges .citation-badge-source {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--global-text-color-light);
+  text-transform: uppercase;
+}
+
+.publications .publication-entry .badges .citation-badge-count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--global-text-color);
+}
+
+.publications .publication-entry .badges .altmetric-embed {
   display: inline-flex;
   align-items: center;
   min-width: 88px;
