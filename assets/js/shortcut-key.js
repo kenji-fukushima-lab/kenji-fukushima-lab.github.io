@@ -4,7 +4,7 @@ document.addEventListener("readystatechange", () => {
     let shortcutKeyElement = document.querySelector("#search-toggle .nav-link");
     if (shortcutKeyElement) {
       // Set to icon only, regardless of platform
-      shortcutKeyElement.innerHTML = '<i class="ti ti-search"></i>';
+      shortcutKeyElement.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
     }
   }
 });

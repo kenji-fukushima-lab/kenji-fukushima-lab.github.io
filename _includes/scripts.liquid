@@ -172,19 +172,45 @@
 <script src="{{ '/assets/js/no_defer.js' | relative_url | bust_file_cache }}"></script>
 <script defer src="{{ '/assets/js/common.js' | relative_url | bust_file_cache }}"></script>
 <script defer src="{{ '/assets/js/copy_code.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% if page.page_id == 'resources' or page.page_id == 'repositories' %}
+  <script defer src="{{ '/assets/js/repo-about.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
+{% if page.page_id == 'resources' %}
+  <script defer src="{{ '/assets/js/ncbi-genome-loader.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
 
 <!-- Jupyter Open External Links New Tab -->
 <script defer src="{{ '/assets/js/jupyter_new_tab.js' | relative_url | bust_file_cache }}"></script>
 
+{% assign load_publication_badges = false %}
+{% if page.page_id == 'publications' or page.selected_papers or page.related_publications %}
+  {% assign load_publication_badges = true %}
+{% endif %}
+{% assign lazy_publication_badges = false %}
+{% if page.page_id == 'publications' %}
+  {% assign lazy_publication_badges = true %}
+{% endif %}
+
 <!-- Badges -->
-{% if site.enable_publication_badges.altmetric %}
+{% if load_publication_badges and site.enable_publication_badges.altmetric and lazy_publication_badges == false %}
   <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
 {% endif %}
-{% if site.enable_publication_badges.dimensions %}
+{% if load_publication_badges and site.enable_publication_badges.dimensions and lazy_publication_badges == false %}
   <script async src="https://badge.dimensions.ai/badge.js"></script>
 {% endif %}
 
+{% assign load_mathjax = false %}
 {% if site.enable_math %}
+  {% if page.math == true or page.enable_math == true or page.layout == 'distill' or page.tikzjax or page.pseudocode %}
+    {% assign load_mathjax = true %}
+  {% elsif page.content %}
+    {% if page.content contains '$$' or page.content contains '\(' or page.content contains '\[' or page.content contains '\begin{' %}
+      {% assign load_mathjax = true %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% if load_mathjax %}
   <!-- MathJax -->
   <script
     defer
@@ -195,15 +221,16 @@
     crossorigin="anonymous"
   ></script>
   {% unless page.pseudocode %}
-    <script src="{{ '/assets/js/mathjax-setup.js' | relative_url | bust_file_cache }}"></script>
+    <script defer src="{{ '/assets/js/mathjax-setup.js' | relative_url | bust_file_cache }}"></script>
     <script
       defer
       src="{{ site.third_party_libraries.polyfill.url.js }}"
       crossorigin="anonymous"
     ></script>
   {% else %}
-    <script src="{{ '/assets/js/pseudocode-setup.js' | relative_url | bust_file_cache }}"></script>
+    <script defer src="{{ '/assets/js/pseudocode-setup.js' | relative_url | bust_file_cache }}"></script>
     <script
+      defer
       type="text/javascript"
       src="{{ site.third_party_libraries.pseudocode.url.js }}"
       integrity="{{ site.third_party_libraries.pseudocode.integrity.js }}"
@@ -216,15 +243,6 @@
   <!-- Analytics -->
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', '{{ site.google_analytics }}');
-  </script>
   <script defer src="{{ '/assets/js/google-analytics-setup.js' | relative_url | bust_file_cache }}"></script>
 {% endif %}
 

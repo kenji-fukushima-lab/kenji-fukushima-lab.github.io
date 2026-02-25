@@ -1,15 +1,23 @@
 ---
 layout: page
 ---
+<link rel="stylesheet" href="{{ '/assets/css/profiles.css' | relative_url | bust_file_cache }}">
 <div class="post">
-  <article>
+  <article class="people-list">
     {% assign position_order = page.position_order %}
     {% assign profiles = site.profiles %}
     {% assign sorted_profiles = '' | split: '' %}
 
     {% for position in position_order %}
       {% for profile in profiles %}
-        {% if profile.position_key == position %}
+        {% assign is_prospective_member = false %}
+        {% if profile.position_key == 'future' %}
+          {% assign is_prospective_member = true %}
+        {% endif %}
+        {% if profile.path contains 'prospective_members/' %}
+          {% assign is_prospective_member = true %}
+        {% endif %}
+        {% if profile.position_key == position and is_prospective_member == false %}
           {% assign sorted_profiles = sorted_profiles | push: profile %}
         {% endif %}
       {% endfor %}
@@ -18,62 +26,71 @@ layout: page
     {% assign lang = page.lang | default: site.lang | default: 'en-us' %}
 
     {% for profile in sorted_profiles %}
-      <div class="media mb-5" style="padding: 1rem; border-bottom: 1px solid #ddd;">
+      <div class="people-card">
         {% if profile.image %}
-          <img src="{{ profile.image | prepend: '/assets/img/' }}" class="mr-4 rounded" style="width:140px; height:auto;" alt="{{ profile.name }}">
+          {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
+          <div class="people-avatar-wrapper">
+            {% include figure.liquid path=profile_image_path class="rounded people-avatar" width="96" alt=profile.name %}
+          </div>
         {% endif %}
-        <div class="media-body">
-          <h3 style="margin-bottom: 0.4rem; font-size:1.6rem;">{{ profile.name }}</h3>
-          {% if profile.name_native %}
-            <div style="font-size: 1.1rem; color: #555; margin-bottom: 0.6rem;">
-              {{ profile.name_native }}
-            </div>
-          {% endif %}
+        <div class="people-card-body">
+          <h3 class="people-name">
+            {{ profile.name }}
+            {% if site.active_lang == 'ja' and profile.name_native %}
+              <span class="people-name-native">{{ profile.name_native }}</span>
+            {% endif %}
+          </h3>
 
           {% assign position = site.data[lang].strings.positions[profile.position_key] %}
-          {% if position %}
-            <p style="font-size: 1.2rem; color: #333;">{{ position }}</p>
+          {% assign has_social_links = false %}
+          {% if profile.email or profile.website or profile.orcid or profile.google_scholar or profile.github or profile.linkedin or profile.twitter or profile.researchgate or profile.amazon or profile.amazon_author or profile.researchmap or profile.tayo %}
+            {% assign has_social_links = true %}
           {% endif %}
 
-          <div class="social-icons" style="margin-top: 0.5rem;">
-            {% if profile.email -%}
-              <a href="mailto:{{ profile.email }}"><i class="fas fa-envelope"></i></a>
-            {%- endif %}
-            {% if profile.website -%}
-              <a href="{{ profile.website }}"><i class="fas fa-globe"></i></a>
-            {%- endif %}
-            {% if profile.orcid -%}
-              <a href="{{ profile.orcid }}"><i class="ai ai-orcid"></i></a>
-            {%- endif %}
-            {% if profile.google_scholar -%}
-              <a href="{{ profile.google_scholar }}"><i class="ai ai-google-scholar"></i></a>
-            {%- endif %}
-            {% if profile.github -%}
-              <a href="https://github.com/{{ profile.github }}"><i class="fab fa-github"></i></a>
-            {%- endif %}
-            {% if profile.linkedin -%}
-              <a href="{{ profile.linkedin }}"><i class="fab fa-linkedin"></i></a>
-            {%- endif %}
-            {% if profile.twitter -%}
-              <a href="{{ profile.twitter }}"><i class="fab fa-x-twitter"></i></a>
-            {%- endif %}
-            {% if profile.researchgate -%}
-              <a href="{{ profile.researchgate }}"><i class="fab fa-researchgate"></i></a>
-            {%- endif %}
-            {% if profile.amazon -%}
-              <a href="{{ profile.amazon }}"><i class="fab fa-amazon"></i></a>
-            {%- endif %}
-            {% if profile.researchmap -%}
-              <a href="{{ profile.researchmap }}"><img src="https://researchmap.jp/favicon.ico" alt="Researchmap" style="height: 1em;"></a>
-            {%- endif %}
-            {% if profile.tayo -%}
-              <a href="{{ profile.tayo }}"><img src="https://tayo.jp/public/assets/favicon.ico" alt="Tayo" style="height: 1em;"></a>
-            {%- endif %}
-          </div>
-
-          <div style="margin-top: 0.7rem;">
-            {{ profile.content | markdownify }}
-          </div>
+          {% if position or has_social_links %}
+            <div class="people-meta">
+              {% if position %}
+                <span class="people-position">{{ position }}</span>
+              {% endif %}
+              <div class="social-icons people-social-icons">
+                {% if profile.email -%}
+                  <a href="mailto:{{ profile.email }}"><i class="fas fa-envelope"></i></a>
+                {%- endif %}
+                {% if profile.website -%}
+                  <a href="{{ profile.website }}"><i class="fas fa-globe"></i></a>
+                {%- endif %}
+                {% if profile.orcid -%}
+                  <a href="{{ profile.orcid }}"><i class="ai ai-orcid"></i></a>
+                {%- endif %}
+                {% if profile.google_scholar -%}
+                  <a href="{{ profile.google_scholar }}"><i class="ai ai-google-scholar"></i></a>
+                {%- endif %}
+                {% if profile.github -%}
+                  <a href="https://github.com/{{ profile.github }}"><i class="fab fa-github"></i></a>
+                {%- endif %}
+                {% if profile.linkedin -%}
+                  <a href="{{ profile.linkedin }}"><i class="fab fa-linkedin"></i></a>
+                {%- endif %}
+                {% if profile.twitter -%}
+                  <a href="{{ profile.twitter }}"><i class="fab fa-x-twitter"></i></a>
+                {%- endif %}
+                {% if profile.researchgate -%}
+                  <a href="{{ profile.researchgate }}"><i class="fab fa-researchgate"></i></a>
+                {%- endif %}
+                {% if profile.amazon -%}
+                  <a href="{{ profile.amazon }}"><i class="fab fa-amazon"></i></a>
+                {%- elsif profile.amazon_author -%}
+                  <a href="{{ profile.amazon_author }}"><i class="fab fa-amazon"></i></a>
+                {%- endif %}
+                {% if profile.researchmap -%}
+                  <a href="{{ profile.researchmap }}"><img src="https://researchmap.jp/favicon.ico" alt="Researchmap"></a>
+                {%- endif %}
+                {% if profile.tayo -%}
+                  <a href="{{ profile.tayo }}"><img src="https://tayo.jp/public/assets/favicon.ico" alt="Tayo"></a>
+                {%- endif %}
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
     {% endfor %}

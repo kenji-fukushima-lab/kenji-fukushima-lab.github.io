@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 
 gem 'jekyll'
+gem 'activesupport', '8.1.2'
+gem 'bigdecimal', '3.1.9'
+gem 'json', '2.9.1'
 
 # Core plugins that directly affect site building
 group :jekyll_plugins do
@@ -18,11 +21,9 @@ group :jekyll_plugins do
     gem 'jekyll-scholar'
     gem 'jekyll-sitemap'
     gem 'jekyll-socials'
-    gem 'jekyll-tabs'
     gem 'jekyll-terser', :git => "https://github.com/RobertoJBeltran/jekyll-terser.git"
     gem 'jekyll-toc'
     gem 'jekyll-twitter-plugin'
-    gem 'jemoji'
 
     gem 'classifier-reborn'  # used for content categorization during the build
 end

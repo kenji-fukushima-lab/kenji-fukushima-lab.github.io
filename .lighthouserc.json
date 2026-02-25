@@ -1,0 +1,49 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://127.0.0.1:4000/",
+        "http://127.0.0.1:4000/publications/",
+        "http://127.0.0.1:4000/resources/"
+      ],
+      "numberOfRuns": 1,
+      "startServerCommand": "npx --yes http-server@14.1.1 _site -a 127.0.0.1 -p 4000 -c-1",
+      "startServerReadyPattern": "Available on:",
+      "settings": {
+        "chromeFlags": "--no-sandbox --headless=new",
+        "blockedUrlPatterns": [
+          "https://metrics-api.dimensions.ai/*"
+        ]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.4
+          }
+        ],
+        "categories:accessibility": [
+          "error",
+          {
+            "minScore": 0.85
+          }
+        ],
+        "largest-contentful-paint": [
+          "warn",
+          {
+            "maxNumericValue": 8000
+          }
+        ],
+        "errors-in-console": "off",
+        "bf-cache": "off",
+        "document-title": "off"
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": "./lighthouse-results-ci"
+    }
+  }
+}

@@ -50,9 +50,7 @@ nav_order: 5
   
 ## Genomes
 
-<p>The embedded viewers below use NCBI's official API and show representative scaffolds for each assembly (initial loading may take a few seconds).</p>
-
-<script src="https://www.ncbi.nlm.nih.gov/projects/sviewer/js/sviewer.js" id="autoload"></script>
+<p>The viewers below use NCBI's official API to display representative scaffolds for each assembly.</p>
 
 <div class="ncbi-genome-embed">
   <h4>
@@ -61,7 +59,13 @@ nav_order: 5
     / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=29002" target="_blank" rel="noopener noreferrer">CoGe</a>
     / <a href="https://www.nature.com/articles/s41559-016-0059" target="_blank" rel="noopener noreferrer">Publication</a>)
   </h4>
-  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" data-autoload>
+  <div class="ncbi-genome-actions">
+    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-cephalotus">
+      Load interactive viewer
+    </button>
+    <span class="ncbi-genome-status" data-ncbi-error hidden>Viewer could not be loaded. Please use the NCBI link above.</span>
+  </div>
+  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" hidden>
     <a href="?embedded=true&id=BDDD01000001.1&assm_context=GCA_001972305.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
   </div>
 </div>
@@ -73,7 +77,13 @@ nav_order: 5
     / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=61566" target="_blank" rel="noopener noreferrer">CoGe</a>
     / <a href="https://www.nature.com/articles/s41477-023-01562-2" target="_blank" rel="noopener noreferrer">Publication</a>)
   </h4>
-  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" data-autoload>
+  <div class="ncbi-genome-actions">
+    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-nepenthes">
+      Load interactive viewer
+    </button>
+    <span class="ncbi-genome-status" data-ncbi-error hidden>Viewer could not be loaded. Please use the NCBI link above.</span>
+  </div>
+  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" hidden>
     <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
   </div>
 </div>
@@ -85,7 +95,3 @@ nav_order: 5
 #### [kflab](https://github.com/kfuku52/kflab)
 
 This repository is designed as the primary platform for coordinating laboratory activities within the Kenji Fukushima lab. Our focus here extends beyond programming code, encompassing a broad spectrum of discussions relevant to our research. These include logistics like lab supply management, strategic considerations in experimental design, and updates on research progress. New members should create a GitHub account and request an invitation from Kenji Fukushima.
-
-#### [gfe_pipeline](https://github.com/kfuku52/gfe_pipeline)
-
-**gfe_pipeline** is an in-house tool that was originally developed for analyzing **g**ene **f**amily **e**volution using an in-house [Apptainer/Singularity](https://apptainer.org/) container, **gfe**. Currently, gfe_pipeline has expanded to include many bioinformatics tools beyond gene family analysis. These include transcriptome assembly, gene annotation, species tree inference, SNV analysis, synteny analysis, and more. For example, a significant portion of the data presented in the studies by [Fukushima & Pollock (2020)](https://www.nature.com/articles/s41467-020-18090-8), [Fukushima & Pollock (2023)](https://www.nature.com/articles/s41559-022-01932-7), and [Saul et al. (2023)](https://www.nature.com/articles/s41477-023-01562-2) was generated using the gfe_pipeline. Lab members who wish to obtain access rights should make a request to Kenji Fukushima.

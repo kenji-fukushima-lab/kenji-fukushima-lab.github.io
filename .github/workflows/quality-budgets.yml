@@ -1,0 +1,71 @@
+name: Quality Budgets
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "assets/**"
+      - "_sass/**"
+      - "_includes/**"
+      - "_layouts/**"
+      - "_pages/**"
+      - "_posts/**"
+      - "_config.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - ".lighthouserc.json"
+      - ".github/scripts/check-image-budget.sh"
+      - ".github/workflows/quality-budgets.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "assets/**"
+      - "_sass/**"
+      - "_includes/**"
+      - "_layouts/**"
+      - "_pages/**"
+      - "_posts/**"
+      - "_config.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - ".lighthouserc.json"
+      - ".github/scripts/check-image-budget.sh"
+      - ".github/workflows/quality-budgets.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image-budget:
+    name: Image Budget
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Enforce image size threshold
+        run: bash .github/scripts/check-image-budget.sh
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.5"
+          bundler-cache: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build site
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick
+          export JEKYLL_ENV=production
+          bundle exec jekyll build
+      - name: Run Lighthouse assertions
+        run: npx --yes @lhci/cli@0.14.0 autorun --config=.lighthouserc.json

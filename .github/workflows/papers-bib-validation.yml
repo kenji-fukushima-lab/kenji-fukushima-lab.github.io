@@ -1,0 +1,39 @@
+name: Validate papers.bib
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - "_bibliography/papers.bib"
+      - ".github/scripts/validate_papers_bib.py"
+      - ".github/workflows/papers-bib-validation.yml"
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - "_bibliography/papers.bib"
+      - ".github/scripts/validate_papers_bib.py"
+      - ".github/workflows/papers-bib-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Validate papers.bib
+        run: python .github/scripts/validate_papers_bib.py _bibliography/papers.bib

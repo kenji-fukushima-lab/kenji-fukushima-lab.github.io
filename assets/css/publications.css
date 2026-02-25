@@ -13,15 +13,238 @@
 
 .badge-type-original {
   color: #fff;
-  background-color: #007bff; /* Blue for ORIGINAL */
+  background-color: #007bff;
 }
 
 .badge-type-preprint {
   color: #fff;
-  background-color: #f80; /* Orange background */
+  background-color: #f80;
 }
 
 .badge-type-other {
   color: #fff;
-  background-color: #28a745; /* Green for REVIEW */
+  background-color: #28a745;
+}
+
+.publications-controls {
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.75rem;
+  padding: 0.7rem;
+  margin-bottom: 0.7rem;
+  background: color-mix(in srgb, var(--global-bg-color) 92%, var(--global-theme-color));
+}
+
+.publications-controls-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.publications-controls-main .bibsearch-form-input {
+  max-width: 360px;
+  margin-right: 0;
+  flex: 1 1 260px;
+  min-height: 28px;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.82rem;
+}
+
+.publications-controls-facets {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.pub-facet-label {
+  display: grid;
+  flex: 1 1 0;
+  min-width: 140px;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--global-text-color-light);
+}
+
+.pub-select {
+  color: var(--global-text-color);
+  background: var(--global-bg-color);
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.5rem;
+  padding: 0.22rem 0.5rem;
+  min-height: 28px;
+  font-size: 0.82rem;
+}
+
+.pub-button {
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--global-theme-color);
+  color: var(--global-bg-color);
+  padding: 0.22rem 0.58rem;
+  min-height: 28px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.pub-button:hover {
+  opacity: 0.9;
+}
+
+.pub-button-secondary {
+  background: var(--global-bg-color);
+  color: var(--global-theme-color);
+  border: 1px solid var(--global-theme-color);
+}
+
+.publications-controls-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--global-text-color-light);
+}
+
+.pub-badge-status {
+  opacity: 0.9;
+}
+
+.role-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.69rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+}
+
+.role-first {
+  color: #105a3f;
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.role-cofirst {
+  color: #1e3a8a;
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.role-corresponding {
+  color: #7c2d12;
+  background: #ffedd5;
+  border-color: #fdba74;
+}
+
+.publications-results .pub-empty-state {
+  margin-top: 1.2rem;
+  color: var(--global-text-color-light);
+}
+
+.pub-sorted-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.publications-dashboard {
+  margin: 0.5rem 0 1rem;
+}
+
+.publications-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.publications-dashboard-card {
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  background: color-mix(in srgb, var(--global-bg-color) 95%, var(--global-theme-color));
+  min-height: 175px;
+}
+
+.publications-dashboard-card h4 {
+  font-size: 0.76rem;
+  margin: 0 0 0.25rem;
+  color: var(--global-text-color-light);
+}
+
+.publications-dashboard-card canvas {
+  width: 100% !important;
+  height: 130px !important;
+}
+
+.publications ol.bibliography li {
+  margin-bottom: 0.72rem;
+}
+
+.publications .publication-entry .abbr {
+  margin-bottom: 0.2rem;
+}
+
+.publications .publication-entry .abbr figure {
+  margin: 0 0 0.2rem;
+  width: 112px;
+  max-width: 100%;
+}
+
+.publications .publication-entry .abbr .preview {
+  display: block;
+  width: 112px;
+  max-width: 100%;
+  height: auto;
+}
+
+.publications .publication-entry .author,
+.publications .publication-entry .periodical {
+  line-height: 1.3;
+  margin-bottom: 0.14rem;
+}
+
+.publications .publication-entry .links,
+.publications .publication-entry .badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.28rem 0.35rem;
+  vertical-align: middle;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.publications .publication-entry .links {
+  margin-right: 0.35rem;
+}
+
+.publications .publication-entry .links a.btn {
+  margin: 0;
+  padding: 0.12rem 0.48rem;
+  font-size: 0.72rem;
+  line-height: 1.15;
+}
+
+.publications .publication-entry .badges span {
+  padding-right: 0;
+}
+
+.publications .publication-entry .badges img {
+  height: 19px;
+  width: auto;
+}
+
+@media (max-width: 900px) {
+  .publications-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }

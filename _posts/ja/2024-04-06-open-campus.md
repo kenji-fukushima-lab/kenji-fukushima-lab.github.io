@@ -13,9 +13,7 @@ categories:
 
 伝え聞いた話ですが、遺伝研前の桜並木はほとんど'染井吉野'なのですが、より紅みの強い'染井紅'が少数植栽されています（写真左）。 これは、ここで生じた枝変わりを固定した品種らしいです。
 
-<div align="center">
-    <img src="/assets/img/posts/20240406_021448112.jpg" alt="" width="450"/>
-</div>
+{% include figure.liquid path="assets/img/posts/20240406_021448112.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="一般公開の桜" %}
 <div style="margin-top: 30px;"></div>
 
 {% twitter https://x.com/kfuku0502/status/1776418457833406946 %}

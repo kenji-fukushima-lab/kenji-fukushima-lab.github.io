@@ -11,7 +11,5 @@ categories:
 
 遺伝研に来て初めて、ゲノム解読用の高分子DNAを抽出しました。今回のサンプルは食虫植物近縁種のルリマツリです。
 
-<div align="center">
-    <img src="/assets/img/posts/20240611_011423758.MP.jpg" alt="" width="450"/>
-</div>
+{% include figure.liquid path="assets/img/posts/20240611_011423758.MP.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="高分子DNAの抽出" %}
 <div style="margin-top: 30px;"></div>

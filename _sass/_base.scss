@@ -215,6 +215,20 @@ ul.task-list input[type="checkbox"] {
   margin-right: 1rem;
 }
 
+.profile-avatar-wrapper {
+  flex: 0 0 auto;
+
+  figure {
+    margin: 0;
+  }
+}
+
+.profile-avatar {
+  width: 140px !important;
+  height: auto !important;
+  display: block;
+}
+
 @media (min-width: 576px) {
   .profile {
     width: 30%;
@@ -573,11 +587,19 @@ footer.sticky-bottom {
   gap: 12px;
 }
 
+.repo-compact-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .repo-compact-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
   color: var(--global-theme-color);
   font-weight: 600;
@@ -587,10 +609,34 @@ footer.sticky-bottom {
     flex-shrink: 0;
   }
 
-  span {
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .repo-compact-name {
+    overflow: visible;
+    text-overflow: clip;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+.repo-compact-about {
+  color: var(--global-text-color-light);
+  font-size: 0.88rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 12rem;
+
+  &:not(.is-empty)::before {
+    content: " - ";
+  }
+
+  &.is-loading {
+    opacity: 0.75;
+  }
+
+  &.is-empty {
+    display: none;
   }
 }
 
@@ -623,8 +669,29 @@ footer.sticky-bottom {
     font-weight: 400;
   }
 
+  .ncbi-genome-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .ncbi-genome-status {
+    font-size: 0.85rem;
+    color: var(--global-text-color-light);
+  }
+
+  [data-ncbi-error][hidden] {
+    display: none !important;
+  }
+
   .SeqViewerApp {
     min-height: 200px;
+  }
+
+  .SeqViewerApp[hidden] {
+    display: none !important;
   }
 }
 

@@ -50,9 +50,7 @@ nav_order: 5
   
 ## ゲノム
 
-<p>NCBIの埋め込みAPIを使って、各ゲノムの代表scaffoldを表示しています（読み込みに少し時間がかかる場合があります）。</p>
-
-<script src="https://www.ncbi.nlm.nih.gov/projects/sviewer/js/sviewer.js" id="autoload"></script>
+<p>NCBIの埋め込みAPIを使って各ゲノムの代表 scaffold を表示できます。</p>
 
 <div class="ncbi-genome-embed">
   <h4>
@@ -61,7 +59,13 @@ nav_order: 5
     / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=29002" target="_blank" rel="noopener noreferrer">CoGe: 29002</a>
     / <a href="https://www.nature.com/articles/s41559-016-0059" target="_blank" rel="noopener noreferrer">Publication: Fukushima et al. (2017)</a>）
   </h4>
-  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" data-autoload>
+  <div class="ncbi-genome-actions">
+    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-cephalotus">
+      インタラクティブビューアを読み込む
+    </button>
+    <span class="ncbi-genome-status" data-ncbi-error hidden>ビューアを読み込めませんでした。上のNCBIリンクをご利用ください。</span>
+  </div>
+  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" hidden>
     <a href="?embedded=true&id=BDDD01000001.1&assm_context=GCA_001972305.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
   </div>
 </div>
@@ -73,7 +77,13 @@ nav_order: 5
     / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=61566" target="_blank" rel="noopener noreferrer">CoGe: 61566</a>
     / <a href="https://www.nature.com/articles/s41477-023-01562-2" target="_blank" rel="noopener noreferrer">Publication: Saul et al. (2023)</a>）
   </h4>
-  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" data-autoload>
+  <div class="ncbi-genome-actions">
+    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-nepenthes">
+      インタラクティブビューアを読み込む
+    </button>
+    <span class="ncbi-genome-status" data-ncbi-error hidden>ビューアを読み込めませんでした。上のNCBIリンクをご利用ください。</span>
+  </div>
+  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" hidden>
     <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
   </div>
 </div>
@@ -85,7 +95,3 @@ nav_order: 5
 #### [kflab](https://github.com/kfuku52/kflab)
 
 研究室のタスク管理のためのプライベートリポジトリです。ここでは、試薬管理から実験計画の議論、そして研究の進捗報告まで、メンバー間で様々な調整が行われます。新メンバーはGitHubアカウントを作成して、福島に招待を依頼してください。
-
-#### [gfe_pipeline](https://github.com/kfuku52/gfe_pipeline)
-
-この内製ツールはもともと、Apptainer/Singularityコンテナを使用して遺伝子族進化(gene family evolution)の解析のために開発しました。現在では、遺伝子族の解析にとどまらず、トランスクリプトームアセンブリー、遺伝子アノテーション、種系統樹推定、SNV分析、シンテニー分析など、多くのバイオインフォマティクスツールを含むよう拡張されています。例えば、[Fukushima and Pollock (2020)](https://www.nature.com/articles/s41467-020-18090-8)、[Fukushima and Pollock (2023)](https://www.nature.com/articles/s41559-022-01932-7)、[Saul et al. (2023)](https://www.nature.com/articles/s41477-023-01562-2)で示したデータの大部分はgfe_pipelineを利用して生成しました。利用にはコマンドライン操作が必要です。アクセスを希望するラボメンバーは福島に申し出てください。

@@ -1,6 +1,85 @@
 ---
 ---
-<div class="row">
+{% assign doi_value = '' %}
+{% if entry.doi and entry.doi != '' and entry.doi != '{}' %}
+  {% assign doi_value = entry.doi | normalize_doi %}
+{% endif %}
+
+{% assign month_name = entry.month | downcase | strip %}
+{% assign month_number = '0' %}
+{% case month_name %}
+  {% when 'jan' %}
+    {% assign month_number = '1' %}
+  {% when 'feb' %}
+    {% assign month_number = '2' %}
+  {% when 'mar' %}
+    {% assign month_number = '3' %}
+  {% when 'apr' %}
+    {% assign month_number = '4' %}
+  {% when 'may' %}
+    {% assign month_number = '5' %}
+  {% when 'jun' %}
+    {% assign month_number = '6' %}
+  {% when 'jul' %}
+    {% assign month_number = '7' %}
+  {% when 'aug' %}
+    {% assign month_number = '8' %}
+  {% when 'sep' %}
+    {% assign month_number = '9' %}
+  {% when 'oct' %}
+    {% assign month_number = '10' %}
+  {% when 'nov' %}
+    {% assign month_number = '11' %}
+  {% when 'dec' %}
+    {% assign month_number = '12' %}
+{% endcase %}
+
+{% assign article_type_value = entry.article_type | default: '' | strip | downcase %}
+{% assign journal_value = entry.journal | default: entry.booktitle | default: entry.school | default: '' | strip %}
+{% assign keyword_value = entry.keywords | default: entry.keyword | default: '' | strip %}
+{% assign first_author_value = '' %}
+{% assign corresponding_authors = '' %}
+{% assign cofirst_authors = '' %}
+{% assign highlight_list = entry.highlight | downcase | strip | split: ' and ' %}
+{% assign lab_member_values = '' %}
+{% assign lab_member_count = 0 %}
+{% for author in entry.author_array %}
+  {% assign author_last_clean = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' | strip %}
+  {% assign author_first_clean = author.first | regex_replace: '[*∗†‡§¶‖&^]', '' | strip %}
+  {% assign full_name = author_last_clean | append: ', ' | append: author_first_clean | strip %}
+  {% assign full_name_normalized = full_name | downcase %}
+  {% if forloop.first %}
+    {% assign first_author_value = full_name %}
+  {% endif %}
+  {% if author.first contains '*' or author.first contains '∗' or author.last contains '*' or author.last contains '∗' %}
+    {% assign corresponding_authors = corresponding_authors | append: full_name_normalized | append: '||' %}
+  {% endif %}
+  {% if author.first contains '†' or author.first contains '‡' or author.last contains '†' or author.last contains '‡' %}
+    {% assign cofirst_authors = cofirst_authors | append: full_name_normalized | append: '||' %}
+  {% endif %}
+  {% if highlight_list contains full_name_normalized and full_name_normalized != '' %}
+    {% assign lab_member_values = lab_member_values | append: full_name_normalized | append: '||' %}
+    {% assign lab_member_count = lab_member_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+<div
+  class="row publication-entry"
+  data-key="{{ entry.key | escape }}"
+  data-year="{{ entry.year | default: '' | escape }}"
+  data-month="{{ month_number }}"
+  data-article-type="{{ article_type_value | escape }}"
+  data-first-author="{{ first_author_value | downcase | escape }}"
+  data-corresponding="{{ corresponding_authors | escape }}"
+  data-co-first="{{ cofirst_authors | escape }}"
+  data-journal="{{ journal_value | downcase | escape }}"
+  data-keywords="{{ keyword_value | downcase | escape }}"
+  data-lab-members="{{ lab_member_values | escape }}"
+  data-lab-member-count="{{ lab_member_count }}"
+  data-citation-count="{{ entry.citation_count | default: entry.citations | default: entry.is_referenced_by_count | default: 0 }}"
+  data-altmetric-score="{{ entry.altmetric_score | default: 0 }}"
+  data-doi="{{ doi_value | downcase | escape }}"
+>
   {% if site.enable_publication_thumbnails %}
     <div class="col col-sm-2 abbr">
       {%- if entry.abbr -%}
@@ -32,7 +111,7 @@
           {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
           {%
             include figure.liquid
-            loading="eager"
+            loading="lazy"
             path=entry_path
             sizes = "200px"
             class="preview z-depth-1 rounded"
@@ -44,7 +123,7 @@
         {% assign default_preview = '/assets/img/publication_preview/default_6902950.png' %}
         {%
           include figure.liquid
-          loading="eager"
+          loading="lazy"
           path=default_preview
           sizes = "200px"
           class="preview z-depth-1 rounded"
@@ -71,7 +150,7 @@
           {% when 'preprint' %}
             <span class="badge badge-type-preprint">Preprint</span>
           {% else %}
-            <span class="badge badge-type-other">{{ entry.article_type | capitalize }}</span>
+            <span class="badge badge-type-other">{{ entry.article_type | article_type_titleize }}</span>
         {% endcase %}
       {% endif %}
       <span class="title">{{ entry.title }}</span>
@@ -103,7 +182,6 @@
         {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
         {%- assign author_last_html = author.last | regex_replace: '([*∗†‡§¶‖&^]+)', '<sup>\1</sup>' -%}
 
-        {%- assign highlight_list = entry.highlight | downcase | strip | split: ' and ' -%}
         {%- assign author_first_clean = author.first | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
         {%- assign full_name = author_last_name | append: ', ' | append: author_first_clean -%}
         {%- assign full_name_normalized = full_name | downcase | strip -%}
@@ -266,8 +344,8 @@
       {% if entry.abstract and entry.abstract != '' and entry.abstract != '{}' %}
         <a class="abstract btn btn-sm z-depth-0" role="button">{{ site.data[site.active_lang].strings.bibliography.abstract }}</a>
       {% endif %}
-      {% if entry.doi and entry.doi != '' and entry.doi != '{}' %}
-        <a href="https://doi.org/{{ entry.doi }}" class="btn btn-sm z-depth-0" role="button">DOI</a>
+      {% if doi_value != '' %}
+        <a href="https://doi.org/{{ doi_value }}" class="btn btn-sm z-depth-0" role="button">DOI</a>
       {% endif %}
       {% if entry.arxiv and entry.arxiv != '' and entry.arxiv != '{}' %}
         <a href="http://arxiv.org/abs/{{ entry.arxiv }}" class="btn btn-sm z-depth-0" role="button">arXiv</a>
@@ -438,8 +516,8 @@
                 data-arxiv-id="{{ entry.arxiv }}"
               {% elsif entry.eprint %}
                 data-arxiv-id="{{ entry.eprint }}"
-              {% elsif entry.doi %}
-                data-doi="{{ entry.doi }}"
+              {% elsif doi_value != '' %}
+                data-doi="{{ doi_value }}"
               {% elsif entry.pmid %}
                 data-pmid="{{ entry.pmid }}"
               {% elsif entry.isbn %}
@@ -452,8 +530,8 @@
               class="__dimensions_badge_embed__"
               {% if entry.dimensions != blank and entry.dimensions != 'true' %}
                 data-id="{{ entry.dimensions }}"
-              {% elsif entry.doi %}
-                data-doi="{{ entry.doi }}"
+              {% elsif doi_value != '' %}
+                data-doi="{{ doi_value }}"
               {% else %}
                 data-pmid="{{ entry.pmid }}"
               {% endif %}
