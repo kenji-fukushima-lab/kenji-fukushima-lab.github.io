@@ -1,6 +1,17 @@
 window.dataLayer = window.dataLayer || [];
-function gtag() {
+window.gtag = window.gtag || function gtag() {
   window.dataLayer.push(arguments);
-}
-gtag("js", new Date());
-gtag("config", "G-19M9F0JMSS");
+};
+
+window.trackSiteEvent = function trackSiteEvent(eventName, params = {}) {
+  if (!eventName) return;
+  try {
+    window.gtag("event", eventName, params);
+  } catch (_error) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: eventName, ...params });
+  }
+};
+
+window.gtag("js", new Date());
+window.gtag("config", "G-19M9F0JMSS");
