@@ -3,7 +3,10 @@ import { highlightSearchTerm } from "./highlight-search-term.js";
 const normalize = (value) => (value ?? "").toString().trim().toLowerCase();
 
 const parseNumber = (value) => {
-  const parsed = Number.parseFloat(value);
+  const normalized = (value ?? "").toString().replace(/,/g, "");
+  const matched = normalized.match(/-?\d+(\.\d+)?/);
+  if (!matched) return 0;
+  const parsed = Number.parseFloat(matched[0]);
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
@@ -356,11 +359,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const highlightSearch = (search) => {
-    if (!CSS.highlights) return;
-    highlightSearchTerm({
-      search,
-      selector: "#publications-results li",
-    });
+    // Some browsers do not expose the CSS Highlight API at all.
+    if (typeof CSS === "undefined" || !("highlights" in CSS) || !CSS.highlights) return;
+    try {
+      highlightSearchTerm({
+        search,
+        selector: "#publications-results li",
+      });
+    } catch {
+      // Keep search/sort functional even if highlight rendering fails.
+    }
   };
 
   const getChartPalette = () => {
@@ -707,13 +715,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (sortSelect) {
-    sortSelect.addEventListener("change", async () => {
+    sortSelect.addEventListener("change", () => {
       currentSort = sortSelect.value;
-      if (currentSort === "citations" && !citationHydrationStarted) {
-        citationHydrationStarted = true;
-        await hydrateCitationCounts();
-      }
       applyFiltersAndRender();
+
+      if (currentSort === "citations") {
+        if (!citationHydrationStarted) {
+          citationHydrationStarted = true;
+          hydrateCitationCounts();
+        }
+        if (citationHydrationPromise) {
+          citationHydrationPromise.finally(() => {
+            if (currentSort === "citations") applyFiltersAndRender();
+          });
+        }
+      } else if (currentSort === "altmetric" && badgeState !== "loaded") {
+        loadExternalBadges().finally(() => {
+          if (currentSort === "altmetric") applyFiltersAndRender();
+        });
+      }
+
       trackAnalyticsEvent("publications_sort_change", {
         sort: currentSort,
       });
