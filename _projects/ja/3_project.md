@@ -1,6 +1,6 @@
 ---
 page_id: project_3
-layout: page
+layout: join
 title: 実験生物
 img: assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg
 importance: 3

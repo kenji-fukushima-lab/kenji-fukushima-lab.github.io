@@ -1,6 +1,6 @@
 ---
 page_id: join
-layout: page
+layout: join
 permalink: /join/
 title: メンバー募集
 nav: true

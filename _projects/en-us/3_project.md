@@ -1,6 +1,6 @@
 ---
 page_id: project_3
-layout: page
+layout: join
 title: organisms
 img: assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg
 importance: 3

@@ -8,7 +8,7 @@ nav: false
 nav_order: 6
 ---
 
-<link rel="stylesheet" href="{{ 'assets/css/access-outreach.css' | relative_url }}">
+<link rel="stylesheet" href="/assets/css/access-outreach.css">
 
 {% assign radio_archive_video_ids = site.data.outreach.radio_archive_latest_video_ids %}
 {% assign youtube_domain = "https://www.youtube.com" %}
@@ -32,7 +32,7 @@ nav_order: 6
       <h3>Book</h3>
       <div class="book-feature">
         <a class="book-feature-cover" href="https://www.amazon.co.jp/dp/4000297104">
-          <img src="{{ '/assets/img/book_covers/fukushima2022.jpg' | relative_url }}" alt="Carnivorous Plants: Through the Evolutionary Labyrinth">
+          <img src="/assets/img/book_covers/fukushima2022.jpg" alt="Carnivorous Plants: Through the Evolutionary Labyrinth">
         </a>
         <div class="book-feature-meta">
           <p><em>Carnivorous Plants: Through the Evolutionary Labyrinth</em> (Iwanami Science Library 310, 2022)</p>
@@ -102,7 +102,7 @@ nav_order: 6
       <h3>Interviews and More</h3>
       <div class="feature-link-grid">
         <a class="feature-thumb-link" href="https://www.nig.ac.jp/nig/ja/research/interviews/faculty-interviews">
-          <img src="{{ '/assets/img/people/kenji_fukushima.jpg' | relative_url }}" alt="NIG faculty interview">
+          <img src="/assets/img/people/kenji_fukushima.jpg" alt="NIG faculty interview">
           <span class="feature-thumb-text">NIG faculty interview</span>
         </a>
       </div>

@@ -10,14 +10,17 @@ layout: page
 
     {% for position in position_order %}
       {% for profile in profiles %}
-        {% assign is_prospective_member = false %}
+        {% assign show_profile = true %}
         {% if profile.position_key == 'future' %}
-          {% assign is_prospective_member = true %}
+          {% assign show_profile = false %}
         {% endif %}
         {% if profile.path contains 'prospective_members/' %}
-          {% assign is_prospective_member = true %}
+          {% assign show_profile = false %}
         {% endif %}
-        {% if profile.position_key == position and is_prospective_member == false %}
+        {% if profile.show_in_people == true or profile.show_in_people == 'true' %}
+          {% assign show_profile = true %}
+        {% endif %}
+        {% if profile.position_key == position and show_profile %}
           {% assign sorted_profiles = sorted_profiles | push: profile %}
         {% endif %}
       {% endfor %}

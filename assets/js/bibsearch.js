@@ -54,6 +54,7 @@ const i18n = {
   citationHydrated: isJapanesePage ? "被引用数を更新しました。" : "Citation counts refreshed.",
   leadRoleLabel: isJapanesePage ? "lab memberがfirst/co-first/corresponding" : "Lab member as first/co-first/corresponding",
   otherRoleLabel: isJapanesePage ? "それ以外" : "Other",
+  paperCountAxisLabel: isJapanesePage ? "論文数" : "Number of publications",
   labMemberFacetOption: "lab member",
   otherFacetOption: "other",
   altmetricHint: isJapanesePage
@@ -442,24 +443,53 @@ document.addEventListener("DOMContentLoaded", () => {
     const palette = getChartPalette();
     const yearLeadValues = yearLabels.map((label) => byYear.get(label).lead);
     const yearOtherValues = yearLabels.map((label) => byYear.get(label).other);
+
+    const createUnitDatasets = (values, label, color, role) => {
+      const maxValue = Math.max(0, ...values);
+      return Array.from({ length: maxValue }, (_, unitLevel) => ({
+        label,
+        data: yearLabels.map((_, index) => (values[index] > unitLevel ? 1 : 0)),
+        backgroundColor: color,
+        borderColor: palette.dividerColor,
+        borderWidth: 1,
+        borderSkipped: false,
+        stack: "publication-counts",
+        unitRole: role,
+        unitLevel,
+      }));
+    };
+
     const yearDatasets = [
-      {
-        label: i18n.leadRoleLabel,
-        data: yearLeadValues,
-        backgroundColor: palette.themeColor,
-        borderColor: palette.themeColor,
-        borderWidth: 1,
-      },
-      {
-        label: i18n.otherRoleLabel,
-        data: yearOtherValues,
-        backgroundColor: palette.secondaryColor,
-        borderColor: palette.secondaryColor,
-        borderWidth: 1,
-      },
+      ...createUnitDatasets(yearLeadValues, i18n.leadRoleLabel, palette.themeColor, "lead"),
+      ...createUnitDatasets(yearOtherValues, i18n.otherRoleLabel, palette.secondaryColor, "other"),
     ];
 
     upsertChart("byYear", "pub-chart-year", "bar", yearLabels, yearDatasets, {
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: palette.textColor,
+            filter: (legendItem, chartData) => {
+              const dataset = chartData.datasets?.[legendItem.datasetIndex];
+              return dataset?.unitLevel === 0;
+            },
+          },
+        },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const dataset = context.dataset;
+              if (!dataset || dataset.unitLevel !== 0) return null;
+              const yearIndex = context.dataIndex;
+              if (dataset.unitRole === "lead") {
+                return `${i18n.leadRoleLabel}: ${yearLeadValues[yearIndex]}`;
+              }
+              return `${i18n.otherRoleLabel}: ${yearOtherValues[yearIndex]}`;
+            },
+          },
+        },
+      },
       scales: {
         x: {
           stacked: true,
@@ -468,7 +498,13 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         y: {
           stacked: true,
-          ticks: { color: palette.textColor, precision: 0 },
+          beginAtZero: true,
+          ticks: { color: palette.textColor, precision: 0, stepSize: 1 },
+          title: {
+            display: true,
+            text: i18n.paperCountAxisLabel,
+            color: palette.textColor,
+          },
           grid: { color: palette.dividerColor },
         },
       },

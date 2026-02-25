@@ -1,6 +1,6 @@
 ---
 page_id: project_4
-layout: page
+layout: join
 title: 設備・環境
 img: assets/img/projects/incubator_IMG_20220124_115601_downsize.jpg
 importance: 4

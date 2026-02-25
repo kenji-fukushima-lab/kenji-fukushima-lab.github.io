@@ -1,6 +1,6 @@
 ---
 page_id: project_1
-layout: page
+layout: join
 title: interests
 img: assets/img/projects/convergence_03_4-3.jpg
 importance: 1

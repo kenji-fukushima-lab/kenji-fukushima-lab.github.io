@@ -8,7 +8,7 @@ nav: true
 nav_order: 6
 ---
 
-<link rel="stylesheet" href="{{ 'assets/css/access-outreach.css' | relative_url }}">
+<link rel="stylesheet" href="/assets/css/access-outreach.css">
 
 {% assign radio_archive_video_ids = site.data.outreach.radio_archive_latest_video_ids %}
 {% assign youtube_domain = "https://www.youtube.com" %}
@@ -31,7 +31,7 @@ nav_order: 6
       <h3>書籍</h3>
       <div class="book-feature">
         <a class="book-feature-cover" href="https://www.amazon.co.jp/dp/4000297104">
-          <img src="{{ '/assets/img/book_covers/fukushima2022.jpg' | relative_url }}" alt="食虫植物：進化の迷宮をゆく">
+          <img src="/assets/img/book_covers/fukushima2022.jpg" alt="食虫植物：進化の迷宮をゆく">
         </a>
         <div class="book-feature-meta">
           <p>
@@ -101,7 +101,7 @@ nav_order: 6
       <h3>インタビュー・その他</h3>
       <div class="feature-link-grid">
         <a class="feature-thumb-link" href="https://www.nig.ac.jp/nig/ja/research/interviews/faculty-interviews">
-          <img src="{{ '/assets/img/people/kenji_fukushima.jpg' | relative_url }}" alt="国立遺伝学研究所 教員インタビュー">
+          <img src="/assets/img/people/kenji_fukushima.jpg" alt="国立遺伝学研究所 教員インタビュー">
           <span class="feature-thumb-text">国立遺伝学研究所 教員インタビュー</span>
         </a>
       </div>

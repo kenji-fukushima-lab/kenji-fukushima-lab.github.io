@@ -7,7 +7,7 @@ nav: true
 nav_order: 9
 ---
 
-<link rel="stylesheet" href="{{ 'assets/css/access-outreach.css' | relative_url }}">
+<link rel="stylesheet" href="/assets/css/access-outreach.css">
 
 <div class="modern-page modern-access">
   <section class="modern-hero">

@@ -1,6 +1,6 @@
 ---
 page_id: project_2
-layout: page
+layout: join
 title: アプローチ
 img: assets/img/projects/multigene_family_4-3.jpg
 importance: 2

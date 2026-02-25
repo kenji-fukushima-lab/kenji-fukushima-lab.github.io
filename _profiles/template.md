@@ -3,6 +3,7 @@ align: left # Do not change this
 name: Your Name # Replace it with your name
 name_native: # if you have a name in a non-latin script, put it here
 position_key: future # Choose this from "position" in _i18n/en.yml
+show_in_people: true # Set true if you want this profile listed on the People page
 image: people/default.png # Your profile picture in /assets/images/people/
 content: # Leave it blank
 image_circular: false # Do not change this
