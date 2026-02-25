@@ -83,6 +83,12 @@
   text-decoration: none;
 }
 
+.people-social-icons a:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .people-social-icons i {
   font-size: 0.9rem;
 }

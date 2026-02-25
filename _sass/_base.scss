@@ -617,6 +617,12 @@ footer.sticky-bottom {
   }
 }
 
+.repo-compact a:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .repo-compact-about {
   color: var(--global-text-color-light);
   font-size: 0.88rem;
@@ -651,6 +657,7 @@ footer.sticky-bottom {
 
   img {
     height: 18px;
+    display: block;
   }
 }
 

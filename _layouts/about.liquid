@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+<link rel="stylesheet" href="{{ '/assets/css/home-dashboard.css' | relative_url | bust_file_cache }}">
 <div class="post">
   <header class="post-header">
     <h1 class="post-title">
@@ -21,6 +22,84 @@ layout: default
     {% include figure.liquid loading="eager" path = profile_image_path class = profile_image_class sizes = sizes alt = page.profile.image %}
 
     <div class="clearfix">{{ content }}</div>
+
+    {% assign is_ja = false %}
+    {% if site.active_lang == 'ja' %}
+      {% assign is_ja = true %}
+    {% endif %}
+    {% assign lab_stats = site.data.lab_stats %}
+    {% assign repo_slug = site.giscus.repo | default: site.repository | default: 'kenji-fukushima-lab/kenji-fukushima-lab.github.io' %}
+    {% assign default_branch = 'main' %}
+    {% assign workflow_file = 'broken-links.yml' %}
+    {% assign workflow_url = 'https://github.com/' | append: repo_slug | append: '/actions/workflows/' | append: workflow_file | append: '?query=branch%3A' | append: default_branch %}
+    {% assign link_health_badge = 'https://img.shields.io/github/actions/workflow/status/' | append: repo_slug | append: '/' | append: workflow_file | append: '?branch=' | append: default_branch | append: '&label=link%20health&style=flat-square' %}
+    {% assign commits_url = 'https://github.com/' | append: repo_slug | append: '/commits/' | append: default_branch %}
+    {% assign last_updated_badge = 'https://img.shields.io/github/last-commit/' | append: repo_slug | append: '?branch=' | append: default_branch | append: '&label=last%20updated&logo=github&style=flat-square' %}
+
+    <section class="home-lab-dashboard" aria-label="{% if is_ja %}ラボ統計{% else %}Lab statistics{% endif %}">
+      <div class="home-lab-dashboard-header">
+        <h2>Lab stats</h2>
+      </div>
+      <div class="home-lab-stats-grid">
+        <article class="home-stat-card">
+          <p class="home-stat-value">{{ lab_stats.publications_total | default: 0 }}</p>
+          <p class="home-stat-label">{% if is_ja %}総論文本数{% else %}Total publications{% endif %}</p>
+        </article>
+        <article class="home-stat-card">
+          <p class="home-stat-value">{{ lab_stats.active_members | default: 0 }}</p>
+          <p class="home-stat-label">{% if is_ja %}現役メンバー{% else %}Active members{% endif %}</p>
+        </article>
+        <article class="home-stat-card">
+          <p class="home-stat-value">{{ lab_stats.github_repositories | default: 0 }}</p>
+          <p class="home-stat-label">{% if is_ja %}GitHubリポジトリ{% else %}GitHub repositories{% endif %}</p>
+        </article>
+      </div>
+      <p class="home-lab-stats-meta">
+        <span>{% if is_ja %}集計ルール: すべての年の論文を集計{% else %}Rule: Publications from all years are counted{% endif %}</span>
+        {% if lab_stats.generated_at %}
+          <span>{% if is_ja %}最終集計:{% else %}Last aggregated:{% endif %} {{ lab_stats.generated_at | date: '%Y-%m-%d %H:%M UTC' }}</span>
+        {% endif %}
+      </p>
+      <div class="home-status-section">
+        <span class="home-status-title">Status</span>
+        <div class="home-status-badges">
+          <a
+            href="{{ workflow_url }}"
+            target="_blank"
+            rel="external nofollow noopener noreferrer"
+            class="external-link-track"
+            data-analytics-label="home_status_link_health"
+            aria-label="{% if is_ja %}リンク健全性ワークフローを開く{% else %}Open link health workflow{% endif %}"
+          >
+            <img
+              src="{{ link_health_badge }}"
+              alt="{% if is_ja %}リンク健全性{% else %}Link health{% endif %}"
+              loading="lazy"
+              decoding="async"
+              width="132"
+              height="20"
+            >
+          </a>
+          <a
+            href="{{ commits_url }}"
+            target="_blank"
+            rel="external nofollow noopener noreferrer"
+            class="external-link-track"
+            data-analytics-label="home_status_last_updated"
+            aria-label="{% if is_ja %}最新コミット履歴を開く{% else %}Open recent commits{% endif %}"
+          >
+            <img
+              src="{{ last_updated_badge }}"
+              alt="{% if is_ja %}最終更新日{% else %}Last updated{% endif %}"
+              loading="lazy"
+              decoding="async"
+              width="132"
+              height="20"
+            >
+          </a>
+        </div>
+      </div>
+    </section>
 
     <!-- Social -->
     {% if page.social %}

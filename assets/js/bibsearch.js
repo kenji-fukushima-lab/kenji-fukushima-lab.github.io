@@ -63,6 +63,27 @@ const i18n = {
     : "Altmetric sort prioritizes publications with `altmetric_score` metadata.",
 };
 
+const trackAnalyticsEvent = (eventName, params = {}) => {
+  if (!eventName) return;
+
+  const payload = {
+    page_path: window.location.pathname,
+    ...params,
+  };
+
+  if (typeof window.trackSiteEvent === "function") {
+    window.trackSiteEvent(eventName, payload);
+    return;
+  }
+  if (typeof window.gtag === "function") {
+    window.gtag("event", eventName, payload);
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: eventName, ...payload });
+};
+
 const defaultFacetConfig = [
   { id: "facet-year", key: "year", labeler: (value) => value.toString() },
   { id: "facet-article-type", key: "articleType", labeler: typeForDisplay },
@@ -168,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let citationHydrationStarted = false;
   let citationHydrationPromise = null;
   let inputDebounceId = null;
+  let lastTrackedSearch = "";
   let chartsReadyAttempts = 0;
   let charts = { byYear: null };
 
@@ -503,10 +525,16 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshBadgeEmbeds();
         parseAltmetricFromDom();
         setBadgeStatus("loaded");
+        trackAnalyticsEvent("publications_badges_loaded", {
+          publication_count: entries.length,
+        });
         applyFiltersAndRender();
       })
       .catch(() => {
         setBadgeStatus("error");
+        trackAnalyticsEvent("publications_badges_load_error", {
+          publication_count: entries.length,
+        });
       });
     return badgeLoadPromise;
   };
@@ -594,6 +622,13 @@ document.addEventListener("DOMContentLoaded", () => {
     inputDebounceId = setTimeout(() => {
       syncHashWithSearch();
       applyFiltersAndRender();
+      const normalizedSearch = normalize(searchInput.value);
+      if (normalizedSearch !== lastTrackedSearch) {
+        lastTrackedSearch = normalizedSearch;
+        trackAnalyticsEvent("publications_search", {
+          query_length: normalizedSearch.length,
+        });
+      }
     }, 250);
   };
 
@@ -609,6 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     syncHashWithSearch();
     applyFiltersAndRender();
+    trackAnalyticsEvent("publications_filters_reset");
   };
 
   const initializeFromHash = () => {
@@ -627,7 +663,13 @@ document.addEventListener("DOMContentLoaded", () => {
   defaultFacetConfig.forEach((facet) => {
     const select = document.getElementById(facet.id);
     if (!select) return;
-    select.addEventListener("change", applyFiltersAndRender);
+    select.addEventListener("change", () => {
+      applyFiltersAndRender();
+      trackAnalyticsEvent("publications_filter_change", {
+        filter_name: facet.key,
+        filter_value: select.value || "all",
+      });
+    });
   });
 
   if (sortSelect) {
@@ -638,6 +680,9 @@ document.addEventListener("DOMContentLoaded", () => {
         await hydrateCitationCounts();
       }
       applyFiltersAndRender();
+      trackAnalyticsEvent("publications_sort_change", {
+        sort: currentSort,
+      });
     });
   }
 
@@ -647,6 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (badgeLoadButton) {
     badgeLoadButton.addEventListener("click", () => {
+      trackAnalyticsEvent("publications_badges_load_click");
       loadExternalBadges();
     });
   }

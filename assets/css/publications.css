@@ -93,6 +93,13 @@
   opacity: 0.9;
 }
 
+.pub-button:focus-visible,
+.pub-select:focus-visible,
+.publications-controls-main .bibsearch-form-input:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 2px;
+}
+
 .pub-button-secondary {
   background: var(--global-bg-color);
   color: var(--global-theme-color);
@@ -236,6 +243,14 @@
 
 .publications .publication-entry .badges span {
   padding-right: 0;
+}
+
+.publications .publication-entry .badges .altmetric-embed,
+.publications .publication-entry .badges .__dimensions_badge_embed__ {
+  display: inline-flex;
+  align-items: center;
+  min-width: 88px;
+  min-height: 19px;
 }
 
 .publications .publication-entry .badges img {
