@@ -15,6 +15,7 @@ on:
       - "Gemfile.lock"
       - ".lighthouserc.json"
       - ".github/scripts/check-image-budget.sh"
+      - ".github/scripts/prepare-jekyll-build-env.sh"
       - ".github/workflows/quality-budgets.yml"
   pull_request:
     branches: [main, master]
@@ -30,6 +31,7 @@ on:
       - "Gemfile.lock"
       - ".lighthouserc.json"
       - ".github/scripts/check-image-budget.sh"
+      - ".github/scripts/prepare-jekyll-build-env.sh"
       - ".github/workflows/quality-budgets.yml"
   workflow_dispatch:
 
@@ -62,9 +64,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
       - name: Build site
         run: |
-          sudo apt-get update && sudo apt-get install -y imagemagick
+          bash .github/scripts/prepare-jekyll-build-env.sh
           export JEKYLL_ENV=production
           bundle exec jekyll build
       - name: Run Lighthouse assertions
