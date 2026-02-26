@@ -20,7 +20,7 @@ nav_order: 6
     <h2>Public Communication and Media Activities</h2>
     <p>
       This page highlights selected talks, media appearances, and educational content from our lab.
-      A full archive is maintained on researchmap.
+      A full archive is maintained on Researchmap.
     </p>
     <div class="quick-links">
       <a class="quick-link" href="https://researchmap.jp/kenji_fukushima/social_contribution?lang=en">Full outreach archive</a>
@@ -47,7 +47,7 @@ nav_order: 6
       <h3>TV Appearance</h3>
       <p>
         NHK WORLD-JAPAN Science View: <em>The Mystery of Carnivorous Plant Evolution</em>.
-        A research feature filmed at the University of Wurzburg in 2020.
+        A research feature filmed at the University of Würzburg in 2020.
       </p>
     </article>
 
@@ -76,14 +76,14 @@ nav_order: 6
         <a class="quick-link" href="https://www.youtube.com/@Iden-chan/search?query=%E7%A6%8F%E5%B3%B6%E5%81%A5%E5%85%90">Radio archive</a>
       </div>
       <p class="outreach-note">
-        Latest 3 episodes are shown above.
+        The latest three episodes are shown above.
       </p>
     </article>
 
     <article class="modern-card">
       <h3>Explainer Videos</h3>
       <p>
-        Invited videos on Yuru Fuwa Biology Channel covering our research and carnivorous-plant-inspired Pokemon.
+        Invited videos on Yuru Fuwa Biology Channel covering our research and carnivorous-plant-inspired Pokémon.
       </p>
       <div class="outreach-video-grid">
         <div class="outreach-media">
@@ -107,7 +107,7 @@ nav_order: 6
         </a>
       </div>
       <div class="quick-links">
-        <a class="quick-link" href="https://researchmap.jp/kenji_fukushima/social_contribution?lang=en">researchmap archive</a>
+        <a class="quick-link" href="https://researchmap.jp/kenji_fukushima/social_contribution?lang=en">Researchmap archive</a>
       </div>
     </article>
 

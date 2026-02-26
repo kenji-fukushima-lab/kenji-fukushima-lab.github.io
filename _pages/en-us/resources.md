@@ -3,7 +3,7 @@ page_id: resources
 layout: page
 permalink: /resources/
 title: resources
-description: List of research resources developed by Fukushima lab
+description: List of research resources developed by the Fukushima Lab
 nav: true
 nav_order: 5
 ---
@@ -94,4 +94,4 @@ nav_order: 5
 
 #### [kflab](https://github.com/kfuku52/kflab)
 
-This repository is designed as the primary platform for coordinating laboratory activities within the Kenji Fukushima lab. Our focus here extends beyond programming code, encompassing a broad spectrum of discussions relevant to our research. These include logistics like lab supply management, strategic considerations in experimental design, and updates on research progress. New members should create a GitHub account and request an invitation from Kenji Fukushima.
+This repository serves as the main platform for coordinating activities in the Kenji Fukushima Lab. It includes more than code: lab supply logistics, experimental-design discussions, and research-progress updates. New members should create a GitHub account and request an invitation from Kenji Fukushima.

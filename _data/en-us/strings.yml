@@ -1,6 +1,6 @@
-archive_category: an archive of posts in this category
-archive_tag: an archive of posts with this tag
-archive_year: an archive of posts from this year
+archive_category: Posts in this category
+archive_tag: Posts with this tag
+archive_year: Posts from this year
 bibliography:
   abstract: Abstract
   awarded: Awarded
@@ -22,16 +22,16 @@ categories: # This categories link /_data/en-us/strings.yml, categories: at leas
 citation:
   bibtex: "or as a BibTeX entry:"
   introduction: "If you found this useful, please cite this as:"
-contact_note: Fukushima lab. 2018-2024 at the University of Würzburg in Germany. 2024-now at the National Institute of Genetics in Japan.
+contact_note: "Fukushima Lab. 2018-2024: University of Würzburg, Germany. Since 2024: National Institute of Genetics, Japan."
 cv:
   address: Address
   area: Area
   awarder: Awarder
   awards: Awards
-  basics: General information
+  basics: General Information
   certificates: Certificates
   city: City
-  countryCode: Country code
+  countryCode: Country Code
   courses: Courses
   date: Date
   education: Education
@@ -58,7 +58,7 @@ cv:
   present: Present
   profiles: Profiles
   projects: Projects
-  publications: "Publications from Fukushima lab. †: co-first authors. *: (co-)corresponding authors."
+  publications: "Publications from the Fukushima Lab. †: co-first authors. *: (co-)corresponding authors."
   publisher: Publisher
   reference: Reference
   references: References
@@ -71,7 +71,7 @@ cv:
   summary: Summary
   table_of_contents: Table of Contents
   title: Title
-  url: Url
+  url: URL
   username: Username
   volunteer: Volunteer
   work: Work
@@ -82,7 +82,7 @@ footer_text: > # the ">" symbol means to ignore newlines until "titles:"
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a> theme.
   Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
 # Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
-latest_posts: latest posts
+latest_posts: Latest posts
 months:
   long:
     january: January
@@ -110,31 +110,31 @@ months:
     october: Oct
     november: Nov
     december: Dec
-news: news
+news: News
 newsletter:
   back: Back
   error: "Oops! Something went wrong, please try again."
-  subscribe: subscribe
+  subscribe: Subscribe
   subscribed: "You have successfully subscribed to the newsletter."
   subscribe_to_receive: "Subscribe to be notified of future articles:"
   too_many_signups: "Too many signups, please try again in a little while"
   wait: "Please wait..."
-no_news: No news so far...
-no_posts: "No posts so far..."
+no_news: No news yet.
+no_posts: "No posts yet."
 pagination:
   page: page
 post:
   created_in: Created in
   created_by: by
-  last_updated: last updated in
+  last_updated: last updated on
 references: References
 related_posts:
   description: "Here are some more articles you might like to read next:"
   title: Enjoy Reading This Article?
 search:
   dark_theme:
-    description: Change the theme of the site to Dark
-    title: Change theme to dark
+    description: Change the site theme to dark mode
+    title: Switch to dark mode
   dropdown: Dropdown
   email: Send an email
   footer:
@@ -144,8 +144,8 @@ search:
     select: to select
   languages: Languages
   light_theme:
-    description: Change the theme of the site to Light
-    title: Change theme to light
+    description: Change the site theme to light mode
+    title: Switch to light mode
   navigation: Navigation menu
   news: News
   placeholder: Type to start searching
@@ -153,18 +153,18 @@ search:
   projects: Projects
   socials: Socials
   system_theme:
-    description: Change the theme of the site to System Default
-    title: Use system default theme
+    description: Change the site theme to the system default
+    title: Use the system default theme
   theme: Theme
-selected_publications: selected publications
-site_description: A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+selected_publications: Selected publications
+site_description: A simple whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 # [add] added at 2025-5-14
 positions:
   professor: Professor
   associate_professor: Associate Professor
   assistant_professor: Assistant Professor
   lecturer: Lecturer
-  tech_staff: Technical staff
+  tech_staff: Technical Staff
   lab_manager: Lab Manager
   postdoc: Postdoctoral Researcher
   researcher: Researcher
@@ -172,7 +172,7 @@ positions:
   master: Master Student
   intern: Intern
   undergraduate: Undergraduate Student
-  technician: Technical assistant
+  technician: Technical Assistant
   secretary: Secretary
   staff: Staff
   alumni: Alumni

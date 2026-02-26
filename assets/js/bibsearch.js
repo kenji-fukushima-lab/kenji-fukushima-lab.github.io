@@ -24,16 +24,6 @@ const splitDelimited = (value) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
-const nameForDisplay = (value) => {
-  const normalized = normalize(value);
-  if (!normalized) return "";
-  const [lastName, firstName] = normalized.split(",").map((part) => part.trim());
-  if (firstName && lastName) {
-    return `${firstName} ${lastName}`;
-  }
-  return normalized.replace(/\b\w/g, (char) => char.toUpperCase());
-};
-
 const createElement = (tag, className = "") => {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -41,11 +31,14 @@ const createElement = (tag, className = "") => {
 };
 
 const isJapanesePage = document.documentElement.lang.toLowerCase().startsWith("ja");
-const LAB_MEMBER_FACET_VALUE = "__lab_member__";
 const OTHER_FACET_VALUE = "__other__";
 const ARTICLE_TYPE_ORIGINAL = "__article_type_original__";
 const ARTICLE_TYPE_PREPRINT = "__article_type_preprint__";
 const ARTICLE_TYPE_REVIEW_OTHERS = "__article_type_review_others__";
+const AUTHOR_ROLE_FIRST_VALUE = "__author_role_first__";
+const AUTHOR_ROLE_CORRESPONDING_VALUE = "__author_role_corresponding__";
+const AUTHOR_ROLE_EITHER_VALUE = "__author_role_either__";
+const AUTHOR_ROLE_BOTH_VALUE = "__author_role_both__";
 
 const articleTypeFacetValue = (value) => {
   const normalized = normalize(value);
@@ -56,6 +49,7 @@ const articleTypeFacetValue = (value) => {
 
 const i18n = {
   all: isJapanesePage ? "すべて" : "All",
+  any: isJapanesePage ? "任意" : "Any",
   showing: isJapanesePage ? "表示中" : "Showing",
   sortedResults: isJapanesePage ? "並び替え結果" : "Sorted results",
   newest: isJapanesePage ? "新着順" : "Newest",
@@ -66,15 +60,25 @@ const i18n = {
   badgeError: isJapanesePage ? "外部バッジの読み込みに失敗しました。" : "Failed to load external badges.",
   citationHydrating: isJapanesePage ? "被引用数を更新中..." : "Refreshing citation counts...",
   citationHydrated: isJapanesePage ? "被引用数を更新しました。" : "Citation counts refreshed.",
-  leadRoleLabel: isJapanesePage ? "lab memberがfirst/co-first/corresponding" : "Lab member as first/co-first/corresponding",
+  leadRoleLabel: isJapanesePage ? "(共)筆頭または(共)責任著者に研究室メンバーを含む" : "Lab members among (co-)first or (co-)corresponding authors",
   otherRoleLabel: isJapanesePage ? "それ以外" : "Other",
   paperCountAxisLabel: isJapanesePage ? "論文数" : "Number of publications",
-  labMemberFacetOption: "lab member",
-  otherFacetOption: "other",
-  crossrefSortLabel: isJapanesePage ? "Crossref被引用順" : "Crossref citations",
-  dimensionsSortLabel: isJapanesePage ? "Dimensions被引用順" : "Dimensions citations",
+  firstAuthorRoleFacetOption: isJapanesePage
+    ? "(共)筆頭"
+    : "(co-)first",
+  correspondingAuthorRoleFacetOption: isJapanesePage
+    ? "(共)責任"
+    : "(co-)corresponding",
+  eitherAuthorRolesFacetOption: isJapanesePage
+    ? "いずれか"
+    : "either",
+  bothAuthorRolesFacetOption: isJapanesePage
+    ? "両方"
+    : "both",
+  otherFacetOption: isJapanesePage ? "どちらでもない" : "neither",
+  crossrefSortLabel: isJapanesePage ? "被引用順（Crossref）" : "Citation (Crossref)",
+  dimensionsSortLabel: isJapanesePage ? "被引用順（Dimensions）" : "Citation (Dimensions)",
   altmetricSortLabel: "Altmetric",
-  labSortLabel: isJapanesePage ? "Lab貢献度" : "Lab contribution",
   altmetricHint: isJapanesePage
     ? "Altmetric順は`altmetric_score`がある論文を優先して並び替えます。"
     : "Altmetric sort prioritizes publications with `altmetric_score` metadata.",
@@ -110,25 +114,19 @@ const defaultFacetConfig = [
     fixedOptions: [
       { value: ARTICLE_TYPE_ORIGINAL, label: "Original" },
       { value: ARTICLE_TYPE_PREPRINT, label: "Preprint" },
-      { value: ARTICLE_TYPE_REVIEW_OTHERS, label: "Review & others" },
+      { value: ARTICLE_TYPE_REVIEW_OTHERS, label: "Review / Other" },
     ],
   },
   {
-    id: "facet-first-author",
-    key: "firstAuthor",
-    labeler: nameForDisplay,
+    id: "facet-author-role",
+    key: "authorRole",
+    labeler: (value) => value,
+    defaultLabel: i18n.any,
     fixedOptions: [
-      { value: LAB_MEMBER_FACET_VALUE, label: i18n.labMemberFacetOption },
-      { value: OTHER_FACET_VALUE, label: i18n.otherFacetOption },
-    ],
-  },
-  {
-    id: "facet-corresponding",
-    key: "corresponding",
-    labeler: nameForDisplay,
-    isList: true,
-    fixedOptions: [
-      { value: LAB_MEMBER_FACET_VALUE, label: i18n.labMemberFacetOption },
+      { value: AUTHOR_ROLE_FIRST_VALUE, label: i18n.firstAuthorRoleFacetOption },
+      { value: AUTHOR_ROLE_CORRESPONDING_VALUE, label: i18n.correspondingAuthorRoleFacetOption },
+      { value: AUTHOR_ROLE_EITHER_VALUE, label: i18n.eitherAuthorRolesFacetOption },
+      { value: AUTHOR_ROLE_BOTH_VALUE, label: i18n.bothAuthorRolesFacetOption },
       { value: OTHER_FACET_VALUE, label: i18n.otherFacetOption },
     ],
   },
@@ -169,14 +167,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const doi = normalizeDoi(publicationEntry.dataset.doi);
 
       const labMemberSet = new Set(labMembers);
-      let contributionScore = labMembers.length;
-      if (firstAuthor && labMemberSet.has(firstAuthor)) contributionScore += 2;
-      contributionScore += coFirst.filter((name) => labMemberSet.has(name)).length;
-      contributionScore += corresponding.filter((name) => labMemberSet.has(name)).length;
-      const hasLeadLabMemberRole =
-        (firstAuthor && labMemberSet.has(firstAuthor)) ||
-        coFirst.some((name) => labMemberSet.has(name)) ||
-        corresponding.some((name) => labMemberSet.has(name));
+      const hasLabFirstAuthorRole =
+        (firstAuthor && labMemberSet.has(firstAuthor)) || coFirst.some((name) => labMemberSet.has(name));
+      const hasLabCorrespondingAuthorRole = corresponding.some((name) => labMemberSet.has(name));
+      let authorRole = OTHER_FACET_VALUE;
+      if (hasLabFirstAuthorRole && hasLabCorrespondingAuthorRole) {
+        authorRole = AUTHOR_ROLE_BOTH_VALUE;
+      } else if (hasLabFirstAuthorRole) {
+        authorRole = AUTHOR_ROLE_FIRST_VALUE;
+      } else if (hasLabCorrespondingAuthorRole) {
+        authorRole = AUTHOR_ROLE_CORRESPONDING_VALUE;
+      }
 
       return {
         index,
@@ -194,8 +195,10 @@ document.addEventListener("DOMContentLoaded", () => {
         citationCount,
         dimensionsCitationCount,
         altmetricScore,
-        contributionScore,
-        leadRole: hasLeadLabMemberRole,
+        hasLabFirstAuthorRole,
+        hasLabCorrespondingAuthorRole,
+        authorRole,
+        leadRole: hasLabFirstAuthorRole || hasLabCorrespondingAuthorRole,
         doi,
       };
     })
@@ -248,14 +251,14 @@ document.addEventListener("DOMContentLoaded", () => {
     else badgeStatusNode.textContent = i18n.badgeIdle;
   };
 
-  const populateFacet = (selectId, values, labeler, prependOptions = []) => {
+  const populateFacet = (selectId, values, labeler, prependOptions = [], defaultLabel = i18n.all) => {
     const select = document.getElementById(selectId);
     if (!select) return;
     const currentValue = select.value;
     select.innerHTML = "";
     const defaultOption = document.createElement("option");
     defaultOption.value = "";
-    defaultOption.textContent = i18n.all;
+    defaultOption.textContent = defaultLabel;
     select.appendChild(defaultOption);
 
     prependOptions.forEach((prependOption) => {
@@ -280,14 +283,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const initializeFacets = () => {
     defaultFacetConfig.forEach((facet) => {
       if (facet.fixedOptions) {
-        populateFacet(facet.id, [], facet.labeler, facet.fixedOptions);
+        populateFacet(facet.id, [], facet.labeler, facet.fixedOptions, facet.defaultLabel || i18n.all);
         return;
       }
       const values = facet.isList
         ? uniqueSorted(entries.flatMap((entry) => entry[facet.key]))
         : uniqueSorted(entries.map((entry) => (facet.key === "year" ? entry.year.toString() : entry[facet.key])));
       const sortableValues = facet.key === "year" ? values.sort((a, b) => Number.parseInt(b, 10) - Number.parseInt(a, 10)) : values;
-      populateFacet(facet.id, sortableValues, facet.labeler, []);
+      populateFacet(facet.id, sortableValues, facet.labeler, [], facet.defaultLabel || i18n.all);
     });
   };
 
@@ -304,23 +307,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (search && !entry.searchText.includes(search)) return false;
     if (filters.year && entry.year.toString() !== filters.year) return false;
     if (filters.articleType && entry.articleType !== filters.articleType) return false;
-    if (filters.firstAuthor) {
-      if (filters.firstAuthor === LAB_MEMBER_FACET_VALUE) {
-        if (!entry.firstAuthor || !entry.labMembers.includes(entry.firstAuthor)) return false;
-      } else if (filters.firstAuthor === OTHER_FACET_VALUE) {
-        if (!entry.firstAuthor || entry.labMembers.includes(entry.firstAuthor)) return false;
-      } else if (entry.firstAuthor !== filters.firstAuthor) {
-        return false;
-      }
+    if (filters.authorRole === AUTHOR_ROLE_FIRST_VALUE && !entry.hasLabFirstAuthorRole) return false;
+    if (filters.authorRole === AUTHOR_ROLE_CORRESPONDING_VALUE && !entry.hasLabCorrespondingAuthorRole) return false;
+    if (filters.authorRole === AUTHOR_ROLE_EITHER_VALUE && !(entry.hasLabFirstAuthorRole || entry.hasLabCorrespondingAuthorRole)) {
+      return false;
     }
-    if (filters.corresponding) {
-      if (filters.corresponding === LAB_MEMBER_FACET_VALUE) {
-        if (!entry.corresponding.some((name) => entry.labMembers.includes(name))) return false;
-      } else if (filters.corresponding === OTHER_FACET_VALUE) {
-        if (!entry.corresponding.length || entry.corresponding.some((name) => entry.labMembers.includes(name))) return false;
-      } else if (!entry.corresponding.includes(filters.corresponding)) {
-        return false;
-      }
+    if (filters.authorRole === AUTHOR_ROLE_BOTH_VALUE && !(entry.hasLabFirstAuthorRole && entry.hasLabCorrespondingAuthorRole)) {
+      return false;
+    }
+    if (filters.authorRole === OTHER_FACET_VALUE && (entry.hasLabFirstAuthorRole || entry.hasLabCorrespondingAuthorRole)) {
+      return false;
     }
     return true;
   };
@@ -337,7 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isCrossrefCitationSort(sortValue)) return i18n.crossrefSortLabel;
     if (sortValue === "dimensions-citations") return i18n.dimensionsSortLabel;
     if (sortValue === "altmetric") return i18n.altmetricSortLabel;
-    if (sortValue === "lab") return i18n.labSortLabel;
     return i18n.newest;
   };
 
@@ -362,13 +357,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentSort === "altmetric") {
       next.sort((a, b) => {
         if (b.altmetricScore !== a.altmetricScore) return b.altmetricScore - a.altmetricScore;
-        return compareByNewest(a, b);
-      });
-      return next;
-    }
-    if (currentSort === "lab") {
-      next.sort((a, b) => {
-        if (b.contributionScore !== a.contributionScore) return b.contributionScore - a.contributionScore;
         return compareByNewest(a, b);
       });
       return next;

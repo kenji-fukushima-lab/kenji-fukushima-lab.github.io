@@ -20,17 +20,14 @@
         <option value="newest">
           {% if is_ja %}新着順{% else %}Newest{% endif %}
         </option>
-        <option value="crossref-citations">
-          {% if is_ja %}被引用順（Crossref）{% else %}Crossref citations{% endif %}
-        </option>
-        <option value="dimensions-citations">
-          {% if is_ja %}被引用順（Dimensions）{% else %}Dimensions citations{% endif %}
-        </option>
         <option value="altmetric">
           {% if is_ja %}Altmetric順{% else %}Altmetric{% endif %}
         </option>
-        <option value="lab">
-          {% if is_ja %}Lab貢献度順{% else %}Lab contribution{% endif %}
+        <option value="crossref-citations">
+          {% if is_ja %}被引用順（Crossref）{% else %}Citation (Crossref){% endif %}
+        </option>
+        <option value="dimensions-citations">
+          {% if is_ja %}被引用順（Dimensions）{% else %}Citation (Dimensions){% endif %}
         </option>
       </select>
       <button type="button" id="pub-reset-filters" class="pub-button">
@@ -40,27 +37,21 @@
     <div class="publications-controls-facets">
       <label class="pub-facet-label" for="facet-year">
         <span>
-          {%- if is_ja %}year{% else %}year{% endif -%}
+          {%- if is_ja %}Year{% else %}Year{% endif -%}
         </span>
         <select id="facet-year" class="pub-select facet-select"></select>
       </label>
       <label class="pub-facet-label" for="facet-article-type">
         <span>
-          {%- if is_ja %}article type{% else %}article type{% endif -%}
+          {%- if is_ja %}Article Type{% else %}Article Type{% endif -%}
         </span>
         <select id="facet-article-type" class="pub-select facet-select"></select>
       </label>
-      <label class="pub-facet-label" for="facet-first-author">
+      <label class="pub-facet-label" for="facet-author-role">
         <span>
-          {%- if is_ja %}first author{% else %}first author{% endif -%}
+          {%- if is_ja %}Lab Member Role{% else %}Lab Member Role{% endif -%}
         </span>
-        <select id="facet-first-author" class="pub-select facet-select"></select>
-      </label>
-      <label class="pub-facet-label" for="facet-corresponding">
-        <span>
-          {%- if is_ja %}corresponding author{% else %}corresponding author{% endif -%}
-        </span>
-        <select id="facet-corresponding" class="pub-select facet-select"></select>
+        <select id="facet-author-role" class="pub-select facet-select"></select>
       </label>
     </div>
     <div class="publications-controls-status">

@@ -15,11 +15,11 @@ Our laboratory operates in an English-speaking environment, and we warmly welcom
 
 ## Choosing a research topic
 
-The selection of research projects for new members will be a collaborative process involving both the candidate and Kenji, with a focus on their individual interests and areas of expertise. It is preferable for these projects to align with at least one aspect of ongoing research in materials, technology, or biological phenomena, as this approach ensures the feasibility of new research. Nevertheless, we are equally receptive to considering entirely new research projects that have the potential for groundbreaking discoveries. We particularly welcome new members joining our team to introduce fresh ideas and perspectives to our lab.
+Research topics for new members are chosen collaboratively by the candidate and Kenji, based on the candidate's interests and expertise. We prefer projects that align with at least one of our ongoing research areas (materials, technology, or biological phenomena), because this improves feasibility. We also welcome entirely new ideas with strong potential for discovery.
 
 ## Joining as a PhD student
 
-At NIG, we provide PhD courses conducted in English. Although NIG primarily functions as a research institute, we are associated with [SOKENDAI (The Graduate University for Advanced Studies)](https://www.soken.ac.jp/en/), which offers an extensive PhD program. SOKENDAI's courses include both 3-year PhD courses (for those with a master's degree) and 5-year courses (for those without a master's). Please note that we generally do not have a program dedicated solely to a master's degree.
+At NIG, PhD courses are offered in English. Although NIG is primarily a research institute, we are affiliated with [SOKENDAI (The Graduate University for Advanced Studies)](https://www.soken.ac.jp/en/), which offers an extensive PhD program. SOKENDAI offers both a 3-year PhD program (for applicants with a master's degree) and a 5-year PhD program (for applicants without one). Please note that we generally do not have a master's-only program.
 
 For further details, including information on tuition and fellowships, please consult the links provided below. NIG also offers an internship program specifically designed for undergraduate students. If you are interested in this opportunity, we encourage you to contact us for more information.
 
@@ -31,8 +31,8 @@ For further details, including information on tuition and fellowships, please co
 
 ## Joining as a postdoc
 
-We announce open postdoc positions through various channels, including the [NIG career page](https://www.nig.ac.jp/nig/career-development/jobs-at-nig) and [JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop?ln=1). Please contact Kenji for potential opportunities to receive information about positions before they are publicly announced.
+We announce open postdoc positions through various channels, including the [NIG career page](https://www.nig.ac.jp/nig/career-development/jobs-at-nig) and [JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop?ln=1). Please contact Kenji if you would like to hear about potential openings before they are publicly announced.
 
-If you are interested in starting new research in our lab, we advise to apply for fellowships such as [JSPS Fellowships](https://www.jsps.go.jp/english/), [HFSP Postdoctoral Fellowships](https://www.hfsp.org/) or [NIG Postdoctoral Fellowships](https://www.nig.ac.jp/nig/career-development/nigpostdoc2024#:~:text=The%20National%20Institute%20of%20Genetics,NIG%20and%20fostering%20researchers%20with). We will provide support during the application process.
+If you are interested in starting new research in our lab, we advise you to apply for fellowships such as [JSPS Fellowships](https://www.jsps.go.jp/english/), [HFSP Postdoctoral Fellowships](https://www.hfsp.org/), or [NIG Postdoctoral Fellowships](https://www.nig.ac.jp/nig/career-development/nigpostdoc2024#:~:text=The%20National%20Institute%20of%20Genetics,NIG%20and%20fostering%20researchers%20with). We will provide support during the application process.
 
-Should your research interest coincide with Kenji's areas of interest, there is a possibility for Kenji to seek research funding. However, please note that this process, from initial preparation to funding acceptance, typically spans over a year.
+Should your research interests align with Kenji's areas of interest, there is a possibility that Kenji can seek research funding. However, please note that this process, from initial preparation to funding acceptance, typically takes more than a year.
