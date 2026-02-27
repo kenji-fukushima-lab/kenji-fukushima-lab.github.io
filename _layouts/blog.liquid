@@ -1,0 +1,44 @@
+---
+layout: default
+---
+<link rel="stylesheet" href="{{ '/assets/css/join.css' | relative_url | bust_file_cache }}">
+<link rel="stylesheet" href="{{ '/assets/css/blog.css' | relative_url | bust_file_cache }}">
+<div class="join-content blog-content">
+  <h1 class="sr-only">{{ page.title }}</h1>
+  {{ content }}
+</div>
+<script>
+  (() => {
+    const openCard = (card) => {
+      const href = card.dataset.href;
+      if (!href) return;
+      if (card.dataset.target === "_blank") {
+        window.open(href, "_blank", "noopener");
+      } else {
+        window.location.href = href;
+      }
+    };
+
+    const activatePostCards = () => {
+      document.querySelectorAll(".blog-content .post-list li.post-card[data-href]").forEach((card) => {
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("a, button, input, textarea, select, summary, label")) return;
+          openCard(card);
+        });
+
+        card.addEventListener("keydown", (event) => {
+          if (event.target !== card) return;
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          openCard(card);
+        });
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", activatePostCards);
+    } else {
+      activatePostCards();
+    }
+  })();
+</script>

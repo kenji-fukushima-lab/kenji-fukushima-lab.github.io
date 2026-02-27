@@ -19,6 +19,7 @@ nav_order: 9
     <div class="quick-links">
       <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Google Maps</a>
       <a class="quick-link" href="https://www.nig.ac.jp/nig/about-nig/access">Access to NIG</a>
+      <a class="quick-link" href="https://www.nig.ac.jp/nig/about-nig/life-at-nig/map">NIG Bird's-eye Map</a>
       <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp">E-mail</a>
     </div>
   </section>
@@ -58,5 +59,15 @@ nav_order: 9
       <li>Use the extension phone on your left after entering the building.</li>
       <li>Dial <strong>6751</strong> (Lab) or <strong>6804</strong> (Lab Secretary).</li>
     </ol>
+  </section>
+
+  <section class="modern-card">
+    <h3>NIG Guest House</h3>
+    <p>NIG Guest House is available for visitors. Please see the official guide PDF for details.</p>
+    <p>If you would like to use it, please contact Kenji Fukushima.</p>
+    <div class="quick-links">
+      <a class="quick-link" href="https://www.nig.ac.jp/nig/pdf/about_nig/guesthouse.pdf">Guest House Guide (PDF)</a>
+    </div>
+    <p>Shampoo and conditioner are not provided in the rooms, but the lab keeps bottles for guests.</p>
   </section>
 </div>

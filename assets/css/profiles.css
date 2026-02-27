@@ -47,7 +47,7 @@
 
 .people-name-native {
   margin-left: 0.33rem;
-  color: var(--global-text-color-light);
+  color: var(--global-text-color);
   font-size: 0.93rem;
   font-weight: 500;
 }
@@ -72,7 +72,7 @@
 }
 
 .people-social-icons a {
-  color: var(--global-text-color-light);
+  color: var(--global-text-color);
   display: inline-flex;
   align-items: center;
   line-height: 1;

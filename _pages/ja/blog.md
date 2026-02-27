@@ -1,6 +1,6 @@
 ---
 page_id: blog
-layout: default
+layout: blog
 permalink: /blog/
 title: ブログ
 blog_name: # [2025.3.19 changed] from al-folio em português brasileiro
@@ -11,7 +11,7 @@ pagination:
   enabled: true
   collection: posts
   permalink: /page/:num/
-  per_page: 5
+  per_page: 20
   sort_field: date
   sort_reverse: true
   trail:
@@ -79,8 +79,6 @@ pagination:
 <h3 class="card-title text-lowercase">{{ post.title }}</h3>
 <p class="card-text">{{ post.description }}</p>
 
-                    {% assign year = post.date | date: "%Y" %}
-
                     <p class="post-meta">
                       {{ site.data[site.active_lang].strings.post.created_in }},
                       {% include date_format.liquid format='long' date=post.date -%}
@@ -109,6 +107,7 @@ pagination:
 
 {% endif %}
 
+  <h2 class="sr-only">投稿一覧</h2>
   <ul class="post-list">
 
     {% if page.pagination.enabled %}
@@ -119,75 +118,110 @@ pagination:
 
     {% for post in postlist %}
 
-    {% assign year = post.date | date: "%Y" %}
+    {% assign post_year = post.date | date: "%Y" %}
     {% assign tags = post.tags | join: "" %}
     {% assign categories = post.categories | join: "" %}
+    {% assign post_url = post.url | relative_url %}
+    {% assign post_target = "" %}
 
-    <li>
+    {% if post.redirect != blank %}
+      {% if post.redirect contains '://' %}
+        {% assign post_url = post.redirect %}
+        {% assign post_target = "_blank" %}
+      {% else %}
+        {% assign post_url = post.redirect | relative_url %}
+      {% endif %}
+    {% endif %}
 
-{% if post.thumbnail %}
-
-<div class="row">
-          <div class="col-sm-9">
-{% endif %}
-        <h3>
-        {% if post.redirect == blank %}
-          <a class="post-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        {% elsif post.redirect contains '://' %}
-          <a class="post-title" href="{{ post.redirect }}" target="_blank">{{ post.title }}</a>
-          <svg width="2rem" height="2rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        {% else %}
-          <a class="post-title" href="{{ post.redirect | relative_url }}">{{ post.title }}</a>
+    {% assign preview_image = post.thumbnail %}
+    {% if preview_image == blank and post.content contains 'include figure.liquid' %}
+      {% assign first_figure_chunk = post.content | split: 'include figure.liquid' | slice: 1, 1 | first %}
+      {% if first_figure_chunk contains 'path="' %}
+        {% assign figure_candidate = first_figure_chunk | split: 'path="' | last | split: '"' | first %}
+        {% if figure_candidate contains '.jpg' or figure_candidate contains '.jpeg' or figure_candidate contains '.png' or figure_candidate contains '.webp' or figure_candidate contains '.gif' %}
+          {% assign preview_image = figure_candidate %}
         {% endif %}
-      </h3>
-      <p>{{ post.description }}</p>
-      <p class="post-meta">
-        {{ site.data[site.active_lang].strings.post.created_in }},
-        {% include date_format.liquid format='long' date=post.date -%}
-        {%- if post.last_updated -%}
-          ; {{ site.data[site.active_lang].strings.post.last_updated }},
-          {% include date_format.liquid format='long' date=post.last_updated -%}
-        {%- endif -%}
-        {%- if post.author -%}
-          ; {{ site.data[site.active_lang].strings.post.created_by }}
-          {{ post.author -}}
-        {%- endif -%}
-        {% if post.external_source %}
-        &nbsp; &middot; &nbsp; {{ post.external_source }}
+      {% endif %}
+    {% endif %}
+
+    {% if preview_image == blank and post.content contains '<img' %}
+      {% assign first_image_chunk = post.content | split: '<img' | slice: 1, 1 | first %}
+      {% assign image_candidate = "" %}
+      {% if first_image_chunk contains 'src="' %}
+        {% assign src_parts = first_image_chunk | split: 'src="' %}
+        {% assign first_src_part = src_parts | slice: 1, 1 | first %}
+        {% assign image_candidate = first_src_part | split: '"' | first %}
+      {% elsif first_image_chunk contains "src='" %}
+        {% assign src_parts = first_image_chunk | split: "src='" %}
+        {% assign first_src_part = src_parts | slice: 1, 1 | first %}
+        {% assign image_candidate = first_src_part | split: "'" | first %}
+      {% endif %}
+      {% if image_candidate contains '.jpg' or image_candidate contains '.jpeg' or image_candidate contains '.png' or image_candidate contains '.webp' or image_candidate contains '.gif' %}
+        {% assign preview_image = image_candidate %}
+      {% endif %}
+    {% endif %}
+
+    <li class="post-card{% if preview_image != blank %} has-thumb{% endif %}" data-href="{{ post_url }}"{% if post_target != blank %} data-target="{{ post_target }}"{% endif %} tabindex="0">
+      <div class="post-card-inner">
+        <div class="post-card-main">
+          <h3>
+            <a class="post-title" href="{{ post_url }}"{% if post_target != blank %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ post.title }}</a>
+            {% if post_target != blank %}
+              <svg width="2rem" height="2rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            {% endif %}
+          </h3>
+          {% if post.description != blank %}
+            <p>{{ post.description }}</p>
+          {% endif %}
+          <p class="post-meta">
+            {{ site.data[site.active_lang].strings.post.created_in }},
+            {% include date_format.liquid format='long' date=post.date -%}
+            {%- if post.last_updated -%}
+              ; {{ site.data[site.active_lang].strings.post.last_updated }},
+              {% include date_format.liquid format='long' date=post.last_updated -%}
+            {%- endif -%}
+            {%- if post.author -%}
+              ; {{ site.data[site.active_lang].strings.post.created_by }}
+              {{ post.author -}}
+            {%- endif -%}
+            {% if post.external_source %}
+            &nbsp; &middot; &nbsp; {{ post.external_source }}
+            {% endif %}
+          </p>
+          <p class="post-tags">
+            <a href="{{ post_year | prepend: '/blog/' | prepend: site.baseurl}}">
+              <i class="fa-solid fa-calendar fa-sm"></i> {{ post_year }} </a>
+
+              {% if tags != "" %}
+              &nbsp; &middot; &nbsp;
+                {% for tag in post.tags %}
+                <a href="{{ tag | slugify | prepend: '/blog/tag/' | prepend: site.baseurl}}">
+                  <i class="fa-solid fa-hashtag fa-sm"></i> {{ tag }}</a> &nbsp;
+                  {% endfor %}
+              {% endif %}
+
+              {% if categories != "" %}
+              &nbsp; &middot; &nbsp;
+                {% for category in post.categories %}
+                <a href="{{ category | slugify | prepend: '/blog/category/' | prepend: site.baseurl}}">
+                  <i class="fa-solid fa-tag fa-sm"></i> {{ category }}</a> &nbsp;
+                  {% endfor %}
+              {% endif %}
+        </p>
+        </div>
+
+        {% if preview_image != blank %}
+          {% assign preview_src = preview_image %}
+          {% unless preview_src contains '://' %}
+            {% assign preview_src = preview_src | relative_url %}
+          {% endunless %}
+          <div class="post-card-thumb">
+            <img src="{{ preview_src }}" alt="{{ post.title | escape }}">
+          </div>
         {% endif %}
-      </p>
-      <p class="post-tags">
-        <a href="{{ year | prepend: '/blog/' | prepend: site.baseurl}}">
-          <i class="fa-solid fa-calendar fa-sm"></i> {{ year }} </a>
-
-          {% if tags != "" %}
-          &nbsp; &middot; &nbsp;
-            {% for tag in post.tags %}
-            <a href="{{ tag | slugify | prepend: '/blog/tag/' | prepend: site.baseurl}}">
-              <i class="fa-solid fa-hashtag fa-sm"></i> {{ tag }}</a> &nbsp;
-              {% endfor %}
-          {% endif %}
-
-          {% if categories != "" %}
-          &nbsp; &middot; &nbsp;
-            {% for category in post.categories %}
-            <a href="{{ category | slugify | prepend: '/blog/category/' | prepend: site.baseurl}}">
-              <i class="fa-solid fa-tag fa-sm"></i> {{ category }}</a> &nbsp;
-              {% endfor %}
-          {% endif %}
-    </p>
-
-{% if post.thumbnail %}
-
-</div>
-
-  <div class="col-sm-3">
-    <img class="card-img" src="{{ post.thumbnail | relative_url }}" style="object-fit: cover; height: 90%" alt="image">
-  </div>
-</div>
-{% endif %}
+      </div>
     </li>
 
     {% endfor %}

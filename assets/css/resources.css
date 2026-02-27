@@ -1,0 +1,65 @@
+.resources-content {
+  --resources-border: var(--global-divider-color);
+  --resources-surface: color-mix(in srgb, var(--global-bg-color) 94%, var(--global-theme-color));
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 0.35rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Prevent grid children from forcing horizontal overflow on long repository text. */
+.resources-content > * {
+  min-width: 0;
+}
+
+.resources-content > h2 {
+  margin: 0.65rem 0 0;
+  padding: 0.66rem 0.86rem;
+  border-radius: 0.78rem;
+  border: 1px solid var(--resources-border);
+  background: linear-gradient(
+    125deg,
+    color-mix(in srgb, var(--global-theme-color) 14%, var(--global-bg-color)) 0%,
+    var(--global-bg-color) 100%
+  );
+  font-size: clamp(1.03rem, 1.8vw, 1.22rem);
+}
+
+.resources-content > h4 {
+  margin: 1rem 0 0;
+  padding: 0.55rem 0.78rem;
+  border-left: 4px solid var(--global-theme-color);
+  border-radius: 0.56rem;
+  background: var(--resources-surface);
+  font-size: 0.98rem;
+}
+
+.resources-content p {
+  margin-top: 0.56rem;
+  line-height: 1.68;
+}
+
+.resources-content ul {
+  margin-top: 0.58rem;
+  padding-left: 1.2rem;
+}
+
+.resources-content li + li {
+  margin-top: 0.3rem;
+}
+
+.resources-content a {
+  text-decoration-thickness: 1.6px;
+  text-underline-offset: 0.16em;
+}
+
+.resources-content .repo-compact-about {
+  color: color-mix(in srgb, var(--global-text-color) 84%, var(--global-bg-color));
+}
+
+@media (max-width: 680px) {
+  .resources-content > h2 {
+    padding: 0.5rem 0.68rem;
+  }
+}

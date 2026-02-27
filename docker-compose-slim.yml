@@ -2,6 +2,13 @@
 services:
   jekyll:
     image: georgegca/multi-language-al-folio:slim
+    command: >-
+      sh -lc "while true; do
+      bundle check || bundle install;
+      bundle exec jekyll serve --watch --port=8080 --host=0.0.0.0 --verbose --trace --force_polling;
+      echo 'jekyll exited; restarting in 2s';
+      sleep 2;
+      done"
     # build: .
     ports:
       - 8080:8080

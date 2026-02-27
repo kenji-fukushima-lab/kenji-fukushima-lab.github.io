@@ -37,12 +37,12 @@ layout: page
           </div>
         {% endif %}
         <div class="people-card-body">
-          <h3 class="people-name">
+          <h2 class="people-name">
             {{ profile.name }}
             {% if site.active_lang == 'ja' and profile.name_native %}
               <span class="people-name-native">{{ profile.name_native }}</span>
             {% endif %}
-          </h3>
+          </h2>
 
           {% assign position = site.data[lang].strings.positions[profile.position_key] %}
           {% assign profile_name = profile.name | strip %}

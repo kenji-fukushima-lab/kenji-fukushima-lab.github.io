@@ -17,6 +17,7 @@ nav_order: 9
     <div class="quick-links">
       <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Googleマップでみる</a>
       <a class="quick-link" href="https://www.nig.ac.jp/nig/ja/about-nig/access_ja">遺伝研へのアクセス</a>
+      <a class="quick-link" href="https://www.nig.ac.jp/nig/ja/about-nig/life-at-nig/map">遺伝研鳥瞰図</a>
       <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp">Eメール</a>
     </div>
   </section>
@@ -56,5 +57,15 @@ nav_order: 9
       <li>入ってすぐ左手の内線電話をご利用ください。</li>
       <li><strong>6751</strong>（研究室）または <strong>6804</strong>（研究室秘書）へご連絡ください。</li>
     </ol>
+  </section>
+
+  <section class="modern-card">
+    <h3>遺伝研ゲストハウス</h3>
+    <p>遺伝研ゲストハウス（研究員宿泊施設）は来訪者が利用可能です。詳細は公式案内PDFをご確認ください。</p>
+    <p>利用をご希望の方は福島までご連絡ください。</p>
+    <div class="quick-links">
+      <a class="quick-link" href="https://www.nig.ac.jp/nig/pdf/about_nig/guesthouse.pdf">ゲストハウス案内PDF</a>
+    </div>
+    <p>客室にシャンプー・コンディショナーの備え付けはありませんが、ラボで購入したボトルをゲスト用に用意しています。</p>
   </section>
 </div>

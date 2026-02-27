@@ -3,7 +3,7 @@ page_id: about
 layout: about
 title: 概要
 permalink: /
-subtitle: 植物進化研究室 <a href="https://www.nig.ac.jp/nig/ja" target="_blank">国立遺伝学研究所</a>
+subtitle: 植物進化研究室 <a href="https://www.nig.ac.jp/nig/ja" target="_blank" rel="noopener noreferrer">国立遺伝学研究所</a>
 
 profile:
   align: right

@@ -16,6 +16,7 @@
 {% if doi_value != '' and site.data.citation_badges and site.data.citation_badges.altmetric_counts %}
   {% assign altmetric_count = site.data.citation_badges.altmetric_counts[doi_value] | default: 0 %}
 {% endif %}
+{% assign altmetric_count = altmetric_count | plus: 0 %}
 
 {% assign month_name = entry.month | downcase | strip %}
 {% assign month_number = '0' %}
@@ -120,7 +121,7 @@
       {% endif %}
       {% if entry.preview and entry.preview != '' and entry.preview != '{}' %}
         {% if entry.preview contains '://' %}
-          <img class="preview z-depth-1 rounded" src="{{ entry.preview }}">
+          <img class="preview z-depth-1 rounded" src="{{ entry.preview }}" alt="{{ entry.title | strip_html | escape }}">
         {% else %}
           {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
           {%
@@ -498,8 +499,9 @@
       {% endif %}
     </div>
     {% if site.enable_publication_badges %}
+      {% assign altmetric_setting = entry.altmetric | default: 'true' | downcase %}
       {% assign entry_has_altmetric_badge = false %}
-      {% if doi_value != '' %}
+      {% if doi_value != '' and altmetric_setting != 'false' and altmetric_setting != 'off' and altmetric_setting != 'no' and altmetric_count > 0 %}
         {% assign entry_has_altmetric_badge = true %}
       {% endif %}
 
@@ -529,7 +531,7 @@
               class="citation-badge citation-badge-altmetric"
               href="https://www.altmetric.com/details.php?doi={{ doi_value | uri_escape }}"
               aria-label="Altmetric score: {{ altmetric_count }}"
-              rel="external nofollow noopener"
+              rel="external nofollow noopener noreferrer"
               target="_blank"
             >
               <span class="citation-badge-source">Altmetric</span>
@@ -547,7 +549,7 @@
               class="citation-badge citation-badge-dimensions"
               href="https://badge.dimensions.ai/details/doi/{{ doi_value | uri_escape }}"
               aria-label="Dimensions citations: {{ dimensions_count }}"
-              rel="external nofollow noopener"
+              rel="external nofollow noopener noreferrer"
               target="_blank"
             >
               <span class="citation-badge-source">Dimensions</span>

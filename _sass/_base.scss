@@ -305,6 +305,20 @@ ul.task-list input[type="checkbox"] {
     color: var(--global-text-color);
   }
 
+  .navbar-brand.navbar-nig-logo {
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 0.75rem;
+
+    img {
+      width: auto;
+      height: 2.1rem;
+      max-height: 2.1rem;
+    }
+  }
+
   .navbar-nav .nav-item .nav-link {
     color: var(--global-text-color);
 
@@ -358,6 +372,13 @@ ul.task-list input[type="checkbox"] {
         }
       }
     }
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar.navbar-light .navbar-brand.navbar-nig-logo img {
+    height: 1.8rem;
+    max-height: 1.8rem;
   }
 }
 
@@ -504,10 +525,13 @@ footer.fixed-bottom {
 
   a {
     color: var(--global-footer-link-color);
+    text-decoration: underline;
+    text-decoration-thickness: 1.2px;
+    text-underline-offset: 0.14em;
 
     &:hover {
       color: var(--global-theme-color);
-      text-decoration: none;
+      text-decoration: underline;
     }
   }
 }
@@ -520,6 +544,12 @@ footer.sticky-bottom {
 
   .container {
     text-align: center;
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-thickness: 1.2px;
+    text-underline-offset: 0.14em;
   }
 }
 
@@ -669,6 +699,7 @@ footer.sticky-bottom {
   border-radius: 8px;
   background-color: var(--global-card-bg-color);
 
+  h3,
   h4 {
     margin-top: 0;
     margin-bottom: 0.35rem;

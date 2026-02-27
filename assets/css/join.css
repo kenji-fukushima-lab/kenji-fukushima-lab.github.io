@@ -1,6 +1,6 @@
 .join-content {
   --join-border: var(--global-divider-color);
-  --join-muted: var(--global-text-color-light);
+  --join-muted: color-mix(in srgb, var(--global-text-color) 84%, var(--global-bg-color));
   --join-surface: color-mix(in srgb, var(--global-bg-color) 94%, var(--global-theme-color));
   --join-surface-strong: color-mix(in srgb, var(--global-bg-color) 88%, var(--global-theme-color));
   --join-shadow: 0 10px 30px color-mix(in srgb, var(--global-theme-color) 20%, transparent);

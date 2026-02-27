@@ -184,7 +184,7 @@
 .publications-dashboard-card h4 {
   font-size: 0.76rem;
   margin: 0 0 0.25rem;
-  color: var(--global-text-color-light);
+  color: var(--global-text-color);
 }
 
 .publications-dashboard-card canvas {
@@ -256,8 +256,8 @@
   padding: 0.08rem 0.36rem !important;
   border: 1px solid var(--global-divider-color) !important;
   border-radius: 999px !important;
-  background: color-mix(in srgb, var(--global-bg-color) 92%, var(--global-theme-color)) !important;
-  color: var(--global-text-color-light) !important;
+  background: var(--global-bg-color) !important;
+  color: var(--global-text-color) !important;
   font-size: 0.62rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.01em;
@@ -269,7 +269,7 @@
 
 .publications ol.bibliography li .links a.btn:hover,
 .publications .publication-entry .links a.btn:hover {
-  color: var(--global-text-color-light) !important;
+  color: var(--global-text-color) !important;
   text-decoration: none !important;
   opacity: 0.92;
 }
@@ -301,17 +301,20 @@
   padding: 0.08rem 0.36rem;
   border: 1px solid var(--global-divider-color);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--global-bg-color) 92%, var(--global-theme-color));
+  background: var(--global-bg-color);
+  color: var(--global-text-color);
   line-height: 1;
 }
 
 .publications ol.bibliography li .badges a.citation-badge,
 .publications .publication-entry .badges a.citation-badge {
+  color: var(--global-text-color);
   text-decoration: none;
 }
 
 .publications ol.bibliography li .badges a.citation-badge:hover,
 .publications .publication-entry .badges a.citation-badge:hover {
+  color: var(--global-text-color);
   text-decoration: none;
   opacity: 0.92;
 }
@@ -321,7 +324,7 @@
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: var(--global-text-color-light);
+  color: var(--global-text-color);
   text-transform: uppercase;
 }
 

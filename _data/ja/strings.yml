@@ -22,7 +22,7 @@ categories: # This categories link /_data/en-us/strings.yml, categories: at leas
 citation:
   bibtex: "BibTeX形式で引用:"
   introduction: "引用の際は以下をご参照ください:"
-contact_note: "Fukushima Lab. 2018-2024: University of Würzburg, Germany. Since 2024: National Institute of Genetics, Japan."
+contact_note: 'Fukushima Lab. Since 2024: <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="external nofollow noopener">National Institute of Genetics, Japan</a>. 2018-2024: <a href="https://www.uni-wuerzburg.de/en/" target="_blank" rel="external nofollow noopener">University of Würzburg, Germany</a>.'
 cv:
   address: 住所
   area: 分野
@@ -80,9 +80,9 @@ footer:
   copyright: Copyright
   last_updated: "Last updated:"
 footer_text: > # the ">" symbol means to ignore newlines until "titles:"
-  Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a> theme.
-  Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
-# Fotos do <a href="https://unsplash.com" target="_blank">Unsplash</a>.
+  Powered by <a href="https://jekyllrb.com/" target="_blank" rel="noopener noreferrer">Jekyll</a> with <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a> theme.
+  Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.
+# Fotos do <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>.
 latest_posts: 最新記事
 
 months:

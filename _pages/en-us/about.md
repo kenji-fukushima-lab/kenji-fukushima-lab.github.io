@@ -3,7 +3,7 @@ page_id: about
 layout: about
 title: about
 permalink: /
-subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank">National Institute of Genetics</a> in Japan
+subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="noopener noreferrer">National Institute of Genetics</a> in Japan
 
 profile:
   align: right
