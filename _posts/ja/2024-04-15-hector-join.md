@@ -10,5 +10,3 @@ categories:
 ---
 
 ドイツ・ヴュルツブルク大学在籍時からのラボメンバーであるHector Montero博士が遺伝研の研究室に着任しました。
-
-{% include figure.liquid path="assets/img/posts/20240910_hector_departure.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="Hector Montero博士の写真" %}

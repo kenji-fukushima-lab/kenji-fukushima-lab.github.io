@@ -124,13 +124,13 @@ no_posts: "No posts yet."
 pagination:
   page: page
 post:
-  created_in: Created in
+  created_in: Article date
   created_by: by
   last_updated: last updated on
 references: References
 related_posts:
-  description: "Here are some more articles you might like to read next:"
-  title: Enjoy Reading This Article?
+  description: ""
+  title: Related Posts:
 search:
   dark_theme:
     description: Change the site theme to dark mode
@@ -157,7 +157,7 @@ search:
     title: Use the system default theme
   theme: Theme
 selected_publications: Selected publications
-site_description: A simple whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+site_description: Website for the Fukushima lab
 # [add] added at 2025-5-14
 positions:
   professor: Professor

@@ -7,7 +7,9 @@
     <br>
     <!-- Adds related posts to the end of an article -->
     <h2 class="text-3xl font-semibold mb-4 mt-12">{{ site.data[site.active_lang].strings.related_posts.title }}</h2>
-    <p class="mb-2">{{ site.data[site.active_lang].strings.related_posts.description }}</p>
+    {% if site.data[site.active_lang].strings.related_posts.description != blank %}
+      <p class="mb-2">{{ site.data[site.active_lang].strings.related_posts.description }}</p>
+    {% endif %}
     <ul class="related-posts-list">
   {% endunless %}
 
