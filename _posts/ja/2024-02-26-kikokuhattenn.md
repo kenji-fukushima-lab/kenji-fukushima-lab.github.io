@@ -4,7 +4,7 @@ title: 科研費・帰国発展研究に採択されました
 date: 2024-02-26
 last_updated:
 author: 福島健児
-description:
+thumbnail:
 tags:
 categories:
 ---

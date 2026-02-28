@@ -4,7 +4,7 @@ title: 一般公開
 date: 2024-04-06
 last_updated: 2024-07-07
 author: 福島健児
-description:
+thumbnail:
 tags:
 categories:
 ---

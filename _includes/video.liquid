@@ -1,39 +1,38 @@
-{% assign extension = include.path | split: '.' | last %}
+{% assign extension = include.path | split: '.' | last | downcase %}
 
 <figure>
   {% if extension == 'mp4' or extension == 'webm' or extension == 'ogg' %}
+    {% capture video_src %}{% if include.cache_bust %}{{ include.path | relative_url | bust_file_cache }}{% else %}{{ include.path | relative_url }}{% endif %}{% endcapture %}
     <video
-      src="{% if include.cache_bust %}{{ include.path | relative_url | bust_file_cache }}{% else %}{{ include.path | relative_url }}{% endif %}"
       {% if include.class %}
         class="{{ include.class }}"
       {% endif %}
       {% if include.width %}
         width="{{ include.width }}"
       {% else %}
-        width="auto"
+        width="450"
       {% endif %}
       {% if include.height %}
         height="{{ include.height }}"
-      {% else %}
-        height="auto"
       {% endif %}
-      {% if include['min-width'] %}
-        min-width="{{ include.min-width }}"
-      {% endif %}
-      {% if include['min-height'] %}
-        min-height="{{ include.min-height }}"
-      {% endif %}
-      {% if include['max-width'] %}
-        max-width="{{ include.max-width }}"
-      {% endif %}
-      {% if include['max-height'] %}
-        height="{{ include.max-height }}"
+      {% if include['min-width'] or include['min-height'] or include['max-width'] or include['max-height'] %}
+        style="
+          {% if include['min-width'] %}
+            min-width: {{ include.min-width }};
+          {% endif %}
+          {% if include['min-height'] %}
+            min-height: {{ include.min-height }};
+          {% endif %}
+          {% if include['max-width'] %}
+            max-width: {{ include.max-width }};
+          {% endif %}
+          {% if include['max-height'] %}
+            max-height: {{ include.max-height }};
+          {% endif %}
+        "
       {% endif %}
       {% if include.title %}
         title="{{ include.title }}"
-      {% endif %}
-      {% if include.alt %}
-        alt="{{ include.alt }}"
       {% endif %}
       {% if include.autoplay %}
         autoplay
@@ -50,7 +49,10 @@
       {% if include.poster %}
         poster="{{ include.poster }}"
       {% endif %}
-    />
+    >
+      <source src="{{ video_src }}" type="video/{{ extension }}">
+      お使いのブラウザは動画再生に対応していません。
+    </video>
 
   {% else %}
     <iframe
@@ -64,24 +66,26 @@
       {% if include.width %}
         width="{{ include.width }}"
       {% else %}
-        width="auto"
+        width="450"
       {% endif %}
       {% if include.height %}
         height="{{ include.height }}"
-      {% else %}
-        height="auto"
       {% endif %}
-      {% if include['min-width'] %}
-        min-width="{{ include.min-width }}"
-      {% endif %}
-      {% if include['min-height'] %}
-        min-height="{{ include.min-height }}"
-      {% endif %}
-      {% if include['max-width'] %}
-        max-width="{{ include.max-width }}"
-      {% endif %}
-      {% if include['max-height'] %}
-        height="{{ include.max-height }}"
+      {% if include['min-width'] or include['min-height'] or include['max-width'] or include['max-height'] %}
+        style="
+          {% if include['min-width'] %}
+            min-width: {{ include.min-width }};
+          {% endif %}
+          {% if include['min-height'] %}
+            min-height: {{ include.min-height }};
+          {% endif %}
+          {% if include['max-width'] %}
+            max-width: {{ include.max-width }};
+          {% endif %}
+          {% if include['max-height'] %}
+            max-height: {{ include.max-height }};
+          {% endif %}
+        "
       {% endif %}
       {% if include.alt %}
         alt="{{ include.alt }}"
@@ -89,7 +93,7 @@
       {% if include.title %}
         title="{{ include.title }}"
       {% endif %}
-    />
+    ></iframe>
   {% endif %}
   {% if include.caption %}
     <figcaption class="caption">{{ include.caption }}</figcaption>

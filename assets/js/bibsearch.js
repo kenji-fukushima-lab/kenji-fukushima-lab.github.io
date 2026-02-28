@@ -63,18 +63,10 @@ const i18n = {
   leadRoleLabel: isJapanesePage ? "(共)筆頭または(共)責任著者に研究室メンバーを含む" : "Lab members among (co-)first or (co-)corresponding authors",
   otherRoleLabel: isJapanesePage ? "それ以外" : "Other",
   paperCountAxisLabel: isJapanesePage ? "論文数" : "Number of publications",
-  firstAuthorRoleFacetOption: isJapanesePage
-    ? "(共)筆頭"
-    : "(co-)first",
-  correspondingAuthorRoleFacetOption: isJapanesePage
-    ? "(共)責任"
-    : "(co-)corresponding",
-  eitherAuthorRolesFacetOption: isJapanesePage
-    ? "いずれか"
-    : "either",
-  bothAuthorRolesFacetOption: isJapanesePage
-    ? "両方"
-    : "both",
+  firstAuthorRoleFacetOption: isJapanesePage ? "(共)筆頭" : "(co-)first",
+  correspondingAuthorRoleFacetOption: isJapanesePage ? "(共)責任" : "(co-)corresponding",
+  eitherAuthorRolesFacetOption: isJapanesePage ? "いずれか" : "either",
+  bothAuthorRolesFacetOption: isJapanesePage ? "両方" : "both",
   otherFacetOption: isJapanesePage ? "どちらでもない" : "neither",
   crossrefSortLabel: isJapanesePage ? "被引用順（Crossref）" : "Citation (Crossref)",
   dimensionsSortLabel: isJapanesePage ? "被引用順（Dimensions）" : "Citation (Dimensions)",
@@ -167,8 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const doi = normalizeDoi(publicationEntry.dataset.doi);
 
       const labMemberSet = new Set(labMembers);
-      const hasLabFirstAuthorRole =
-        (firstAuthor && labMemberSet.has(firstAuthor)) || coFirst.some((name) => labMemberSet.has(name));
+      const hasLabFirstAuthorRole = (firstAuthor && labMemberSet.has(firstAuthor)) || coFirst.some((name) => labMemberSet.has(name));
       const hasLabCorrespondingAuthorRole = corresponding.some((name) => labMemberSet.has(name));
       let authorRole = OTHER_FACET_VALUE;
       if (hasLabFirstAuthorRole && hasLabCorrespondingAuthorRole) {
@@ -761,9 +752,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const fetchCrossrefCitationCount = async (doi) => {
-    const response = await fetch(
-      `${CROSSREF_WORKS_ENDPOINT}/${encodeURIComponent(doi)}?mailto=${encodeURIComponent(CONTACT_EMAIL)}`
-    );
+    const response = await fetch(`${CROSSREF_WORKS_ENDPOINT}/${encodeURIComponent(doi)}?mailto=${encodeURIComponent(CONTACT_EMAIL)}`);
     if (!response.ok) return null;
     const payload = await response.json();
     const count = Number.parseInt(payload?.message?.["is-referenced-by-count"], 10);

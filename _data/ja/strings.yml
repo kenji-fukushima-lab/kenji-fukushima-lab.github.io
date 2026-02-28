@@ -131,7 +131,7 @@ pagination:
   page: ページ
 
 post:
-  created_in: 投稿日
+  created_in: 記事日付
   created_by: 投稿者
   last_updated: 最終更新日
 

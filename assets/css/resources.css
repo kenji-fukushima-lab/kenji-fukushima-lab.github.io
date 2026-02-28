@@ -18,11 +18,7 @@
   padding: 0.66rem 0.86rem;
   border-radius: 0.78rem;
   border: 1px solid var(--resources-border);
-  background: linear-gradient(
-    125deg,
-    color-mix(in srgb, var(--global-theme-color) 14%, var(--global-bg-color)) 0%,
-    var(--global-bg-color) 100%
-  );
+  background: linear-gradient(125deg, color-mix(in srgb, var(--global-theme-color) 14%, var(--global-bg-color)) 0%, var(--global-bg-color) 100%);
   font-size: clamp(1.03rem, 1.8vw, 1.22rem);
 }
 

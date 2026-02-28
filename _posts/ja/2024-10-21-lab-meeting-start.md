@@ -4,7 +4,7 @@ title: 遺伝研でラボミーティングを開始
 date: 2024-10-21
 last_updated: 2026-02-27
 author: 福島健児
-description: 遺伝研での定例ラボミーティングを開始しました。
+thumbnail:
 tags:
 categories:
 ---

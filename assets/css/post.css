@@ -1,0 +1,62 @@
+.post-content {
+  --post-heading-border: var(--global-divider-color);
+  --post-heading-surface: color-mix(in srgb, var(--global-bg-color) 94%, var(--global-theme-color));
+}
+
+.post > h2,
+.post-content #markdown-content > h2 {
+  margin: 0.65rem 0 0;
+  padding: 0.66rem 0.86rem;
+  border-radius: 0.78rem;
+  border: 1px solid var(--post-heading-border);
+  background: linear-gradient(125deg, color-mix(in srgb, var(--global-theme-color) 14%, var(--global-bg-color)) 0%, var(--global-bg-color) 100%);
+  font-size: clamp(1.03rem, 1.8vw, 1.22rem);
+}
+
+.post-content #markdown-content > h3 {
+  margin: 1rem 0 0;
+  padding: 0.55rem 0.78rem;
+  border-left: 4px solid var(--global-theme-color);
+  border-radius: 0.56rem;
+  background: var(--post-heading-surface);
+  font-size: 1.02rem;
+}
+
+.post-content #markdown-content > h4 {
+  margin: 1rem 0 0;
+  padding: 0.55rem 0.78rem;
+  border-left: 4px solid var(--global-theme-color);
+  border-radius: 0.56rem;
+  background: var(--post-heading-surface);
+  font-size: 0.98rem;
+}
+
+.related-posts-list {
+  list-style: disc;
+  list-style-position: outside;
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.related-posts-list > li {
+  margin: 0.45rem 0;
+}
+
+/* Center embedded tweets rendered by jekyll-twitter-plugin/X widgets */
+.post-content #markdown-content .jekyll-twitter-plugin {
+  display: flex;
+  justify-content: center;
+}
+
+.post-content #markdown-content .jekyll-twitter-plugin > * {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.post-content #markdown-content blockquote.twitter-tweet,
+.post-content #markdown-content .twitter-tweet,
+.post-content #markdown-content iframe.twitter-tweet,
+.post-content #markdown-content iframe.twitter-tweet-rendered {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

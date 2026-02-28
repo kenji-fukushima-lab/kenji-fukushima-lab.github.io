@@ -4,7 +4,7 @@ title: 高分子DNAの抽出
 date: 2024-06-11
 last_updated: 2024-07-07
 author: 福島健児
-description:
+thumbnail:
 tags:
 categories:
 ---

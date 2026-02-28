@@ -2,11 +2,13 @@
 layout: post
 title: Hector Montero博士が着任
 date: 2024-04-15
-last_updated: 2024-07-07
+last_updated: 2026-02-27
 author: 福島健児
-description:
+thumbnail:
 tags:
 categories:
 ---
 
 ドイツ・ヴュルツブルク大学在籍時からのラボメンバーであるHector Montero博士が遺伝研の研究室に着任しました。
+
+{% include figure.liquid path="assets/img/posts/20240910_hector_departure.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="Hector Montero博士の写真" %}

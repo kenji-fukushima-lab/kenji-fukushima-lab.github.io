@@ -3,6 +3,8 @@
   --blog-surface: color-mix(in srgb, var(--global-bg-color) 95%, var(--global-theme-color));
   --blog-surface-strong: color-mix(in srgb, var(--global-bg-color) 90%, var(--global-theme-color));
   --blog-shadow: 0 8px 24px color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+  --blog-card-thumb-width-desktop: 156px;
+  --blog-card-thumb-height-desktop: 98px;
 }
 
 .blog-content .header-bar {
@@ -11,12 +13,7 @@
   padding: 1rem 1.1rem;
   margin: 0;
   text-align: left;
-  background: linear-gradient(
-    130deg,
-    var(--blog-surface-strong) 0%,
-    var(--blog-surface) 58%,
-    var(--global-bg-color) 100%
-  );
+  background: linear-gradient(130deg, var(--blog-surface-strong) 0%, var(--blog-surface) 58%, var(--global-bg-color) 100%);
   box-shadow: var(--blog-shadow);
 }
 
@@ -173,7 +170,7 @@
   overflow: hidden;
   border: 1px solid var(--blog-border);
   background: color-mix(in srgb, var(--global-bg-color) 94%, var(--global-theme-color));
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
 }
 
 .blog-content .post-list li .post-card-thumb img {
@@ -184,12 +181,29 @@
 }
 
 @media (min-width: 860px) {
-  .blog-content .post-list li.has-thumb .post-card-inner {
-    grid-template-columns: minmax(0, 1fr) 228px;
+  .blog-content .post-list li .post-card-inner {
+    grid-template-columns: minmax(0, 1fr) var(--blog-card-thumb-width-desktop);
+    align-items: start;
+    min-height: var(--blog-card-thumb-height-desktop);
   }
 
-  .blog-content .post-list li.has-thumb .post-card-thumb {
-    aspect-ratio: 4 / 3;
+  .blog-content .post-list li .post-card-main {
+    min-height: var(--blog-card-thumb-height-desktop);
+  }
+
+  .blog-content .post-list li .post-card-thumb {
+    width: 100%;
+    height: var(--blog-card-thumb-height-desktop);
+    aspect-ratio: auto;
+  }
+
+  .blog-content .post-list li:not(.has-thumb) .post-card-inner::after {
+    content: "";
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    height: var(--blog-card-thumb-height-desktop);
   }
 }
 

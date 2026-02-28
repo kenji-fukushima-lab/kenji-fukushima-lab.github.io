@@ -4,7 +4,7 @@ title: 遺伝学講座・みしまで講演
 date: 2026-01-24
 last_updated: 2026-02-27
 author: 福島健児
-description: 三島市主催の「遺伝学講座・みしま」で講演しました。
+thumbnail:
 tags:
 categories:
 ---
@@ -13,4 +13,8 @@ categories:
 
 講演テーマは「食虫植物から迫る進化の謎」です。当日は多数の参加者にご来場いただき、ポスター発表も含めて活発な会となりました。
 
+待ち時間のために楽屋をあてがっていただきました。生まれて初めての楽屋です。
+
 イベントの報告ページ：<https://www.city.mishima.shizuoka.jp/page/28476.html>
+
+{% include figure.liquid path="assets/img/posts/20260124_gakuya.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="遺伝学講座・みしま当日の楽屋" %}
