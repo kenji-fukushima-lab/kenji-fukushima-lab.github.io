@@ -57,8 +57,6 @@ jobs:
             --exclude https://scholar[.]google[.][^/]+/citations.*
             --exclude https://github[.]com/kfuku52/kflab/?$
             --exclude https://kenji-fukushima-lab[.]github[.]io/assets/.*
-            --exclude https://bsj88[.]org/.*
-            --exclude https://taikai89[.]bsj[.]or[.]jp/.*
             --exclude-path README.md
             --exclude-path CUSTOMIZE.md
             --exclude-path FAQ.md
