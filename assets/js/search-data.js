@@ -656,6 +656,17 @@ ninja.data = [{
           window.location.href = "/blog/2024/bsj88-utsunomiya/";
         
       },
+    },{id: "post-三菱財団自然科学研究助成-若手助成-に採択",
+      
+        title: "三菱財団自然科学研究助成（若手助成）に採択",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2024/mitsubishi-foundation-grant/";
+        
+      },
     },{id: "post-フクロユキノシタを箱詰めして共同研究先へ",
       
         title: "フクロユキノシタを箱詰めして共同研究先へ",
