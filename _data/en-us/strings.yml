@@ -130,7 +130,7 @@ post:
 references: References
 related_posts:
   description: ""
-  title: Related Posts:
+  title: "Related Posts"
 search:
   dark_theme:
     description: Change the site theme to dark mode

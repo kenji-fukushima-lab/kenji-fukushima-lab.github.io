@@ -9,7 +9,7 @@ tags:
 categories:
 ---
 
-村田隆博士に遺伝研でご講演いただきました。
+神奈川工科大学の村田隆博士に遺伝研でご講演いただきました。
 
 {% include figure.liquid path="assets/img/posts/20250619_murata_seminar.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="村田先生のセミナーの様子" %}
 

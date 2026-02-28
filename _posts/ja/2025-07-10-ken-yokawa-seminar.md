@@ -9,7 +9,7 @@ tags:
 categories:
 ---
 
-2025年7月10日、北見工業大学の陽川憲博士にご講演いただきました。
+北見工業大学の陽川憲博士にご講演いただきました。
 
 NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1729](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1729)
 
