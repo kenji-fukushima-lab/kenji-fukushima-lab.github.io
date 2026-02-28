@@ -52,11 +52,13 @@ jobs:
           args: >-
             --base https://kenji-fukushima-lab.github.io
             --max-retries 3
-            --accept '100..=103,200..=299,302,403,429'
-            --user-agent 'curl/7.54'
-            --exclude 'https://scholar\\.google\\.[^/]+/citations.*'
-            --exclude 'https://github\\.com/kfuku52/kflab/?$'
-            --exclude 'https://kenji-fukushima-lab\\.github\\.io/assets/.*'
+            --accept 100..=103,200..=299,302,403,429
+            --user-agent curl/7.54
+            --exclude https://scholar[.]google[.][^/]+/citations.*
+            --exclude https://github[.]com/kfuku52/kflab/?$
+            --exclude https://kenji-fukushima-lab[.]github[.]io/assets/.*
+            --exclude https://bsj88[.]org/.*
+            --exclude https://taikai89[.]bsj[.]or[.]jp/.*
             --exclude-path README.md
             --exclude-path CUSTOMIZE.md
             --exclude-path FAQ.md
@@ -79,4 +81,4 @@ jobs:
             --exclude-path _posts/pt-br/2023-04-24-videos.md
             --exclude-path _books/en-us/the_godfather.md
             --exclude-path _books/pt-br/the_godfather.md
-            --verbose --no-progress './**/*.md' './**/*.html'
+            --verbose --no-progress ./**/*.md ./**/*.html
