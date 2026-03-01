@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 第1384回NIGコロキウムで講演
+title: 第1384回NIGコロキウムで発表
 date: 2025-10-10
-last_updated: 2026-02-27
+last_updated: 2026-03-01
 author: 福島健児
 thumbnail:
 tags:

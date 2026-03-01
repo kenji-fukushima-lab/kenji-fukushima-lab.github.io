@@ -9,7 +9,7 @@ nav: false
 # * * * * * * * * * * [change 2025.3.13] change from 6 to 7 * * * * * * * * * *
 nav_order: 7
 pagination:
-  enabled: true
+  enabled: false
   collection: posts
   permalink: /page/:num/
   per_page: 20
@@ -18,6 +18,8 @@ pagination:
   trail:
     before: 1 # The number of links before the current page
     after: 3 # The number of links after the current page
+chart:
+  chartjs: true
 ---
 
 <div class="post">
@@ -59,6 +61,8 @@ pagination:
     </ul>
   </div>
   {% endif %}
+
+{% include blog_search.liquid %}
 
 {% assign featured_posts = site.posts | where: "featured", "true" %}
 {% if featured_posts.size > 0 %}
@@ -108,11 +112,7 @@ pagination:
   <h2 class="sr-only">Post list</h2>
   <ul class="post-list">
 
-    {% if page.pagination.enabled %}
-      {% assign postlist = paginator.posts %}
-    {% else %}
-      {% assign postlist = site.posts %}
-    {% endif %}
+    {% assign postlist = site.posts %}
 
     {% for post in postlist %}
 
@@ -164,7 +164,26 @@ pagination:
       {% endif %}
     {% endif %}
 
-    <li class="post-card{% if preview_image != blank %} has-thumb{% endif %}" data-href="{{ post_url }}"{% if post_target != blank %} data-target="{{ post_target }}"{% endif %} tabindex="0">
+    {% assign tag_values = post.tags | join: '||' %}
+    {% assign category_values = post.categories | join: '||' %}
+    {% if post.external_source == blank %}
+      {% assign post_search_content = post.content %}
+    {% else %}
+      {% assign post_search_content = post.feed_content %}
+    {% endif %}
+    <li
+      class="post-card{% if preview_image != blank %} has-thumb{% endif %}"
+      data-href="{{ post_url }}"
+      data-year="{{ year }}"
+      data-date="{{ post.date | date: '%Y-%m-%d' }}"
+      data-tags="{{ tag_values | downcase | escape }}"
+      data-categories="{{ category_values | downcase | escape }}"
+      data-author="{{ post.author | escape }}"
+      data-title="{{ post.title | downcase | escape }}"
+      data-content="{{ post_search_content | strip_html | strip_newlines | downcase | escape }}"
+      {% if post_target != blank %} data-target="{{ post_target }}"{% endif %}
+      tabindex="0"
+    >
       <div class="post-card-inner">
         <div class="post-card-main">
           <h3>

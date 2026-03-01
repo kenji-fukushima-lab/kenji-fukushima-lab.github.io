@@ -1,0 +1,54 @@
+{% assign is_ja = false %}
+{% if site.active_lang == 'ja' %}
+  {% assign is_ja = true %}
+{% endif %}
+
+<div class="blog-top-panels">
+  <div class="blog-controls" aria-label="{% if is_ja %}ブログ絞り込み{% else %}Blog filters{% endif %}">
+    <div class="blog-controls-main">
+      <input
+        type="text"
+        id="blogsearch"
+        spellcheck="false"
+        autocomplete="off"
+        class="search bibsearch-form-input"
+        placeholder="{% if is_ja %}キーワードで検索{% else %}Search posts{% endif %}"
+      >
+      <select id="blog-sort" class="pub-select" aria-label="{% if is_ja %}並び替え{% else %}Sort posts{% endif %}">
+        <option value="newest">
+          {% if is_ja %}新着順{% else %}Newest{% endif %}
+        </option>
+        <option value="oldest">
+          {% if is_ja %}古い順{% else %}Oldest{% endif %}
+        </option>
+        <option value="title">
+          {% if is_ja %}タイトル順{% else %}Title{% endif %}
+        </option>
+      </select>
+      <button type="button" id="blog-reset-filters" class="pub-button">
+        {% if is_ja %}絞り込みを解除{% else %}Reset filters{% endif %}
+      </button>
+    </div>
+    <div class="blog-controls-facets">
+      <label class="pub-facet-label" for="blog-facet-year">
+        <span>{% if is_ja %}年{% else %}Year{% endif %}</span>
+        <select id="blog-facet-year" class="pub-select facet-select"></select>
+      </label>
+      <label class="pub-facet-label" for="blog-facet-author">
+        <span>{% if is_ja %}投稿者{% else %}Author{% endif %}</span>
+        <select id="blog-facet-author" class="pub-select facet-select"></select>
+      </label>
+    </div>
+    <div class="blog-controls-status">
+      <span id="blog-active-count"></span>
+    </div>
+  </div>
+
+  <section class="blog-dashboard" id="blog-dashboard">
+    <div class="blog-dashboard-grid">
+      <article class="blog-dashboard-card">
+        <canvas id="blog-chart-year" aria-label="{% if is_ja %}年次ブログ記事数{% else %}Posts by year{% endif %}"></canvas>
+      </article>
+    </div>
+  </section>
+</div>

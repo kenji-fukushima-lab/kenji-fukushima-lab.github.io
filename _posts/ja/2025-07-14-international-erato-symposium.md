@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 埼玉大学の国際シンポジウムに参加
+title: The 1st International ERATO symposiumで発表
 date: 2025-07-14
-last_updated: 2026-02-28
+last_updated: 2026-03-01
 author: 福島健児
 thumbnail:
 tags:

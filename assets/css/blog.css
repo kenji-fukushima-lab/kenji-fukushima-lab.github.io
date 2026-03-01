@@ -78,6 +78,150 @@
   border-color: var(--global-theme-color);
 }
 
+.blog-content .blog-controls {
+  border: 1px solid var(--blog-border);
+  border-radius: 0.95rem;
+  padding: 0.75rem;
+  margin: 0.75rem 0 0.65rem;
+  background: linear-gradient(130deg, var(--blog-surface-strong) 0%, var(--blog-surface) 100%);
+  box-shadow: var(--blog-shadow);
+}
+
+.blog-content .blog-top-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+  margin: 0.75rem 0 0.85rem;
+}
+
+.blog-content .blog-top-panels .blog-controls,
+.blog-content .blog-top-panels .blog-dashboard {
+  margin: 0;
+}
+
+.blog-content .blog-controls-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.blog-content .blog-controls-main .bibsearch-form-input {
+  max-width: 360px;
+  margin-right: 0;
+  flex: 1 1 260px;
+  min-height: 28px;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.82rem;
+}
+
+.blog-content .blog-controls-facets {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.blog-content .pub-facet-label {
+  display: grid;
+  flex: 1 1 0;
+  min-width: 140px;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--global-text-color-light);
+}
+
+.blog-content .pub-select {
+  color: var(--global-text-color);
+  background: var(--global-bg-color);
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.5rem;
+  padding: 0.22rem 0.5rem;
+  min-height: 28px;
+  font-size: 0.82rem;
+}
+
+.blog-content .pub-button {
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--global-theme-color);
+  color: var(--global-bg-color);
+  padding: 0.22rem 0.58rem;
+  min-height: 28px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.blog-content .pub-button:hover {
+  opacity: 0.9;
+}
+
+.blog-content .pub-button:focus-visible,
+.blog-content .pub-select:focus-visible,
+.blog-content .blog-controls-main .bibsearch-form-input:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 2px;
+}
+
+.blog-content .blog-controls-status {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--global-text-color-light);
+}
+
+.blog-content .blog-dashboard {
+  margin: 0.4rem 0 0.85rem;
+}
+
+.blog-content .blog-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.blog-content .blog-dashboard-card {
+  border: 1px solid var(--blog-border);
+  border-radius: 0.95rem;
+  padding: 0.5rem 0.65rem;
+  background: color-mix(in srgb, var(--global-bg-color) 95%, var(--global-theme-color));
+  min-height: 175px;
+  box-shadow: var(--blog-shadow);
+}
+
+.blog-content .blog-dashboard-card canvas {
+  width: 100% !important;
+  height: 130px !important;
+}
+
+@media (min-width: 960px) {
+  .blog-content .blog-top-panels {
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+    align-items: stretch;
+    gap: 0.72rem;
+  }
+
+  .blog-content .blog-top-panels .blog-dashboard {
+    display: flex;
+  }
+
+  .blog-content .blog-top-panels .blog-dashboard-grid {
+    width: 100%;
+  }
+
+  .blog-content .blog-top-panels .blog-dashboard-card {
+    height: 100%;
+    min-height: 152px;
+  }
+}
+
+.blog-content .blog-empty-state {
+  margin: 0.85rem 0 0;
+  color: var(--global-text-color-light);
+  font-size: 0.9rem;
+}
+
 .blog-content .featured-posts {
   padding: 0;
 }
@@ -210,6 +354,46 @@
 .blog-content .pagination .page-item .page-link {
   border-radius: 0.72rem;
   border-color: var(--blog-border);
+}
+
+.blog-content .blog-pagination {
+  margin: 0.75rem 0 0.2rem;
+}
+
+.blog-content .blog-pagination .pagination {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.blog-content .blog-pagination .page-item .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.05rem;
+  min-height: 1.95rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--blog-border);
+  border-radius: 0.72rem;
+  background: var(--global-bg-color);
+  color: var(--global-text-color);
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.blog-content .blog-pagination .page-item.active .page-link {
+  background: var(--global-theme-color);
+  border-color: var(--global-theme-color);
+  color: var(--global-bg-color);
+}
+
+.blog-content .blog-pagination .page-item.disabled .page-link {
+  opacity: 0.52;
+}
+
+.blog-content .blog-pagination .page-item:not(.disabled):not(.active) .page-link:hover {
+  border-color: var(--global-theme-color);
 }
 
 @media (max-width: 680px) {

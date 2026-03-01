@@ -1,6 +1,6 @@
 ---
 layout: post
-title: NIG Retreatに参加
+title: 遺伝研リトリートに参加
 date: 2025-07-04
 last_updated: 2026-02-28
 author: 福島健児
@@ -9,9 +9,7 @@ tags:
 categories:
 ---
 
-2025年7月3日から4日に開催された NIG Retreat に参加しました。
-
-ディスカッションを通じて、今後の研究方針を整理する機会になりました。
+2025年7月3日から4日に開催された遺伝研リトリートに参加しました。
 
 会場ページ: <https://www.tokinosumika.com/>
 

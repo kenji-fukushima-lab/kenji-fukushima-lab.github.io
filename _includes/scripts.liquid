@@ -175,6 +175,9 @@
 {% if page.page_id == 'resources' or page.page_id == 'repositories' %}
   <script defer src="{{ '/assets/js/repo-about.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
 {% endif %}
+{% if page.page_id == 'blog' %}
+  <script defer src="{{ '/assets/js/blogsearch.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
 {% if page.page_id == 'resources' %}
   <script defer src="{{ '/assets/js/ncbi-genome-loader.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
 {% endif %}
