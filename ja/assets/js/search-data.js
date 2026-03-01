@@ -98,9 +98,9 @@ ninja.data = [{
           window.location.href = "/ja/blog/2026/junior-high-internship/";
         
       },
-    },{id: "post-遺伝学講座-みしまで講演",
+    },{id: "post-遺伝学講座-みしまで発表",
       
-        title: "遺伝学講座・みしまで講演",
+        title: "遺伝学講座・みしまで発表",
       
       description: "",
       section: "記事",
@@ -131,9 +131,31 @@ ninja.data = [{
           window.location.href = "/ja/blog/2026/spatial-omics-in-plants/";
         
       },
-    },{id: "post-イネ属近縁野生種研究会で講演",
+    },{id: "post-総研大-発生生物学1-で講義",
       
-        title: "イネ属近縁野生種研究会で講演",
+        title: "総研大「発生生物学1」で講義",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/developmental-biology-1-sokendai/";
+        
+      },
+    },{id: "post-静岡大学で講義",
+      
+        title: "静岡大学で講義",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/shizuoka-frontier-science-lecture/";
+        
+      },
+    },{id: "post-イネ属近縁野生種研究会で発表",
+      
+        title: "イネ属近縁野生種研究会で発表",
       
       description: "",
       section: "記事",
@@ -208,9 +230,20 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/kazuki-fukushima-seminar/";
         
       },
-    },{id: "post-第1384回nigコロキウムで講演",
+    },{id: "post-名古屋大学農学部で集中講義",
       
-        title: "第1384回NIGコロキウムで講演",
+        title: "名古屋大学農学部で集中講義",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/nagoya-intensive-lectures-macroevolution/";
+        
+      },
+    },{id: "post-第1384回nigコロキウムで発表",
+      
+        title: "第1384回NIGコロキウムで発表",
       
       description: "",
       section: "記事",
@@ -241,6 +274,17 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/dischidia-pectenoides-seedlings/";
         
       },
+    },{id: "post-かずさdna研究所でセミナー発表",
+      
+        title: "かずさDNA研究所でセミナー発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/kazusa-dna-seminar/";
+        
+      },
     },{id: "post-jst創発に採択",
       
         title: "JST創発に採択",
@@ -261,6 +305,28 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/ja/blog/2025/yusuke-asaka-departure/";
+        
+      },
+    },{id: "post-千葉大学理学部で集中講義",
+      
+        title: "千葉大学理学部で集中講義",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/chiba-intensive-lectures-systematics-a/";
+        
+      },
+    },{id: "post-symposium-on-molecular-plant-biotic-interactions-2025で発表",
+      
+        title: "Symposium on Molecular Plant-Biotic Interactions 2025で発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/symposium-molecular-plant-biotic-interactions-2025/";
         
       },
     },{id: "post-植物学会でシンポジウムを企画",
@@ -329,9 +395,20 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/nig-intern/";
         
       },
-    },{id: "post-埼玉大学の国際シンポジウムに参加",
+    },{id: "post-東北大学-2025-fris-ti-frisリトリートで発表",
       
-        title: "埼玉大学の国際シンポジウムに参加",
+        title: "東北大学 2025 FRIS/TI-FRISリトリートで発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/tohoku-fris-ti-fris-retreat/";
+        
+      },
+    },{id: "post-the-1st-international-erato-symposiumで発表",
+      
+        title: "The 1st International ERATO symposiumで発表",
       
       description: "",
       section: "記事",
@@ -351,9 +428,9 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/ken-yokawa-seminar/";
         
       },
-    },{id: "post-nig-retreatに参加",
+    },{id: "post-遺伝研リトリートに参加",
       
-        title: "NIG Retreatに参加",
+        title: "遺伝研リトリートに参加",
       
       description: "",
       section: "記事",
@@ -428,9 +505,9 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/yamada-tetsuya-heidelberg-seminar/";
         
       },
-    },{id: "post-ふじのくに地球環境史ミュージアムで一般向け講演",
+    },{id: "post-ふじのくに地球環境史ミュージアムで一般向け発表",
       
-        title: "ふじのくに地球環境史ミュージアムで一般向け講演",
+        title: "ふじのくに地球環境史ミュージアムで一般向け発表",
       
       description: "",
       section: "記事",
@@ -505,6 +582,17 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/tmu-final-lecture/";
         
       },
+    },{id: "post-第1回植物異分野勉強会で発表",
+      
+        title: "第1回植物異分野勉強会で発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/plant-ibunya-study-group-1/";
+        
+      },
     },{id: "post-イシモチソウが開花",
       
         title: "イシモチソウが開花",
@@ -525,6 +613,17 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/ja/blog/2025/omer-gokcumen-seminar/";
+        
+      },
+    },{id: "post-東北大学-独眼竜講話会でセミナー発表",
+      
+        title: "東北大学・独眼竜講話会でセミナー発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2025/tohoku-dokuganryu-kowakai-seminar/";
         
       },
     },{id: "post-昇降式デスクを導入",
@@ -560,9 +659,20 @@ ninja.data = [{
           window.location.href = "/ja/blog/2025/technicians-join/";
         
       },
-    },{id: "post-種生物学会第56回大会-岡山-に参加",
+    },{id: "post-第5回木村資生記念進化学セミナーで発表",
       
-        title: "種生物学会第56回大会（岡山）に参加",
+        title: "第5回木村資生記念進化学セミナーで発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2024/kimura-motoo-evolution-seminar-5/";
+        
+      },
+    },{id: "post-種生物学会第56回大会-岡山-で発表",
+      
+        title: "種生物学会第56回大会（岡山）で発表",
       
       description: "",
       section: "記事",
@@ -591,6 +701,17 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/ja/blog/2024/mbsj-symposium-plant-survival-strategy/";
+        
+      },
+    },{id: "post-基礎生物学研究所でセミナー発表",
+      
+        title: "基礎生物学研究所でセミナー発表",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2024/nibb-seminar/";
         
       },
     },{id: "post-研究会-イネ分子遺伝学の深化-で発表",
@@ -703,9 +824,9 @@ ninja.data = [{
           window.location.href = "/ja/blog/2024/sssj-annual-meeting/";
         
       },
-    },{id: "post-咲くやこの花館で講演",
+    },{id: "post-咲くやこの花館で発表",
       
-        title: "咲くやこの花館で講演",
+        title: "咲くやこの花館で発表",
       
       description: "",
       section: "記事",
