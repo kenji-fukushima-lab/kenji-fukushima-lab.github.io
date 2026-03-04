@@ -295,14 +295,67 @@ def main() -> int:
 
     sections = parse_sections(issue_body)
 
-    title = first_non_empty(sections, ["投稿タイトル", "Post title"], required=True)
-    date_str = parse_iso_date(first_non_empty(sections, ["投稿日 (YYYY-MM-DD)", "Post date (YYYY-MM-DD)"], required=True))
-    lang = normalize_language(first_non_empty(sections, ["言語", "Language"], required=False) or "ja")
-    author = first_non_empty(sections, ["投稿者名", "Author"], required=True)
-    requested_slug = first_non_empty(sections, ["URLスラッグ（英数字とハイフン、任意）", "URL slug (optional)"], required=False)
-    tags = parse_csv_list(first_non_empty(sections, ["タグ（任意、カンマ区切り）", "Tags (optional, comma-separated)"], required=False))
-    categories = parse_csv_list(first_non_empty(sections, ["カテゴリ（任意、カンマ区切り）", "Categories (optional, comma-separated)"], required=False))
-    content = first_non_empty(sections, ["本文（Markdown）", "Body (Markdown)"], required=True)
+    title = first_non_empty(
+        sections,
+        ["記事タイトル / Post Title", "投稿タイトル", "Post title"],
+        required=True,
+    )
+    date_str = parse_iso_date(
+        first_non_empty(
+            sections,
+            [
+                "記事日付 / Article Date (YYYY-MM-DD)",
+                "記事日付/Article Date (YYYY-MM-DD)",
+                "投稿日 (YYYY-MM-DD)",
+                "Post date (YYYY-MM-DD)",
+            ],
+            required=True,
+        )
+    )
+    lang = normalize_language(
+        first_non_empty(sections, ["言語 / Language", "言語", "Language"], required=False) or "ja"
+    )
+    author = first_non_empty(
+        sections,
+        ["投稿者 / Author", "投稿者名", "Author"],
+        required=True,
+    )
+    requested_slug = first_non_empty(
+        sections,
+        [
+            "URLスラッグ / URL Slug（英数字とハイフン、任意 / optional）",
+            "URLスラッグ（英数字とハイフン、任意）",
+            "URL slug (optional)",
+        ],
+        required=False,
+    )
+    tags = parse_csv_list(
+        first_non_empty(
+            sections,
+            [
+                "タグ / Tags（任意 / optional, カンマ区切り / comma-separated）",
+                "タグ（任意、カンマ区切り）",
+                "Tags (optional, comma-separated)",
+            ],
+            required=False,
+        )
+    )
+    categories = parse_csv_list(
+        first_non_empty(
+            sections,
+            [
+                "カテゴリ / Categories（任意 / optional, カンマ区切り / comma-separated）",
+                "カテゴリ（任意、カンマ区切り）",
+                "Categories (optional, comma-separated)",
+            ],
+            required=False,
+        )
+    )
+    content = first_non_empty(
+        sections,
+        ["本文 / Body (Markdown)", "本文（Markdown）", "Body (Markdown)"],
+        required=True,
+    )
 
     slug = normalize_slug(requested_slug) if requested_slug else slugify(title)
     if not slug:
