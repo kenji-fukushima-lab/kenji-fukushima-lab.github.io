@@ -124,7 +124,7 @@ no_posts: "No posts yet."
 pagination:
   page: page
 post:
-  created_in: Article date
+  created_in: Article Date
   created_by: by
   last_updated: last updated on
 references: References
