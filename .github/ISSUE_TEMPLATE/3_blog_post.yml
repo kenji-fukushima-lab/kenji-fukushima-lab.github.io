@@ -7,10 +7,14 @@ body:
     attributes:
       value: |
         以下のフォームを入力して投稿申請してください。
+        Please fill out the form below to submit a blog post request.
 
         - 画像は「本文」欄にドラッグ&ドロップで添付できます。
+          You can drag and drop images into the "本文 (Body)" field.
         - 添付画像は自動で `assets/img/posts/` に保存され、本文リンクも自動で置換されます。
+          Attached images are automatically saved to `assets/img/posts/`, and links in the post body are rewritten automatically.
         - 公開は管理者レビュー後です。
+          Publication happens only after maintainer review and approval.
 
   - type: input
     id: post_title
@@ -24,7 +28,7 @@ body:
     id: post_date
     attributes:
       label: 投稿日 (YYYY-MM-DD)
-      description: 公開時の記事日付です
+      description: 公開時の記事日付です / Publication date of the post
       placeholder: "2026-03-04"
     validations:
       required: true
@@ -52,7 +56,7 @@ body:
     id: slug
     attributes:
       label: URLスラッグ（英数字とハイフン、任意）
-      description: 空欄の場合はタイトルから自動生成します
+      description: 空欄の場合はタイトルから自動生成します / If empty, it will be generated from the title
       placeholder: 例）conference-report-2026
     validations:
       required: false
@@ -77,11 +81,13 @@ body:
     id: content
     attributes:
       label: 本文（Markdown）
-      description: Markdownで本文を入力してください。画像添付もここで行えます。
+      description: Markdownで本文を入力してください。画像添付もここで行えます。 / Write the post body in Markdown. You can also attach images here.
       placeholder: |
         ここに本文を書いてください。
+        Write your post content here.
 
         画像を挿入したい場合は、この欄にドラッグ&ドロップしてください。
+        To insert images, drag and drop them into this field.
     validations:
       required: true
 
@@ -90,5 +96,5 @@ body:
     attributes:
       label: 確認事項
       options:
-        - label: 投稿内容は研究室サイトに公開可能な内容であり、必要な権利確認を行いました。
+        - label: 投稿内容は研究室サイトに公開可能な内容であることを確認しました。
           required: true

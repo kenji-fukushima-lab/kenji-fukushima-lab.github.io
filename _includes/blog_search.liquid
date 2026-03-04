@@ -31,11 +31,15 @@
     </div>
     <div class="blog-controls-facets">
       <label class="pub-facet-label" for="blog-facet-year">
-        <span>{% if is_ja %}年{% else %}Year{% endif %}</span>
+        <span>
+          {%- if is_ja %}年{% else %}Year{% endif -%}
+        </span>
         <select id="blog-facet-year" class="pub-select facet-select"></select>
       </label>
       <label class="pub-facet-label" for="blog-facet-author">
-        <span>{% if is_ja %}投稿者{% else %}Author{% endif %}</span>
+        <span>
+          {%- if is_ja %}投稿者{% else %}Author{% endif -%}
+        </span>
         <select id="blog-facet-author" class="pub-select facet-select"></select>
       </label>
     </div>
