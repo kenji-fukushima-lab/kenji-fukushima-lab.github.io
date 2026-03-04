@@ -27,6 +27,9 @@ IMAGES_ROOT = REPO_ROOT / "assets" / "img" / "posts"
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\s*\n([\s\S]*?)(?=^###\s+|\Z)", re.MULTILINE)
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<url>https?://[^\s)]+)\)")
 NO_RESPONSE = "_No response_"
+AUTHOR_NAME_OVERRIDES = {
+    "kfuku52": "Kenji Fukushima",
+}
 
 
 class InputError(RuntimeError):
@@ -97,21 +100,17 @@ def normalize_slug(slug: str) -> str:
     return slug
 
 
-def parse_csv_list(value: str) -> List[str]:
-    if not value:
-        return []
-    items = [part.strip() for part in re.split(r"[,\n]", value) if part.strip()]
-    return items
-
-
 def yaml_quote(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
 
 
-def yaml_inline_list(items: List[str]) -> str:
-    if not items:
-        return ""
-    return "[" + ", ".join(yaml_quote(item) for item in items) + "]"
+def build_author_html(issue_user_login: str) -> str:
+    login = issue_user_login.strip() or "unknown"
+    profile_url = f"https://github.com/{urllib.parse.quote(login)}"
+    display_name = AUTHOR_NAME_OVERRIDES.get(login)
+    if display_name:
+        return f'<a href="{profile_url}">{login}</a> ({display_name})'
+    return f'<a href="{profile_url}">{login}</a>'
 
 
 def is_github_attachment_url(url: str) -> bool:
@@ -252,8 +251,6 @@ def build_markdown(
     title: str,
     date_str: str,
     author: str,
-    tags: List[str],
-    categories: List[str],
     body_markdown: str,
 ) -> str:
     lines = [
@@ -264,8 +261,6 @@ def build_markdown(
         "last_updated:",
         f"author: {yaml_quote(author)}",
         "thumbnail:",
-        f"tags: {yaml_inline_list(tags)}" if tags else "tags:",
-        f"categories: {yaml_inline_list(categories)}" if categories else "categories:",
         "---",
         "",
         body_markdown.rstrip(),
@@ -315,11 +310,7 @@ def main() -> int:
     lang = normalize_language(
         first_non_empty(sections, ["言語 / Language", "言語", "Language"], required=False) or "ja"
     )
-    author = first_non_empty(
-        sections,
-        ["投稿者 / Author", "投稿者名", "Author"],
-        required=True,
-    )
+    author = build_author_html(issue_user)
     requested_slug = first_non_empty(
         sections,
         [
@@ -328,28 +319,6 @@ def main() -> int:
             "URL slug (optional)",
         ],
         required=False,
-    )
-    tags = parse_csv_list(
-        first_non_empty(
-            sections,
-            [
-                "タグ / Tags（任意 / optional, カンマ区切り / comma-separated）",
-                "タグ（任意、カンマ区切り）",
-                "Tags (optional, comma-separated)",
-            ],
-            required=False,
-        )
-    )
-    categories = parse_csv_list(
-        first_non_empty(
-            sections,
-            [
-                "カテゴリ / Categories（任意 / optional, カンマ区切り / comma-separated）",
-                "カテゴリ（任意、カンマ区切り）",
-                "Categories (optional, comma-separated)",
-            ],
-            required=False,
-        )
     )
     content = first_non_empty(
         sections,
@@ -374,8 +343,6 @@ def main() -> int:
         title=title,
         date_str=date_str,
         author=author,
-        tags=tags,
-        categories=categories,
         body_markdown=content,
     )
     post_path.write_text(post_markdown, encoding="utf-8")

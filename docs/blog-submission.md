@@ -4,9 +4,15 @@
 
 1. Open the repository Issues page.
 2. Choose `📝 Blog post submission`.
-3. Fill in title/date/author/body.
+3. Fill in post title, article date, language, and body.
 4. Drag and drop images into the body field if needed.
 5. Submit the issue.
+
+Notes:
+
+- `Add a title` in the issue header is for issue tracking only.
+- Blog post title is taken from `記事タイトル / Post Title`.
+- Author is derived automatically from your GitHub username and linked to your profile.
 
 What happens next:
 
