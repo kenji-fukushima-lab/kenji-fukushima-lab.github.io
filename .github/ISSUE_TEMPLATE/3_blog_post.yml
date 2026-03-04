@@ -15,6 +15,12 @@ body:
           Attached images are automatically saved to `assets/img/posts/`, and links in the post body are rewritten automatically.
         - 公開は管理者レビュー後です。
           Publication happens only after maintainer review and approval.
+        - `Add a title` は Issue 管理用です。記事タイトルには `記事タイトル / Post Title` が使われます。
+          `Add a title` is only for issue tracking. `記事タイトル / Post Title` is used as the blog post title.
+        - 投稿者は GitHub ユーザー名から自動取得されます（入力不要）。
+          Author is automatically derived from your GitHub username.
+          例: `kfuku52 (Kenji Fukushima)`（`kfuku52` はプロフィールページへのリンクになります）
+          Example: `kfuku52 (Kenji Fukushima)` where `kfuku52` links to the GitHub profile.
 
   - type: input
     id: post_title
@@ -45,35 +51,11 @@ body:
       required: true
 
   - type: input
-    id: author
-    attributes:
-      label: 投稿者 / Author
-      placeholder: 例）山田太郎
-    validations:
-      required: true
-
-  - type: input
     id: slug
     attributes:
       label: URLスラッグ / URL Slug（英数字とハイフン、任意 / optional）
       description: 空欄の場合はタイトルから自動生成します / If empty, it will be generated from the title
       placeholder: 例）conference-report-2026
-    validations:
-      required: false
-
-  - type: input
-    id: tags
-    attributes:
-      label: タグ / Tags（任意 / optional, カンマ区切り / comma-separated）
-      placeholder: 例）seminar, fieldwork
-    validations:
-      required: false
-
-  - type: input
-    id: categories
-    attributes:
-      label: カテゴリ / Categories（任意 / optional, カンマ区切り / comma-separated）
-      placeholder: 例）news
     validations:
       required: false
 
@@ -96,5 +78,5 @@ body:
     attributes:
       label: 確認事項 / Confirmation
       options:
-        - label: 投稿内容は研究室サイトに公開可能な内容であることを確認しました。
+        - label: 投稿内容は研究室サイトに公開可能な内容であることを確認しました。 / I confirm that this content is suitable for publication on the lab website.
           required: true
