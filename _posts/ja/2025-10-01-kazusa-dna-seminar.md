@@ -3,7 +3,7 @@ layout: post
 title: かずさDNA研究所でセミナー発表
 date: 2025-10-01
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

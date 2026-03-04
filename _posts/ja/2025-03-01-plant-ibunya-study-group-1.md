@@ -3,7 +3,7 @@ layout: post
 title: 第1回植物異分野勉強会で発表
 date: 2025-03-01
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

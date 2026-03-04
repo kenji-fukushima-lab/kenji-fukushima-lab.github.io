@@ -3,7 +3,7 @@ layout: post
 title: Dischidia pectenoides の実生
 date: 2025-10-02
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

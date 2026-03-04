@@ -3,7 +3,7 @@ layout: post
 title: 花序付きの Nepenthes gracilis cv. 'Sport' を購入
 date: 2025-07-24
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

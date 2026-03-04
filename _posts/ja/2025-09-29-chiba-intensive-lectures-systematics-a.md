@@ -3,7 +3,7 @@ layout: post
 title: 千葉大学理学部で集中講義
 date: 2025-09-29
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

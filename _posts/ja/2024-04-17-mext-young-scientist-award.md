@@ -3,7 +3,7 @@ layout: post
 title: 文部科学大臣表彰若手科学者賞を受賞
 date: 2024-04-17
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

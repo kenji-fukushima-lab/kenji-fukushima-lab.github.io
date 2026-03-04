@@ -3,7 +3,7 @@ layout: post
 title: クリーンベンチの設置
 date: 2024-05-30
 last_updated: 2024-07-07
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

@@ -3,7 +3,7 @@ layout: post
 title: 種生物学会第56回大会（岡山）で発表
 date: 2024-12-06
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

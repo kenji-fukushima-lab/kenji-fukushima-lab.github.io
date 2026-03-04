@@ -3,7 +3,7 @@ layout: post
 title: 食虫植物の形質転換実験で使う蛍光顕微鏡
 date: 2025-11-14
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

@@ -3,7 +3,7 @@ layout: post
 title: 遺伝研の御衣黄
 date: 2024-04-15
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

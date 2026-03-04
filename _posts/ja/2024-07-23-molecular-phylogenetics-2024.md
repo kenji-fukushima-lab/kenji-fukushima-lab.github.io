@@ -3,7 +3,7 @@ layout: post
 title: 「生命科学を支える分子系統学 2024」に参加
 date: 2024-07-23
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

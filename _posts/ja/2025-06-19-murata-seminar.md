@@ -3,7 +3,7 @@ layout: post
 title: 村田隆博士のセミナー
 date: 2025-06-19
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

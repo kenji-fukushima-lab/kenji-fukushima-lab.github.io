@@ -3,7 +3,7 @@ layout: post
 title: 分子生物学会年会シンポジウムに参加
 date: 2024-11-29
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

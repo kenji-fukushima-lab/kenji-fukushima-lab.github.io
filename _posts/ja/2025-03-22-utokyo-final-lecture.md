@@ -3,7 +3,7 @@ layout: post
 title: 角谷徹仁博士の最終講義
 date: 2025-03-22
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

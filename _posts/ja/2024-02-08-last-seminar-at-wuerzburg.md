@@ -3,7 +3,7 @@ layout: post
 title: ヴュルツブルク大学で最後のセミナー発表
 date: 2024-02-08
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

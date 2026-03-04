@@ -3,7 +3,7 @@ layout: post
 title: イネ属近縁野生種研究会で発表
 date: 2025-12-10
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

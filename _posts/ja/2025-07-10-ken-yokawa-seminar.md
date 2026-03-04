@@ -3,7 +3,7 @@ layout: post
 title: 陽川憲博士のセミナー
 date: 2025-07-10
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:
