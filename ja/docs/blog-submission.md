@@ -12,6 +12,7 @@ Notes:
 
 - `Add a title` in the issue header is for issue tracking only.
 - Blog post title is taken from `記事タイトル / Post Title`.
+- `記事日付 / Article Date` is the date shown on the post page, not the publication date.
 - Author is derived automatically from your GitHub username and linked to your profile.
 
 What happens next:
