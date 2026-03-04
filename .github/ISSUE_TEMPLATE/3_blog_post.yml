@@ -34,7 +34,7 @@ body:
     id: post_date
     attributes:
       label: 記事日付 / Article Date (YYYY-MM-DD)
-      description: 公開時の記事日付です / Publication date of the post
+      description: 記事ページに表示される日付です（公開日ではありません） / Date shown on the post page (this is not the publication date)
       placeholder: "2026-03-04"
     validations:
       required: true
