@@ -3,7 +3,7 @@ layout: post
 title: 総研大「発生生物学1」で講義
 date: 2025-12-17
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

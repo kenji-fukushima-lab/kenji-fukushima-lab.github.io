@@ -3,7 +3,7 @@ layout: post
 title: 倍数性研究会＋サイズ生物学研究会ジョイント研究会に参加
 date: 2024-09-30
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

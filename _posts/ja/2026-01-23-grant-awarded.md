@@ -3,7 +3,7 @@ layout: post
 title: サントリーSunRiSEに採択
 date: 2026-01-23
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

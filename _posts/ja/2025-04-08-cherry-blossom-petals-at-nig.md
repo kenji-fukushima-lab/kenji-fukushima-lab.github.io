@@ -3,7 +3,7 @@ layout: post
 title: 遺伝研前の桜並木
 date: 2025-04-08
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

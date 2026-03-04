@@ -3,7 +3,7 @@ layout: post
 title: 日本植物学会第88回大会（宇都宮）に参加
 date: 2024-09-13
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

@@ -3,7 +3,7 @@ layout: post
 title: 東北大学・独眼竜講話会でセミナー発表
 date: 2025-02-13
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

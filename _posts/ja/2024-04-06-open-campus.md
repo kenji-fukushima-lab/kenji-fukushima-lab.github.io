@@ -3,7 +3,7 @@ layout: post
 title: 一般公開
 date: 2024-04-06
 last_updated: 2024-07-07
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

@@ -3,7 +3,7 @@ layout: post
 title: BBQに参加
 date: 2025-04-12
 last_updated: 2026-02-27
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

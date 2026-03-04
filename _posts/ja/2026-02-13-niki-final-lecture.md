@@ -3,7 +3,7 @@ layout: post
 title: 仁木宏典博士の最終講義
 date: 2026-02-13
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

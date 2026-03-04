@@ -3,7 +3,7 @@ layout: post
 title: Workshop on Spatial Omics in Plantsに参加
 date: 2026-01-08
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

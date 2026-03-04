@@ -3,7 +3,7 @@ layout: post
 title: 科研費・帰国発展研究に採択されました
 date: 2024-02-26
 last_updated:
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

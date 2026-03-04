@@ -3,7 +3,7 @@ layout: post
 title: 植物学会でシンポジウムを企画
 date: 2025-09-18
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

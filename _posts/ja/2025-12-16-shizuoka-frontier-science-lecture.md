@@ -3,7 +3,7 @@ layout: post
 title: 静岡大学で講義
 date: 2025-12-16
 last_updated: 2026-03-01
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

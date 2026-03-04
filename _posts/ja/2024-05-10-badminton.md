@@ -3,7 +3,7 @@ layout: post
 title: 遺伝研バドミントン部
 date: 2024-05-10
 last_updated: 2024-07-07
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:

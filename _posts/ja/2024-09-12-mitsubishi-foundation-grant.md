@@ -3,7 +3,7 @@ layout: post
 title: 三菱財団自然科学研究助成（若手助成）に採択
 date: 2024-09-12
 last_updated: 2026-02-28
-author: 福島健児
+author: '<a href="https://github.com/kfuku52">kfuku52</a> (Kenji Fukushima)'
 thumbnail:
 tags:
 categories:
