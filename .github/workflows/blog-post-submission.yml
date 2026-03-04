@@ -1,0 +1,75 @@
+name: Create blog post PR from submission issue
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  create-blog-post-pr:
+    if: contains(github.event.issue.labels.*.name, 'blog-post') || startsWith(github.event.issue.title, '[Blog]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Generate post markdown and download attachments
+        id: generate
+        continue-on-error: true
+        run: python .github/scripts/create_blog_post_from_issue.py
+
+      - name: Comment issue when generation fails
+        if: steps.generate.outcome == 'failure'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            投稿の自動処理に失敗しました。入力内容を確認して Issue を編集してください。
+
+            想定される原因:
+            - 投稿日の形式が `YYYY-MM-DD` ではない
+            - 必須項目が空欄
+            - 本文セクションが欠落している
+
+            修正後に Issue を保存すると再実行されます。
+
+      - name: Stop workflow when generation fails
+        if: steps.generate.outcome == 'failure'
+        run: exit 1
+
+      - name: Create pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: ${{ steps.generate.outputs.commit_message }}
+          title: ${{ steps.generate.outputs.pr_title }}
+          body: ${{ steps.generate.outputs.pr_body }}
+          branch: ${{ steps.generate.outputs.branch_name }}
+          base: main
+          delete-branch: true
+          reviewers: kfuku52
+          assignees: kfuku52
+
+      - name: Comment issue with PR link
+        if: steps.cpr.outputs.pull-request-url != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ steps.generate.outputs.issue_number }}
+          body: |
+            投稿ありがとうございます。レビュー用のPRを作成しました。
+            ${{ steps.cpr.outputs.pull-request-url }}
+
+            画像添付がある場合は、`assets/img/posts/` への保存と本文リンク置換を自動実行しています。
