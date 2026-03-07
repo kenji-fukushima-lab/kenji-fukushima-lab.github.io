@@ -1,0 +1,10 @@
+---
+layout: null
+lang: ja
+page_id: feed
+permalink: /feed.xml
+sitemap: false
+title: ブログ
+description: 研究室の活動記録やお知らせを掲載しています。
+---
+{% include custom_feed.liquid %}

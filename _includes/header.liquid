@@ -120,12 +120,20 @@
             </li>
           {% endif %}
           <!-- Toogle language -->
-          {% if site.languages.size >= 2 %}
-            {% if site.languages.size == 2 %}
-              {% if site.active_lang == site.languages.first %}
-                {% assign other_language = site.languages.last %}
+          {% assign available_languages = site.languages %}
+          {% if page['lang-exclusive'] %}
+            {% assign available_languages = page['lang-exclusive'] %}
+          {% elsif page.url contains '/blog/' and page.layout %}
+            {% if page.layout == 'archive-year' or page.layout == 'archive-tag' or page.layout == 'archive-category' %}
+              {% assign available_languages = 'ja' | split: ',' %}
+            {% endif %}
+          {% endif %}
+          {% if available_languages.size >= 2 %}
+            {% if available_languages.size == 2 %}
+              {% if site.active_lang == available_languages.first %}
+                {% assign other_language = available_languages.last %}
               {% else %}
-                {% assign other_language = site.languages.first %}
+                {% assign other_language = available_languages.first %}
               {% endif %}
               <li class="nav-item active">
                 {% if site.active_lang == site.default_lang %}
@@ -186,7 +194,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                   {% assign language_set = false %}
-                  {% for l in site.languages %}
+                  {% for l in available_languages %}
                     {% if l != site.active_lang %}
                       {% if language_set %}
                         <div class="dropdown-divider"></div>

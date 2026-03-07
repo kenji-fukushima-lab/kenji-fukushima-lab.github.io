@@ -131,7 +131,19 @@ layout: default
     {% if page.social %}
       <div class="social">
         <div class="contact-icons">
-          <a href="{{ '/feed.xml' | relative_url }}" title="RSS feed" aria-label="RSS feed">
+          {% assign rss_feed_lang = site.active_lang %}
+          {% assign active_feed_posts = site.data.generated_posts_by_lang[site.active_lang] %}
+          {% assign japanese_feed_posts = site.data.generated_posts_by_lang['ja'] %}
+          {% if active_feed_posts == nil or active_feed_posts.size == 0 %}
+            {% if japanese_feed_posts and japanese_feed_posts.size > 0 %}
+              {% assign rss_feed_lang = 'ja' %}
+            {% endif %}
+          {% endif %}
+          {% assign rss_path = '/feed.xml' %}
+          {% if rss_feed_lang != site.default_lang %}
+            {% assign rss_path = '/feed.xml' | prepend: rss_feed_lang | prepend: '/' %}
+          {% endif %}
+          <a href="{{ rss_path | relative_url }}" title="RSS feed" aria-label="RSS feed">
             <i class="fas fa-rss-square" aria-hidden="true"></i>
           </a>
         </div>

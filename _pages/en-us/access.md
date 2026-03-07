@@ -3,6 +3,7 @@ page_id: access
 layout: page
 permalink: /access/
 title: access
+description: Directions and contact details for the Plant Evolution Laboratory at the National Institute of Genetics in Mishima, Japan.
 nav: true
 nav_order: 9
 ---

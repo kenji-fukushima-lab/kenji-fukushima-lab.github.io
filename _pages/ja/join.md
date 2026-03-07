@@ -3,6 +3,7 @@ page_id: join
 layout: join
 permalink: /join/
 title: メンバー募集
+description: 福島研究室への参加を希望する博士課程学生・博士研究員向けの案内です。
 nav: true
 nav_order: 8
 ---
