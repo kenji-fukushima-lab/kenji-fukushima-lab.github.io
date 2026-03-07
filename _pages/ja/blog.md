@@ -1,12 +1,12 @@
 ---
-page_id: blog
 layout: blog
 permalink: /blog/
 title: ブログ
-blog_name: # [2025.3.19 changed] from al-folio em português brasileiro
-description: # [2025.3.19 changed] from um tema simples para acadêmicos
+blog_name: ブログ
+description: 研究室の活動記録やお知らせを掲載しています。
 nav: true
 nav_order: 7
+lang-exclusive: ["ja"]
 pagination:
   enabled: false
   collection: posts

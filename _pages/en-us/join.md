@@ -3,6 +3,7 @@ page_id: join
 layout: join
 permalink: /join/
 title: join us
+description: Information for prospective PhD students and postdoctoral researchers interested in joining the Fukushima Lab.
 nav: true
 nav_order: 8
 ---

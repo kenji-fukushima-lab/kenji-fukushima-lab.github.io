@@ -91,7 +91,7 @@ ninja.data = [
     },
   {%- endfor -%}
   {%- for collection in site.collections -%}
-    {%- if collection.label != 'posts' -%}
+    {%- if collection.label != 'posts' and collection.output != false -%}
       {%- for item in collection.docs -%}
         {
           {%- if item.inline -%}
@@ -103,11 +103,11 @@ ninja.data = [
           title: '{{ title | escape | emojify | truncatewords: 13 }}',
           description: "{{ item.description | strip_html | strip_newlines | escape | strip }}",
           section: "{{ site.data[site.active_lang].strings.search[collection.label] }}",
-          {%- unless item.inline -%}
+          {%- if item.url != blank -%}
             handler: () => {
               window.location.href = "{{ item.url | prepend: lang | relative_url }}";
             },
-          {%- endunless -%}
+          {%- endif -%}
         },
       {%- endfor -%}
     {%- endif -%}
@@ -226,7 +226,19 @@ ninja.data = [
         {%- when "rss_icon" -%}
           {%- assign social_id = "social-rss" -%}
           {%- assign social_title = "RSS Feed" -%}
-          {%- capture social_url %}"{{ site.baseurl }}/feed.xml"{% endcapture -%}
+          {%- assign rss_feed_lang = site.active_lang -%}
+          {%- assign active_feed_posts = site.data.generated_posts_by_lang[site.active_lang] -%}
+          {%- assign japanese_feed_posts = site.data.generated_posts_by_lang['ja'] -%}
+          {%- if active_feed_posts == nil or active_feed_posts.size == 0 -%}
+            {%- if japanese_feed_posts and japanese_feed_posts.size > 0 -%}
+              {%- assign rss_feed_lang = 'ja' -%}
+            {%- endif -%}
+          {%- endif -%}
+          {%- assign rss_feed_path = '/feed.xml' -%}
+          {%- if rss_feed_lang != site.default_lang -%}
+            {%- assign rss_feed_path = '/feed.xml' | prepend: rss_feed_lang | prepend: '/' -%}
+          {%- endif -%}
+          {%- capture social_url %}"{{ site.baseurl }}{{ rss_feed_path }}"{% endcapture -%}
         {%- when "scholar_userid" -%}
           {%- assign social_id = "social-scholar" -%}
           {%- assign social_title = "Google Scholar" -%}

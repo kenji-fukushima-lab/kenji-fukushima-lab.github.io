@@ -3,6 +3,7 @@ page_id: access
 layout: page
 permalink: /access/
 title: アクセス
+description: 国立遺伝学研究所・植物進化研究室へのアクセスと連絡先の案内です。
 nav: true
 nav_order: 9
 ---

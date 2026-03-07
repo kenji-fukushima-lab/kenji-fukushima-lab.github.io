@@ -3,7 +3,7 @@ page_id: outreach
 layout: page
 permalink: /outreach/
 title: アウトリーチ
-description:
+description: 福島研究室の書籍、講演、メディア出演などのアウトリーチ活動を紹介しています。
 nav: true
 nav_order: 6
 ---

@@ -25,14 +25,21 @@
 {% else %}
   {% capture title %}{{ site.title }}{% endcapture %}
 {% endif %}
+{% assign archive_description = null %}
 {% if page.title != null and page.title != '' %}
-  {% if page.url == '/blog/index.html' %}
-    {% capture page_title %}{{ site.data[site.active_lang].strings.blog.navigation_title }}{% endcapture %}
-  {% else %}
-    {% assign page_title = page.title %}
-  {% endif %}
+  {% assign page_title = page.title %}
 {% else %}
   {% assign page_title = null %}
+{% endif %}
+{% if page.layout == 'archive-year' %}
+  {% assign page_title = page.date | date: '%Y' %}
+  {% assign archive_description = site.data[site.active_lang].strings.archive_year %}
+{% elsif page.layout == 'archive-tag' %}
+  {% assign page_title = page.title | default: page.name %}
+  {% assign archive_description = site.data[site.active_lang].strings.archive_tag %}
+{% elsif page.layout == 'archive-category' %}
+  {% assign page_title = page.title | default: page.name %}
+  {% assign archive_description = site.data[site.active_lang].strings.archive_category %}
 {% endif %}
 {% if page_title %}
   {% assign title_array = '' | split: ',' %}
@@ -56,21 +63,92 @@
   {% endfor %}
   {% assign page_title = title_array | join: ' ' %}
 {% endif %}
-{% if page.description %}
-  {% assign description = page.description %}
-{% else %}
-  {% assign description = site.data[site.active_lang].strings.site_description %}
+{% assign raw_description = null %}
+{% if page.description != blank %}
+  {% assign raw_description = page.description %}
+{% elsif archive_description %}
+  {% assign raw_description = archive_description %}
+{% elsif page.collection == 'posts' or page.collection == 'news' or page.collection == 'projects' %}
+  {% assign raw_description = page.excerpt | default: page.content %}
+{% elsif page.content != blank %}
+  {% assign stripped_page_content = page.content | strip %}
+  {% unless stripped_page_content contains '{%' or stripped_page_content contains '{{' %}
+    {% assign raw_description = stripped_page_content %}
+  {% endunless %}
 {% endif %}
-<title>
-  {% if page.url == '/blog/index.html' %}
-    {{ page.title }} | {{ title }}
-  {% elsif page.url contains '/blog/' %}
-    {% capture blog_year %}{{ page.url | slice: 0, 11 }}{% endcapture %}
-    {% if page.url == blog_year %}
-      {{ page.date | date: '%Y' }} | {{ title }}
-    {% else %}
-      {{ page_title }} | {{ title }}
+{% if raw_description == blank %}
+  {% assign description = site.data[site.active_lang].strings.site_description %}
+{% else %}
+  {% assign description = raw_description | strip_html | normalize_whitespace | truncate: 180 %}
+{% endif %}
+{% assign social_image = page.og_image %}
+{% if social_image == blank and page.thumbnail %}
+  {% assign social_image = page.thumbnail %}
+{% endif %}
+{% if social_image == blank and page.img %}
+  {% assign social_image = page.img %}
+{% endif %}
+{% if social_image == blank and page.collection == 'posts' and page.content %}
+  {% if page.content contains 'include figure.liquid' %}
+    {% assign first_figure_chunk = page.content | split: 'include figure.liquid' | slice: 1, 1 | first %}
+    {% if first_figure_chunk contains 'path="' %}
+      {% assign figure_candidate = first_figure_chunk | split: 'path="' | last | split: '"' | first %}
+      {% if figure_candidate contains '.jpg'
+        or figure_candidate contains '.jpeg'
+        or figure_candidate contains '.png'
+        or figure_candidate contains '.webp'
+        or figure_candidate contains '.gif'
+      %}
+        {% assign social_image = figure_candidate %}
+      {% endif %}
     {% endif %}
+  {% endif %}
+  {% if social_image == blank and page.content contains '<img' %}
+    {% assign first_image_chunk = page.content | split: '<img' | slice: 1, 1 | first %}
+    {% assign image_candidate = '' %}
+    {% if first_image_chunk contains 'src="' %}
+      {% assign src_parts = first_image_chunk | split: 'src="' %}
+      {% assign first_src_part = src_parts | slice: 1, 1 | first %}
+      {% assign image_candidate = first_src_part | split: '"' | first %}
+    {% elsif first_image_chunk contains "src='" %}
+      {% assign src_parts = first_image_chunk | split: "src='" %}
+      {% assign first_src_part = src_parts | slice: 1, 1 | first %}
+      {% assign image_candidate = first_src_part | split: "'" | first %}
+    {% endif %}
+    {% if image_candidate contains '.jpg'
+      or image_candidate contains '.jpeg'
+      or image_candidate contains '.png'
+      or image_candidate contains '.webp'
+      or image_candidate contains '.gif'
+    %}
+      {% assign social_image = image_candidate %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+{% if social_image == blank %}
+  {% assign social_image = site.og_image %}
+{% endif %}
+{% if social_image != blank %}
+  {% assign social_image_first_char = social_image | slice: 0, 1 %}
+  {% unless social_image contains '://' %}
+    {% if social_image_first_char != '/' %}
+      {% assign social_image = social_image | prepend: '/' %}
+    {% endif %}
+    {% assign social_image = social_image | prepend: site.baseurl | prepend: site.url %}
+  {% endunless %}
+{% endif %}
+{% assign is_blog_index = false %}
+{% if page.layout == 'blog' %}
+  {% assign is_blog_index = true %}
+{% endif %}
+
+<title>
+  {% if is_blog_index %}
+    {{ page_title }} | {{ title }}
+  {% elsif page.layout == 'archive-year' %}
+    {{ page.date | date: '%Y' }} | {{ title }}
+  {% elsif page.url contains '/blog/' %}
+    {{ page_title }} | {{ title }}
   {% elsif page.title != 'blank' and page.url != '/' %}
     {% if page.title == null or page.title == '' %}
       {{ page.date | date: '%Y' }} | {{ title }}
@@ -83,35 +161,50 @@
 </title>
 <meta name="author" content="{{ author_name }}">
 <meta name="description" content="{{ description }}">
+{% if page.robots %}
+  <meta name="robots" content="{{ page.robots }}">
+{% endif %}
 {% if page.keywords or site.keywords %}
   <meta name="keywords" content="{% if page.keywords %}{{ page.keywords }}{% else %}{{ site.keywords }}{% endif %}">
 {% endif %}
 
-{% assign is_blog_post = false %}
-{% if page.url != '/blog/index.html' and page.url contains '/blog/' %}
-  {% unless page.url contains '/tag/' or page.url contains '/category/' %}
-    {% assign is_blog_post = true %}
-  {% endunless %}
+{% assign is_article_page = false %}
+{% assign schema_type = 'WebSite' %}
+{% if page.layout == 'post' %}
+  {% assign is_article_page = true %}
+  {% if page.collection == 'news' %}
+    {% assign schema_type = 'NewsArticle' %}
+  {% else %}
+    {% assign schema_type = 'BlogPosting' %}
+  {% endif %}
 {% endif %}
 
 {% if site.serve_og_meta %}
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
-  <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{% if page.title %}{{ title }} | {{ page_title }}{% else %}{{ title }}{% endif %}">
-  <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
+  <meta property="og:type" content="{% if is_article_page %}article{% else %}website{% endif %}">
+  <meta property="og:title" content="{% if page_title %}{{ title }} | {{ page_title }}{% else %}{{ title }}{% endif %}">
+  {% if canonical_url %}
+    <meta property="og:url" content="{{ canonical_url }}">
+  {% else %}
+    <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
+  {% endif %}
   <meta property="og:description" content="{{ description }}">
-  {% if page.og_image or site.og_image %}
-    <meta property="og:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+  {% if social_image != blank %}
+    <meta property="og:image" content="{{ social_image }}">
+  {% endif %}
+  {% if is_article_page and page.date %}
+    <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+    <meta property="article:modified_time" content="{{ page.last_updated | default: page.date | date_to_xmlschema }}">
   {% endif %}
   <meta property="og:locale" content="{{ site.active_lang }}">
 
   <!-- Twitter card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{% if page.title %}{{ page_title }}{% else %}{{ title }}{% endif %}">
+  <meta name="twitter:title" content="{% if page_title %}{{ page_title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{{ description }}">
-  {% if page.og_image or site.og_image %}
-    <meta name="twitter:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+  {% if social_image != blank %}
+    <meta name="twitter:image" content="{{ social_image }}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">
@@ -270,10 +363,17 @@
             "@type": "Person",
             "name": "{{ author_name }}"
         },
-        "url": "{{ page.url | prepend: site.baseurl | prepend: site.url }}",
-        "@type": "{% if is_blog_post %}BlogPosting{% else %}WebSite{% endif %}",
+        "url": "{% if canonical_url %}{{ canonical_url }}{% else %}{{ page.url | prepend: site.baseurl | prepend: site.url }}{% endif %}",
+        "@type": "{{ schema_type }}",
         "description": "{{ description }}",
-        "headline": "{% if page.title %}{{ page_title }}{% else %}{{ site.title }}{% endif %}",
+        {% if social_image != blank %}
+        "image": "{{ social_image }}",
+        {% endif %}
+        "headline": "{% if page_title %}{{ page_title }}{% else %}{{ site.title }}{% endif %}",
+        {% if is_article_page and page.date %}
+        "datePublished": "{{ page.date | date_to_xmlschema }}",
+        "dateModified": "{{ page.last_updated | default: page.date | date_to_xmlschema }}",
+        {% endif %}
         {% if sameaslinks != blank %}
         "sameAs": {{ sameaslinks }},
         {% endif %}

@@ -179,6 +179,7 @@ exclude:
   - Gemfile.lock
   - INSTALL.md
   - LICENSE
+  - lighthouse-results-ci/
   - lighthouse_results/
   - package.json
   - package-lock.json
@@ -197,7 +198,6 @@ keep_files:
 plugins:
   - jekyll-archives
   - jekyll-email-protect
-  - jekyll-feed
   - jekyll-get-json
   - jekyll-imagemagick
   - jekyll-jupyter-notebook
@@ -207,7 +207,6 @@ plugins:
   - jekyll-polyglot
   - jekyll-regex-replace
   - jekyll/scholar
-  - jekyll-sitemap
   - jekyll-socials
   - jekyll-terser
   - jekyll-toc
@@ -219,6 +218,10 @@ defaults:
       path: "assets"
     values:
       sitemap: false
+  - scope:
+      path: "_posts/ja"
+    values:
+      lang-exclusive: ["ja"]
   - scope:
       path: _profiles/alumni
     values:

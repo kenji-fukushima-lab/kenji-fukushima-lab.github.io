@@ -3,7 +3,7 @@ page_id: outreach
 layout: page
 permalink: /outreach/
 title: outreach
-description:
+description: Selected books, talks, media appearances, and outreach activities from the Fukushima Lab.
 nav: false
 nav_order: 6
 ---
