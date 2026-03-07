@@ -2,7 +2,7 @@
 {% if site.active_lang != site.default_lang %}
   {% assign localized_page_path = page.url | prepend: site.active_lang | prepend: '/' %}
 {% endif %}
-{% assign canonical_url = localized_page_path | replace:'index.html','' | prepend: site.baseurl | prepend: site.url %}
+{% assign canonical_url = localized_page_path | replace: 'index.html', '' | prepend: site.baseurl | prepend: site.url %}
 {% assign alternate_languages = site.languages %}
 {% if page['lang-exclusive'] %}
   {% assign alternate_languages = page['lang-exclusive'] %}
@@ -91,14 +91,14 @@
   {% endif %}
 {% endif %}
 {% if has_alternate_links %}
-  {% assign x_default_path = page.permalink | default: page.url | replace:'index.html','' %}
+  {% assign x_default_path = page.permalink | default: page.url | replace: 'index.html', '' %}
   {% assign x_default_href = x_default_path | prepend: site.baseurl | prepend: site.url %}
   {% for lang in alternate_languages %}
     {% assign alternate_page_path = page.url %}
     {% if lang != site.default_lang %}
       {% assign alternate_page_path = page.url | prepend: lang | prepend: '/' %}
     {% endif %}
-    {% assign alternate_href = alternate_page_path | replace:'index.html','' | prepend: site.baseurl | prepend: site.url %}
+    {% assign alternate_href = alternate_page_path | replace: 'index.html', '' | prepend: site.baseurl | prepend: site.url %}
     <link rel="alternate" hreflang="{{ lang }}" href="{{ alternate_href }}">
   {% endfor %}
   <link rel="alternate" hreflang="x-default" {% static_href -%} href="{{ x_default_href }}" {%- endstatic_href %}>

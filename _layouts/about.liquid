@@ -133,8 +133,8 @@ layout: default
         <div class="contact-icons">
           {% assign rss_feed_lang = site.active_lang %}
           {% assign active_feed_posts = site.data.generated_posts_by_lang[site.active_lang] %}
-          {% assign japanese_feed_posts = site.data.generated_posts_by_lang['ja'] %}
-          {% if active_feed_posts == nil or active_feed_posts.size == 0 %}
+          {% assign japanese_feed_posts = site.data.generated_posts_by_lang.ja %}
+          {% if active_feed_posts == null or active_feed_posts.size == 0 %}
             {% if japanese_feed_posts and japanese_feed_posts.size > 0 %}
               {% assign rss_feed_lang = 'ja' %}
             {% endif %}

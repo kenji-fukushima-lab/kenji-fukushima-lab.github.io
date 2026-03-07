@@ -25,7 +25,7 @@
 {% else %}
   {% capture title %}{{ site.title }}{% endcapture %}
 {% endif %}
-{% assign archive_description = nil %}
+{% assign archive_description = null %}
 {% if page.title != null and page.title != '' %}
   {% assign page_title = page.title %}
 {% else %}
@@ -63,7 +63,7 @@
   {% endfor %}
   {% assign page_title = title_array | join: ' ' %}
 {% endif %}
-{% assign raw_description = nil %}
+{% assign raw_description = null %}
 {% if page.description != blank %}
   {% assign raw_description = page.description %}
 {% elsif archive_description %}
@@ -93,7 +93,12 @@
     {% assign first_figure_chunk = page.content | split: 'include figure.liquid' | slice: 1, 1 | first %}
     {% if first_figure_chunk contains 'path="' %}
       {% assign figure_candidate = first_figure_chunk | split: 'path="' | last | split: '"' | first %}
-      {% if figure_candidate contains '.jpg' or figure_candidate contains '.jpeg' or figure_candidate contains '.png' or figure_candidate contains '.webp' or figure_candidate contains '.gif' %}
+      {% if figure_candidate contains '.jpg'
+        or figure_candidate contains '.jpeg'
+        or figure_candidate contains '.png'
+        or figure_candidate contains '.webp'
+        or figure_candidate contains '.gif'
+      %}
         {% assign social_image = figure_candidate %}
       {% endif %}
     {% endif %}
@@ -110,7 +115,12 @@
       {% assign first_src_part = src_parts | slice: 1, 1 | first %}
       {% assign image_candidate = first_src_part | split: "'" | first %}
     {% endif %}
-    {% if image_candidate contains '.jpg' or image_candidate contains '.jpeg' or image_candidate contains '.png' or image_candidate contains '.webp' or image_candidate contains '.gif' %}
+    {% if image_candidate contains '.jpg'
+      or image_candidate contains '.jpeg'
+      or image_candidate contains '.png'
+      or image_candidate contains '.webp'
+      or image_candidate contains '.gif'
+    %}
       {% assign social_image = image_candidate %}
     {% endif %}
   {% endif %}
