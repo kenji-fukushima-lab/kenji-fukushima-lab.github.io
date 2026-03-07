@@ -50,28 +50,28 @@ ninja.data = [{
           },
         },{id: "nav-アウトリーチ",
           title: "アウトリーチ",
-          description: "",
+          description: "福島研究室の書籍、講演、メディア出演などのアウトリーチ活動を紹介しています。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/outreach/";
           },
         },{id: "nav-ブログ",
           title: "ブログ",
-          description: "",
+          description: "研究室の活動記録やお知らせを掲載しています。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/blog/";
           },
         },{id: "nav-メンバー募集",
           title: "メンバー募集",
-          description: "",
+          description: "福島研究室への参加を希望する博士課程学生・博士研究員向けの案内です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/join/";
           },
         },{id: "nav-アクセス",
           title: "アクセス",
-          description: "",
+          description: "国立遺伝学研究所・植物進化研究室へのアクセスと連絡先の案内です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/access/";
@@ -1091,66 +1091,8 @@ ninja.data = [{
     },{id: "news-a-simple-inline-announcement",
           title: 'A simple inline announcement.',
           description: "",
-          section: "ニュース",},{id: "profiles-katsuhiro-yoneoka",
-          title: 'Katsuhiro_yoneoka',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/katsuhiro_yoneoka/";
-            },},{id: "profiles-kenji-fukushima",
-          title: 'Kenji_fukushima',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/kenji_fukushima/";
-            },},{id: "profiles-naoto-inui",
-          title: 'Naoto_inui',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/naoto_inui/";
-            },},{id: "profiles-jiawei-li",
-          title: 'Jiawei_li',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/prospective_members/jiawei_li/";
-            },},{id: "profiles-yukiho-toyama",
-          title: 'Yukiho_toyama',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/prospective_members/yukiho_toyama/";
-            },},{id: "profiles-sakiko-teramoto",
-          title: 'Sakiko_teramoto',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/sakiko_teramoto/";
-            },},{id: "profiles-sayoko-shirai",
-          title: 'Sayoko_shirai',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/sayoko_shirai/";
-            },},{id: "profiles-shunsuke-kanamori",
-          title: 'Shunsuke_kanamori',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/shunsuke_kanamori/";
-            },},{id: "profiles-template",
-          title: 'Template',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/template/";
-            },},{id: "profiles-tomoya-nishiguchi",
-          title: 'Tomoya_nishiguchi',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/tomoya_nishiguchi/";
-            },},{id: "profiles-yoshino-hashimoto",
-          title: 'Yoshino_hashimoto',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/yoshino_hashimoto/";
-            },},{id: "profiles-yuhan-guo",
-          title: 'Yuhan_guo',
-          description: "",
-          section: "",handler: () => {
-              window.location.href = "/ja/profiles/yuhan_guo/";
+          section: "ニュース",handler: () => {
+              window.location.href = "/ja/news/announcement_1/";
             },},{id: "projects-研究興味",
           title: '研究興味',
           description: "",
@@ -1190,7 +1132,7 @@ ninja.data = [{
         title: 'RSS Feed',
         section: 'SNS',
         handler: () => {
-          window.open("/feed.xml", "_blank");
+          window.open("/ja/feed.xml", "_blank");
         },
       },{
         id: 'social-scholar',
