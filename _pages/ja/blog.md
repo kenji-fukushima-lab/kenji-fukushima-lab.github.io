@@ -1,4 +1,5 @@
 ---
+page_id: blog
 layout: blog
 permalink: /blog/
 title: ブログ

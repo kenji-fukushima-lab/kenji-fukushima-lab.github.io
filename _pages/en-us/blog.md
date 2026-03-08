@@ -1,4 +1,5 @@
 ---
+page_id: blog
 layout: page
 permalink: /blog/
 title: blog
