@@ -79,11 +79,14 @@ def normalize_language(value: str) -> str:
 
 
 def parse_iso_date(value: str) -> str:
+    normalized = value.strip()
+    if re.fullmatch(r"\d{8}", normalized):
+        normalized = f"{normalized[:4]}-{normalized[4:6]}-{normalized[6:8]}"
     try:
-        dt.date.fromisoformat(value)
+        parsed = dt.date.fromisoformat(normalized)
     except ValueError as exc:
         raise InputError(f"Invalid date '{value}'. Expected YYYY-MM-DD.") from exc
-    return value
+    return parsed.isoformat()
 
 
 def slugify(text: str) -> str:
@@ -164,7 +167,25 @@ def guess_extension(url: str, content_type: str) -> str:
     return ".bin"
 
 
-def download_attachment(url: str, output_path: pathlib.Path) -> None:
+def guess_extension_from_bytes(data: bytes) -> str:
+    if data.startswith(b"\xff\xd8\xff"):
+        return ".jpg"
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return ".png"
+    if data.startswith((b"GIF87a", b"GIF89a")):
+        return ".gif"
+    if data.startswith(b"BM"):
+        return ".bmp"
+    if data.startswith((b"II*\x00", b"MM\x00*")):
+        return ".tiff"
+    if len(data) >= 12 and data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return ".webp"
+    if len(data) >= 12 and data[4:8] == b"ftyp":
+        return ".mp4"
+    return ".bin"
+
+
+def download_attachment(url: str) -> tuple[bytes, str]:
     req = urllib.request.Request(
         url,
         headers={
@@ -173,7 +194,7 @@ def download_attachment(url: str, output_path: pathlib.Path) -> None:
         },
     )
     with urllib.request.urlopen(req, timeout=60) as response:
-        output_path.write_bytes(response.read())
+        return response.read(), response.headers.get("Content-Type", "")
 
 
 def replace_attachment_images(
@@ -206,26 +227,18 @@ def replace_attachment_images(
         basename = f"{date_str}_{slug}_issue{issue_number}_{counter:02d}"
 
         try:
-            head_req = urllib.request.Request(
-                url,
-                headers={"User-Agent": "github-actions-blog-post-bot", "Accept": "*/*"},
-                method="HEAD",
-            )
-            content_type = ""
-            with urllib.request.urlopen(head_req, timeout=60) as response:
-                content_type = response.headers.get("Content-Type", "")
-        except Exception:
-            content_type = ""
-
-        extension = guess_extension(url, content_type)
-        filename = f"{basename}{extension}"
-        output_path = IMAGES_ROOT / filename
-
-        try:
-            download_attachment(url, output_path)
+            data, content_type = download_attachment(url)
         except Exception as exc:  # pragma: no cover
             warnings.append(f"Failed to download attachment: {url} ({exc})")
             return match.group(0)
+
+        extension = guess_extension(url, content_type)
+        if extension == ".bin":
+            extension = guess_extension_from_bytes(data)
+
+        filename = f"{basename}{extension}"
+        output_path = IMAGES_ROOT / filename
+        output_path.write_bytes(data)
 
         local_rel = f"/assets/img/posts/{filename}"
         cache[url] = local_rel
