@@ -10,6 +10,7 @@ links to local asset paths.
 from __future__ import annotations
 
 import datetime as dt
+import html
 import json
 import mimetypes
 import os
@@ -30,6 +31,8 @@ NO_RESPONSE = "_No response_"
 AUTHOR_NAME_OVERRIDES = {
     "kfuku52": "Kenji Fukushima",
 }
+POST_IMAGE_CLASS = "img-fluid rounded z-depth-1 mx-auto d-block"
+POST_IMAGE_WIDTH = "450"
 
 
 class InputError(RuntimeError):
@@ -105,6 +108,18 @@ def normalize_slug(slug: str) -> str:
 
 def yaml_quote(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
+
+
+def build_figure_include(path: str, alt: str) -> str:
+    escaped_alt = html.escape(alt.strip(), quote=True)
+    return (
+        "{% include figure.liquid "
+        f'path="{path}" '
+        f'class="{POST_IMAGE_CLASS}" '
+        f'width="{POST_IMAGE_WIDTH}" '
+        f'alt="{escaped_alt}" '
+        "%}"
+    )
 
 
 def build_author_html(issue_user_login: str) -> str:
@@ -220,8 +235,7 @@ def replace_attachment_images(
             return match.group(0)
 
         if url in cache:
-            local_rel = cache[url]
-            return f"![{alt}]({local_rel})"
+            return f"\n\n{build_figure_include(cache[url], alt)}\n\n"
 
         counter += 1
         basename = f"{date_str}_{slug}_issue{issue_number}_{counter:02d}"
@@ -240,10 +254,10 @@ def replace_attachment_images(
         output_path = IMAGES_ROOT / filename
         output_path.write_bytes(data)
 
-        local_rel = f"/assets/img/posts/{filename}"
-        cache[url] = local_rel
-        replaced_files.append(local_rel)
-        return f"![{alt}]({local_rel})"
+        local_asset_path = f"assets/img/posts/{filename}"
+        cache[url] = local_asset_path
+        replaced_files.append(f"/{local_asset_path}")
+        return f"\n\n{build_figure_include(local_asset_path, alt)}\n\n"
 
     replaced_markdown = MARKDOWN_IMAGE_PATTERN.sub(_replacement, markdown)
     return replaced_markdown, replaced_files, warnings

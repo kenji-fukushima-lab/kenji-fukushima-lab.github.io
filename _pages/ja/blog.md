@@ -20,4 +20,5 @@ pagination:
 chart:
   chartjs: true
 ---
+
 {% include blog/index.liquid %}
