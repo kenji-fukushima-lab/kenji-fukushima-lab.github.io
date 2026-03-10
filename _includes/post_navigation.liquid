@@ -1,0 +1,63 @@
+{% assign localized_posts = site.data.generated_posts_by_lang[site.active_lang] %}
+{% if localized_posts and localized_posts.size > 1 %}
+  {% assign current_post_nav_url = page.url | replace: 'index.html', '' %}
+  {% if site.active_lang != site.default_lang %}
+    {% assign current_post_nav_url = current_post_nav_url | prepend: site.active_lang | prepend: '/' %}
+  {% endif %}
+
+  {% assign current_post_index = -1 %}
+  {% for post_entry in localized_posts %}
+    {% if post_entry.url == current_post_nav_url %}
+      {% assign current_post_index = forloop.index0 %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if current_post_index != -1 %}
+    {% assign previous_post_index = current_post_index | plus: 1 %}
+    {% assign next_post_index = current_post_index | minus: 1 %}
+
+    {% if previous_post_index < localized_posts.size %}
+      {% assign previous_post = localized_posts[previous_post_index] %}
+    {% endif %}
+    {% if next_post_index >= 0 %}
+      {% assign next_post = localized_posts[next_post_index] %}
+    {% endif %}
+
+    {% if previous_post or next_post %}
+      <nav class="post-navigation" aria-label="{{ site.data[site.active_lang].strings.post_navigation.label }}">
+        <div class="post-navigation-grid">
+          {% if previous_post %}
+            <a
+              class="post-nav-card post-nav-card-previous"
+              href="{{ previous_post.url | relative_url }}"
+              aria-label="{{ site.data[site.active_lang].strings.post_navigation.previous }}: {{ previous_post.title | escape }}"
+            >
+              <span class="post-nav-eyebrow">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                {{- site.data[site.active_lang].strings.post_navigation.previous -}}
+              </span>
+              <span class="post-nav-title">{{ previous_post.title }}</span>
+              <span class="post-nav-date">{% include date_format.liquid format='long' date=previous_post.date %}</span>
+            </a>
+          {% endif %}
+
+          {% if next_post %}
+            <a
+              class="post-nav-card post-nav-card-next"
+              href="{{ next_post.url | relative_url }}"
+              aria-label="{{ site.data[site.active_lang].strings.post_navigation.next }}: {{ next_post.title | escape }}"
+            >
+              <span class="post-nav-eyebrow">
+                {{- site.data[site.active_lang].strings.post_navigation.next -}}
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </span>
+              <span class="post-nav-title">{{ next_post.title }}</span>
+              <span class="post-nav-date">{% include date_format.liquid format='long' date=next_post.date %}</span>
+            </a>
+          {% endif %}
+        </div>
+      </nav>
+    {% endif %}
+  {% endif %}
+{% endif %}

@@ -127,6 +127,12 @@ post:
   created_in: Article Date
   created_by: by
   last_updated: last updated on
+
+post_navigation:
+  label: Post navigation
+  previous: Previous post
+  next: Next post
+
 references: References
 related_posts:
   description: ""

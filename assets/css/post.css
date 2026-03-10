@@ -42,6 +42,93 @@
   margin: 0.45rem 0;
 }
 
+.post-navigation {
+  margin: 1.6rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--global-divider-color);
+}
+
+.post-navigation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.85rem;
+}
+
+.post-nav-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 100%;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--global-bg-color) 92%, var(--global-theme-color));
+  color: var(--global-text-color);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.post-nav-card:hover {
+  border-color: var(--global-theme-color);
+  color: var(--global-text-color);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+}
+
+.post-nav-card:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 2px;
+  color: var(--global-text-color);
+  text-decoration: none;
+}
+
+.post-nav-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--global-theme-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.post-nav-card-next .post-nav-eyebrow {
+  justify-content: space-between;
+}
+
+.post-nav-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.post-nav-date {
+  display: block;
+  margin-top: auto;
+  color: var(--global-text-color-light);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 680px) {
+  .post-navigation {
+    margin-top: 1.3rem;
+    padding-top: 1rem;
+  }
+
+  .post-navigation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-card {
+    padding: 0.88rem 0.92rem;
+  }
+}
+
 /* Center embedded tweets rendered by jekyll-twitter-plugin/X widgets */
 .post-content #markdown-content .jekyll-twitter-plugin {
   display: flex;

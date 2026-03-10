@@ -106,6 +106,10 @@ layout: default
     </div>
   {% endif %}
 
+  {% if url_beginning == '/blog/' %}
+    {% include post_navigation.liquid %}
+  {% endif %}
+
   {% if site.related_blog_posts and site.related_blog_posts.enabled %}
     {% if page.related_posts == null or page.related_posts %}
       {% include related_posts.liquid %}

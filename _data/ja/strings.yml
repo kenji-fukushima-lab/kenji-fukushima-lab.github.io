@@ -135,6 +135,11 @@ post:
   created_by: 投稿者
   last_updated: 最終更新日
 
+post_navigation:
+  label: 前後の記事
+  previous: 前の記事
+  next: 次の記事
+
 references: 参考文献
 
 related_posts:
