@@ -158,7 +158,7 @@
       data-date="{{ post.date | date: '%Y-%m-%d' }}"
       data-tags="{{ tag_values | downcase | escape }}"
       data-categories="{{ category_values | downcase | escape }}"
-      data-author="{{ post.author | escape }}"
+      data-author="{{ post.author | strip_html | strip | escape }}"
       data-title="{{ post.title | downcase | escape }}"
       data-content="{{ post_search_content | strip_html | strip_newlines | downcase | escape }}"
       {% if post_target != blank %} data-target="{{ post_target }}"{% endif %}

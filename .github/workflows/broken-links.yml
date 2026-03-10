@@ -38,6 +38,10 @@ on:
       - "!.github/workflows/prettier.yml"
       - "!lighthouse_results/**"
 
+concurrency:
+  group: links-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   link-checker:
     runs-on: ubuntu-latest

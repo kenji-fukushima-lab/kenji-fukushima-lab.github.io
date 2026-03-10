@@ -6,10 +6,48 @@ on:
     branches:
       - master
       - main
+    paths:
+      - "assets/**"
+      - "_sass/**"
+      - "**.bib"
+      - "**.html"
+      - "**.js"
+      - "**.liquid"
+      - "**/**.md"
+      - "**.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - ".github/scripts/prepare-jekyll-build-env.sh"
+      - ".github/workflows/axe.yml"
+      - "!lighthouse_results/**"
+      - "!CONTRIBUTING.md"
+      - "!CUSTOMIZE.md"
+      - "!FAQ.md"
+      - "!INSTALL.md"
+      - "!README.md"
   pull_request:
     branches:
       - master
       - main
+    paths:
+      - "assets/**"
+      - "_sass/**"
+      - "**.bib"
+      - "**.html"
+      - "**.js"
+      - "**.liquid"
+      - "**/**.md"
+      - "**.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - ".github/scripts/prepare-jekyll-build-env.sh"
+      - ".github/workflows/axe.yml"
+      - "!lighthouse_results/**"
+      - "!CONTRIBUTING.md"
+      - "!CUSTOMIZE.md"
+      - "!FAQ.md"
+      - "!INSTALL.md"
+      - "!README.md"
   workflow_dispatch:
     inputs:
       url:
@@ -18,6 +56,10 @@ on:
 
 env:
   URL: ""
+
+concurrency:
+  group: axe-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:
@@ -51,10 +93,6 @@ jobs:
           bash .github/scripts/prepare-jekyll-build-env.sh
           export JEKYLL_ENV=production
           bundle exec jekyll build
-      - name: Purge unused CSS 🧹
-        run: |
-          npm install -g purgecss
-          purgecss -c purgecss.config.js
       - name: Get Chromium version 🌐
         # https://github.com/GoogleChromeLabs/chrome-for-testing?tab=readme-ov-file#other-api-endpoints
         run: |

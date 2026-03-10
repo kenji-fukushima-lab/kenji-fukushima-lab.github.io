@@ -5,10 +5,60 @@ on:
     branches:
       - master
       - main
+    paths:
+      - "*.css"
+      - "*.html"
+      - "*.js"
+      - "*.json"
+      - "*.liquid"
+      - "*.md"
+      - "*.scss"
+      - "*.yml"
+      - "*.yaml"
+      - "**/*.css"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.json"
+      - "**/*.liquid"
+      - "**/*.md"
+      - "**/*.scss"
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/prettier.yml"
+      - "!lighthouse_results/**"
   push:
     branches:
       - master
       - main
+    paths:
+      - "*.css"
+      - "*.html"
+      - "*.js"
+      - "*.json"
+      - "*.liquid"
+      - "*.md"
+      - "*.scss"
+      - "*.yml"
+      - "*.yaml"
+      - "**/*.css"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.json"
+      - "**/*.liquid"
+      - "**/*.md"
+      - "**/*.scss"
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/prettier.yml"
+      - "!lighthouse_results/**"
+
+concurrency:
+  group: prettier-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:
@@ -19,8 +69,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
       - name: Install Prettier 💾
-        run: npm install --save-dev --save-exact prettier @shopify/prettier-plugin-liquid
+        run: npm ci
       - name: Prettier Check 🔎
         id: prettier
         run: npx prettier . --check

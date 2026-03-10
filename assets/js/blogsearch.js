@@ -2,6 +2,11 @@
   "use strict";
 
   const normalize = (value) => (value ?? "").toString().trim().toLowerCase();
+  const toPlainText = (value) => {
+    const template = document.createElement("template");
+    template.innerHTML = (value ?? "").toString();
+    return (template.content.textContent ?? "").replace(/\s+/g, " ").trim();
+  };
 
   document.addEventListener("DOMContentLoaded", () => {
     const PAGE_SIZE = 20;
@@ -45,7 +50,7 @@
       const title = normalize(card.dataset.title);
       const bodyText = normalize(card.dataset.content);
       const cardText = normalize(card.textContent);
-      const author = (card.dataset.author ?? "").toString().trim();
+      const author = toPlainText(card.dataset.author);
       return {
         index,
         card,

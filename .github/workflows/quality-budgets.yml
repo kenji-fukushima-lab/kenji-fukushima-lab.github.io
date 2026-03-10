@@ -8,8 +8,6 @@ on:
       - "_sass/**"
       - "_includes/**"
       - "_layouts/**"
-      - "_pages/**"
-      - "_posts/**"
       - "_config.yml"
       - "Gemfile"
       - "Gemfile.lock"
@@ -24,8 +22,6 @@ on:
       - "_sass/**"
       - "_includes/**"
       - "_layouts/**"
-      - "_pages/**"
-      - "_posts/**"
       - "_config.yml"
       - "Gemfile"
       - "Gemfile.lock"
@@ -37,6 +33,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   image-budget:

@@ -12,12 +12,24 @@
 name: "CodeQL Advanced"
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
     branches: ["main"]
+    paths:
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.rb"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/codeql.yml"
   schedule:
     - cron: "45 4 * * 3"
+  workflow_dispatch:
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analyze:
