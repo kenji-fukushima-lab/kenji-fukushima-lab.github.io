@@ -1,13 +1,25 @@
 ---
 page_id: blog
-layout: page
+layout: blog
 permalink: /blog/
 title: blog
-description: "Blog posts are published in Japanese."
+blog_name: Blog
+description: Lab updates and announcements available in English.
 nav: false
 sitemap: false
 robots: "noindex, nofollow"
-redirect: /ja/blog/
+post_path_contains: "/en-us/"
+pagination:
+  enabled: false
+  collection: posts
+  permalink: /page/:num/
+  per_page: 20
+  sort_field: date
+  sort_reverse: true
+  trail:
+    before: 1
+    after: 3
+chart:
+  chartjs: true
 ---
-
-Blog posts are published in Japanese. You will be redirected to the Japanese blog.
+{% include blog/index.liquid %}
