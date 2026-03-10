@@ -76,7 +76,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/ja/access/";
           },
-        },{id: "post-仁木宏典博士の最終講義",
+        },{id: "post-投稿できると聞いて",
+      
+        title: "投稿できると聞いて",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2026/post-13/";
+        
+      },
+    },{id: "post-仁木宏典博士の最終講義",
       
         title: "仁木宏典博士の最終講義",
       
