@@ -136,8 +136,7 @@ def yaml_double_quote(value: str) -> str:
 
 def normalize_body_markdown(markdown: str) -> str:
     normalized = markdown.replace("\r\n", "\n").replace("\r", "\n")
-    normalized = "\n".join(line.rstrip() for line in normalized.split("\n")).strip()
-    return re.sub(r"\n{3,}", "\n\n", normalized)
+    return normalized.strip("\n")
 
 
 def build_figure_include(path: str, alt: str) -> str:

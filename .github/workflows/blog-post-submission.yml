@@ -25,8 +25,17 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
       - name: Install Python dependencies
         run: python -m pip install --upgrade pillow
+
+      - name: Install Node dependencies
+        run: npm ci
 
       - name: Generate post markdown and download attachments
         id: generate
@@ -34,6 +43,10 @@ jobs:
         env:
           MAX_IMAGE_BYTES: "900000"
         run: python .github/scripts/create_blog_post_from_issue.py
+
+      - name: Format generated post
+        if: steps.generate.outcome == 'success'
+        run: npx prettier "${{ steps.generate.outputs.generated_post }}" --write
 
       - name: Comment issue when generation fails
         if: steps.generate.outcome == 'failure'
