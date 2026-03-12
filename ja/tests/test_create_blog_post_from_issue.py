@@ -21,11 +21,22 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
             title="春探し",
             date_str="2026-03-12",
             author='<a href="https://github.com/YoshinoHashimoto">YoshinoHashimoto</a>',
-            body_markdown="1行目\n\n\n\n{% include figure.liquid path=\"assets/img/posts/sample.jpg\" class=\"img-fluid rounded z-depth-1 mx-auto d-block\" width=\"450\" alt=\"Image\" %}\n\n",
+            body_markdown="1行目\n\n{% include figure.liquid path=\"assets/img/posts/sample.jpg\" class=\"img-fluid rounded z-depth-1 mx-auto d-block\" width=\"450\" alt=\"Image\" %}\n\n",
         )
 
         self.assertIn('title: "春探し"', markdown)
-        self.assertNotIn("\n\n\n", markdown)
+        self.assertTrue(markdown.endswith('alt="Image" %}\n'))
+
+    def test_build_markdown_preserves_markdown_meaningful_whitespace(self) -> None:
+        markdown = MODULE.build_markdown(
+            title="Whitespace",
+            date_str="2026-03-12",
+            author="author",
+            body_markdown="\nline 1  \nline 2\n\n```text\na\n\n\nb\n```\n\n",
+        )
+
+        self.assertIn("line 1  \nline 2", markdown)
+        self.assertIn("```text\na\n\n\nb\n```", markdown)
 
     def test_optimize_image_asset_keeps_budget(self) -> None:
         image = Image.frombytes("RGB", (1200, 1200), os.urandom(1200 * 1200 * 3))
