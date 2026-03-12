@@ -3,14 +3,16 @@
 
 This script is intended to run in GitHub Actions on the `issues` event.
 It parses issue form sections, downloads image attachments embedded in the
-post body, stores them under assets/img/posts, and rewrites markdown image
-links to local asset paths.
+post body, stores them under assets/img/posts, normalizes image orientation
+from EXIF metadata when needed, and rewrites markdown image links to local
+asset paths.
 """
 
 from __future__ import annotations
 
 import datetime as dt
 import html
+import io
 import json
 import mimetypes
 import os
@@ -22,12 +24,20 @@ import urllib.parse
 import urllib.request
 from typing import Dict, List, Tuple
 
+try:
+    from PIL import Image, ImageOps
+except ImportError:  # pragma: no cover
+    Image = None
+    ImageOps = None
+
 REPO_ROOT = pathlib.Path(".").resolve()
 POSTS_ROOT = REPO_ROOT / "_posts"
 IMAGES_ROOT = REPO_ROOT / "assets" / "img" / "posts"
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\s*\n([\s\S]*?)(?=^###\s+|\Z)", re.MULTILINE)
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<url>https?://[^\s)]+)\)")
 NO_RESPONSE = "_No response_"
+EXIF_ORIENTATION_TAG = 274
+AUTO_ORIENT_EXTENSIONS = {".jpg", ".jpeg", ".tif", ".tiff"}
 AUTHOR_NAME_OVERRIDES = {
     "kfuku52": "Kenji Fukushima",
 }
@@ -212,6 +222,46 @@ def download_attachment(url: str) -> tuple[bytes, str]:
         return response.read(), response.headers.get("Content-Type", "")
 
 
+def normalize_image_orientation(data: bytes, extension: str, source_url: str, warnings: List[str]) -> bytes:
+    extension = extension.lower()
+    if extension not in AUTO_ORIENT_EXTENSIONS:
+        return data
+
+    if Image is None or ImageOps is None:
+        warnings.append(f"Skipped orientation normalization for {source_url} (Pillow is unavailable)")
+        return data
+
+    try:
+        with Image.open(io.BytesIO(data)) as image:
+            orientation = image.getexif().get(EXIF_ORIENTATION_TAG)
+            if orientation in (None, 1):
+                return data
+
+            normalized = ImageOps.exif_transpose(image)
+            output = io.BytesIO()
+            save_kwargs = {
+                "format": "JPEG" if extension in {".jpg", ".jpeg"} else "TIFF",
+            }
+            if extension in {".jpg", ".jpeg"}:
+                save_kwargs["quality"] = 95
+
+            exif = normalized.getexif()
+            if EXIF_ORIENTATION_TAG in exif:
+                del exif[EXIF_ORIENTATION_TAG]
+            if len(exif) > 0:
+                save_kwargs["exif"] = exif.tobytes()
+
+            icc_profile = image.info.get("icc_profile")
+            if icc_profile:
+                save_kwargs["icc_profile"] = icc_profile
+
+            normalized.save(output, **save_kwargs)
+            return output.getvalue()
+    except Exception as exc:  # pragma: no cover
+        warnings.append(f"Skipped orientation normalization for {source_url} ({exc})")
+        return data
+
+
 def replace_attachment_images(
     markdown: str,
     date_str: str,
@@ -249,6 +299,8 @@ def replace_attachment_images(
         extension = guess_extension(url, content_type)
         if extension == ".bin":
             extension = guess_extension_from_bytes(data)
+
+        data = normalize_image_orientation(data, extension, url, warnings)
 
         filename = f"{basename}{extension}"
         output_path = IMAGES_ROOT / filename

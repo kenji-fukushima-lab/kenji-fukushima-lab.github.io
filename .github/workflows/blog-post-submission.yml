@@ -25,6 +25,9 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pillow
+
       - name: Generate post markdown and download attachments
         id: generate
         continue-on-error: true
@@ -83,4 +86,4 @@ jobs:
             投稿ありがとうございます。レビュー用のPRを作成しました。
             ${{ steps.cpr.outputs.pull-request-url }}
 
-            画像添付がある場合は、`assets/img/posts/` への保存と本文リンク置換を自動実行しています。
+            画像添付がある場合は、`assets/img/posts/` への保存、本文リンク置換、向き補正を自動実行しています。
