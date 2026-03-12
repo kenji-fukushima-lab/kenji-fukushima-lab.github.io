@@ -3,9 +3,9 @@
 
 This script is intended to run in GitHub Actions on the `issues` event.
 It parses issue form sections, downloads image attachments embedded in the
-post body, stores them under assets/img/posts, normalizes image orientation
-from EXIF metadata when needed, and rewrites markdown image links to local
-asset paths.
+post body, stores them under assets/img/posts, keeps generated images within
+the site's quality budget, normalizes image orientation from EXIF metadata
+when needed, and rewrites markdown image links to local asset paths.
 """
 
 from __future__ import annotations
@@ -37,12 +37,22 @@ SECTION_PATTERN = re.compile(r"^###\s+(.+?)\s*\n([\s\S]*?)(?=^###\s+|\Z)", re.MU
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<url>https?://[^\s)]+)\)")
 NO_RESPONSE = "_No response_"
 EXIF_ORIENTATION_TAG = 274
-AUTO_ORIENT_EXTENSIONS = {".jpg", ".jpeg", ".tif", ".tiff"}
+MAX_IMAGE_BYTES = int(os.environ.get("MAX_IMAGE_BYTES", "900000"))
+RASTER_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".tif", ".tiff"}
+BUDGETED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+JPEG_QUALITY_STEPS = (90, 85, 80, 75, 70, 65, 60)
+WEBP_QUALITY_STEPS = (90, 85, 80, 75, 70, 65, 60)
+RESIZE_SCALE_STEPS = (1.0, 0.9, 0.8, 0.7, 0.6, 0.5)
 AUTHOR_NAME_OVERRIDES = {
     "kfuku52": "Kenji Fukushima",
 }
 POST_IMAGE_CLASS = "img-fluid rounded z-depth-1 mx-auto d-block"
 POST_IMAGE_WIDTH = "450"
+
+if Image is not None:
+    RESAMPLING_LANCZOS = Image.Resampling.LANCZOS if hasattr(Image, "Resampling") else Image.LANCZOS
+else:  # pragma: no cover
+    RESAMPLING_LANCZOS = None
 
 
 class InputError(RuntimeError):
@@ -118,6 +128,16 @@ def normalize_slug(slug: str) -> str:
 
 def yaml_quote(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
+
+
+def yaml_double_quote(value: str) -> str:
+    return json.dumps(value, ensure_ascii=False)
+
+
+def normalize_body_markdown(markdown: str) -> str:
+    normalized = markdown.replace("\r\n", "\n").replace("\r", "\n")
+    normalized = "\n".join(line.rstrip() for line in normalized.split("\n")).strip()
+    return re.sub(r"\n{3,}", "\n\n", normalized)
 
 
 def build_figure_include(path: str, alt: str) -> str:
@@ -222,44 +242,163 @@ def download_attachment(url: str) -> tuple[bytes, str]:
         return response.read(), response.headers.get("Content-Type", "")
 
 
-def normalize_image_orientation(data: bytes, extension: str, source_url: str, warnings: List[str]) -> bytes:
+def image_has_alpha(image: Image.Image) -> bool:
+    if image.mode in {"RGBA", "LA"}:
+        return True
+    if image.mode == "P" and "transparency" in image.info:
+        return True
+    return "A" in image.getbands()
+
+
+def flatten_to_rgb(image: Image.Image) -> Image.Image:
+    if image_has_alpha(image):
+        rgba = image.convert("RGBA")
+        background = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+        return Image.alpha_composite(background, rgba).convert("RGB")
+    if image.mode == "RGB":
+        return image.copy()
+    return image.convert("RGB")
+
+
+def resize_image(image: Image.Image, scale: float) -> Image.Image:
+    if scale == 1.0:
+        return image.copy()
+
+    width = max(1, round(image.width * scale))
+    height = max(1, round(image.height * scale))
+    return image.resize((width, height), RESAMPLING_LANCZOS)
+
+
+def encode_image_candidate(
+    image: Image.Image,
+    extension: str,
+    *,
+    quality: int | None,
+    icc_profile: bytes | None,
+) -> bytes:
+    output = io.BytesIO()
+    save_kwargs = {}
+    working = image
+
+    if extension == ".jpg":
+        working = flatten_to_rgb(image)
+        save_kwargs = {
+            "format": "JPEG",
+            "quality": quality or JPEG_QUALITY_STEPS[-1],
+            "optimize": True,
+            "progressive": True,
+        }
+    elif extension == ".png":
+        save_kwargs = {
+            "format": "PNG",
+            "optimize": True,
+            "compress_level": 9,
+        }
+    elif extension == ".webp":
+        if image.mode not in {"RGB", "RGBA", "L"}:
+            working = image.convert("RGBA" if image_has_alpha(image) else "RGB")
+        save_kwargs = {
+            "format": "WEBP",
+            "quality": quality or WEBP_QUALITY_STEPS[-1],
+            "method": 6,
+        }
+    else:  # pragma: no cover
+        raise ValueError(f"Unsupported output extension: {extension}")
+
+    if icc_profile:
+        save_kwargs["icc_profile"] = icc_profile
+
+    working.save(output, **save_kwargs)
+    if working is not image:
+        working.close()
+    return output.getvalue()
+
+
+def budget_candidate_extensions(source_extension: str, has_alpha: bool) -> tuple[str, ...]:
+    if source_extension in {".jpg", ".jpeg", ".tif", ".tiff", ".bmp"}:
+        return (".jpg", ".webp")
+    if source_extension == ".png":
+        return (".png", ".webp") if has_alpha else (".png", ".webp", ".jpg")
+    if source_extension == ".webp":
+        return (".webp",) if has_alpha else (".webp", ".jpg")
+    if source_extension == ".gif":
+        return (".webp",) if has_alpha else (".webp", ".jpg")
+    return (source_extension,)
+
+
+def budget_quality_steps(extension: str) -> tuple[int | None, ...]:
+    if extension == ".jpg":
+        return JPEG_QUALITY_STEPS
+    if extension == ".webp":
+        return WEBP_QUALITY_STEPS
+    return (None,)
+
+
+def optimize_image_asset(data: bytes, extension: str, source_url: str, warnings: List[str]) -> tuple[bytes, str]:
     extension = extension.lower()
-    if extension not in AUTO_ORIENT_EXTENSIONS:
-        return data
+
+    if extension not in RASTER_IMAGE_EXTENSIONS:
+        if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
+            raise InputError(f"Attachment exceeds {MAX_IMAGE_BYTES} bytes and cannot be optimized automatically: {source_url}")
+        return data, extension
 
     if Image is None or ImageOps is None:
-        warnings.append(f"Skipped orientation normalization for {source_url} (Pillow is unavailable)")
-        return data
+        if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
+            raise InputError(f"Attachment exceeds {MAX_IMAGE_BYTES} bytes but Pillow is unavailable: {source_url}")
+        warnings.append(f"Skipped image optimization for {source_url} (Pillow is unavailable)")
+        return data, extension
 
     try:
         with Image.open(io.BytesIO(data)) as image:
+            if getattr(image, "is_animated", False) and getattr(image, "n_frames", 1) > 1:
+                if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
+                    raise InputError(
+                        f"Animated attachment exceeds {MAX_IMAGE_BYTES} bytes and cannot be optimized automatically: {source_url}"
+                    )
+                return data, extension
+
             orientation = image.getexif().get(EXIF_ORIENTATION_TAG)
-            if orientation in (None, 1):
-                return data
-
             normalized = ImageOps.exif_transpose(image)
-            output = io.BytesIO()
-            save_kwargs = {
-                "format": "JPEG" if extension in {".jpg", ".jpeg"} else "TIFF",
-            }
-            if extension in {".jpg", ".jpeg"}:
-                save_kwargs["quality"] = 95
+            needs_orientation_fix = orientation not in (None, 1)
+            needs_budget_fix = extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES
+            needs_format_fix = extension in {".tif", ".tiff", ".bmp"}
 
-            exif = normalized.getexif()
-            if EXIF_ORIENTATION_TAG in exif:
-                del exif[EXIF_ORIENTATION_TAG]
-            if len(exif) > 0:
-                save_kwargs["exif"] = exif.tobytes()
+            if not (needs_orientation_fix or needs_budget_fix or needs_format_fix):
+                return data, extension
 
             icc_profile = image.info.get("icc_profile")
-            if icc_profile:
-                save_kwargs["icc_profile"] = icc_profile
+            has_alpha = image_has_alpha(normalized)
 
-            normalized.save(output, **save_kwargs)
-            return output.getvalue()
+            try:
+                for scale in RESIZE_SCALE_STEPS:
+                    resized = resize_image(normalized, scale)
+                    try:
+                        for candidate_extension in budget_candidate_extensions(extension, has_alpha):
+                            for quality in budget_quality_steps(candidate_extension):
+                                candidate_data = encode_image_candidate(
+                                    resized,
+                                    candidate_extension,
+                                    quality=quality,
+                                    icc_profile=icc_profile,
+                                )
+                                if (
+                                    candidate_extension not in BUDGETED_IMAGE_EXTENSIONS
+                                    or len(candidate_data) <= MAX_IMAGE_BYTES
+                                ):
+                                    return candidate_data, candidate_extension
+                    finally:
+                        resized.close()
+            finally:
+                normalized.close()
+    except InputError:
+        raise
     except Exception as exc:  # pragma: no cover
-        warnings.append(f"Skipped orientation normalization for {source_url} ({exc})")
-        return data
+        warnings.append(f"Skipped image optimization for {source_url} ({exc})")
+        if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
+            raise InputError(f"Attachment could not be processed under {MAX_IMAGE_BYTES} bytes: {source_url}") from exc
+        return data, extension
+
+    raise InputError(f"Attachment could not be reduced below {MAX_IMAGE_BYTES} bytes automatically: {source_url}")
 
 
 def replace_attachment_images(
@@ -300,7 +439,7 @@ def replace_attachment_images(
         if extension == ".bin":
             extension = guess_extension_from_bytes(data)
 
-        data = normalize_image_orientation(data, extension, url, warnings)
+        data, extension = optimize_image_asset(data, extension, url, warnings)
 
         filename = f"{basename}{extension}"
         output_path = IMAGES_ROOT / filename
@@ -332,17 +471,18 @@ def build_markdown(
     author: str,
     body_markdown: str,
 ) -> str:
+    normalized_body = normalize_body_markdown(body_markdown)
     lines = [
         "---",
         "layout: post",
-        f"title: {yaml_quote(title)}",
+        f"title: {yaml_double_quote(title)}",
         f"date: {date_str}",
         "last_updated:",
         f"author: {yaml_quote(author)}",
         "thumbnail:",
         "---",
         "",
-        body_markdown.rstrip(),
+        normalized_body,
         "",
     ]
     return "\n".join(lines)

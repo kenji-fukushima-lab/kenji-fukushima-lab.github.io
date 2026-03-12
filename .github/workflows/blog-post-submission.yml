@@ -31,6 +31,8 @@ jobs:
       - name: Generate post markdown and download attachments
         id: generate
         continue-on-error: true
+        env:
+          MAX_IMAGE_BYTES: "900000"
         run: python .github/scripts/create_blog_post_from_issue.py
 
       - name: Comment issue when generation fails
@@ -86,4 +88,4 @@ jobs:
             投稿ありがとうございます。レビュー用のPRを作成しました。
             ${{ steps.cpr.outputs.pull-request-url }}
 
-            画像添付がある場合は、`assets/img/posts/` への保存、本文リンク置換、向き補正を自動実行しています。
+            画像添付がある場合は、`assets/img/posts/` への保存、本文リンク置換、向き補正、容量最適化を自動実行しています。
