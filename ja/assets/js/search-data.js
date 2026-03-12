@@ -76,7 +76,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/ja/access/";
           },
-        },{id: "post-投稿できると聞いて",
+        },{id: "post-春探し",
+      
+        title: "春探し",
+      
+      description: "",
+      section: "記事",
+      handler: () => {
+        
+          window.location.href = "/ja/blog/2026/post-15/";
+        
+      },
+    },{id: "post-投稿できると聞いて",
       
         title: "投稿できると聞いて",
       
