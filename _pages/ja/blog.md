@@ -7,6 +7,7 @@ blog_name: ブログ
 description: 研究室の活動記録やお知らせを掲載しています。
 nav: true
 nav_order: 7
+seo_alternate_languages: ["ja"]
 pagination:
   enabled: false
   collection: posts

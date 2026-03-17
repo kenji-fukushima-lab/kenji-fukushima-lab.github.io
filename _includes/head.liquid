@@ -4,7 +4,9 @@
 {% endif %}
 {% assign canonical_url = localized_page_path | replace: 'index.html', '' | prepend: site.baseurl | prepend: site.url %}
 {% assign alternate_languages = site.languages %}
-{% if page['lang-exclusive'] %}
+{% if page.seo_alternate_languages %}
+  {% assign alternate_languages = page.seo_alternate_languages %}
+{% elsif page['lang-exclusive'] %}
   {% assign alternate_languages = page['lang-exclusive'] %}
 {% endif %}
 
