@@ -2,7 +2,9 @@ import importlib.util
 import io
 import os
 import pathlib
+import tempfile
 import unittest
+from unittest import mock
 
 from PIL import Image
 
@@ -54,6 +56,35 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
 
         self.assertEqual(optimized_extension, ".jpg")
         self.assertLessEqual(len(optimized_bytes), MODULE.MAX_IMAGE_BYTES)
+
+    def test_replace_attachment_images_converts_html_image_tags(self) -> None:
+        buffer = io.BytesIO()
+        Image.new("RGB", (16, 16), color=(12, 34, 56)).save(buffer, format="PNG")
+        image_bytes = buffer.getvalue()
+        html_image = (
+            '<img width="1584" height="1193" alt="Image" '
+            'src="https://github.com/user-attachments/assets/8695a3da-3d9f-44ee-9dfe-dd42dcc6b86b" />'
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            original_images_root = MODULE.IMAGES_ROOT
+            MODULE.IMAGES_ROOT = pathlib.Path(tmpdir)
+            try:
+                with mock.patch.object(MODULE, "download_attachment", return_value=(image_bytes, "image/png")):
+                    replaced_markdown, replaced_files, warnings = MODULE.replace_attachment_images(
+                        markdown=html_image,
+                        date_str="2026-03-19",
+                        slug="internship-report",
+                        issue_number=17,
+                    )
+            finally:
+                MODULE.IMAGES_ROOT = original_images_root
+
+        expected_asset = "assets/img/posts/2026-03-19_internship-report_issue17_01.png"
+        self.assertIn(f'path="{expected_asset}"', replaced_markdown)
+        self.assertIn('width="450"', replaced_markdown)
+        self.assertEqual(replaced_files, [f"/{expected_asset}"])
+        self.assertEqual(warnings, [])
 
 
 if __name__ == "__main__":
