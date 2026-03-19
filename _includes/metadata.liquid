@@ -106,6 +106,7 @@
   {% if social_image == blank and page.content contains '<img' %}
     {% assign first_image_chunk = page.content | split: '<img' | slice: 1, 1 | first %}
     {% assign image_candidate = '' %}
+    {% assign image_candidate_is_github_attachment = false %}
     {% if first_image_chunk contains 'src="' %}
       {% assign src_parts = first_image_chunk | split: 'src="' %}
       {% assign first_src_part = src_parts | slice: 1, 1 | first %}
@@ -115,11 +116,18 @@
       {% assign first_src_part = src_parts | slice: 1, 1 | first %}
       {% assign image_candidate = first_src_part | split: "'" | first %}
     {% endif %}
+    {% if image_candidate contains 'github.com/user-attachments/assets/'
+      or image_candidate contains 'user-images.githubusercontent.com/'
+      or image_candidate contains 'private-user-images.githubusercontent.com/'
+    %}
+      {% assign image_candidate_is_github_attachment = true %}
+    {% endif %}
     {% if image_candidate contains '.jpg'
       or image_candidate contains '.jpeg'
       or image_candidate contains '.png'
       or image_candidate contains '.webp'
       or image_candidate contains '.gif'
+      or image_candidate_is_github_attachment
     %}
       {% assign social_image = image_candidate %}
     {% endif %}

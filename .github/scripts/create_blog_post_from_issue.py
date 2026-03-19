@@ -35,6 +35,11 @@ POSTS_ROOT = REPO_ROOT / "_posts"
 IMAGES_ROOT = REPO_ROOT / "assets" / "img" / "posts"
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\s*\n([\s\S]*?)(?=^###\s+|\Z)", re.MULTILINE)
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<url>https?://[^\s)]+)\)")
+HTML_IMAGE_TAG_PATTERN = re.compile(r"<img\b(?P<attrs>[^>]*)/?>", re.IGNORECASE)
+HTML_ATTRIBUTE_PATTERN = re.compile(
+    r"""(?P<name>[\w:-]+)\s*=\s*(?P<quote>["'])(?P<value>.*?)(?P=quote)""",
+    re.IGNORECASE | re.DOTALL,
+)
 NO_RESPONSE = "_No response_"
 EXIF_ORIENTATION_TAG = 274
 MAX_IMAGE_BYTES = int(os.environ.get("MAX_IMAGE_BYTES", "900000"))
@@ -137,6 +142,15 @@ def yaml_double_quote(value: str) -> str:
 def normalize_body_markdown(markdown: str) -> str:
     normalized = markdown.replace("\r\n", "\n").replace("\r", "\n")
     return normalized.strip("\n")
+
+
+def parse_html_attributes(raw_attributes: str) -> Dict[str, str]:
+    attributes: Dict[str, str] = {}
+    for match in HTML_ATTRIBUTE_PATTERN.finditer(raw_attributes):
+        name = match.group("name").strip().lower()
+        value = html.unescape(match.group("value"))
+        attributes[name] = value
+    return attributes
 
 
 def build_figure_include(path: str, alt: str) -> str:
@@ -413,17 +427,14 @@ def replace_attachment_images(
     cache: Dict[str, str] = {}
     counter = 0
 
-    def _replacement(match: re.Match) -> str:
+    def localize_attachment(url: str, alt: str) -> str | None:
         nonlocal counter
 
-        alt = match.group("alt")
-        url = match.group("url")
-
         if not is_github_attachment_url(url):
-            return match.group(0)
+            return None
 
         if url in cache:
-            return f"\n\n{build_figure_include(cache[url], alt)}\n\n"
+            return build_figure_include(cache[url], alt.strip() or "Image")
 
         counter += 1
         basename = f"{date_str}_{slug}_issue{issue_number}_{counter:02d}"
@@ -432,7 +443,7 @@ def replace_attachment_images(
             data, content_type = download_attachment(url)
         except Exception as exc:  # pragma: no cover
             warnings.append(f"Failed to download attachment: {url} ({exc})")
-            return match.group(0)
+            return None
 
         extension = guess_extension(url, content_type)
         if extension == ".bin":
@@ -447,9 +458,27 @@ def replace_attachment_images(
         local_asset_path = f"assets/img/posts/{filename}"
         cache[url] = local_asset_path
         replaced_files.append(f"/{local_asset_path}")
-        return f"\n\n{build_figure_include(local_asset_path, alt)}\n\n"
+        return build_figure_include(local_asset_path, alt.strip() or "Image")
 
-    replaced_markdown = MARKDOWN_IMAGE_PATTERN.sub(_replacement, markdown)
+    def _replace_markdown_image(match: re.Match) -> str:
+        replacement = localize_attachment(match.group("url"), match.group("alt"))
+        if replacement is None:
+            return match.group(0)
+        return f"\n\n{replacement}\n\n"
+
+    def _replace_html_image(match: re.Match) -> str:
+        attributes = parse_html_attributes(match.group("attrs"))
+        url = attributes.get("src", "").strip()
+        if not url:
+            return match.group(0)
+
+        replacement = localize_attachment(url, attributes.get("alt", ""))
+        if replacement is None:
+            return match.group(0)
+        return f"\n\n{replacement}\n\n"
+
+    replaced_markdown = MARKDOWN_IMAGE_PATTERN.sub(_replace_markdown_image, markdown)
+    replaced_markdown = HTML_IMAGE_TAG_PATTERN.sub(_replace_html_image, replaced_markdown)
     return replaced_markdown, replaced_files, warnings
 
 
