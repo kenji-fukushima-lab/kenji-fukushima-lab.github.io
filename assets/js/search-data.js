@@ -15,7 +15,7 @@ const ninja = document.querySelector('ninja-keys');
 // add the home and posts menu items
 ninja.data = [{
     id: "nav-about",
-    title: "about",
+    title: "About",
     section: "Navigation menu",
     handler: () => {
       window.location.href = "/";
@@ -67,23 +67,23 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/announcement_1/";
-            },},{id: "projects-interests",
-          title: 'interests',
+            },},{id: "projects-research-interests",
+          title: 'Research Interests',
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/1_project/";
             },},{id: "projects-approaches",
-          title: 'approaches',
+          title: 'Approaches',
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/2_project/";
-            },},{id: "projects-organisms",
-          title: 'organisms',
+            },},{id: "projects-study-organisms",
+          title: 'Study Organisms',
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/3_project/";
-            },},{id: "projects-facilities",
-          title: 'facilities',
+            },},{id: "projects-facilities-amp-environment",
+          title: 'Facilities &amp;amp; Environment',
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/4_project/";
