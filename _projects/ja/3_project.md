@@ -17,6 +17,7 @@ related_publications: false
 革新的形質進化・収斂進化・転用進化・表現型可塑性など、食虫植物はこうした現象を研究するのに適した性質を数多く備えています。必要に応じてさまざまな系統を扱いながら、進化の謎に迫っています。
 
 ゲノム・トランスクリプトーム情報の取得はほぼすべての食虫植物系統で進めていますが、特に重要な種について以下に紹介します。
+
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg" alt="Carnivorous plants" width="450"/>

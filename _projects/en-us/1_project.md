@@ -30,6 +30,7 @@ The trapping leaves of carnivorous plants evolved from ordinary photosynthetic l
 "History repeats itself" is a useful metaphor for evolution. Organisms that evolved independently can sometimes acquire similar traits. This phenomenon, known as convergent evolution, is a widespread pattern across the tree of life. Powered flight in birds and bats, and diving ability in dolphins, dugongs, and platypuses, are familiar examples. Carnivory in plants is another: it has evolved independently in roughly ten lineages.
 
 Convergent evolution is not limited to form and function. When we examine convergent traits in detail, we sometimes find that the same genes changed in similar ways. This molecular-scale recurrence is known as molecular convergence. Under what conditions does evolution repeat itself? We think molecular convergence provides an important clue.
+
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/convergence_03.jpg" alt="Convergent evolution" width="900"/>

@@ -17,6 +17,7 @@ This page introduces the organisms we work with in the lab.
 Carnivorous plants are exceptionally well suited to the study of evolutionary innovation, convergent evolution, co-option, and phenotypic plasticity. We work with a range of lineages as needed to address these questions.
 
 We are collecting genome and transcriptome data across a broad diversity of carnivorous plants. Below are some of the species and lineages that are especially important in our research.
+
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg" alt="Carnivorous plants" width="450"/>

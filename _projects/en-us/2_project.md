@@ -30,6 +30,7 @@ Just as children differ slightly from their parents, organisms also change gradu
 Unlike animals, plants cannot easily move to a better place when conditions become too hot, too cold, or too poor in resources. Instead, they survive by changing their own bodies and physiology in response to the environment. We study that way of life in plants.
 
 Molecular biology, centered on nucleic acids and proteins, is a core foundation of modern biology and one of the main pillars of our lab. Plant experiments require workflows tailored to plant cells, including the removal of secondary metabolites during nucleic-acid extraction and the use of Agrobacterium for gene delivery. Agrobacterium is also commonly used in CRISPR-based gene editing. We are developing genetic manipulation techniques for carnivorous plants as well.
+
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/cephalotus_molecular_biology.jpg" alt="Plant Molecular Biology" width="600"/>
@@ -58,6 +59,7 @@ Carnivorous trapping leaves have highly complex forms, but how were they acquire
 Appearance is only part of the story. To understand the digestive capacity and nutrient-absorption mechanisms of carnivorous plants, we also need to study transport, metabolism, and plant hormones, all of which belong to plant physiology.
 
 Electricity is also often important. When people hear "bioelectricity," they tend to think of muscles and nerves, but plants use electrical signals too. These signals are based on membrane potential, the voltage difference created by unequal ion composition across biological membranes. Electrophysiological methods for detecting membrane potentials are useful not only for analyzing movements such as the snap of the Venus flytrap, but also for studying more general carnivorous-plant functions, including digestion and absorption, where ion transport plays a major role. Kenji does not currently practice these techniques himself, but if experienced members join the lab we would like to build in-house capability. For now, we carry out the necessary electrophysiological analyses through collaboration.
+
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/cephalotus_gland.jpg" alt="Stoma-to-stomach evolution" width="450"/>
@@ -86,6 +88,7 @@ Proteins can be synthesized and modified relatively easily in vitro. With carefu
 The "build to understand" approach is highly effective in science. If we identify key principles from the study of carnivorous plants, one way to test them is to partially recreate carnivorous traits in ordinary plants. Re-engineering _Arabidopsis thaliana_ into a full _Nepenthes_-like carnivore is not yet realistic, but introducing a single carnivorous-plant gene to alter some aspect of nutrient metabolism, or inducing hair-like structures reminiscent of those found in carnivorous plants, is becoming increasingly plausible.
 
 At the protein level, the idea is even more tractable: we can introduce mutations and ask whether they confer characteristic properties of carnivorous-plant proteins. Starting from reconstructed ancestral proteins, this approach becomes a kind of experimental replay of evolution. Comparing the mutations that actually occurred with plausible alternatives can also tell us something about evolutionary paths that were not taken. Broadly speaking, these are synthetic-biology-like approaches.
+
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/carnivorization.jpg" alt="Carnivorization" width="300"/>
