@@ -1,7 +1,7 @@
 ---
 page_id: about
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="noopener noreferrer">National Institute of Genetics</a> in Japan
 
@@ -10,7 +10,7 @@ profile:
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>Unraveling evolutionary marvels in plants and beyond</p>
+    <p>Exploring evolutionary innovations in plants and beyond</p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
@@ -26,6 +26,6 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-Evolution has led to remarkable innovations in the structures and functions of organisms, sometimes reaching levels that seem almost unbelievable. Our research aims to demystify these evolutionary marvels by integrating computational and experimental approaches to study a wide range of organisms, with a particular focus on plants.
+Evolution can produce biological structures and functions of astonishing complexity. Our mission is to uncover the mechanisms that give rise to such evolutionary innovations. We integrate bioinformatics with experimental approaches to study a wide range of organisms, with a particular focus on plants.
 
-Our primary interest lies in insect-trapping carnivorous plants, which derive nutrients from their captured prey. By studying these unique plants, we aim to enhance our understanding of key concepts in evolutionary biology.
+A major focus of the lab is carnivorous plants, which capture animals and use them as a nutrient source. Using these remarkable plants as a starting point, we investigate key evolutionary phenomena including innovative trait evolution, convergent evolution, co-option, and phenotypic plasticity.

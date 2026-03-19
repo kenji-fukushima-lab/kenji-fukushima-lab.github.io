@@ -1,54 +1,102 @@
 ---
 page_id: project_1
 layout: join
-title: interests
+title: Research Interests
 img: assets/img/projects/convergence_03_4-3.jpg
 importance: 1
 category: research
 related_publications: false
 ---
 
-Our primary focus is on the analysis of carnivorous plants, with the aim of exploring a variety of topics within evolutionary biology. Key areas of research include the following.
+This page introduces the biological phenomena and evolutionary processes at the core of our research. Each theme is described separately here, but many of our projects sit at the intersection of several of them.
 
 #### Evolutionary innovations
 
-The trapping leaves of carnivorous plants originated from ordinary leaves specialized in photosynthesis. Despite being leaves, they possess the ability to attract and capture small insects and digest and assimilate nutrients, much like the digestive systems of animals. By studying these innovative traits, we aim to push the boundaries of evolutionary biology.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+The trapping leaves of carnivorous plants evolved from ordinary photosynthetic leaves. Despite being leaves, they can attract and capture small insects and digest and absorb nutrients much like an animal gut. Such highly elaborate and seemingly improbable traits are nevertheless products of evolution. Their apparent improbability suggests that important evolutionary mechanisms still remain to be discovered. By studying evolutionary innovations, we aim to push the boundaries of biology.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/tract_01_notext.jpg" alt="Evolution of digestive systems" width="450"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Convergent evolution
 
-The saying "history repeats itself" finds a parallel in the natural world through the phenomenon of convergent evolution, where organisms not closely related independently evolve similar traits. This widespread occurrence is evident across the entire tree of life. Convergent evolution is exemplified by the development of powered flight in both birds and bats, as well as the adaptation to diving seen in dolphins, dugongs, and platypuses. This phenomenon is also evident in carnivorous plants, which have evolved independently across approximately ten different lineages. By examining these "green hunters", we gain insights into the mechanisms and reasons behind convergent evolution.
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+"History repeats itself" is a useful metaphor for evolution. Organisms that evolved independently can sometimes acquire similar traits. This phenomenon, known as convergent evolution, is a widespread pattern across the tree of life. Powered flight in birds and bats, and diving ability in dolphins, dugongs, and platypuses, are familiar examples. Carnivory in plants is another: it has evolved independently in roughly ten lineages.
 
-<div align="center">
+Convergent evolution is not limited to form and function. When we examine convergent traits in detail, we sometimes find that the same genes changed in similar ways. This molecular-scale recurrence is known as molecular convergence. Under what conditions does evolution repeat itself? We think molecular convergence provides an important clue.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/convergence_03.jpg" alt="Convergent evolution" width="900"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Phenotypic plasticity
 
-Organisms have the remarkable ability to modify their physical forms in reaction to environmental changes, a process known as phenotypic plasticity. A fascinating example of phenotypic plasticity is seen in some carnivorous plants, which develop distinct types of leaves for trapping prey and conducting photosynthesis. Notably, trapping leaves are derived from photosynthetic leaves, suggesting that this plasticity could provide insights into how carnivorous traits evolved. To unravel this mystery, we are studying the Australian pitcher plant Cephalotus follicularis.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Organisms can alter their body plans in response to the environment. When those changes are especially pronounced, the phenomenon is called phenotypic plasticity. Some carnivorous plants show this plasticity by producing both trapping leaves and photosynthetic leaves. Because trapping leaves always evolved from photosynthetic leaves, this plasticity may preserve clues to how carnivorous leaves originated. We are tackling this question using the Australian pitcher plant _Cephalotus follicularis_.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/cephalotus_heterophylly.jpg" alt="Cephalotus follicularis" width="900"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
-#### Other topics
+#### Drastic morphological evolution
 
-- Drastic morphological evolution
-- Cell type evolution
-- Co-option
-- Gene duplication
-- Whole-genome duplication
-- Gene sequence evolution
-- Gene expression evolution
-- Gene loss
+When people think of evolution, they often imagine gradual, continuous change. But some forms seem to appear abruptly, with no obvious intermediates. Pitcher-shaped trapping leaves in carnivorous plants are a good example. We think the key to this apparent leap lies in development, the process by which organs take shape.
+
+<div style="margin-top: 30px;"></div>
+
+#### Cell type evolution
+
+Organisms are assemblies of cells, and the evolution of body form can ultimately be understood as the evolution of cell types. Carnivorous plants possess many specialized cell types that are absent from other plants. How did these novel cells arise during the evolution of carnivory?
+
+<div style="margin-top: 30px;"></div>
+
+#### Co-option
+
+Evolution rarely invents complex new functions from scratch. It is often more effective to reuse existing components in new contexts. When genes that originally served one trait are co-opted for another, an apparently sudden innovation can emerge. We previously showed that digestive enzymes in carnivorous plants evolved from enzymes involved in pathogen defense, and we continue to investigate other unexpected cases of co-option.
+
+<div style="margin-top: 30px;"></div>
+
+#### Gene duplication and whole-genome duplication
+
+New genes often appear in the background of trait evolution. Many of them arise through duplication of pre-existing genes, a process that is indispensable in evolution. We search genomes for traces of gene duplications that coincide with major trait innovations, and we ask how duplication interacts with other modes of molecular evolution.
+
+Gene duplication does not always occur one gene at a time. Whole-genome duplication doubles tens of thousands of genes at once and is especially common in plants. By analyzing its timing and the interactions between subgenomes, we seek to understand its evolutionary significance.
+
+<div style="margin-top: 30px;"></div>
+
+#### Gene sequence evolution
+
+DNA sequence determines amino-acid sequence, amino-acid sequence shapes protein structure, protein structure influences protein function, and protein function ultimately affects organismal traits through higher levels of biological organization. Even though many layers separate sequence from phenotype, a single amino-acid change can sometimes have direct consequences for survival. We search for the sequence changes that drove trait evolution.
+
+<div style="margin-top: 30px;"></div>
+
+#### Gene expression evolution
+
+Gene function can evolve even when the encoded protein sequence does not change. Regulatory changes that alter when, where, or how strongly a gene is expressed can also reshape traits. We are especially interested in this process because it is closely tied to evolutionary co-option.
+
+<div style="margin-top: 30px;"></div>
+
+#### Gene loss
+
+Evolution is not only about gaining something new. Losing genes is also an important component of evolutionary change. The emergence of new traits is often accompanied by the loss of specific genes. Gene loss is the counterpart of gene duplication, and its evolutionary significance can be just as great.
+
+<div style="margin-top: 30px;"></div>
+
+#### Genetic background
+
+The same mutation does not always produce the same evolutionary outcome. Gene function depends on interactions with many other genes. When we focus on one locus, the collective influence of all the others is called genetic background. This is a key factor in convergent evolution. If genetic background has a strong effect, phenotypic convergence driven by the same molecular changes should be less likely; if its effect is weaker, such convergence should be more likely. We investigate these relationships.
 
 <div style="margin-top: 30px;"></div>

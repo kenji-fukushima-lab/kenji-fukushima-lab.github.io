@@ -172,6 +172,31 @@
   text-underline-offset: 0.16em;
 }
 
+.join-content .project-media-split {
+  display: grid;
+  gap: 1rem 2rem;
+  align-items: start;
+}
+
+.join-content .project-media-split__body > :first-child {
+  margin-top: 0;
+}
+
+.join-content .project-media-split__body > :last-child {
+  margin-bottom: 0;
+}
+
+.join-content .project-media-split__media {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.join-content .project-media-split__media img {
+  width: min(100%, 450px);
+  height: auto;
+}
+
 .join-content .repositories.repo-list-compact {
   gap: 0.62rem;
   margin-top: 0.2rem;
@@ -340,5 +365,16 @@
 
   .join-content .projects .card-body {
     padding: 0.68rem 0.74rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .join-content .project-media-split {
+    grid-template-columns: minmax(0, 50%) minmax(0, 45%);
+    column-gap: 2.5%;
+  }
+
+  .join-content .project-media-split__media {
+    justify-content: flex-end;
   }
 }

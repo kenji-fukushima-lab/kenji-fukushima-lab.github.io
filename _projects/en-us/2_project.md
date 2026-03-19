@@ -1,117 +1,147 @@
 ---
 page_id: project_2
 layout: join
-title: approaches
+title: Approaches
 img: assets/img/projects/multigene_family_4-3.jpg
 importance: 2
 category: research
 related_publications: false
 ---
 
-In our laboratory, we specialize in solving complex problems by integrating methods from a diverse range of research disciplines. This multidisciplinary approach is tailored for each project we undertake. Specifically, we frequently combine methodologies from the following areas:
+In our lab, we combine methods from multiple disciplines according to the question at hand. Here we introduce our research topics and the techniques we use through the lens of the fields they draw on.
 
 #### Evolutionary Biology
 
-Just as we, as individuals, bear subtle differences from our parents, living organisms subtly alter their forms with each successive generation. Viewing the passage of time on a grand scale reveals a fascinating narrative: primitive bacteria evolved over approximately 4 billion years into diverse forms, including humans, frogs, and carnivorous plants. This perspective, while accurate, only skims the surface of the complex mechanisms and pivotal events that have driven evolution at crucial junctures. Our commitment lies in delving deep into these mysteries to uncover the intricacies of evolutionary history.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Just as children differ slightly from their parents, organisms also change gradually from generation to generation. If we stretch that timescale far enough, we arrive at the familiar story that primitive bacteria gave rise, over roughly four billion years, to humans, frogs, and carnivorous plants. That story is correct, but it leaves many questions open: what mechanisms drove those transformations, and what key events shaped major evolutionary transitions? Our lab works on those questions.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/heterotrophs_03.jpg" alt="Carnivorous plant evolution" width="600"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Plant Molecular Biology
 
-Unlike animals, which can relocate to more favorable environments when faced with extreme temperatures or scarcity of food, plants are rooted to their spot and must adapt their physiology to survive. This resilience of plants under various environmental pressures is a central focus of our research.
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Unlike animals, plants cannot easily move to a better place when conditions become too hot, too cold, or too poor in resources. Instead, they survive by changing their own bodies and physiology in response to the environment. We study that way of life in plants.
 
-Molecular biology, with its emphasis on nucleic acids and proteins, underpins much of modern biology and is a critical tool in our laboratory work. In plant research, experiments must be tailored to address the unique characteristics of plant cells. This includes strategies for removing secondary metabolites during the purification of nucleic acids, as well as the use of Agrobacterium for the genetic modifications. We are actively advancing genetic modification techniques for carnivorous plants, expanding the capabilities within the field of plant molecular biology.
-
-<div align="center">
+Molecular biology, centered on nucleic acids and proteins, is a core foundation of modern biology and one of the main pillars of our lab. Plant experiments require workflows tailored to plant cells, including the removal of secondary metabolites during nucleic-acid extraction and the use of Agrobacterium for gene delivery. Agrobacterium is also commonly used in CRISPR-based gene editing. We are developing genetic manipulation techniques for carnivorous plants as well.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/cephalotus_molecular_biology.jpg" alt="Plant Molecular Biology" width="600"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Evo-Devo
 
-The complex structure of carnivorous trapping leaves presents a fascinating puzzle regarding their evolution. The complexity of these specialized organs doesn't appear all at once but is progressively layered on during the development process. Intriguingly, at the onset of development, there is little to distinguish between the incipient forms of normal and trapping leaves, both of which start simple and remarkably similar. By closely observing the divergence in development between these two types of leaves over time, we can deduce the critical evolutionary milestones that led to the unique morphology of trapping leaves.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Carnivorous trapping leaves have highly complex forms, but how were they acquired through evolution? It is difficult to infer the path from ordinary leaves to mature traps by looking only at the final structures. Much of that complexity, however, is built step by step during development. Early in development, ordinary leaves and trapping leaves are simple and remarkably similar. By carefully tracing when and how they diverge, we can infer the evolutionary events that were important for the origin of trapping-leaf morphology.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/leaf_development.jpg" alt="Leaf Evo-Devo" width="300"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
-#### Plant physiology & electrophysiology
+#### Plant Physiology and Electrophysiology
 
-Characteristics beyond mere appearance are of paramount importance. For example, to understand the digestive capabilities and absorption mechanisms of carnivorous plants, one must explore the knowledge of nutrient transport, metabolism, and plant hormones, which are integral to plant physiology.
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Appearance is only part of the story. To understand the digestive capacity and nutrient-absorption mechanisms of carnivorous plants, we also need to study transport, metabolism, and plant hormones, all of which belong to plant physiology.
 
-'Electricity' also plays a pivotal role in this context. While the concept of bioelectricity might immediately bring to mind muscles and nerves, plants, too, leverage electrical signals. At the heart of bioelectricity is what's known as "membrane potential", a term that describes the voltage difference arising from the disparity in ion composition on either side of a biological membrane. Electrophysiological methods, which are employed to detect these membrane potentials, are instrumental not only in analyzing the motility of plants like the snapping movement of Venus flytrap but also in understanding functions where ion transport is key, such as the digestive and absorption capabilities found broadly among carnivorous plants. While Kenji may not have practical experience with these techniques, there is a keen interest in enhancing the lab capabilities in this area, pending the recruitment of team members with the necessary expertise. In the meantime, electrophysiological analyses are being undertaken in collaboration with external partners.
-
-<div align="center">
+Electricity is also often important. When people hear "bioelectricity," they tend to think of muscles and nerves, but plants use electrical signals too. These signals are based on membrane potential, the voltage difference created by unequal ion composition across biological membranes. Electrophysiological methods for detecting membrane potentials are useful not only for analyzing movements such as the snap of the Venus flytrap, but also for studying more general carnivorous-plant functions, including digestion and absorption, where ion transport plays a major role. Kenji does not currently practice these techniques himself, but if experienced members join the lab we would like to build in-house capability. For now, we carry out the necessary electrophysiological analyses through collaboration.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/cephalotus_gland.jpg" alt="Stoma-to-stomach evolution" width="450"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
-#### Biochemistry & Protein engineering
+#### Biochemistry and Protein Engineering
 
-The capacity to synthesize and modify proteins in vitro opens up a significant pathway for obtaining detailed insights into biological evolution. Through biochemistry and protein engineering have the opportunity to simulate and scrutinize evolutionary pathways, illuminating the processes by which proteins have adapted and diversified to fulfill new roles and acquire novel characteristics.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Proteins can be synthesized and modified relatively easily in vitro. With careful experimental design, this makes it possible to obtain high-resolution insights into biological evolution. Biochemical and protein-engineering approaches are therefore powerful tools in our research.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/protein_structure.jpg" alt="Protein structure" width="600"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
-#### Synthetic biology
+#### Synthetic Biology
 
-The "build to understand" methodology holds substantial value in scientific research, offering a tangible means to validate theoretical knowledge through practical application. For example, in the realm of botany, particularly with carnivorous plants, our comprehension might be deepened not just by study but by attempting to replicate their characteristics in non-carnivorous plants. While completely transforming _Arabidopsis thaliana_ into a _Nepenthes_-like full carnivore remains beyond our current capabilities, it is feasible to transfer specific traits with a few genetic modifications.
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+The "build to understand" approach is highly effective in science. If we identify key principles from the study of carnivorous plants, one way to test them is to partially recreate carnivorous traits in ordinary plants. Re-engineering _Arabidopsis thaliana_ into a full _Nepenthes_-like carnivore is not yet realistic, but introducing a single carnivorous-plant gene to alter some aspect of nutrient metabolism, or inducing hair-like structures reminiscent of those found in carnivorous plants, is becoming increasingly plausible.
 
-A more attainable goal may involve mutating Arabidopsis proteins to mirror those found in carnivorous plants, effectively imbuing them with similar properties. Beginning with ancestral proteins, this approach can be viewed as an experimental replay of protein evolution.
-
-<div align="center">
+At the protein level, the idea is even more tractable: we can introduce mutations and ask whether they confer characteristic properties of carnivorous-plant proteins. Starting from reconstructed ancestral proteins, this approach becomes a kind of experimental replay of evolution. Comparing the mutations that actually occurred with plausible alternatives can also tell us something about evolutionary paths that were not taken. Broadly speaking, these are synthetic-biology-like approaches.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/carnivorization.jpg" alt="Carnivorization" width="300"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Genomics
 
-The immense wealth of data contained within genomes provides key insights into the origins and traits of living organisms. Decoding the complete genomic sequences, predicting gene structures, and inferring their functions represent foundational steps in unlocking biological discoveries from genomic data. The advent of long-read sequencing technologies, such as those offered by PacBio and Oxford Nanopore, in conjunction with the Hi-C chromosome conformation capture methods, enables us to achieve genome assemblies at a chromosomal level.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+The vast amount of information encoded in genomes provides crucial clues to the origin and biology of organisms. Producing whole-genome sequences, predicting gene structures, and inferring gene function are important groundwork for making biological discoveries from genomic data. By combining long-read sequencing platforms such as PacBio and Oxford Nanopore with Hi-C, we can obtain chromosome-scale genome assemblies. Generating the sequence data requires molecular biology, and much of the downstream analysis relies on bioinformatics.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/plant-gene-from-herbs-leaves-generative-ai_small.jpg" alt="Genomics" width="300"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Bioinformatics
 
-In the exploration of complex biological phenomena, bioinformatics emerges as a profoundly influential tool. The proficiency in utilizing existing tools for omics analysis and comparative genomics already yields substantial insights. However, our laboratory is committed not just to mastering these tools but also to forging new methodologies.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+When we confront complex biological phenomena, bioinformatics is an extremely powerful tool. Using existing tools for omics and comparative genomics already allows us to extract a great deal of insight, but our lab also develops new methods.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/csubst_code.png" alt="Programming" width="600"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Phylogenetics
 
-Phylogenetics stands as a foundational pillar within bioinformatics, providing essential methodologies for engaging in comparative genomics. Beyond merely utilizing molecular phylogeny to delineate relationships among organisms, our laboratory frequently employs phylogenetic comparative methods. These methods enable us to deduce the evolutionary pathways of gene expression levels and other various traits within the context of phylogenetic trees.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Phylogenetics is a classical area within bioinformatics, but it remains a core framework for comparative genomics. In addition to inferring evolutionary relationships among organisms, we routinely use phylogenetic comparative methods to model the evolution of gene expression levels and other traits on phylogenetic trees.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/ou.jpg" alt="Ornstein-Uhlenbeck models" width="300"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
 
 #### Statistics
 
-In modern biology, mastering statistical principles is essential. Our daily research activities provide a rich environment for developing a wide range of statistical skills.
-
-<div align="center">
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Statistics is an essential skill in modern biology. Through day-to-day research, our lab provides opportunities to learn statistical thinking from the basics to more advanced applications, including how to describe statistical analyses clearly in papers.
+  </div>
+  <div class="project-media-split__media">
     <img src="/assets/img/projects/gwas.jpg" alt="Genome-wide association study" width="600"/>
+  </div>
 </div>
 
 <div style="margin-top: 30px;"></div>
