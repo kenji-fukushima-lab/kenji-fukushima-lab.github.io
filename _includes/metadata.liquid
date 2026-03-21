@@ -25,6 +25,21 @@
 {% else %}
   {% capture title %}{{ site.title }}{% endcapture %}
 {% endif %}
+{% assign organization_name_localized = site.organization_name %}
+{% assign organization_url_localized = site.organization_url %}
+{% assign organization_topics_localized = site.organization_topics %}
+{% assign parent_organization_name_localized = site.parent_organization_name %}
+{% assign parent_organization_url_localized = site.parent_organization_url %}
+{% assign parent_organization_alternate_names_localized = site.parent_organization_alternate_names %}
+{% if site.active_lang contains 'en' %}
+  {% assign organization_name_localized = site.organization_name_en | default: organization_name_localized %}
+  {% assign organization_url_localized = site.organization_url_en | default: organization_url_localized %}
+  {% assign organization_topics_localized = site.organization_topics_en | default: organization_topics_localized %}
+  {% assign parent_organization_name_localized = site.parent_organization_name_en | default: parent_organization_name_localized %}
+  {% assign parent_organization_url_localized = site.parent_organization_url_en | default: parent_organization_url_localized %}
+  {% assign parent_organization_alternate_names_localized = site.parent_organization_alternate_names_en | default: parent_organization_alternate_names_localized %}
+{% endif %}
+{% assign site_name_for_meta = organization_name_localized | default: title %}
 {% assign archive_description = null %}
 {% if page.title != null and page.title != '' %}
   {% assign page_title = page.title %}
@@ -64,7 +79,9 @@
   {% assign page_title = title_array | join: ' ' %}
 {% endif %}
 {% assign raw_description = null %}
-{% if page.description != blank %}
+{% if page.seo_description != blank %}
+  {% assign raw_description = page.seo_description %}
+{% elsif page.description != blank %}
   {% assign raw_description = page.description %}
 {% elsif archive_description %}
   {% assign raw_description = archive_description %}
@@ -145,13 +162,28 @@
     {% assign social_image = social_image | prepend: site.baseurl | prepend: site.url %}
   {% endunless %}
 {% endif %}
+{% assign organization_image = site.organization_image | default: social_image %}
+{% if organization_image != blank %}
+  {% assign organization_image_first_char = organization_image | slice: 0, 1 %}
+  {% unless organization_image contains '://' %}
+    {% if organization_image_first_char != '/' %}
+      {% assign organization_image = organization_image | prepend: '/' %}
+    {% endif %}
+    {% assign organization_image = organization_image | prepend: site.baseurl | prepend: site.url %}
+  {% endunless %}
+{% endif %}
 {% assign is_blog_index = false %}
 {% if page.layout == 'blog' %}
   {% assign is_blog_index = true %}
 {% endif %}
-
-<title>
-  {% if is_blog_index %}
+{% assign page_title_for_meta = page_title %}
+{% if page.seo_title != blank %}
+  {% assign page_title_for_meta = page.seo_title %}
+{% endif %}
+{% capture meta_title %}
+  {% if page.seo_title != blank %}
+    {{ page.seo_title }}
+  {% elsif is_blog_index %}
     {{ page_title }} | {{ title }}
   {% elsif page.layout == 'archive-year' %}
     {{ page.date | date: '%Y' }} | {{ title }}
@@ -166,7 +198,10 @@
   {% else %}
     {{ title }}
   {% endif %}
-</title>
+{% endcapture %}
+{% assign meta_title = meta_title | strip | normalize_whitespace %}
+
+<title>{{ meta_title }}</title>
 <meta name="author" content="{{ author_name }}">
 <meta name="description" content="{{ description }}">
 {% if page.robots %}
@@ -186,12 +221,15 @@
     {% assign schema_type = 'BlogPosting' %}
   {% endif %}
 {% endif %}
+{% if page.schema_type %}
+  {% assign schema_type = page.schema_type %}
+{% endif %}
 
 {% if site.serve_og_meta %}
   <!-- OpenGraph -->
-  <meta property="og:site_name" content="{{ title }}">
+  <meta property="og:site_name" content="{{ site_name_for_meta }}">
   <meta property="og:type" content="{% if is_article_page %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{% if page_title %}{{ title }} | {{ page_title }}{% else %}{{ title }}{% endif %}">
+  <meta property="og:title" content="{{ meta_title }}">
   {% if canonical_url %}
     <meta property="og:url" content="{{ canonical_url }}">
   {% else %}
@@ -209,7 +247,7 @@
 
   <!-- Twitter card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{% if page_title %}{{ page_title }}{% else %}{{ title }}{% endif %}">
+  <meta name="twitter:title" content="{{ meta_title }}">
   <meta name="twitter:description" content="{{ description }}">
   {% if social_image != blank %}
     <meta name="twitter:image" content="{{ social_image }}">
@@ -360,33 +398,77 @@
     {% capture link %}https://www.zotero.org/{{ site.zotero_username }}{% endcapture %}
     {% assign sameaslinks = sameaslinks | push: link %}
   {% endif %}
-  {% if sameaslinks != blank %}
-    {% assign sameaslinks = sameaslinks | split: '' %}
+  {% assign schema_url = canonical_url %}
+  {% if schema_url == blank %}
+    {% assign schema_url = page.url | prepend: site.baseurl | prepend: site.url %}
   {% endif %}
+  {% assign schema_name = page.schema_name | default: page_title_for_meta | default: title %}
 
   <script type="application/ld+json">
     {
-        "author":
-        {
-            "@type": "Person",
-            "name": "{{ author_name }}"
-        },
-        "url": "{% if canonical_url %}{{ canonical_url }}{% else %}{{ page.url | prepend: site.baseurl | prepend: site.url }}{% endif %}",
-        "@type": "{{ schema_type }}",
-        "description": "{{ description }}",
-        {% if social_image != blank %}
-        "image": "{{ social_image }}",
-        {% endif %}
-        "headline": "{% if page_title %}{{ page_title }}{% else %}{{ site.title }}{% endif %}",
-        {% if is_article_page and page.date %}
-        "datePublished": "{{ page.date | date_to_xmlschema }}",
-        "dateModified": "{{ page.last_updated | default: page.date | date_to_xmlschema }}",
-        {% endif %}
-        {% if sameaslinks != blank %}
-        "sameAs": {{ sameaslinks }},
-        {% endif %}
-        "name": "{{ author_name }}",
-        "@context": "https://schema.org"
+      "@context": "https://schema.org",
+      "@type": "{{ schema_type }}",
+      "@id": "{{ schema_url }}#page",
+      "url": "{{ schema_url }}",
+      "name": "{{ schema_name }}",
+      "headline": "{{ schema_name }}",
+      "description": "{{ description }}",
+      "inLanguage": "{{ site.active_lang }}"{% if social_image != blank %},
+      "image": "{{ social_image }}"{% endif %},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "{{ site.url }}#website",
+        "name": "{{ site_name_for_meta }}",
+        "url": "{{ site.url }}"
+      }{% if organization_name_localized != blank %},
+      "publisher": {
+        "@id": "{{ organization_url_localized }}#organization"
+      }{% endif %}{% if is_article_page %},
+      "author": {
+        "@type": "Person",
+        "name": "{{ author_name }}"
+      }{% endif %}{% if is_article_page and page.date %},
+      "datePublished": "{{ page.date | date_to_xmlschema }}",
+      "dateModified": "{{ page.last_updated | default: page.date | date_to_xmlschema }}"{% endif %}{% if sameaslinks.size > 0 %},
+      "sameAs": {{ sameaslinks | jsonify }}{% endif %},
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ schema_url }}"
+      }
     }
   </script>
+  {% if organization_name_localized != blank %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ResearchOrganization",
+        "@id": "{{ organization_url_localized }}#organization",
+        "name": "{{ organization_name_localized }}"{% if site.organization_alternate_names and site.organization_alternate_names.size > 0 %},
+        "alternateName": {{ site.organization_alternate_names | jsonify }}{% endif %},
+        "url": "{{ organization_url_localized }}"{% if organization_image != blank %},
+        "image": "{{ organization_image }}"{% endif %},
+        "email": "mailto:{{ site.email }}"{% if organization_topics_localized and organization_topics_localized.size > 0 %},
+        "knowsAbout": {{ organization_topics_localized | jsonify }}{% endif %},
+        "department": {
+          "@type": "Organization",
+          "name": "{{ site.organization_department }}"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "{{ site.organization_street_address }}",
+          "addressLocality": "{{ site.organization_locality }}",
+          "addressRegion": "{{ site.organization_region }}",
+          "postalCode": "{{ site.organization_postal_code }}",
+          "addressCountry": "{{ site.organization_country }}"
+        },
+        "parentOrganization": {
+          "@type": "ResearchOrganization",
+          "name": "{{ parent_organization_name_localized }}"{% if parent_organization_alternate_names_localized and parent_organization_alternate_names_localized.size > 0 %},
+          "alternateName": {{ parent_organization_alternate_names_localized | jsonify }}{% endif %},
+          "url": "{{ parent_organization_url_localized }}"
+        }{% if sameaslinks.size > 0 %},
+        "sameAs": {{ sameaslinks | jsonify }}{% endif %}
+      }
+    </script>
+  {% endif %}
 {% endif %}

@@ -1,14 +1,19 @@
 ---
 page_id: project_1
 layout: join
-title: 研究興味
+title: 植物進化・収斂進化の研究テーマ
 img: assets/img/projects/convergence_03_4-3.jpg
 importance: 1
 category: research
 related_publications: false
+description: 食虫植物を起点に、植物進化、収斂進化、転用進化、表現型可塑性を研究しています。
+seo_title: 植物進化・収斂進化の研究テーマ | 食虫植物から進化の仕組みを探る
+seo_description: 国立遺伝学研究所の植物進化研究室が、食虫植物を材料に植物進化と収斂進化の仕組みを解説します。
+keywords: 食虫植物, 植物進化, 収斂進化
+schema_type: WebPage
 ---
 
-当研究室で取り組む研究の中心にある生命現象や進化プロセスを、キーワードごとに紹介します。ここでは個別に説明していますが、実際には複数のキーワードが交差する研究課題にも数多く取り組んでいます。
+国立遺伝学研究所（遺伝研）の植物進化研究室で取り組む研究の中心にある生命現象や進化プロセスを、キーワードごとに紹介します。ここでは個別に説明していますが、実際には複数のキーワードが交差する研究課題にも数多く取り組んでいます。
 
 <div style="margin-top: 30px;"></div>
 

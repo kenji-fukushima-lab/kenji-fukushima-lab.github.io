@@ -17,6 +17,42 @@ baseurl: # the subpath of your site, e.g. /blog/. Leave blank for root
 last_updated: true # set to true if you want to display last updated in the footer
 impressum_path: # set to path to include impressum link in the footer, use the same path as permalink in a page, helps to conform with EU GDPR
 back_to_top: true # set to false to disable the back to top button
+organization_name: 植物進化研究室
+organization_url: https://kenji-fukushima-lab.github.io/ja/
+organization_name_en: Plant Evolution Laboratory
+organization_url_en: https://kenji-fukushima-lab.github.io/
+organization_alternate_names:
+  - 福島研
+  - Fukushima lab
+  - Plant Evolution Lab
+organization_topics:
+  - 食虫植物
+  - 植物進化
+  - 収斂進化
+  - 進化生物学
+  - バイオインフォマティクス
+organization_topics_en:
+  - carnivorous plants
+  - plant evolution
+  - convergent evolution
+  - evolutionary biology
+  - bioinformatics
+parent_organization_name: 国立遺伝学研究所
+parent_organization_url: https://www.nig.ac.jp/nig/ja
+parent_organization_name_en: National Institute of Genetics
+parent_organization_url_en: https://www.nig.ac.jp/nig/
+parent_organization_alternate_names:
+  - 遺伝研
+  - NIG
+parent_organization_alternate_names_en:
+  - NIG
+organization_department: 新分野創造センター
+organization_street_address: 谷田1111 国立遺伝学研究所 新分野創造センター C棟6階
+organization_locality: 三島市
+organization_region: 静岡県
+organization_postal_code: 411-8540
+organization_country: JP
+organization_image: /assets/img/00_tiles.jpg
 
 # -----------------------------------------------------------------------------
 # Theme

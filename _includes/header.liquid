@@ -11,6 +11,12 @@
       >
         <img src="{{ '/assets/img/nig-logo.svg' | relative_url }}" alt="National Institute of Genetics logo">
       </a>
+      {% assign navbar_title = site.title %}
+      {% if site.active_lang == 'ja' and site.organization_name %}
+        {% assign navbar_title = site.organization_name %}
+      {% elsif site.active_lang contains 'en' and site.organization_name_en %}
+        {% assign navbar_title = site.organization_name_en %}
+      {% endif %}
       <a class="navbar-brand title font-weight-lighter" href="{{ site.baseurl }}/">
         {% if site.title == 'blank' %}
           {% if site.first_name %}
@@ -25,7 +31,7 @@
             {{- site.last_name -}}
           {% endif %}
         {% else %}
-          {{- site.title -}}
+          {{- navbar_title -}}
         {% endif %}
       </a>
       {% if site.enable_navbar_social and page.permalink == '/' %}

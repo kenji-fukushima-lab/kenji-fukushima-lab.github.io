@@ -1,14 +1,19 @@
 ---
 page_id: project_1
 layout: join
-title: Research Interests
+title: Plant evolution and convergent evolution
 img: assets/img/projects/convergence_03_4-3.jpg
 importance: 1
 category: research
 related_publications: false
+description: We use carnivorous plants to study plant evolution, convergent evolution, co-option, and phenotypic plasticity.
+seo_title: Plant evolution and convergent evolution | Carnivorous plant research at NIG
+seo_description: The Plant Evolution Laboratory at the National Institute of Genetics uses carnivorous plants to investigate plant evolution and convergent evolution.
+keywords: carnivorous plants, plant evolution, convergent evolution
+schema_type: WebPage
 ---
 
-This page introduces the biological phenomena and evolutionary processes at the core of our research. Each theme is described separately here, but many of our projects sit at the intersection of several of them.
+This page introduces the biological phenomena and evolutionary processes at the core of our research at the Plant Evolution Laboratory of the National Institute of Genetics (NIG). Each theme is described separately here, but many of our projects sit at the intersection of several of them.
 
 #### Evolutionary innovations
 

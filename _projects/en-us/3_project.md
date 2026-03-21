@@ -1,14 +1,19 @@
 ---
 page_id: project_3
 layout: join
-title: Study Organisms
+title: Carnivorous plants and model plants
 img: assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg
 importance: 3
 category: research
 related_publications: false
+description: We compare carnivorous plants such as Cephalotus and Nepenthes with model plants to study plant evolution and convergent evolution.
+seo_title: Carnivorous plants and model plants | Study systems for plant evolution and convergent evolution
+seo_description: Meet the carnivorous plants and model plants we use to investigate plant evolution and convergent evolution.
+keywords: carnivorous plants, plant evolution, convergent evolution, Cephalotus, Nepenthes
+schema_type: WebPage
 ---
 
-This page introduces the organisms we work with in the lab.
+This page introduces the organisms we work with in the lab. Carnivorous plants are especially important systems for understanding plant evolution and convergent evolution.
 
 ## Carnivorous plants
 
