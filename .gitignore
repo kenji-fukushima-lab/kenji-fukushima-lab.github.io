@@ -13,3 +13,4 @@ vendor
 .idea
 .DS_Store
 _site/
+.github/scripts/__pycache__/
