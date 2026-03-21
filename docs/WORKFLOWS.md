@@ -83,6 +83,16 @@ If you need to disable accessibility checks temporarily (not recommended):
 **What it does**:
 Checks code formatting consistency using Prettier and posts a comment on the PR if fixes are needed.
 
+### Local pre-commit hook
+
+To run the same Prettier check before every local commit, install the repository hook once:
+
+```bash
+npm run hooks:install
+```
+
+The hook runs `prettier . --check` before each commit. It uses local `node_modules` when available and falls back to Docker (`node:20`) if Node.js dependencies are not installed locally.
+
 ### How to fix formatting issues
 
 #### Option 1: Auto-fix with Prettier (Recommended)
