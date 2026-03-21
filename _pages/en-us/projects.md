@@ -14,6 +14,7 @@ horizontal: false
 ---
 
 <!-- pages/projects.md -->
+
 ## Research on carnivorous plants, plant evolution, and convergent evolution
 
 At the Plant Evolution Laboratory of the National Institute of Genetics (NIG), we use carnivorous plants to study plant evolution and convergent evolution. This page brings together our core research questions, methods, study organisms, and research environment.

@@ -37,7 +37,9 @@
   {% assign organization_topics_localized = site.organization_topics_en | default: organization_topics_localized %}
   {% assign parent_organization_name_localized = site.parent_organization_name_en | default: parent_organization_name_localized %}
   {% assign parent_organization_url_localized = site.parent_organization_url_en | default: parent_organization_url_localized %}
-  {% assign parent_organization_alternate_names_localized = site.parent_organization_alternate_names_en | default: parent_organization_alternate_names_localized %}
+  {% assign parent_organization_alternate_names_localized = site.parent_organization_alternate_names_en
+    | default: parent_organization_alternate_names_localized
+  %}
 {% endif %}
 {% assign site_name_for_meta = organization_name_localized | default: title %}
 {% assign archive_description = null %}
