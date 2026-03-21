@@ -36,7 +36,7 @@ ninja.data = [{
           },
         },{id: "nav-研究内容",
           title: "研究内容",
-          description: "当研究室で取り組む研究の紹介です。",
+          description: "食虫植物を起点に、植物進化と収斂進化の研究テーマ、実験系、アプローチを紹介します。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/projects/";
@@ -71,7 +71,7 @@ ninja.data = [{
           },
         },{id: "nav-アクセス",
           title: "アクセス",
-          description: "国立遺伝学研究所・植物進化研究室へのアクセスと連絡先の案内です。",
+          description: "遺伝研（国立遺伝学研究所）にある植物進化研究室へのアクセスと連絡先の案内です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/access/";
@@ -1126,24 +1126,24 @@ ninja.data = [{
           description: "",
           section: "ニュース",handler: () => {
               window.location.href = "/ja/news/announcement_1/";
-            },},{id: "projects-研究興味",
-          title: '研究興味',
-          description: "",
+            },},{id: "projects-植物進化-収斂進化の研究テーマ",
+          title: '植物進化・収斂進化の研究テーマ',
+          description: "食虫植物を起点に、植物進化、収斂進化、転用進化、表現型可塑性を研究しています。",
           section: "プロジェクト",handler: () => {
               window.location.href = "/ja/projects/1_project/";
-            },},{id: "projects-アプローチ",
-          title: 'アプローチ',
-          description: "",
+            },},{id: "projects-植物進化研究のアプローチ",
+          title: '植物進化研究のアプローチ',
+          description: "進化生物学、植物分子生物学、ゲノム解析、バイオインフォマティクスを組み合わせて植物進化を研究します。",
           section: "プロジェクト",handler: () => {
               window.location.href = "/ja/projects/2_project/";
-            },},{id: "projects-実験生物",
-          title: '実験生物',
-          description: "",
+            },},{id: "projects-食虫植物とモデル植物",
+          title: '食虫植物とモデル植物',
+          description: "フクロユキノシタやウツボカズラなどの食虫植物とモデル植物を比較し、植物進化と収斂進化を研究しています。",
           section: "プロジェクト",handler: () => {
               window.location.href = "/ja/projects/3_project/";
-            },},{id: "projects-設備-環境",
-          title: '設備・環境',
-          description: "",
+            },},{id: "projects-遺伝研の研究環境",
+          title: '遺伝研の研究環境',
+          description: "国立遺伝学研究所（遺伝研）の共通機器と研究室設備、食虫植物栽培環境、計算資源を紹介します。",
           section: "プロジェクト",handler: () => {
               window.location.href = "/ja/projects/4_project/";
             },},{

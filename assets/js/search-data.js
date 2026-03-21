@@ -35,8 +35,8 @@ ninja.data = [{
             window.location.href = "/publications/";
           },
         },{id: "nav-research",
-          title: "research",
-          description: "Our research",
+          title: "Research",
+          description: "Research themes, study systems, and approaches for carnivorous plants, plant evolution, and convergent evolution.",
           section: "Navigation menu",
           handler: () => {
             window.location.href = "/projects/";
@@ -56,7 +56,7 @@ ninja.data = [{
             window.location.href = "/join/";
           },
         },{id: "nav-access",
-          title: "access",
+          title: "Access",
           description: "Directions and contact details for the Plant Evolution Laboratory at the National Institute of Genetics in Mishima, Japan.",
           section: "Navigation menu",
           handler: () => {
@@ -67,24 +67,24 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/announcement_1/";
-            },},{id: "projects-research-interests",
-          title: 'Research Interests',
-          description: "",
+            },},{id: "projects-plant-evolution-and-convergent-evolution",
+          title: 'Plant evolution and convergent evolution',
+          description: "We use carnivorous plants to study plant evolution, convergent evolution, co-option, and phenotypic plasticity.",
           section: "Projects",handler: () => {
               window.location.href = "/projects/1_project/";
-            },},{id: "projects-approaches",
-          title: 'Approaches',
-          description: "",
+            },},{id: "projects-approaches-to-plant-evolution-research",
+          title: 'Approaches to plant evolution research',
+          description: "We combine evolutionary biology, plant molecular biology, genomics, and bioinformatics to study plant evolution.",
           section: "Projects",handler: () => {
               window.location.href = "/projects/2_project/";
-            },},{id: "projects-study-organisms",
-          title: 'Study Organisms',
-          description: "",
+            },},{id: "projects-carnivorous-plants-and-model-plants",
+          title: 'Carnivorous plants and model plants',
+          description: "We compare carnivorous plants such as Cephalotus and Nepenthes with model plants to study plant evolution and convergent evolution.",
           section: "Projects",handler: () => {
               window.location.href = "/projects/3_project/";
-            },},{id: "projects-facilities-amp-environment",
-          title: 'Facilities &amp;amp; Environment',
-          description: "",
+            },},{id: "projects-research-environment-at-nig",
+          title: 'Research environment at NIG',
+          description: "Facilities, cultivation rooms, and computing resources for plant evolution and carnivorous plant research at the National Institute of Genetics.",
           section: "Projects",handler: () => {
               window.location.href = "/projects/4_project/";
             },},{
