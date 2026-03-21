@@ -1,19 +1,18 @@
 ---
 page_id: project_2
 layout: join
-title: 植物進化研究のアプローチ
+title: アプローチ
 img: assets/img/projects/multigene_family_4-3.jpg
 importance: 2
 category: research
 related_publications: false
-description: 進化生物学、植物分子生物学、ゲノム解析、バイオインフォマティクスを組み合わせて植物進化を研究します。
 seo_title: 植物進化研究のアプローチ | 食虫植物を実験と計算で読み解く
 seo_description: 食虫植物とモデル植物を用いて、植物進化と収斂進化を調べるための研究手法を紹介します。
 keywords: 食虫植物, 植物進化, 収斂進化, バイオインフォマティクス
 schema_type: WebPage
 ---
 
-当研究室では、各プロジェクトの課題に応じて、複数の研究分野の手法を組み合わせています。ここでは、食虫植物を含む研究対象について、植物進化研究と使用技術の関わりを分野ごとに紹介します。
+当研究室では、各プロジェクトの課題に応じて、複数の研究分野の手法を組み合わせています。ここでは、研究課題と使用技術の関わりを、分野ごとに紹介します。
 
 #### 進化生物学
 

@@ -2,7 +2,7 @@
 page_id: access
 layout: page
 permalink: /access/
-title: Access
+title: access
 description: Directions and contact details for the Plant Evolution Laboratory at the National Institute of Genetics in Mishima, Japan.
 seo_title: Access | Plant Evolution Laboratory at the National Institute of Genetics (NIG)
 keywords: National Institute of Genetics, NIG, Plant Evolution Laboratory

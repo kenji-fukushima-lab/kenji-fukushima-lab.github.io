@@ -1,19 +1,18 @@
 ---
 page_id: project_3
 layout: join
-title: 食虫植物とモデル植物
+title: 実験生物
 img: assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg
 importance: 3
 category: research
 related_publications: false
-description: フクロユキノシタやウツボカズラなどの食虫植物とモデル植物を比較し、植物進化と収斂進化を研究しています。
 seo_title: 食虫植物とモデル植物 | 植物進化・収斂進化の研究材料
 seo_description: フクロユキノシタ、ウツボカズラ、ブロッキニアなどの食虫植物を中心に、植物進化と収斂進化の研究材料を紹介します。
 keywords: 食虫植物, 植物進化, 収斂進化, フクロユキノシタ, ウツボカズラ
 schema_type: WebPage
 ---
 
-当研究室で取り扱う実験生物について紹介します。食虫植物は植物進化と収斂進化を考えるうえで特に重要な研究材料です。
+当研究室で取り扱う実験生物について紹介します。
 
 ## 食虫植物
 

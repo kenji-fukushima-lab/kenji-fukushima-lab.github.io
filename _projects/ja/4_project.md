@@ -1,12 +1,11 @@
 ---
 page_id: project_4
 layout: join
-title: 遺伝研の研究環境
+title: 設備・環境
 img: assets/img/projects/incubator_IMG_20220124_115601_downsize.jpg
 importance: 4
 category: research
 related_publications: false
-description: 国立遺伝学研究所（遺伝研）の共通機器と研究室設備、食虫植物栽培環境、計算資源を紹介します。
 seo_title: 遺伝研の研究環境 | 国立遺伝学研究所 植物進化研究室の設備
 seo_description: 国立遺伝学研究所にある植物進化研究室の実験設備、計算機資源、食虫植物の栽培環境を紹介します。
 keywords: 遺伝研, 国立遺伝学研究所, 食虫植物, 植物進化研究室

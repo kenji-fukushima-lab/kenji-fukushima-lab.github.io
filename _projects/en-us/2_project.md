@@ -1,19 +1,18 @@
 ---
 page_id: project_2
 layout: join
-title: Approaches to plant evolution research
+title: Approaches
 img: assets/img/projects/multigene_family_4-3.jpg
 importance: 2
 category: research
 related_publications: false
-description: We combine evolutionary biology, plant molecular biology, genomics, and bioinformatics to study plant evolution.
 seo_title: Approaches to plant evolution research | Experimental and computational work on carnivorous plants
 seo_description: Our lab combines experiments and bioinformatics to study carnivorous plants, plant evolution, and convergent evolution.
 keywords: carnivorous plants, plant evolution, convergent evolution, bioinformatics
 schema_type: WebPage
 ---
 
-In our lab, we combine methods from multiple disciplines according to the question at hand. Here we introduce our research topics and the techniques we use to study carnivorous plants, plant evolution, and convergent evolution.
+In our lab, we combine methods from multiple disciplines according to the question at hand. Here we introduce our research topics and the techniques we use through the lens of the fields they draw on.
 
 #### Evolutionary Biology
 

@@ -36,19 +36,3 @@ latest_posts:
 Evolution can produce biological structures and functions of astonishing complexity. Our mission is to uncover the mechanisms that give rise to such evolutionary innovations. We integrate bioinformatics with experimental approaches to study a wide range of organisms, with a particular focus on plants.
 
 A major focus of the lab is carnivorous plants, which capture animals and use them as a nutrient source. Using these remarkable plants as a starting point, we investigate key evolutionary phenomena including innovative trait evolution, convergent evolution, co-option, and phenotypic plasticity.
-
-## A plant evolution lab at the National Institute of Genetics (NIG)
-
-The Plant Evolution Laboratory is based at the National Institute of Genetics (NIG) in Mishima, Japan, within the Center for Frontier Research. Led by Kenji Fukushima, the lab studies how plant traits evolve by combining experiments with bioinformatics and comparative genomics.
-
-## Carnivorous plants as a window into plant evolution and convergent evolution
-
-Carnivorous plants are powerful systems for asking how ordinary leaves became traps, digestive organs, and nutrient-absorbing surfaces. By studying _Cephalotus_, _Nepenthes_, _Brocchinia_, and other lineages, we investigate plant evolution, convergent evolution, co-option, and phenotypic plasticity.
-
-## Explore our research
-
-- [Plant evolution and convergent evolution](/projects/1_project/)
-- [Carnivorous plants and model plants](/projects/3_project/)
-- [Publications](/publications/)
-- [People](/people/)
-- [Access](/access/)

@@ -3,8 +3,9 @@ page_id: access
 layout: page
 permalink: /access/
 title: アクセス
-description: 遺伝研（国立遺伝学研究所）にある植物進化研究室へのアクセスと連絡先の案内です。
+description: 国立遺伝学研究所・植物進化研究室へのアクセスと連絡先の案内です。
 seo_title: アクセス | 遺伝研（国立遺伝学研究所）植物進化研究室
+seo_description: 遺伝研（国立遺伝学研究所）にある植物進化研究室へのアクセスと連絡先の案内です。
 keywords: 遺伝研, 国立遺伝学研究所, 植物進化研究室
 schema_type: ContactPage
 nav: true

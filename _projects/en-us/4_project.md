@@ -1,12 +1,11 @@
 ---
 page_id: project_4
 layout: join
-title: Research environment at NIG
+title: Facilities & Environment
 img: assets/img/projects/incubator_IMG_20220124_115601_downsize.jpg
 importance: 4
 category: research
 related_publications: false
-description: Facilities, cultivation rooms, and computing resources for plant evolution and carnivorous plant research at the National Institute of Genetics.
 seo_title: Research environment at NIG | Facilities for plant evolution and carnivorous plant research
 seo_description: Explore the facilities, computing, and cultivation environment available to the Plant Evolution Laboratory at the National Institute of Genetics.
 keywords: National Institute of Genetics, NIG, carnivorous plants, plant evolution

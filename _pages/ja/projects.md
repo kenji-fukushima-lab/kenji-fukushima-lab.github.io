@@ -3,8 +3,9 @@ page_id: projects
 layout: page
 title: 研究内容
 permalink: /projects/
-description: 食虫植物を起点に、植物進化と収斂進化の研究テーマ、実験系、アプローチを紹介します。
+description: 当研究室で取り組む研究の紹介です。
 seo_title: 研究内容 | 食虫植物・植物進化・収斂進化を研究する植物進化研究室
+seo_description: 食虫植物を起点に、植物進化と収斂進化の研究テーマ、実験系、アプローチを紹介します。
 keywords: 食虫植物, 植物進化, 収斂進化, 遺伝研, 国立遺伝学研究所
 schema_type: CollectionPage
 nav: true
@@ -14,16 +15,6 @@ horizontal: false
 ---
 
 <!-- pages/projects.md -->
-
-## 食虫植物・植物進化・収斂進化の研究内容
-
-国立遺伝学研究所（遺伝研）の植物進化研究室では、食虫植物を起点に植物進化と収斂進化を研究しています。このページでは、研究テーマ、研究アプローチ、研究対象生物、そして遺伝研での研究環境をまとめて紹介します。
-
-- [植物進化・収斂進化の研究テーマ](/ja/projects/1_project/)
-- [植物進化研究のアプローチ](/ja/projects/2_project/)
-- [食虫植物とモデル植物](/ja/projects/3_project/)
-- [遺伝研の研究環境](/ja/projects/4_project/)
-
 <div class="projects">
   {% if site.enable_project_categories and page.display_categories %}
     <!-- Display categorized projects -->
