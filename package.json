@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "prettier": "prettier . --check",
+    "prettier:fix": "prettier . --write",
+    "hooks:install": "git config core.hooksPath .githooks"
+  },
   "devDependencies": {
     "@shopify/prettier-plugin-liquid": "1.4.0",
     "prettier": "3.8.1"

@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+echo "Running Prettier check before commit..."
+
+if [ -x "./node_modules/.bin/prettier" ]; then
+  ./node_modules/.bin/prettier . --check
+  exit 0
+fi
+
+if command -v docker >/dev/null 2>&1; then
+  docker run --rm \
+    -v "$repo_root:/work" \
+    -w /work \
+    node:20 \
+    sh -lc 'npm install -g prettier@3.8.1 @shopify/prettier-plugin-liquid@1.4.0 >/tmp/npm.log 2>&1 && prettier . --check --plugin=@shopify/prettier-plugin-liquid'
+  exit 0
+fi
+
+cat >&2 <<'EOF'
+Prettier pre-commit check could not run.
+Install dependencies with `npm install`, or install Docker so the hook can use the fallback container.
+EOF
+exit 1
