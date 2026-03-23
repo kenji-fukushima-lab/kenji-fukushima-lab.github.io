@@ -1,7 +1,7 @@
 ---
 align: left
 name: Yuhan Guo
-name_native:
+name_native: 郭 喩涵 (ゴ ユェハン)
 position_key: phd
 image: people/yuhan_guo.jpg
 content:

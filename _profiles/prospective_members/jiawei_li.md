@@ -1,7 +1,7 @@
 ---
 align: left
 name: Jiawei Li
-name_native: 李 佳蔚 (り　かい)
+name_native: 李 佳蔚 (り かい)
 position_key: postdoc
 image: people/jiawei_li.jpg
 content:
