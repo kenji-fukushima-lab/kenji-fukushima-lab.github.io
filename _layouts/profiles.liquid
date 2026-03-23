@@ -14,11 +14,8 @@ layout: page
         {% if profile.position_key == 'future' %}
           {% assign show_profile = false %}
         {% endif %}
-        {% if profile.path contains 'prospective_members/' %}
+        {% if profile.path contains 'prospective_members/' or profile.path contains 'alumni/' %}
           {% assign show_profile = false %}
-        {% endif %}
-        {% if profile.show_in_people == true or profile.show_in_people == 'true' %}
-          {% assign show_profile = true %}
         {% endif %}
         {% if profile.position_key == position and show_profile %}
           {% assign sorted_profiles = sorted_profiles | push: profile %}
