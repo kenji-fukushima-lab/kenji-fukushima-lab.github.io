@@ -24,15 +24,39 @@ nav_order: 8
 
 遺伝研・総研大の双方で豊富な経済支援を利用可能です。
 
+代表的な制度として、以下のようなものがあります。募集時期・応募資格・他制度との併給可否は毎年変わることがあるため、最新情報は必ず各制度の公式ページをご確認ください。
+
 - [国立遺伝学研究所の学生支援制度](https://www.nig.ac.jp/nig/ja/phd-program/main-page-top/sien)
 
 - [総合研究大学院大学の学費・経済支援](https://www.soken.ac.jp/campuslife/tuition/)
+
+- [日本学術振興会特別研究員（DC1/DC2）](https://www.jsps.go.jp/j-pd/index.html)
+
+- [SOKENDAI特別研究員制度](https://www.soken.ac.jp/campuslife/tuition/sp_researcher_n/)（一般枠・次世代AI研究者枠・共創研究型）
+
+- [文部科学省国費外国人留学生（大学推薦）](https://www.mext.go.jp/a_menu/koutou/ryugaku/1423055_00022.htm) / [文部科学省国費外国人留学生（大使館推薦）](https://www.mext.go.jp/a_menu/koutou/ryugaku/boshu/1415352_00007.htm)
+
+- [JASSO 文部科学省外国人留学生学習奨励費](https://www.jasso.go.jp/ryugaku/scholarship_j/shoreihi/about.html)（私費外国人留学生向け）
+
+- [総研大のその他経済支援](https://www.soken.ac.jp/campuslife/tuition/other/)（民間財団・自治体奨学金の案内）
+
+- たとえば [本庄国際奨学財団](https://www.hisf.or.jp/) や [ロータリー米山記念奨学会](https://www.rotary-yoneyama.or.jp/scholarship) などの民間奨学金があります。
 
 ## 博士研究員（ポスドク）として参加する
 
 研究室で進行中のプロジェクトに紐づくポスドクポジションは、[遺伝研の人材募集ページ](https://www.nig.ac.jp/nig/ja/career-development/jobs-at-nig)や[JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop)、[tayo](https://tayo.jp/)、そして関連研究分野のメーリングリスト([nazuna](https://www.kazusa.or.jp/ml/nazunaml/)や[EVOLVE2](https://evolve2-ml.jimdofree.com/))を通じて応募をつのります。福島へ直接ご連絡いただければ、公開前のポジションについて情報共有できる場合もあります。
 
-新しい研究テーマを持ち込みたい場合は特に、[日本学術振興会特別研究員](https://www.jsps.go.jp/j-pd/)や[国立遺伝学研究所博士研究員](https://www.nig.ac.jp/nig/ja/career-development/2023nig-postdoc)などのフェローシップ獲得を第一選択として準備していただくことになります。申請書の作成・添削を支援いたします。
+新しい研究テーマを持ち込みたい場合は特に、外部フェローシップや所内フェローシップの獲得を第一選択として準備していただくことになります。申請書の作成・添削を支援いたします。代表的な制度は以下のとおりです。
+
+- [日本学術振興会特別研究員（PD）](https://www.jsps.go.jp/j-pd/index.html)
+
+- [日本学術振興会特別研究員（RPD）](https://www.jsps.go.jp/j-pd/rpd_sin.html)
+
+- [JSPS Postdoctoral Fellowships for Research in Japan](https://www.jsps.go.jp/english/e-fellow/application.html)（主に海外在住の研究者向け）
+
+- [HFSP Postdoctoral Fellowships](https://www.hfsp.org/funding/hfsp-funding/postdoctoral-fellowships)
+
+- [国立遺伝学研究所博士研究員（2026年度）](https://www.nig.ac.jp/nig/ja/career-development/2026nig-postdoc)
 
 候補者と福島の興味が一致する場合は、新しい研究テーマであっても福島側で研究費を申請することも可能です。しかし、準備開始から採択まで、通常一年以上の時間を要することにご留意ください。
 

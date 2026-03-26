@@ -24,16 +24,28 @@ At NIG, PhD courses are offered in English. Although NIG is primarily a research
 
 For further details, including information on tuition and fellowships, please consult the links provided below. NIG also offers an internship program specifically designed for undergraduate students. If you are interested in this opportunity, we encourage you to contact us for more information.
 
+Major funding routes for PhD students include the following. Please note that eligibility, application timing, and rules on combining awards change over time, so applicants should always check the latest official guidelines.
+
 - [SOKENDAI's tuition](https://www.soken.ac.jp/en/campuslife/tuition/payment/)
 
 - [NIG research assistant program for PhD students](https://www.nig.ac.jp/nig/phd-program/main-page-top/various-aids-to-students)
 
 - [NIGINTERN program](https://www.nig.ac.jp/jimu/soken/intern)
 
+- [JSPS Research Fellowships for Young Scientists (DC1/DC2)](https://www.jsps.go.jp/english/e-pd/index.html)
+
+- [SOKENDAI Special Researcher Program](https://www.soken.ac.jp/en/campuslife/tuition/sp_researcher_n/)
+
+- [Japanese Government (MEXT) Scholarship](https://www.studyinjapan.go.jp/en/planning/scholarships/mext-scholarships/)
+
+- [Monbukagakusho Honors Scholarship for Privately-Financed International Students (JASSO)](https://www.jasso.go.jp/en/ryugaku/scholarship_j/shoreihi/about.html)
+
+- [Private Foundation Scholarships at SOKENDAI](https://www.soken.ac.jp/en/campuslife/international/international.html), including opportunities such as the [Honjo International Scholarship Foundation](https://www.hisf.or.jp/en/scholarship/foreigner/)
+
 ## Joining as a postdoc
 
 We announce open postdoc positions through various channels, including the [NIG career page](https://www.nig.ac.jp/nig/career-development/jobs-at-nig) and [JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop?ln=1). Please contact Kenji if you would like to hear about potential openings before they are publicly announced.
 
-If you are interested in starting new research in our lab, we advise you to apply for fellowships such as [JSPS Fellowships](https://www.jsps.go.jp/english/), [HFSP Postdoctoral Fellowships](https://www.hfsp.org/), or [NIG Postdoctoral Fellowships](https://www.nig.ac.jp/nig/career-development/nigpostdoc2024#:~:text=The%20National%20Institute%20of%20Genetics,NIG%20and%20fostering%20researchers%20with). We will provide support during the application process.
+If you are interested in starting new research in our lab, we advise you to consider fellowship schemes such as [JSPS Research Fellowships (PD)](https://www.jsps.go.jp/english/e-pd/index.html), [JSPS Postdoctoral Fellowships for Research in Japan](https://www.jsps.go.jp/english/e-fellow/application.html) for overseas candidates, [HFSP Postdoctoral Fellowships](https://www.hfsp.org/funding/hfsp-funding/postdoctoral-fellowships), or [NIG Postdoctoral Fellows 2026](https://www.nig.ac.jp/nig/career-development/nigpostdoc2026). We will provide support during the application process.
 
 Should your research interests align with Kenji's areas of interest, there is a possibility that Kenji can seek research funding. However, please note that this process, from initial preparation to funding acceptance, typically takes more than a year.
