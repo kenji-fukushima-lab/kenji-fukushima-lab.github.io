@@ -1,0 +1,193 @@
+{% assign network = site.data.coauthor_network %}
+{% assign lang_code = include.lang | default: 'ja' %}
+
+{% if lang_code == 'en' %}
+  {% assign network_error_prefix = 'Failed to generate the coauthor network:' %}
+  {% assign legend_self = 'Principal investigator' %}
+  {% assign legend_highlighted = 'Current and former lab members' %}
+  {% assign legend_coauthor = 'External collaborators' %}
+  {% assign node_example_1 = 'Coauthored papers 1' %}
+  {% assign node_example_2 = 'Coauthored papers 4' %}
+  {% assign node_example_3 = 'Coauthored papers 8' %}
+  {% assign edge_example_1 = 'Joint papers 1' %}
+  {% assign edge_example_2 = 'Joint papers 3' %}
+  {% assign edge_example_3 = 'Joint papers 5' %}
+  {% assign fit_view_label = 'Fit view' %}
+  {% assign focus_center_label = 'Center PI' %}
+  {% assign zoom_in_label = 'Zoom in' %}
+  {% assign zoom_out_label = 'Zoom out' %}
+  {% assign toolbar_note = 'Drag the background to pan and use the mouse wheel to zoom.' %}
+  {% assign search_label = 'Highlight author' %}
+  {% assign search_placeholder = 'e.g. Kenji Fukushima' %}
+  {% assign year_range_label = 'Publication year range' %}
+  {% assign min_weight_label = 'Minimum coauthored papers shown' %}
+  {% assign min_weight_value = '1+' %}
+  {% assign direct_only_label = 'Show only direct coauthors of the PI' %}
+  {% assign visible_roles_label = 'Visible categories' %}
+  {% assign author_list_label = 'Authors' %}
+  {% assign author_col = 'Author' %}
+  {% assign role_col = 'Category' %}
+  {% assign papers_col = 'Coauthored' %}
+  {% assign first_col = 'First' %}
+  {% assign last_col = 'Latest' %}
+{% else %}
+  {% assign network_error_prefix = '共同研究ネットワークを生成できませんでした:' %}
+  {% assign legend_self = '研究室主宰者' %}
+  {% assign legend_highlighted = '現在・過去の研究室メンバー' %}
+  {% assign legend_coauthor = '外部の共同研究者' %}
+  {% assign node_example_1 = '論文数 1本' %}
+  {% assign node_example_2 = '論文数 4本' %}
+  {% assign node_example_3 = '論文数 8本' %}
+  {% assign edge_example_1 = '共著 1本' %}
+  {% assign edge_example_2 = '共著 3本' %}
+  {% assign edge_example_3 = '共著 5本' %}
+  {% assign fit_view_label = '全体表示' %}
+  {% assign focus_center_label = '主宰者へ移動' %}
+  {% assign zoom_in_label = '拡大' %}
+  {% assign zoom_out_label = '縮小' %}
+  {% assign toolbar_note = '背景をドラッグして移動、ホイールで拡大縮小できます。' %}
+  {% assign search_label = '著者名をハイライト' %}
+  {% assign search_placeholder = '例: Kenji Fukushima' %}
+  {% assign year_range_label = '出版年範囲' %}
+  {% assign min_weight_label = '表示する最小共著本数' %}
+  {% assign min_weight_value = '1本以上' %}
+  {% assign direct_only_label = '研究室主宰者との直接共著だけ表示' %}
+  {% assign visible_roles_label = '表示する属性' %}
+  {% assign author_list_label = '著者一覧' %}
+  {% assign author_col = '著者' %}
+  {% assign role_col = '属性' %}
+  {% assign papers_col = '共著本数' %}
+  {% assign first_col = '最初' %}
+  {% assign last_col = '最新' %}
+{% endif %}
+
+{% if network.error %}
+  <div class="alert alert-warning" role="alert">
+    {{ network_error_prefix }} {{ network.error }}
+  </div>
+{% else %}
+  {% assign stats = network.stats %}
+  <div class="coauthor-network-page">
+    <section class="coauthor-network-supporting">
+      <aside class="coauthor-network-legend">
+        <div class="coauthor-network-legend-grid">
+          <ul>
+            <li><span><span class="legend-swatch legend-swatch-self"></span>{{ legend_self }}</span><span>{{ stats.role_counts.self | default: 0 }}</span></li>
+            <li><span><span class="legend-swatch legend-swatch-highlighted_collaborator"></span>{{ legend_highlighted }}</span><span>{{ stats.role_counts.highlighted_collaborator | default: 0 }}</span></li>
+            <li><span><span class="legend-swatch legend-swatch-coauthor"></span>{{ legend_coauthor }}</span><span>{{ stats.role_counts.coauthor | default: 0 }}</span></li>
+          </ul>
+          <div class="coauthor-network-graphic-legend">
+            <div>
+              <ul>
+                <li><span class="graphic-node-size"><span class="graphic-node graphic-node-sm"></span>{{ node_example_1 }}</span></li>
+                <li><span class="graphic-node-size"><span class="graphic-node graphic-node-mid"></span>{{ node_example_2 }}</span></li>
+                <li><span class="graphic-node-size"><span class="graphic-node graphic-node-md"></span>{{ node_example_3 }}</span></li>
+              </ul>
+            </div>
+            <div>
+              <ul>
+                <li><span class="graphic-edge-size"><span class="graphic-edge graphic-edge-sm"></span>{{ edge_example_1 }}</span></li>
+                <li><span class="graphic-edge-size"><span class="graphic-edge graphic-edge-md"></span>{{ edge_example_2 }}</span></li>
+                <li><span class="graphic-edge-size"><span class="graphic-edge graphic-edge-lg"></span>{{ edge_example_3 }}</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="coauthor-network-layout">
+      <div class="coauthor-network-graph-panel">
+        <div class="coauthor-network-toolbar" aria-label="{{ toolbar_note }}">
+          <button id="network-fit-view" class="btn btn-sm btn-outline-primary" type="button">{{ fit_view_label }}</button>
+          <button id="network-focus-center" class="btn btn-sm btn-outline-primary" type="button">{{ focus_center_label }}</button>
+          <button id="network-zoom-in" class="btn btn-sm btn-outline-primary" type="button">{{ zoom_in_label }}</button>
+          <button id="network-zoom-out" class="btn btn-sm btn-outline-primary" type="button">{{ zoom_out_label }}</button>
+          <span class="coauthor-network-toolbar-note">{{ toolbar_note }}</span>
+        </div>
+        <div id="coauthor-network-graph"></div>
+      </div>
+    </section>
+
+    <section class="coauthor-network-controls">
+      <div class="coauthor-network-controls-grid">
+        <div>
+          <label for="network-search">{{ search_label }}</label>
+          <input id="network-search" type="search" placeholder="{{ search_placeholder }}">
+        </div>
+        <div>
+          <label for="network-year-min">{{ year_range_label }}</label>
+          <div class="coauthor-network-year-range" id="network-year-range" style="--range-min: 0%; --range-max: 100%;">
+            <div class="coauthor-network-year-range-values">
+              <span id="network-year-min-value">{{ stats.year_first }}</span>
+              <span id="network-year-max-value">{{ stats.year_last }}</span>
+            </div>
+            <div class="coauthor-network-year-range-slider">
+              <div class="coauthor-network-year-range-track"></div>
+              <input id="network-year-min" type="range" min="{{ stats.year_first }}" max="{{ stats.year_last }}" value="{{ stats.year_first }}" aria-label="{{ year_range_label }}">
+              <input id="network-year-max" type="range" min="{{ stats.year_first }}" max="{{ stats.year_last }}" value="{{ stats.year_last }}" aria-label="{{ year_range_label }}">
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="network-min-weight">{{ min_weight_label }}</label>
+          <input id="network-min-weight" type="range" min="1" max="6" value="1">
+          <small id="network-min-weight-value">{{ min_weight_value }}</small>
+        </div>
+        <div>
+          <label class="coauthor-network-inline-toggle" for="network-direct-only">
+            <input id="network-direct-only" type="checkbox">
+            {{ direct_only_label }}
+          </label>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>{{ visible_roles_label }}</legend>
+        <div class="coauthor-network-role-list">
+          <label><input type="checkbox" data-network-role-toggle="self" checked> {{ legend_self }}</label>
+          <label><input type="checkbox" data-network-role-toggle="highlighted_collaborator" checked> {{ legend_highlighted }}</label>
+          <label><input type="checkbox" data-network-role-toggle="coauthor" checked> {{ legend_coauthor }}</label>
+        </div>
+      </fieldset>
+      <p id="coauthor-network-filter-summary" aria-live="polite"></p>
+    </section>
+
+    <details class="coauthor-network-table">
+      <summary>{{ author_list_label }}</summary>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>{{ author_col }}</th>
+              <th>{{ role_col }}</th>
+              <th>{{ papers_col }}</th>
+              <th>{{ first_col }}</th>
+              <th>{{ last_col }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for collaborator in network.top_collaborators limit: 40 %}
+              <tr data-author-id="{{ collaborator.id }}">
+                <td>
+                  {% if collaborator.url %}
+                    <a href="{{ collaborator.url }}" target="_blank" rel="noopener noreferrer">{{ collaborator.name }}</a>
+                  {% else %}
+                    {{ collaborator.name }}
+                  {% endif %}
+                </td>
+                <td><span class="badge badge-role-{{ collaborator.role }}">{% if lang_code == 'en' %}{{ collaborator.role_label_en }}{% else %}{{ collaborator.role_label_ja }}{% endif %}</span></td>
+                <td class="author-focus-paper-count">{{ collaborator.focus_paper_count }}</td>
+                <td class="author-first-year">{{ collaborator.first_year }}</td>
+                <td class="author-last-year">{{ collaborator.last_year }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <script id="coauthor-network-data" type="application/json">{{ network | jsonify }}</script>
+  <script id="coauthor-network-i18n" type="application/json">{"lang":"{{ lang_code }}","unavailable":"{% if lang_code == 'en' %}Network data is unavailable.{% else %}Network data is unavailable.{% endif %}","graphAriaLabel":"{% if lang_code == 'en' %}Coauthor network graph{% else %}共同研究ネットワーク図{% endif %}","filterSummary":"{% if lang_code == 'en' %}Visible: authors {authors} / links {links} / years {minYear}-{maxYear}{% else %}表示中: 著者 {authors}人 / 連携 {links}本 / 出版年 {minYear}-{maxYear}{% endif %}","minWeightValue":"{% if lang_code == 'en' %}{value}+{% else %}{value}本以上{% endif %}","detailPaperCount":"{% if lang_code == 'en' %}Coauthored papers{% else %}論文数{% endif %}","detailFirstYear":"{% if lang_code == 'en' %}First coauthored year{% else %}最初の共著年{% endif %}","detailLastYear":"{% if lang_code == 'en' %}Latest coauthored year{% else %}最新の共著年{% endif %}","coauthoredPapers":"{% if lang_code == 'en' %}Coauthored papers{% else %}共著論文数{% endif %}","latestCoauthoredYear":"{% if lang_code == 'en' %}Latest coauthored year{% else %}最終共著年{% endif %}","na":"n/a"}</script>
+{% endif %}

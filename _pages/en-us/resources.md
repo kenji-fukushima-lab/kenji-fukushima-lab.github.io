@@ -6,6 +6,11 @@ title: resources
 description: List of research resources developed by the Fukushima Lab
 nav: true
 nav_order: 5
+chart:
+  d3: true
+coauthor_network: true
+paper_network: true
+organism_map: true
 ---
 
 {% if site.data.repositories.github_users %}
@@ -87,6 +92,24 @@ nav_order: 5
     <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
   </div>
 </div>
+
+<div style="margin-top: 30px;"></div>
+
+## Collaboration Network
+
+{% include coauthor_network_section.liquid lang='en' %}
+
+<div style="margin-top: 30px;"></div>
+
+## Paper Network
+
+{% include paper_network_section.liquid lang='en' %}
+
+<div style="margin-top: 30px;"></div>
+
+## Study Organism Genus Counts
+
+{% include organism_map_section.liquid lang='en' %}
 
 <div style="margin-top: 30px;"></div>
   

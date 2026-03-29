@@ -1,0 +1,6 @@
+# Optional future overrides for coauthor name normalization.
+# Format:
+# "Canonical, Name":
+#   - "Variant, Name"
+#   - "Another Variant, Name"
+{}

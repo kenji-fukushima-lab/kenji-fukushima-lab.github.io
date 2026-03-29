@@ -53,9 +53,29 @@
 {% assign first_author_value = '' %}
 {% assign corresponding_authors = '' %}
 {% assign cofirst_authors = '' %}
+{% assign corresponding_raw = entry.corresponding_authors | default: '' | strip %}
+{% assign cofirst_raw = entry.cofirst_authors | default: '' | strip %}
 {% assign highlight_list = entry.highlight | downcase | strip | split: ' and ' %}
 {% assign lab_member_values = '' %}
 {% assign lab_member_count = 0 %}
+{% if corresponding_raw != '' %}
+  {% assign explicit_corresponding_authors = corresponding_raw | downcase | split: ' and ' %}
+  {% for corresponding_name in explicit_corresponding_authors %}
+    {% assign cleaned_corresponding_name = corresponding_name | strip %}
+    {% if cleaned_corresponding_name != '' %}
+      {% assign corresponding_authors = corresponding_authors | append: cleaned_corresponding_name | append: '||' %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if cofirst_raw != '' %}
+  {% assign explicit_cofirst_authors = cofirst_raw | downcase | split: ' and ' %}
+  {% for cofirst_name in explicit_cofirst_authors %}
+    {% assign cleaned_cofirst_name = cofirst_name | strip %}
+    {% if cleaned_cofirst_name != '' %}
+      {% assign cofirst_authors = cofirst_authors | append: cleaned_cofirst_name | append: '||' %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 {% for author in entry.author_array %}
   {% assign author_last_clean = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' | strip %}
   {% assign author_first_clean = author.first | regex_replace: '[*∗†‡§¶‖&^]', '' | strip %}
@@ -64,10 +84,10 @@
   {% if forloop.first %}
     {% assign first_author_value = full_name %}
   {% endif %}
-  {% if author.first contains '*' or author.first contains '∗' or author.last contains '*' or author.last contains '∗' %}
+  {% if corresponding_raw == '' and (author.first contains '*' or author.first contains '∗' or author.last contains '*' or author.last contains '∗') %}
     {% assign corresponding_authors = corresponding_authors | append: full_name_normalized | append: '||' %}
   {% endif %}
-  {% if author.first contains '†' or author.first contains '‡' or author.last contains '†' or author.last contains '‡' %}
+  {% if cofirst_raw == '' and (author.first contains '†' or author.first contains '‡' or author.last contains '†' or author.last contains '‡') %}
     {% assign cofirst_authors = cofirst_authors | append: full_name_normalized | append: '||' %}
   {% endif %}
   {% if highlight_list contains full_name_normalized and full_name_normalized != '' %}
@@ -189,23 +209,27 @@
           {%- endif -%}
         {%- endif -%}
 
-        {%- capture author_string -%}
-          {{ author.first }} {{ author_last_html }}
-        {%- endcapture -%}
-
         {%- assign author_is_self = false -%}
         {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
-        {%- assign author_last_html = author.last | regex_replace: '([*∗†‡§¶‖&^]+)', '<sup>\1</sup>' -%}
-
         {%- assign author_first_clean = author.first | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
         {%- assign full_name = author_last_name | append: ', ' | append: author_first_clean -%}
         {%- assign full_name_normalized = full_name | downcase | strip -%}
+          {%- assign author_markers = '' -%}
+          {%- if cofirst_authors contains full_name_normalized -%}
+            {%- assign author_markers = author_markers | append: '†' -%}
+          {%- endif -%}
+          {%- if corresponding_authors contains full_name_normalized -%}
+            {%- assign author_markers = author_markers | append: '*' -%}
+          {%- endif -%}
+          {%- capture author_last_html -%}
+            {{ author_last_name }}{% if author_markers != '' %}<sup>{{ author_markers }}</sup>{% endif %}
+          {%- endcapture -%}
         {%- assign should_highlight = false -%}
         {%- if highlight_list contains full_name_normalized -%}
           {%- assign should_highlight = true -%}
         {%- endif -%}
 
-        {%- if site.scholar.last_name contains author_last_name and site.scholar.first_name contains author.first -%}
+          {%- if site.scholar.last_name contains author_last_name and site.scholar.first_name contains author_first_clean -%}
           {%- assign author_is_self = true -%}
         {%- endif -%}
 
@@ -213,16 +237,15 @@
         {%- assign clean_last_name = author_last_name | downcase | remove_accents -%}
         {%- if site.data.coauthors[clean_last_name] -%}
           {%- for coauthor in site.data.coauthors[clean_last_name] -%}
-            {%- if coauthor.firstname contains author.first -%}
+              {%- if coauthor.firstname contains author_first_clean -%}
               {%- assign coauthor_url = coauthor.url -%}
               {%- break -%}
             {%- endif -%}
           {%- endfor -%}
         {%- endif -%}
 
-        {%- comment -%}★出力ここから（カンマ直後にスペース明示的）{%- endcomment -%}
         {%- capture author_string -%}
-          {{ author.first }} {{ author_last_html }}
+            {{ author_first_clean }} {{ author_last_html }}
         {%- endcapture -%}
 
         {%- if author_is_self -%}

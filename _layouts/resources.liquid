@@ -2,6 +2,15 @@
 layout: page
 ---
 <link rel="stylesheet" href="{{ '/assets/css/resources.css' | relative_url | bust_file_cache }}">
+{% if page.coauthor_network %}
+  <link rel="stylesheet" href="{{ '/assets/css/coauthor-network.css' | relative_url | bust_file_cache }}">
+{% endif %}
+{% if page.paper_network %}
+  <link rel="stylesheet" href="{{ '/assets/css/paper-network.css' | relative_url | bust_file_cache }}">
+{% endif %}
+{% if page.organism_map %}
+  <link rel="stylesheet" href="{{ '/assets/css/organism-map.css' | relative_url | bust_file_cache }}">
+{% endif %}
 <div class="resources-content">
   {{ content }}
 </div>

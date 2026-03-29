@@ -1,0 +1,109 @@
+{% assign dataset = site.data.organism_map %}
+{% assign lang_code = include.lang | default: 'ja' %}
+
+{% if lang_code == 'en' %}
+  {% assign dataset_error_prefix = 'Failed to generate the genus counts:' %}
+  {% assign stat_papers_label = 'Papers scanned' %}
+  {% assign stat_genera_label = 'Detected genera' %}
+  {% assign stat_mentions_label = 'Max papers per genus' %}
+  {% assign note_text = 'The chart counts how many papers mention each genus in titles or abstracts. Each genus links to Wikipedia, NCBI Taxonomy, and GBIF.' %}
+  {% assign chart_label = 'Genus counts by number of papers' %}
+  {% assign table_label = 'Detected genera' %}
+  {% assign genus_col = 'Genus' %}
+  {% assign count_col = 'Papers' %}
+  {% assign first_col = 'First' %}
+  {% assign last_col = 'Latest' %}
+  {% assign wikipedia_col = 'Wikipedia' %}
+  {% assign ncbi_col = 'NCBI Taxonomy' %}
+  {% assign gbif_col = 'GBIF' %}
+  {% assign wikipedia_link_label = 'Wikipedia' %}
+  {% assign ncbi_link_label = 'NCBI' %}
+  {% assign gbif_link_label = 'GBIF' %}
+{% else %}
+  {% assign dataset_error_prefix = '属名カウントを生成できませんでした:' %}
+  {% assign stat_papers_label = '対象論文数' %}
+  {% assign stat_genera_label = '抽出された属数' %}
+  {% assign stat_mentions_label = '属ごとの最大論文数' %}
+  {% assign note_text = '各属について、論文タイトルまたはアブストラクトに出現した論文数を数えています。各属から Wikipedia、NCBI Taxonomy、GBIF に移動できます。' %}
+  {% assign chart_label = '属名ごとの出現論文数' %}
+  {% assign table_label = '抽出された属名' %}
+  {% assign genus_col = '属名' %}
+  {% assign count_col = '論文数' %}
+  {% assign first_col = '最初' %}
+  {% assign last_col = '最新' %}
+  {% assign wikipedia_col = 'Wikipedia' %}
+  {% assign ncbi_col = 'NCBI Taxonomy' %}
+  {% assign gbif_col = 'GBIF' %}
+  {% assign wikipedia_link_label = 'Wikipedia' %}
+  {% assign ncbi_link_label = 'NCBI' %}
+  {% assign gbif_link_label = 'GBIF' %}
+{% endif %}
+
+{% if dataset.error %}
+  <div class="alert alert-warning" role="alert">
+    {{ dataset_error_prefix }} {{ dataset.error }}
+  </div>
+{% else %}
+  {% assign stats = dataset.stats %}
+  <div class="organism-map-page">
+    <section class="organism-map-supporting">
+      <div class="organism-map-stat-grid">
+        <div class="organism-map-stat-card">
+          <span class="organism-map-stat-label">{{ stat_papers_label }}</span>
+          <strong class="organism-map-stat-value">{{ stats.paper_count | default: 0 }}</strong>
+        </div>
+        <div class="organism-map-stat-card">
+          <span class="organism-map-stat-label">{{ stat_genera_label }}</span>
+          <strong class="organism-map-stat-value">{{ stats.genus_count | default: 0 }}</strong>
+        </div>
+        <div class="organism-map-stat-card">
+          <span class="organism-map-stat-label">{{ stat_mentions_label }}</span>
+          <strong class="organism-map-stat-value">{{ stats.max_paper_count | default: 0 }}</strong>
+        </div>
+      </div>
+      <p class="organism-map-note">{{ note_text }}</p>
+    </section>
+
+    <section class="organism-map-layout">
+      <div class="organism-map-chart-panel">
+        <h3 class="organism-map-chart-title">{{ chart_label }}</h3>
+        <div id="organism-map-chart"></div>
+      </div>
+    </section>
+
+    <details class="organism-map-table">
+      <summary>{{ table_label }}</summary>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>{{ genus_col }}</th>
+              <th>{{ count_col }}</th>
+              <th>{{ first_col }}</th>
+              <th>{{ last_col }}</th>
+              <th>{{ wikipedia_col }}</th>
+              <th>{{ ncbi_col }}</th>
+              <th>{{ gbif_col }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for genus in dataset.genera %}
+              <tr data-organism-id="{{ genus.id }}">
+                <td><i class="organism-genus-label">{{ genus.label }}</i></td>
+                <td class="organism-paper-count">{{ genus.paper_count }}</td>
+                <td class="organism-first-year">{{ genus.first_year }}</td>
+                <td class="organism-last-year">{{ genus.last_year }}</td>
+                <td><a href="{{ genus.wikipedia_url }}" target="_blank" rel="noopener noreferrer">{{ wikipedia_link_label }}</a></td>
+                <td><a href="{{ genus.ncbi_taxonomy_url }}" target="_blank" rel="noopener noreferrer">{{ ncbi_link_label }}</a></td>
+                <td><a href="{{ genus.gbif_url }}" target="_blank" rel="noopener noreferrer">{{ gbif_link_label }}</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <script id="organism-map-data" type="application/json">{{ dataset | jsonify }}</script>
+  <script id="organism-map-i18n" type="application/json">{"lang":"{{ lang_code }}","unavailable":"{% if lang_code == 'en' %}Genus-count data is unavailable.{% else %}属名カウントのデータがありません。{% endif %}","chartAriaLabel":"{% if lang_code == 'en' %}Genus count bar chart{% else %}属名カウントのバー chart{% endif %}","countLabel":"{{ count_col }}","wikipediaLabel":"{{ wikipedia_link_label }}","ncbiLabel":"{{ ncbi_link_label }}","gbifLabel":"{{ gbif_link_label }}","yearRange":"{% if lang_code == 'en' %}{first}-{last}{% else %}{first}-{last}年{% endif %}"}</script>
+{% endif %}

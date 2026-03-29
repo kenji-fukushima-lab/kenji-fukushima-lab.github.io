@@ -6,6 +6,11 @@ title: リソース
 description: 当研究室で提供している研究リソースの一覧です。
 nav: true
 nav_order: 5
+chart:
+  d3: true
+coauthor_network: true
+paper_network: true
+organism_map: true
 ---
 
 {% if site.data.repositories.github_users %}
@@ -87,6 +92,24 @@ nav_order: 5
     <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
   </div>
 </div>
+
+<div style="margin-top: 30px;"></div>
+
+## 共同研究ネットワーク
+
+{% include coauthor_network_section.liquid lang='ja' %}
+
+<div style="margin-top: 30px;"></div>
+
+## 論文ネットワーク
+
+{% include paper_network_section.liquid lang='ja' %}
+
+<div style="margin-top: 30px;"></div>
+
+## 研究対象生物の属名カウント
+
+{% include organism_map_section.liquid lang='ja' %}
 
 <div style="margin-top: 30px;"></div>
   
