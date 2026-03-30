@@ -1,0 +1,166 @@
+name: Create profile update PR from submission issue
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  create-profile-update-pr:
+    if: contains(github.event.issue.labels.*.name, 'profile-update') || startsWith(github.event.issue.title, '[Profile]')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: profile-update-${{ github.event.issue.number }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Update profile markdown from issue
+        id: generate
+        continue-on-error: true
+        run: python .github/scripts/create_profile_update_from_issue.py
+
+      - name: Format updated profile
+        if: steps.generate.outcome == 'success'
+        run: npx prettier "${{ steps.generate.outputs.generated_profile }}" --write
+
+      - name: Upsert issue comment when generation fails
+        if: steps.generate.outcome == 'failure'
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            <!-- profile-update-automation -->
+            プロフィール更新PRの自動作成に失敗しました。Issue の入力内容を確認して再編集してください。
+
+            ${{ steps.generate.outputs.error_message || '想定される原因: 対象プロフィールが特定できない、または有効な変更が含まれていません。' }}
+
+            修正後に Issue を保存すると再実行されます。
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const body = process.env.COMMENT_BODY;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+            const existing = comments.find(
+              (comment) =>
+                comment.user?.type === "Bot" &&
+                comment.body?.includes("<!-- profile-update-automation -->"),
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body,
+            });
+
+      - name: Stop workflow when generation fails
+        if: steps.generate.outcome == 'failure'
+        run: exit 1
+
+      - name: Create pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: ${{ steps.generate.outputs.commit_message }}
+          title: ${{ steps.generate.outputs.pr_title }}
+          body: ${{ steps.generate.outputs.pr_body }}
+          branch: ${{ steps.generate.outputs.branch_name }}
+          base: main
+          add-paths: ${{ steps.generate.outputs.generated_profile }}
+          delete-branch: true
+          assignees: kfuku52
+
+      - name: Request maintainer review
+        if: steps.cpr.outputs.pull-request-number != '' && github.event.issue.user.login != 'kfuku52'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: Number("${{ steps.cpr.outputs.pull-request-number }}"),
+              reviewers: ["kfuku52"],
+            });
+
+      - name: Upsert issue comment with PR link
+        if: steps.cpr.outputs.pull-request-url != ''
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            <!-- profile-update-automation -->
+            プロフィール更新用のPRを作成しました。
+            ${{ steps.cpr.outputs.pull-request-url }}
+
+            レビュー後にマージされると、サイト上のプロフィールに反映されます。
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const body = process.env.COMMENT_BODY;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+            const existing = comments.find(
+              (comment) =>
+                comment.user?.type === "Bot" &&
+                comment.body?.includes("<!-- profile-update-automation -->"),
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body,
+            });

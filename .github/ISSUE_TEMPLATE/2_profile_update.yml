@@ -1,0 +1,202 @@
+name: "👤 Profile update"
+description: "自分のプロフィール更新用PRを自動作成します / Create a PR to update your own profile"
+title: "[Profile] "
+labels: ["profile-update"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        自分のプロフィール更新用フォームです。
+        This form creates a pull request to update your own profile markdown file.
+
+        - 通常は GitHub ユーザー名とプロフィールの `github:` フィールドの一致で対象ファイルを自動判定します。
+          The target profile file is usually detected from your GitHub username and the profile's `github:` field.
+        - 入力しなかった項目は変更されません。
+          Fields you leave blank are not changed.
+        - 値を消したい項目には `CLEAR` と入力してください。
+          Enter `CLEAR` if you want to erase a value.
+        - GitHub ユーザー名は、通常はこの Issue を送信した GitHub アカウントと一致している必要があります。
+          The GitHub username must normally stay matched to the GitHub account that submitted this issue.
+        - リンク欄は `https://` から始まる完全なURLを推奨します。`ORCID`、`X / Twitter`、`ResearchGate`、`researchmap` は ID / handle でも受け付け、自動でURL化します。
+          Full URLs starting with `https://` are recommended for link fields. `ORCID`, `X / Twitter`, `ResearchGate`, and `researchmap` also accept IDs / handles and will be normalized automatically.
+        - このフォームはプロフィール本文ではなく front matter の更新用です。
+          This form updates front matter fields, not free-form profile body content.
+        - 画像差し替えやプロフィールファイルの移動は自動化の対象外です。
+          Photo replacement and moving profile files are out of scope for this automation.
+
+  - type: checkboxes
+    id: confirm_ownership
+    attributes:
+      label: 確認 / Confirmation
+      options:
+        - label: これは自分自身のプロフィール更新です / This updates my own profile
+          required: true
+
+  - type: input
+    id: profile_file
+    attributes:
+      label: プロフィールファイル指定 / Profile File Override (optional, maintainers only)
+      description: 通常は空欄のままで構いません。自動判定できない場合のみ使用します。 / Leave blank in normal cases. Use only when auto-detection fails.
+      placeholder: 例) naoto_inui または _profiles/naoto_inui.md
+    validations:
+      required: false
+
+  - type: input
+    id: name
+    attributes:
+      label: 氏名 / Name
+      placeholder: 例) Kenji Fukushima
+    validations:
+      required: false
+
+  - type: input
+    id: name_native
+    attributes:
+      label: 母語表記の氏名 / Native Script Name
+      placeholder: 例) 福島 健児（ふくしま けんじ）
+    validations:
+      required: false
+
+  - type: dropdown
+    id: position_key
+    attributes:
+      label: 役職 / Position Key
+      description: "`keep current value` のままなら変更しません。 / Leave as `keep current value` to keep the existing role."
+      default: 0
+      options:
+        - keep current value
+        - professor
+        - associate_professor
+        - assistant_professor
+        - lecturer
+        - tech_staff
+        - lab_manager
+        - postdoc
+        - researcher
+        - phd
+        - master
+        - intern
+        - undergraduate
+        - technician
+        - secretary
+        - staff
+        - alumni
+        - visiting
+        - collaborator
+        - other
+        - future
+    validations:
+      required: true
+
+  - type: input
+    id: email
+    attributes:
+      label: メールアドレス / Email
+      placeholder: 例) your.name@nig.ac.jp
+    validations:
+      required: false
+
+  - type: input
+    id: website
+    attributes:
+      label: ウェブサイト / Website
+      placeholder: 例) https://example.com
+    validations:
+      required: false
+
+  - type: input
+    id: orcid
+    attributes:
+      label: ORCID
+      placeholder: 例) https://orcid.org/0000-0002-2353-9274
+    validations:
+      required: false
+
+  - type: input
+    id: google_scholar
+    attributes:
+      label: Google Scholar
+      placeholder: 例) https://scholar.google.com/citations?user=XXXX
+    validations:
+      required: false
+
+  - type: input
+    id: github
+    attributes:
+      label: GitHub ユーザー名 / GitHub Username
+      description: 通常はこの Issue を送信した GitHub アカウント名のままにしてください。 / In normal use, keep this matched to the GitHub account that submitted the issue.
+      placeholder: 例) kfuku52
+    validations:
+      required: false
+
+  - type: input
+    id: linkedin
+    attributes:
+      label: LinkedIn
+      placeholder: 例) https://www.linkedin.com/in/your-name
+    validations:
+      required: false
+
+  - type: input
+    id: twitter
+    attributes:
+      label: X / Twitter
+      placeholder: 例) https://x.com/your_account
+    validations:
+      required: false
+
+  - type: input
+    id: researchgate
+    attributes:
+      label: ResearchGate
+      placeholder: 例) https://www.researchgate.net/profile/Your-Name
+    validations:
+      required: false
+
+  - type: input
+    id: amazon_author
+    attributes:
+      label: Amazon Author
+      placeholder: 例) https://www.amazon.co.jp/stores/...
+    validations:
+      required: false
+
+  - type: input
+    id: instagram
+    attributes:
+      label: Instagram
+      placeholder: 例) https://www.instagram.com/your_account
+    validations:
+      required: false
+
+  - type: input
+    id: facebook
+    attributes:
+      label: Facebook
+      placeholder: 例) https://www.facebook.com/your_account
+    validations:
+      required: false
+
+  - type: input
+    id: youtube
+    attributes:
+      label: YouTube
+      placeholder: 例) https://www.youtube.com/@your_channel
+    validations:
+      required: false
+
+  - type: input
+    id: researchmap
+    attributes:
+      label: researchmap
+      placeholder: 例) https://researchmap.jp/kenji_fukushima
+    validations:
+      required: false
+
+  - type: input
+    id: tayo
+    attributes:
+      label: Tayo
+      placeholder: 例) https://tayo.jp/users/XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    validations:
+      required: false
