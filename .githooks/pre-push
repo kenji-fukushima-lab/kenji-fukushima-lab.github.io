@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+bash .github/scripts/run-local-push-checks.sh

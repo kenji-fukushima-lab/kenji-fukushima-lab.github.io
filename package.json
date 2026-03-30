@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "checks:push": "bash .github/scripts/run-local-push-checks.sh",
     "prettier": "prettier . --check",
     "prettier:fix": "prettier . --write",
     "hooks:install": "git config core.hooksPath .githooks"
