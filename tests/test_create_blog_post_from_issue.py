@@ -18,6 +18,12 @@ SPEC.loader.exec_module(MODULE)
 
 
 class CreateBlogPostFromIssueTests(unittest.TestCase):
+    def test_build_issue_title_uses_post_title(self) -> None:
+        self.assertEqual(
+            MODULE.build_issue_title("春探し"),
+            "Blog post submission: 春探し",
+        )
+
     def test_build_markdown_uses_prettier_friendly_front_matter(self) -> None:
         markdown = MODULE.build_markdown(
             title="春探し",
