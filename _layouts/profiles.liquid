@@ -109,13 +109,21 @@ layout: page
                 {%- endif %}
                 {% if profile.researchmap -%}
                   <a href="{{ profile.researchmap }}" aria-label="researchmap profile of {{ profile_name }}">
-                    <img src="https://researchmap.jp/favicon.ico" alt="" aria-hidden="true" loading="lazy" decoding="async" width="14" height="14">
+                    <img
+                      src="{{ '/assets/img/icons/researchmap.gif' | relative_url | bust_file_cache }}"
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      decoding="async"
+                      width="14"
+                      height="14"
+                    >
                   </a>
                 {%- endif %}
                 {% if profile.tayo -%}
                   <a href="{{ profile.tayo }}" aria-label="Tayo profile of {{ profile_name }}">
                     <img
-                      src="https://tayo.jp/public/assets/favicon.ico"
+                      src="{{ '/assets/img/icons/tayo.ico' | relative_url | bust_file_cache }}"
                       alt=""
                       aria-hidden="true"
                       loading="lazy"
