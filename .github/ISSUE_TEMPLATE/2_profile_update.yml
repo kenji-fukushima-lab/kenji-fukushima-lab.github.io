@@ -1,6 +1,6 @@
 name: "👤 Profile update"
 description: "自分のプロフィール更新用PRを自動作成します / Create a PR to update your own profile"
-title: "[Profile] "
+title: "Profile update submission"
 labels: ["profile-update"]
 body:
   - type: markdown
@@ -11,6 +11,8 @@ body:
 
         - 通常は GitHub ユーザー名とプロフィールの `github:` フィールドの一致で対象ファイルを自動判定します。
           The target profile file is usually detected from your GitHub username and the profile's `github:` field.
+        - Issue のタイトルは送信後に自動更新されます。
+          The issue title is updated automatically after submission.
         - 入力しなかった項目は変更されません。
           Fields you leave blank are not changed.
         - 値を消したい項目には `CLEAR` と入力してください。
@@ -37,7 +39,7 @@ body:
     attributes:
       label: プロフィールファイル指定 / Profile File Override (optional, maintainers only)
       description: 通常は空欄のままで構いません。自動判定できない場合のみ使用します。 / Leave blank in normal cases. Use only when auto-detection fails.
-      placeholder: 例) naoto_inui または _profiles/naoto_inui.md
+      placeholder: 例) kenji_fukushima または _profiles/kenji_fukushima.md
     validations:
       required: false
 

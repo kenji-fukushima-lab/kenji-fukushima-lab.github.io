@@ -287,7 +287,7 @@ def resolve_profile_override(raw_value: str, profile_paths: List[pathlib.Path]) 
 
   raise InputError(
     f"Could not resolve profile override '{raw_value}'. "
-    "Use a file stem such as 'naoto_inui' or a path like '_profiles/naoto_inui.md'."
+    "Use a file stem such as 'kenji_fukushima' or a path like '_profiles/kenji_fukushima.md'."
   )
 
 
@@ -521,12 +521,14 @@ def main() -> int:
 
   relative_profile_path = profile_path.relative_to(REPO_ROOT).as_posix()
   branch_name = f"automation/profile-update-{issue['number']}-{slugify(profile_path.stem)}"
+  issue_title = f"Profile update for {profile_name}"
   commit_message = f"Update profile for {profile_name}"
   pr_title = f"Update profile for {profile_name}"
   pr_body = build_pr_body(issue, profile_path, changed_fields, profile_name)
 
   write_output("generated_profile", relative_profile_path)
   write_output("branch_name", branch_name)
+  write_output("issue_title", issue_title)
   write_output("commit_message", commit_message)
   write_output("pr_title", pr_title)
   write_output("pr_body", pr_body)
