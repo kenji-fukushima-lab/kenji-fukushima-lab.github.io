@@ -57,7 +57,8 @@
 
 {% if network.error %}
   <div class="alert alert-warning" role="alert">
-    {{ network_error_prefix }} {{ network.error }}
+    {{ network_error_prefix }}
+    {{ network.error }}
   </div>
 {% else %}
   {% assign stats = network.stats %}
@@ -66,22 +67,39 @@
       <aside class="paper-network-legend">
         <div class="paper-network-legend-grid">
           <ul>
-            <li><span class="paper-network-year-node"></span><span>{{ year_old_label }}</span><span>{{ stats.year_first }}</span></li>
-            <li><span class="paper-network-year-node paper-network-year-node-recent"></span><span>{{ year_new_label }}</span><span>{{ stats.year_last }}</span></li>
+            <li>
+              <span class="paper-network-year-node"></span><span>{{ year_old_label }}</span><span>{{ stats.year_first }}</span>
+            </li>
+            <li>
+              <span class="paper-network-year-node paper-network-year-node-recent"></span><span>{{ year_new_label }}</span
+              ><span>{{ stats.year_last }}</span>
+            </li>
           </ul>
           <div class="paper-network-graphic-legend">
             <div>
               <ul>
-                <li><span class="paper-graphic-node-size"><span class="paper-graphic-node paper-graphic-node-sm"></span>{{ node_example_1 }}</span></li>
-                <li><span class="paper-graphic-node-size"><span class="paper-graphic-node paper-graphic-node-mid"></span>{{ node_example_2 }}</span></li>
-                <li><span class="paper-graphic-node-size"><span class="paper-graphic-node paper-graphic-node-lg"></span>{{ node_example_3 }}</span></li>
+                <li>
+                  <span class="paper-graphic-node-size"><span class="paper-graphic-node paper-graphic-node-sm"></span>{{ node_example_1 }}</span>
+                </li>
+                <li>
+                  <span class="paper-graphic-node-size"><span class="paper-graphic-node paper-graphic-node-mid"></span>{{ node_example_2 }}</span>
+                </li>
+                <li>
+                  <span class="paper-graphic-node-size"><span class="paper-graphic-node paper-graphic-node-lg"></span>{{ node_example_3 }}</span>
+                </li>
               </ul>
             </div>
             <div>
               <ul>
-                <li><span class="paper-graphic-edge-size"><span class="paper-graphic-edge paper-graphic-edge-sm"></span>{{ edge_example_1 }}</span></li>
-                <li><span class="paper-graphic-edge-size"><span class="paper-graphic-edge paper-graphic-edge-md"></span>{{ edge_example_2 }}</span></li>
-                <li><span class="paper-graphic-edge-size"><span class="paper-graphic-edge paper-graphic-edge-lg"></span>{{ edge_example_3 }}</span></li>
+                <li>
+                  <span class="paper-graphic-edge-size"><span class="paper-graphic-edge paper-graphic-edge-sm"></span>{{ edge_example_1 }}</span>
+                </li>
+                <li>
+                  <span class="paper-graphic-edge-size"><span class="paper-graphic-edge paper-graphic-edge-md"></span>{{ edge_example_2 }}</span>
+                </li>
+                <li>
+                  <span class="paper-graphic-edge-size"><span class="paper-graphic-edge paper-graphic-edge-lg"></span>{{ edge_example_3 }}</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -117,8 +135,22 @@
             </div>
             <div class="paper-network-year-range-slider">
               <div class="paper-network-year-range-track"></div>
-              <input id="paper-network-year-min" type="range" min="{{ stats.year_first }}" max="{{ stats.year_last }}" value="{{ stats.year_first }}" aria-label="{{ year_range_label }}">
-              <input id="paper-network-year-max" type="range" min="{{ stats.year_first }}" max="{{ stats.year_last }}" value="{{ stats.year_last }}" aria-label="{{ year_range_label }}">
+              <input
+                id="paper-network-year-min"
+                type="range"
+                min="{{ stats.year_first }}"
+                max="{{ stats.year_last }}"
+                value="{{ stats.year_first }}"
+                aria-label="{{ year_range_label }}"
+              >
+              <input
+                id="paper-network-year-max"
+                type="range"
+                min="{{ stats.year_first }}"
+                max="{{ stats.year_last }}"
+                value="{{ stats.year_last }}"
+                aria-label="{{ year_range_label }}"
+              >
             </div>
           </div>
         </div>
@@ -170,6 +202,24 @@
     </details>
   </div>
 
-  <script id="paper-network-data" type="application/json">{{ network | jsonify }}</script>
-  <script id="paper-network-i18n" type="application/json">{"lang":"{{ lang_code }}","unavailable":"{% if lang_code == 'en' %}Network data is unavailable.{% else %}Network data is unavailable.{% endif %}","graphAriaLabel":"{% if lang_code == 'en' %}Paper network graph{% else %}論文ネットワーク図{% endif %}","filterSummary":"{% if lang_code == 'en' %}Visible: {papers} of {totalPapers} papers / {links} links / {minYear}-{maxYear}{% else %}表示中: 総論文数{totalPapers}本中{papers}本 / リンク{links}本 / {minYear}-{maxYear}年{% endif %}","minWeightValue":"{% if lang_code == 'en' %}{value}+{% else %}{value}人以上{% endif %}","detailYear":"{% if lang_code == 'en' %}Year{% else %}年{% endif %}","detailAuthors":"{% if lang_code == 'en' %}Authors{% else %}著者{% endif %}","detailConnections":"{% if lang_code == 'en' %}Linked papers{% else %}接続論文数{% endif %}","detailScore":"{% if lang_code == 'en' %}Connection score{% else %}接続スコア{% endif %}","detailSharedAuthors":"{% if lang_code == 'en' %}Shared coauthors (excluding Kenji Fukushima){% else %}共通著者（Kenji Fukushima を除く）{% endif %}","noSharedAuthors":"{% if lang_code == 'en' %}None{% else %}なし{% endif %}","linkSharedAuthors":"{% if lang_code == 'en' %}Shared coauthors{% else %}共通著者{% endif %}","na":"n/a"}</script>
+  <script id="paper-network-data" type="application/json">
+    {{ network | jsonify }}
+  </script>
+  <script id="paper-network-i18n" type="application/json">
+    {
+      "lang": "{{ lang_code }}",
+      "unavailable": "{% if lang_code == 'en' %}Network data is unavailable.{% else %}Network data is unavailable.{% endif %}",
+      "graphAriaLabel": "{% if lang_code == 'en' %}Paper network graph{% else %}論文ネットワーク図{% endif %}",
+      "filterSummary": "{% if lang_code == 'en' %}Visible: {papers} of {totalPapers} papers / {links} links / {minYear}-{maxYear}{% else %}表示中: 総論文数{totalPapers}本中{papers}本 / リンク{links}本 / {minYear}-{maxYear}年{% endif %}",
+      "minWeightValue": "{% if lang_code == 'en' %}{value}+{% else %}{value}人以上{% endif %}",
+      "detailYear": "{% if lang_code == 'en' %}Year{% else %}年{% endif %}",
+      "detailAuthors": "{% if lang_code == 'en' %}Authors{% else %}著者{% endif %}",
+      "detailConnections": "{% if lang_code == 'en' %}Linked papers{% else %}接続論文数{% endif %}",
+      "detailScore": "{% if lang_code == 'en' %}Connection score{% else %}接続スコア{% endif %}",
+      "detailSharedAuthors": "{% if lang_code == 'en' %}Shared coauthors (excluding Kenji Fukushima){% else %}共通著者（Kenji Fukushima を除く）{% endif %}",
+      "noSharedAuthors": "{% if lang_code == 'en' %}None{% else %}なし{% endif %}",
+      "linkSharedAuthors": "{% if lang_code == 'en' %}Shared coauthors{% else %}共通著者{% endif %}",
+      "na": "n/a"
+    }
+  </script>
 {% endif %}

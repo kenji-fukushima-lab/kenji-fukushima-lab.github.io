@@ -63,7 +63,8 @@
 
 {% if network.error %}
   <div class="alert alert-warning" role="alert">
-    {{ network_error_prefix }} {{ network.error }}
+    {{ network_error_prefix }}
+    {{ network.error }}
   </div>
 {% else %}
   {% assign stats = network.stats %}
@@ -72,23 +73,44 @@
       <aside class="coauthor-network-legend">
         <div class="coauthor-network-legend-grid">
           <ul>
-            <li><span><span class="legend-swatch legend-swatch-self"></span>{{ legend_self }}</span><span>{{ stats.role_counts.self | default: 0 }}</span></li>
-            <li><span><span class="legend-swatch legend-swatch-highlighted_collaborator"></span>{{ legend_highlighted }}</span><span>{{ stats.role_counts.highlighted_collaborator | default: 0 }}</span></li>
-            <li><span><span class="legend-swatch legend-swatch-coauthor"></span>{{ legend_coauthor }}</span><span>{{ stats.role_counts.coauthor | default: 0 }}</span></li>
+            <li>
+              <span><span class="legend-swatch legend-swatch-self"></span>{{ legend_self }}</span
+              ><span>{{ stats.role_counts.self | default: 0 }}</span>
+            </li>
+            <li>
+              <span><span class="legend-swatch legend-swatch-highlighted_collaborator"></span>{{ legend_highlighted }}</span
+              ><span>{{ stats.role_counts.highlighted_collaborator | default: 0 }}</span>
+            </li>
+            <li>
+              <span><span class="legend-swatch legend-swatch-coauthor"></span>{{ legend_coauthor }}</span
+              ><span>{{ stats.role_counts.coauthor | default: 0 }}</span>
+            </li>
           </ul>
           <div class="coauthor-network-graphic-legend">
             <div>
               <ul>
-                <li><span class="graphic-node-size"><span class="graphic-node graphic-node-sm"></span>{{ node_example_1 }}</span></li>
-                <li><span class="graphic-node-size"><span class="graphic-node graphic-node-mid"></span>{{ node_example_2 }}</span></li>
-                <li><span class="graphic-node-size"><span class="graphic-node graphic-node-md"></span>{{ node_example_3 }}</span></li>
+                <li>
+                  <span class="graphic-node-size"><span class="graphic-node graphic-node-sm"></span>{{ node_example_1 }}</span>
+                </li>
+                <li>
+                  <span class="graphic-node-size"><span class="graphic-node graphic-node-mid"></span>{{ node_example_2 }}</span>
+                </li>
+                <li>
+                  <span class="graphic-node-size"><span class="graphic-node graphic-node-md"></span>{{ node_example_3 }}</span>
+                </li>
               </ul>
             </div>
             <div>
               <ul>
-                <li><span class="graphic-edge-size"><span class="graphic-edge graphic-edge-sm"></span>{{ edge_example_1 }}</span></li>
-                <li><span class="graphic-edge-size"><span class="graphic-edge graphic-edge-md"></span>{{ edge_example_2 }}</span></li>
-                <li><span class="graphic-edge-size"><span class="graphic-edge graphic-edge-lg"></span>{{ edge_example_3 }}</span></li>
+                <li>
+                  <span class="graphic-edge-size"><span class="graphic-edge graphic-edge-sm"></span>{{ edge_example_1 }}</span>
+                </li>
+                <li>
+                  <span class="graphic-edge-size"><span class="graphic-edge graphic-edge-md"></span>{{ edge_example_2 }}</span>
+                </li>
+                <li>
+                  <span class="graphic-edge-size"><span class="graphic-edge graphic-edge-lg"></span>{{ edge_example_3 }}</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -124,8 +146,22 @@
             </div>
             <div class="coauthor-network-year-range-slider">
               <div class="coauthor-network-year-range-track"></div>
-              <input id="network-year-min" type="range" min="{{ stats.year_first }}" max="{{ stats.year_last }}" value="{{ stats.year_first }}" aria-label="{{ year_range_label }}">
-              <input id="network-year-max" type="range" min="{{ stats.year_first }}" max="{{ stats.year_last }}" value="{{ stats.year_last }}" aria-label="{{ year_range_label }}">
+              <input
+                id="network-year-min"
+                type="range"
+                min="{{ stats.year_first }}"
+                max="{{ stats.year_last }}"
+                value="{{ stats.year_first }}"
+                aria-label="{{ year_range_label }}"
+              >
+              <input
+                id="network-year-max"
+                type="range"
+                min="{{ stats.year_first }}"
+                max="{{ stats.year_last }}"
+                value="{{ stats.year_last }}"
+                aria-label="{{ year_range_label }}"
+              >
             </div>
           </div>
         </div>
@@ -176,7 +212,11 @@
                     {{ collaborator.name }}
                   {% endif %}
                 </td>
-                <td><span class="badge badge-role-{{ collaborator.role }}">{% if lang_code == 'en' %}{{ collaborator.role_label_en }}{% else %}{{ collaborator.role_label_ja }}{% endif %}</span></td>
+                <td>
+                  <span class="badge badge-role-{{ collaborator.role }}">
+                    {%- if lang_code == 'en' %}{{ collaborator.role_label_en }}{% else %}{{ collaborator.role_label_ja }}{% endif -%}
+                  </span>
+                </td>
                 <td class="author-focus-paper-count">{{ collaborator.focus_paper_count }}</td>
                 <td class="author-first-year">{{ collaborator.first_year }}</td>
                 <td class="author-last-year">{{ collaborator.last_year }}</td>
@@ -188,6 +228,22 @@
     </details>
   </div>
 
-  <script id="coauthor-network-data" type="application/json">{{ network | jsonify }}</script>
-  <script id="coauthor-network-i18n" type="application/json">{"lang":"{{ lang_code }}","unavailable":"{% if lang_code == 'en' %}Network data is unavailable.{% else %}Network data is unavailable.{% endif %}","graphAriaLabel":"{% if lang_code == 'en' %}Coauthor network graph{% else %}共同研究ネットワーク図{% endif %}","filterSummary":"{% if lang_code == 'en' %}Visible: authors {authors} / links {links} / years {minYear}-{maxYear}{% else %}表示中: 著者 {authors}人 / 連携 {links}本 / 出版年 {minYear}-{maxYear}{% endif %}","minWeightValue":"{% if lang_code == 'en' %}{value}+{% else %}{value}本以上{% endif %}","detailPaperCount":"{% if lang_code == 'en' %}Coauthored papers{% else %}論文数{% endif %}","detailFirstYear":"{% if lang_code == 'en' %}First coauthored year{% else %}最初の共著年{% endif %}","detailLastYear":"{% if lang_code == 'en' %}Latest coauthored year{% else %}最新の共著年{% endif %}","coauthoredPapers":"{% if lang_code == 'en' %}Coauthored papers{% else %}共著論文数{% endif %}","latestCoauthoredYear":"{% if lang_code == 'en' %}Latest coauthored year{% else %}最終共著年{% endif %}","na":"n/a"}</script>
+  <script id="coauthor-network-data" type="application/json">
+    {{ network | jsonify }}
+  </script>
+  <script id="coauthor-network-i18n" type="application/json">
+    {
+      "lang": "{{ lang_code }}",
+      "unavailable": "{% if lang_code == 'en' %}Network data is unavailable.{% else %}Network data is unavailable.{% endif %}",
+      "graphAriaLabel": "{% if lang_code == 'en' %}Coauthor network graph{% else %}共同研究ネットワーク図{% endif %}",
+      "filterSummary": "{% if lang_code == 'en' %}Visible: authors {authors} / links {links} / years {minYear}-{maxYear}{% else %}表示中: 著者 {authors}人 / 連携 {links}本 / 出版年 {minYear}-{maxYear}{% endif %}",
+      "minWeightValue": "{% if lang_code == 'en' %}{value}+{% else %}{value}本以上{% endif %}",
+      "detailPaperCount": "{% if lang_code == 'en' %}Coauthored papers{% else %}論文数{% endif %}",
+      "detailFirstYear": "{% if lang_code == 'en' %}First coauthored year{% else %}最初の共著年{% endif %}",
+      "detailLastYear": "{% if lang_code == 'en' %}Latest coauthored year{% else %}最新の共著年{% endif %}",
+      "coauthoredPapers": "{% if lang_code == 'en' %}Coauthored papers{% else %}共著論文数{% endif %}",
+      "latestCoauthoredYear": "{% if lang_code == 'en' %}Latest coauthored year{% else %}最終共著年{% endif %}",
+      "na": "n/a"
+    }
+  </script>
 {% endif %}

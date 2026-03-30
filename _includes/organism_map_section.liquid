@@ -41,7 +41,8 @@
 
 {% if dataset.error %}
   <div class="alert alert-warning" role="alert">
-    {{ dataset_error_prefix }} {{ dataset.error }}
+    {{ dataset_error_prefix }}
+    {{ dataset.error }}
   </div>
 {% else %}
   {% assign stats = dataset.stats %}
@@ -89,13 +90,21 @@
           <tbody>
             {% for genus in dataset.genera %}
               <tr data-organism-id="{{ genus.id }}">
-                <td><i class="organism-genus-label">{{ genus.label }}</i></td>
+                <td>
+                  <i class="organism-genus-label">{{ genus.label }}</i>
+                </td>
                 <td class="organism-paper-count">{{ genus.paper_count }}</td>
                 <td class="organism-first-year">{{ genus.first_year }}</td>
                 <td class="organism-last-year">{{ genus.last_year }}</td>
-                <td><a href="{{ genus.wikipedia_url }}" target="_blank" rel="noopener noreferrer">{{ wikipedia_link_label }}</a></td>
-                <td><a href="{{ genus.ncbi_taxonomy_url }}" target="_blank" rel="noopener noreferrer">{{ ncbi_link_label }}</a></td>
-                <td><a href="{{ genus.gbif_url }}" target="_blank" rel="noopener noreferrer">{{ gbif_link_label }}</a></td>
+                <td>
+                  <a href="{{ genus.wikipedia_url }}" target="_blank" rel="noopener noreferrer">{{ wikipedia_link_label }}</a>
+                </td>
+                <td>
+                  <a href="{{ genus.ncbi_taxonomy_url }}" target="_blank" rel="noopener noreferrer">{{ ncbi_link_label }}</a>
+                </td>
+                <td>
+                  <a href="{{ genus.gbif_url }}" target="_blank" rel="noopener noreferrer">{{ gbif_link_label }}</a>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -104,6 +113,19 @@
     </details>
   </div>
 
-  <script id="organism-map-data" type="application/json">{{ dataset | jsonify }}</script>
-  <script id="organism-map-i18n" type="application/json">{"lang":"{{ lang_code }}","unavailable":"{% if lang_code == 'en' %}Genus-count data is unavailable.{% else %}属名カウントのデータがありません。{% endif %}","chartAriaLabel":"{% if lang_code == 'en' %}Genus count bar chart{% else %}属名カウントのバー chart{% endif %}","countLabel":"{{ count_col }}","wikipediaLabel":"{{ wikipedia_link_label }}","ncbiLabel":"{{ ncbi_link_label }}","gbifLabel":"{{ gbif_link_label }}","yearRange":"{% if lang_code == 'en' %}{first}-{last}{% else %}{first}-{last}年{% endif %}"}</script>
+  <script id="organism-map-data" type="application/json">
+    {{ dataset | jsonify }}
+  </script>
+  <script id="organism-map-i18n" type="application/json">
+    {
+      "lang": "{{ lang_code }}",
+      "unavailable": "{% if lang_code == 'en' %}Genus-count data is unavailable.{% else %}属名カウントのデータがありません。{% endif %}",
+      "chartAriaLabel": "{% if lang_code == 'en' %}Genus count bar chart{% else %}属名カウントのバー chart{% endif %}",
+      "countLabel": "{{ count_col }}",
+      "wikipediaLabel": "{{ wikipedia_link_label }}",
+      "ncbiLabel": "{{ ncbi_link_label }}",
+      "gbifLabel": "{{ gbif_link_label }}",
+      "yearRange": "{% if lang_code == 'en' %}{first}-{last}{% else %}{first}-{last}年{% endif %}"
+    }
+  </script>
 {% endif %}

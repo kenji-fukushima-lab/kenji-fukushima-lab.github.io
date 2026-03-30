@@ -214,14 +214,14 @@
         {%- assign author_first_clean = author.first | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
         {%- assign full_name = author_last_name | append: ', ' | append: author_first_clean -%}
         {%- assign full_name_normalized = full_name | downcase | strip -%}
-          {%- assign author_markers = '' -%}
-          {%- if cofirst_authors contains full_name_normalized -%}
-            {%- assign author_markers = author_markers | append: '†' -%}
-          {%- endif -%}
-          {%- if corresponding_authors contains full_name_normalized -%}
-            {%- assign author_markers = author_markers | append: '*' -%}
-          {%- endif -%}
-          {%- capture author_last_html -%}
+        {%- assign author_markers = '' -%}
+        {%- if cofirst_authors contains full_name_normalized -%}
+          {%- assign author_markers = author_markers | append: '†' -%}
+        {%- endif -%}
+        {%- if corresponding_authors contains full_name_normalized -%}
+          {%- assign author_markers = author_markers | append: '*' -%}
+        {%- endif -%}
+        {%- capture author_last_html -%}
             {{ author_last_name }}{% if author_markers != '' %}<sup>{{ author_markers }}</sup>{% endif %}
           {%- endcapture -%}
         {%- assign should_highlight = false -%}
@@ -229,7 +229,7 @@
           {%- assign should_highlight = true -%}
         {%- endif -%}
 
-          {%- if site.scholar.last_name contains author_last_name and site.scholar.first_name contains author_first_clean -%}
+        {%- if site.scholar.last_name contains author_last_name and site.scholar.first_name contains author_first_clean -%}
           {%- assign author_is_self = true -%}
         {%- endif -%}
 
@@ -237,7 +237,7 @@
         {%- assign clean_last_name = author_last_name | downcase | remove_accents -%}
         {%- if site.data.coauthors[clean_last_name] -%}
           {%- for coauthor in site.data.coauthors[clean_last_name] -%}
-              {%- if coauthor.firstname contains author_first_clean -%}
+            {%- if coauthor.firstname contains author_first_clean -%}
               {%- assign coauthor_url = coauthor.url -%}
               {%- break -%}
             {%- endif -%}
