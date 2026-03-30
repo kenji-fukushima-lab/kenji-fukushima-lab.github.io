@@ -1,6 +1,6 @@
 name: "📝 Blog post submission"
 description: "研究室ブログ投稿を申請します（外部投稿は承認後に公開）"
-title: "[Blog] "
+title: "Blog post submission"
 labels: ["blog-post"]
 body:
   - type: markdown
@@ -15,8 +15,8 @@ body:
           Attached images are automatically saved to `assets/img/posts/`, and links in the post body are rewritten automatically.
         - メンテナ以外からの投稿は、管理者レビュー後に公開されます。
           Submissions from non-maintainers are published only after maintainer review and approval.
-        - `Add a title` は Issue 管理用です。記事タイトルには `記事タイトル / Post Title` が使われます。
-          `Add a title` is only for issue tracking. `記事タイトル / Post Title` is used as the blog post title.
+        - Issue のタイトルは送信後に自動更新されます。記事タイトルには `記事タイトル / Post Title` が使われます。
+          The issue title is updated automatically after submission. `記事タイトル / Post Title` is used as the blog post title.
         - 投稿者は GitHub ユーザー名から自動取得されます（入力不要）。
           Author is automatically derived from your GitHub username.
           例: `kfuku52 (Kenji Fukushima)`（`kfuku52` はプロフィールページへのリンクになります）

@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   create-blog-post-pr:
-    if: contains(github.event.issue.labels.*.name, 'blog-post') || startsWith(github.event.issue.title, '[Blog]')
+    if: contains(github.event.issue.labels.*.name, 'blog-post')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -66,6 +66,18 @@ jobs:
       - name: Stop workflow when generation fails
         if: steps.generate.outcome == 'failure'
         run: exit 1
+
+      - name: Update issue title
+        if: steps.generate.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              title: "${{ steps.generate.outputs.issue_title }}",
+            });
 
       - name: Create pull request
         id: cpr

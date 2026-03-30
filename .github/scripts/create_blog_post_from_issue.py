@@ -516,6 +516,10 @@ def build_markdown(
     return "\n".join(lines)
 
 
+def build_issue_title(title: str) -> str:
+    return f"Blog post submission: {title}"
+
+
 def set_output(name: str, value: str) -> None:
     output_file = os.environ.get("GITHUB_OUTPUT")
     if not output_file:
@@ -616,6 +620,7 @@ def main() -> int:
     pr_body_lines.extend(["", f"Closes #{issue_number}"])
 
     set_output("branch_name", f"codex/blog-post-issue-{issue_number}")
+    set_output("issue_title", build_issue_title(title))
     set_output("pr_title", f"[Blog Submission] {title}")
     set_output("commit_message", f"blog: add submission from issue #{issue_number}")
     set_output("pr_body", "\n".join(pr_body_lines))
