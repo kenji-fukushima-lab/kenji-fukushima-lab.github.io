@@ -93,6 +93,32 @@ npm run hooks:install
 
 The hook runs `prettier . --check` before each commit. It uses local `node_modules` when available and falls back to Docker (`node:20`) if Node.js dependencies are not installed locally.
 
+### Local pre-push hook
+
+The same hook installation also enables a local `pre-push` check:
+
+```bash
+npm run hooks:install
+```
+
+Before each push, the hook runs:
+
+- Python syntax checks for files in `.github/scripts/`
+- `python3 -m unittest discover -s tests`
+- `.github/scripts/check-image-budget.sh`
+
+You can run the same checks manually with:
+
+```bash
+npm run checks:push
+```
+
+If you intentionally need to bypass the hook once, use:
+
+```bash
+git push --no-verify
+```
+
 ### How to fix formatting issues
 
 #### Option 1: Auto-fix with Prettier (Recommended)
