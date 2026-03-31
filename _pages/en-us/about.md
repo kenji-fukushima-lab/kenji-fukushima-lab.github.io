@@ -3,34 +3,25 @@ page_id: about
 layout: about
 title: About
 permalink: /
-description: Plant Evolution Laboratory at the National Institute of Genetics (NIG) in Japan, studying carnivorous plants, plant evolution, and convergent evolution.
-seo_title: Plant Evolution Laboratory | National Institute of Genetics (NIG) | Carnivorous plants, plant evolution, convergent evolution
+description: Plant Evolution Laboratory at the National Institute of Genetics (NIG), studying the mechanisms of evolution with a focus on carnivorous plants.
+seo_title: Plant Evolution Laboratory | Studying evolution at the National Institute of Genetics (NIG)
 hero_title: Plant Evolution Laboratory
-hero_image_alt: Carnivorous plants and other study systems used by the Plant Evolution Laboratory at the National Institute of Genetics
+hero_image_alt: Study systems investigated by the Plant Evolution Laboratory at the National Institute of Genetics
 keywords: National Institute of Genetics, NIG, carnivorous plants, plant evolution, convergent evolution
 schema_type: AboutPage
-schema_name: Plant Evolution Laboratory
-subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="noopener noreferrer">National Institute of Genetics</a> in Japan
+subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="noopener noreferrer">National Institute of Genetics</a>
 
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>Exploring evolutionary innovations in plants and beyond</p>
+    <p>Revealing the wonders of evolution through plants</p>
 
-selected_papers: true # includes a list of papers marked as "selected={true}"
+news: false # includes a list of news items
+latest_posts: false # includes a list of the newest posts
+selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
-
-announcements:
-  enabled: true # includes a list of news items
-  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: 5 # leave blank to include all the news in the `_news` folder
-
-latest_posts:
-  enabled: true
-  scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
-  limit: 3 # leave blank to include all the blog posts
 ---
 
 Evolution can produce biological structures and functions of astonishing complexity. Our mission is to uncover the mechanisms that give rise to such evolutionary innovations. We integrate bioinformatics with experimental approaches to study a wide range of organisms, with a particular focus on plants.
