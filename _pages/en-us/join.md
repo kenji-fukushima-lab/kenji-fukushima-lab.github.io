@@ -28,9 +28,9 @@ Major funding routes for PhD students include the following. Please note that el
 
 - [SOKENDAI's tuition](https://www.soken.ac.jp/en/campuslife/tuition/payment/)
 
-- [NIG research assistant program for PhD students](https://www.nig.ac.jp/nig/phd-program/main-page-top/various-aids-to-students)
+- [NIG research assistant program for PhD students](https://www.nig.ac.jp/en/students/program/student-aid/)
 
-- [NIGINTERN program](https://www.nig.ac.jp/jimu/soken/intern)
+- [NIGINTERN program](https://www.nig.ac.jp/en/students/nig-intern/)
 
 - [JSPS Research Fellowships for Young Scientists (DC1/DC2)](https://www.jsps.go.jp/english/e-pd/index.html)
 
@@ -44,8 +44,8 @@ Major funding routes for PhD students include the following. Please note that el
 
 ## Joining as a postdoc
 
-We announce open postdoc positions through various channels, including the [NIG career page](https://www.nig.ac.jp/nig/career-development/jobs-at-nig) and [JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop?ln=1). Please contact Kenji if you would like to hear about potential openings before they are publicly announced.
+We announce open postdoc positions through various channels, including the [NIG career page](https://www.nig.ac.jp/en/career/) and [JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop?ln=1). Please contact Kenji if you would like to hear about potential openings before they are publicly announced.
 
-If you are interested in starting new research in our lab, we advise you to consider fellowship schemes such as [JSPS Research Fellowships (PD)](https://www.jsps.go.jp/english/e-pd/index.html), [JSPS Postdoctoral Fellowships for Research in Japan](https://www.jsps.go.jp/english/e-fellow/application.html) for overseas candidates, [HFSP Postdoctoral Fellowships](https://www.hfsp.org/funding/hfsp-funding/postdoctoral-fellowships), or [NIG Postdoctoral Fellows 2026](https://www.nig.ac.jp/nig/career-development/nigpostdoc2026). We will provide support during the application process.
+If you are interested in starting new research in our lab, we advise you to consider fellowship schemes such as [JSPS Research Fellowships (PD)](https://www.jsps.go.jp/english/e-pd/index.html), [JSPS Postdoctoral Fellowships for Research in Japan](https://www.jsps.go.jp/english/e-fellow/application.html) for overseas candidates, [HFSP Postdoctoral Fellowships](https://www.hfsp.org/funding/hfsp-funding/postdoctoral-fellowships), or the [latest openings at NIG](https://www.nig.ac.jp/en/career/). We will provide support during the application process.
 
 Should your research interests align with Kenji's areas of interest, there is a possibility that Kenji can seek research funding. However, please note that this process, from initial preparation to funding acceptance, typically takes more than a year.

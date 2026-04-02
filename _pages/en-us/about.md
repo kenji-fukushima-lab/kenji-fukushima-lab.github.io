@@ -9,7 +9,7 @@ hero_title: Plant Evolution Laboratory
 hero_image_alt: Study systems investigated by the Plant Evolution Laboratory at the National Institute of Genetics
 keywords: National Institute of Genetics, NIG, carnivorous plants, plant evolution, convergent evolution
 schema_type: AboutPage
-subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="noopener noreferrer">National Institute of Genetics</a>
+subtitle: Plant Evolution Laboratory at the <a href="https://www.nig.ac.jp/en/" target="_blank" rel="noopener noreferrer">National Institute of Genetics</a>
 
 profile:
   align: right

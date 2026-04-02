@@ -11,7 +11,8 @@ categories:
 
 University of Zurich の福島和紀博士に遺伝研でご講演いただきました。
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1757](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1757)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1757</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2025/10/24
 - 時間: 11:00-12:00

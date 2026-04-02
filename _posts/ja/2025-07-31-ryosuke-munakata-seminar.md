@@ -11,7 +11,8 @@ categories:
 
 2025年7月31日、京都大学 生存圏研究所の棟方涼介博士にご講演いただきました。
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1732](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1732)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1732</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2025/07/31
 - 時間: 13:30-14:30

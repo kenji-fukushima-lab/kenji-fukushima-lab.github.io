@@ -14,7 +14,7 @@ schema_type: WebPage
 
 #### Equipment
 
-Our laboratory is equipped for plant-focused molecular biology experiments. We also have access to the extensive [common equipment](https://www.nig.ac.jp/nig/ja/research-infrastructure-collaboration/common-equipment) available at NIG.
+Our laboratory is equipped for plant-focused molecular biology experiments. We also have access to the extensive [common equipment](https://www.nig.ac.jp/en/researchers/equipment/) available at NIG.
 
 <div style="display: flex; justify-content: space-around;">
     <img src="/assets/img/projects/lab_equipment1.jpg" alt="Lab equipment 1" style="width: 45%; max-width: 450px;"/>

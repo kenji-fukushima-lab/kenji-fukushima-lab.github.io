@@ -14,5 +14,6 @@ categories:
 - Invited by: 浅川和秀
 
 イベントページ:
-<https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1574>
-<https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1599>
+旧イベントページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1574</span>
+旧イベントページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1599</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページはいずれも削除済みです。

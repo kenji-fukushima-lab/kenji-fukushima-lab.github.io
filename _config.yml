@@ -46,8 +46,8 @@ parent_organization_alternate_names:
   - NIG
 parent_organization_alternate_names_en:
   - NIG
-organization_department: 新分野創造センター
-organization_street_address: 谷田1111 国立遺伝学研究所 新分野創造センター C棟6階
+organization_department:
+organization_street_address: 谷田1111 国立遺伝学研究所 C棟6階
 organization_locality: 三島市
 organization_region: 静岡県
 organization_postal_code: 411-8540

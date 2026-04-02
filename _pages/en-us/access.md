@@ -18,12 +18,12 @@ nav_order: 9
     <p class="modern-eyebrow">Visit Us</p>
     <h2>Plant Evolution Laboratory, National Institute of Genetics</h2>
     <p>
-      Find us in Building C (6F), Center for Frontier Research, National Institute of Genetics, Mishima, Japan.
+      Find us in Building C (6F), National Institute of Genetics, Mishima, Japan.
     </p>
     <div class="quick-links">
       <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Google Maps</a>
-      <a class="quick-link" href="https://www.nig.ac.jp/nig/about-nig/access">Access to NIG</a>
-      <a class="quick-link" href="https://www.nig.ac.jp/nig/about-nig/life-at-nig/map">NIG Bird's-eye Map</a>
+      <a class="quick-link" href="https://www.nig.ac.jp/en/public/access/">Access to NIG</a>
+      <a class="quick-link" href="https://www.nig.ac.jp/en/public/campus-map/">Campus Map</a>
       <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp">E-mail</a>
     </div>
   </section>
@@ -33,7 +33,6 @@ nav_order: 9
       <h3>Affiliation</h3>
       <p>
         National Institute of Genetics<br>
-        Center for Frontier Research<br>
         Plant Evolution Laboratory (Building C, 6F)
       </p>
     </article>

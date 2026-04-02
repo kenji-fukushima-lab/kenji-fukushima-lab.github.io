@@ -22,7 +22,7 @@ categories: # This categories link /_data/en-us/strings.yml, categories: at leas
 citation:
   bibtex: "or as a BibTeX entry:"
   introduction: "If you found this useful, please cite this as:"
-contact_note: 'Fukushima Lab. Since 2024: <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="external nofollow noopener">National Institute of Genetics, Japan</a>. 2018-2024: <a href="https://www.uni-wuerzburg.de/en/" target="_blank" rel="external nofollow noopener">University of Würzburg, Germany</a>.'
+contact_note: 'Fukushima Lab. Since 2024: <a href="https://www.nig.ac.jp/en/" target="_blank" rel="external nofollow noopener">National Institute of Genetics, Japan</a>. 2018-2024: <a href="https://www.uni-wuerzburg.de/en/" target="_blank" rel="external nofollow noopener">University of Würzburg, Germany</a>.'
 cv:
   address: Address
   area: Area

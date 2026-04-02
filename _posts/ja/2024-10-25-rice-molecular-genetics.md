@@ -11,7 +11,8 @@ categories:
 
 遺伝研で開催された研究会「イネ分子遺伝学の深化」で発表しました。
 
-イベントページ: [https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1624](https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1624)
+旧イベントページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1624</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2024/10/25 13:00-17:20、2024/10/26 09:00-11:50
 - 場所: 宿泊施設2階セミナー室 / Seminar room-Guest house 2F

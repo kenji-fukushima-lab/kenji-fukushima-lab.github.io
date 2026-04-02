@@ -20,13 +20,13 @@ nav_order: 8
 
 ## 博士課程学生として参加する
 
-[国立遺伝学研究所](https://www.nig.ac.jp/nig/ja/)はおもに研究機関として機能していますが、[総合研究大学院大学](https://www.soken.ac.jp/)と連携して大学院機能を備えています。遺伝研では、学部卒向けの5年一貫博士課程と、修士卒向けの博士後期課程（3年間）が提供されています。修士号の取得に特化したコースは設けられていないことにご留意ください。
+[国立遺伝学研究所](https://www.nig.ac.jp/)はおもに研究機関として機能していますが、[総合研究大学院大学](https://www.soken.ac.jp/)と連携して大学院機能を備えています。遺伝研では、学部卒向けの5年一貫博士課程と、修士卒向けの博士後期課程（3年間）が提供されています。修士号の取得に特化したコースは設けられていないことにご留意ください。
 
 遺伝研・総研大の双方で豊富な経済支援を利用可能です。
 
 代表的な制度として、以下のようなものがあります。募集時期・応募資格・他制度との併給可否は毎年変わることがあるため、最新情報は必ず各制度の公式ページをご確認ください。
 
-- [国立遺伝学研究所の学生支援制度](https://www.nig.ac.jp/nig/ja/phd-program/main-page-top/sien)
+- [国立遺伝学研究所の学生支援制度](https://www.nig.ac.jp/students/program/student-aid/)
 
 - [総合研究大学院大学の学費・経済支援](https://www.soken.ac.jp/campuslife/tuition/)
 
@@ -44,7 +44,7 @@ nav_order: 8
 
 ## 博士研究員（ポスドク）として参加する
 
-研究室で進行中のプロジェクトに紐づくポスドクポジションは、[遺伝研の人材募集ページ](https://www.nig.ac.jp/nig/ja/career-development/jobs-at-nig)や[JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop)、[tayo](https://tayo.jp/)、そして関連研究分野のメーリングリスト([nazuna](https://www.kazusa.or.jp/ml/nazunaml/)や[EVOLVE2](https://evolve2-ml.jimdofree.com/))を通じて応募をつのります。福島へ直接ご連絡いただければ、公開前のポジションについて情報共有できる場合もあります。
+研究室で進行中のプロジェクトに紐づくポスドクポジションは、[遺伝研の人材・キャリアページ](https://www.nig.ac.jp/career/)や[JREC-IN](https://jrecin.jst.go.jp/seek/SeekTop)、[tayo](https://tayo.jp/)、そして関連研究分野のメーリングリスト([nazuna](https://www.kazusa.or.jp/ml/nazunaml/)や[EVOLVE2](https://evolve2-ml.jimdofree.com/))を通じて応募をつのります。福島へ直接ご連絡いただければ、公開前のポジションについて情報共有できる場合もあります。
 
 新しい研究テーマを持ち込みたい場合は特に、外部フェローシップや所内フェローシップの獲得を第一選択として準備していただくことになります。申請書の作成・添削を支援いたします。代表的な制度は以下のとおりです。
 
@@ -56,7 +56,7 @@ nav_order: 8
 
 - [HFSP Postdoctoral Fellowships](https://www.hfsp.org/funding/hfsp-funding/postdoctoral-fellowships)
 
-- [国立遺伝学研究所博士研究員（2026年度）](https://www.nig.ac.jp/nig/ja/career-development/2026nig-postdoc)
+- [遺伝研の最新公募情報](https://www.nig.ac.jp/career/)
 
 候補者と福島の興味が一致する場合は、新しい研究テーマであっても福島側で研究費を申請することも可能です。しかし、準備開始から採択まで、通常一年以上の時間を要することにご留意ください。
 

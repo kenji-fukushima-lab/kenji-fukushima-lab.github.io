@@ -11,7 +11,8 @@ categories:
 
 北見工業大学の陽川憲博士にご講演いただきました。
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1729](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1729)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1729</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2025/07/10
 - 時間: 15:30-16:30

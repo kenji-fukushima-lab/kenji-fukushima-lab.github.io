@@ -13,7 +13,8 @@ categories:
 
 {% include figure.liquid path="assets/img/posts/20250602_yamada_tetsuya_heidelberg_lecture.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="遺伝研での山田哲也さんの講演の様子" %}
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1715](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1715)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1715</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2025/06/02
 - 時間: 13:30-14:30

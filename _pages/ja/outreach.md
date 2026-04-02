@@ -100,7 +100,7 @@ nav_order: 6
     <article class="modern-card">
       <h3>インタビュー・その他</h3>
       <div class="feature-link-grid">
-        <a class="feature-thumb-link" href="https://www.nig.ac.jp/nig/ja/research/interviews/faculty-interviews">
+        <a class="feature-thumb-link" href="https://www.nig.ac.jp/interviews/">
           <img src="/assets/img/people/kenji_fukushima.jpg" alt="国立遺伝学研究所 教員インタビュー">
           <span class="feature-thumb-text">国立遺伝学研究所 教員インタビュー</span>
         </a>

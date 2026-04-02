@@ -11,7 +11,8 @@ categories:
 
 2024年10月7日、Aoi Hosakaさん（Nihon BioData Corporation / 横浜市立大学 木原生物学研究所）にご講演いただきました。
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1604](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1604)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1604</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2024/10/07
 - 時間: 13:30-14:30

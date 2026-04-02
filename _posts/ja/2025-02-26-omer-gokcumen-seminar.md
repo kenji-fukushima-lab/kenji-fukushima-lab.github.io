@@ -11,7 +11,8 @@ categories:
 
 University at Buffalo の Omer Gokcumen博士にご講演いただきました。
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1664](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1664)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1664</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2025/02/26
 - 時間: 13:30-14:30

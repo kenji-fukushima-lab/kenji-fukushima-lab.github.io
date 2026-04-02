@@ -3,13 +3,13 @@ page_id: about
 layout: about
 title: 概要
 permalink: /
-description: 遺伝研（国立遺伝学研究所）の植物進化研究室。食虫植物を起点に、植物進化と収斂進化の仕組みを研究しています。
-seo_title: 植物進化研究室 | 遺伝研（国立遺伝学研究所）で食虫植物・植物進化・収斂進化を研究
+description: 遺伝研（国立遺伝学研究所）の植物進化研究室。食虫植物を起点に、進化の仕組みを研究しています。
+seo_title: 植物進化研究室 | 遺伝研（国立遺伝学研究所）で進化を研究
 hero_title: 植物進化研究室
-hero_image_alt: 国立遺伝学研究所の植物進化研究室で研究対象として扱う食虫植物と植物
+hero_image_alt: 国立遺伝学研究所の植物進化研究室で取り扱う研究対象
 keywords: 遺伝研, 国立遺伝学研究所, 食虫植物, 植物進化, 収斂進化
 schema_type: AboutPage
-subtitle: 植物進化研究室 <a href="https://www.nig.ac.jp/nig/ja" target="_blank" rel="noopener noreferrer">国立遺伝学研究所</a>
+subtitle: 植物進化研究室 <a href="https://www.nig.ac.jp/" target="_blank" rel="noopener noreferrer">国立遺伝学研究所</a>
 
 profile:
   align: right

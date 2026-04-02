@@ -101,7 +101,7 @@ nav_order: 6
     <article class="modern-card">
       <h3>Interviews and More</h3>
       <div class="feature-link-grid">
-        <a class="feature-thumb-link" href="https://www.nig.ac.jp/nig/ja/research/interviews/faculty-interviews">
+        <a class="feature-thumb-link" href="https://www.nig.ac.jp/en/interviews/">
           <img src="/assets/img/people/kenji_fukushima.jpg" alt="NIG faculty interview">
           <span class="feature-thumb-text">NIG faculty interview</span>
         </a>

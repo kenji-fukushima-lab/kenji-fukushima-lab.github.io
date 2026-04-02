@@ -18,11 +18,11 @@ nav_order: 9
   <section class="modern-hero">
     <p class="modern-eyebrow">Access</p>
     <h2>植物進化研究室（国立遺伝学研究所）</h2>
-    <p>国立遺伝学研究所 新分野創造センター C棟6階に研究室があります。</p>
+    <p>国立遺伝学研究所 C棟6階に研究室があります。</p>
     <div class="quick-links">
       <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Googleマップでみる</a>
-      <a class="quick-link" href="https://www.nig.ac.jp/nig/ja/about-nig/access_ja">遺伝研へのアクセス</a>
-      <a class="quick-link" href="https://www.nig.ac.jp/nig/ja/about-nig/life-at-nig/map">遺伝研鳥瞰図</a>
+      <a class="quick-link" href="https://www.nig.ac.jp/public/access/">遺伝研へのアクセス</a>
+      <a class="quick-link" href="https://www.nig.ac.jp/public/campus-map/">遺伝研施設マップ</a>
       <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp">Eメール</a>
     </div>
   </section>
@@ -32,7 +32,6 @@ nav_order: 9
       <h3>所属</h3>
       <p>
         国立遺伝学研究所<br>
-        新分野創造センター<br>
         植物進化研究室（C棟6階）
       </p>
     </article>

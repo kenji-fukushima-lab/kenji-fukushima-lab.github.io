@@ -13,4 +13,5 @@ categories:
 
 - Invited by: 鈴木誉保, 工樂樹洋
 
-イベントページ: <https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1345>
+旧イベントページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/nig-meetings?id=1345</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。

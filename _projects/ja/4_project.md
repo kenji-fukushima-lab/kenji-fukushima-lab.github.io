@@ -14,7 +14,7 @@ schema_type: WebPage
 
 #### 実験設備
 
-当研究室では、植物に特化した分子生物学実験が可能です。また、国立遺伝学研究所の豊富な[共通機器](https://www.nig.ac.jp/nig/ja/research-infrastructure-collaboration/common-equipment)にもアクセスできます。
+当研究室では、植物に特化した分子生物学実験が可能です。また、国立遺伝学研究所の豊富な[共通機器](https://www.nig.ac.jp/researchers/equipment/)にもアクセスできます。
 
 <div style="display: flex; justify-content: space-around;">
     <img src="/assets/img/projects/lab_equipment1.jpg" alt="Lab equipment 1" style="width: 45%; max-width: 450px;"/>

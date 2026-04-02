@@ -13,7 +13,8 @@ categories:
 
 {% include figure.liquid path="assets/img/posts/20250619_murata_seminar.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="村田先生のセミナーの様子" %}
 
-NIGセミナーページ: [https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1719](https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1719)
+旧NIGセミナーページURL: <span class="text-break">https://www.nig.ac.jp/nig/ja/research/seminer-ja?id=1719</span>
+遺伝研ウェブサイトのリニューアルに伴い、リンク先ページは削除済みです。
 
 - 開催日: 2025/06/19
 - 時間: 16:00-17:00

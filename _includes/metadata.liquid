@@ -450,11 +450,11 @@
         "url": "{{ organization_url_localized }}"{% if organization_image != blank %},
         "image": "{{ organization_image }}"{% endif %},
         "email": "mailto:{{ site.email }}"{% if organization_topics_localized and organization_topics_localized.size > 0 %},
-        "knowsAbout": {{ organization_topics_localized | jsonify }}{% endif %},
+        "knowsAbout": {{ organization_topics_localized | jsonify }}{% endif %}{% if site.organization_department != blank %},
         "department": {
           "@type": "Organization",
           "name": "{{ site.organization_department }}"
-        },
+        }{% endif %},
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "{{ site.organization_street_address }}",

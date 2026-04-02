@@ -22,7 +22,7 @@ categories: # This categories link /_data/en-us/strings.yml, categories: at leas
 citation:
   bibtex: "BibTeX形式で引用:"
   introduction: "引用の際は以下をご参照ください:"
-contact_note: 'Fukushima Lab. Since 2024: <a href="https://www.nig.ac.jp/nig/" target="_blank" rel="external nofollow noopener">National Institute of Genetics, Japan</a>. 2018-2024: <a href="https://www.uni-wuerzburg.de/en/" target="_blank" rel="external nofollow noopener">University of Würzburg, Germany</a>.'
+contact_note: 'Fukushima Lab. Since 2024: <a href="https://www.nig.ac.jp/en/" target="_blank" rel="external nofollow noopener">National Institute of Genetics, Japan</a>. 2018-2024: <a href="https://www.uni-wuerzburg.de/en/" target="_blank" rel="external nofollow noopener">University of Würzburg, Germany</a>.'
 cv:
   address: 住所
   area: 分野
