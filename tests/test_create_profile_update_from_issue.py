@@ -1,9 +1,12 @@
 import importlib.util
+import io
 import pathlib
 import tempfile
 import textwrap
 import unittest
 from unittest import mock
+
+from PIL import Image
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -88,6 +91,146 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
             with mock.patch.object(MODULE, "REPO_ROOT", repo_root), mock.patch.object(MODULE, "PROFILES_ROOT", current_root):
                 with self.assertRaisesRegex(MODULE.InputError, "matched multiple files"):
                     MODULE.resolve_profile_override("member", [first, second])
+
+    def test_extract_profile_photo_source_rejects_multiple_attachments(self) -> None:
+        sections = {
+            "プロフィール写真 / Profile Photo (drag and drop one image, optional)": textwrap.dedent(
+                """\
+                ![one](https://github.com/user-attachments/assets/one)
+                ![two](https://github.com/user-attachments/assets/two)
+                """
+            )
+        }
+
+        with self.assertRaisesRegex(MODULE.InputError, "Attach exactly one profile photo"):
+            MODULE.extract_profile_photo_source(sections)
+
+    def test_save_profile_photo_attachment_rejects_non_image_attachment(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            images_root = repo_root / "assets" / "img" / "people"
+            images_root.mkdir(parents=True)
+            profile_path = repo_root / "_profiles" / "naoto_inui.md"
+            profile_path.parent.mkdir(parents=True)
+            profile_path.write_text("---\nimage: people/naoto_inui.jpg\n---\n", encoding="utf-8")
+
+            with (
+                mock.patch.object(MODULE, "REPO_ROOT", repo_root),
+                mock.patch.object(MODULE, "PROFILE_IMAGES_ROOT", images_root),
+                mock.patch.object(
+                    MODULE.blog_post_automation,
+                    "download_attachment",
+                    return_value=(b"\x00\x00\x00\x18ftypmp42" + b"0" * 32, "video/mp4"),
+                ),
+            ):
+                with self.assertRaisesRegex(MODULE.InputError, "supported raster image attachment"):
+                    MODULE.save_profile_photo_attachment(
+                        profile_path,
+                        {"image": "people/naoto_inui.jpg"},
+                        "https://github.com/user-attachments/assets/profile-video",
+                    )
+
+    def test_save_profile_photo_attachment_converts_webp_output_to_supported_format(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            images_root = repo_root / "assets" / "img" / "people"
+            images_root.mkdir(parents=True)
+            profile_path = repo_root / "_profiles" / "naoto_inui.md"
+            profile_path.parent.mkdir(parents=True)
+            profile_path.write_text("---\nimage: people/naoto_inui.jpg\n---\n", encoding="utf-8")
+
+            buffer = io.BytesIO()
+            Image.new("RGBA", (16, 16), color=(12, 34, 56, 128)).save(buffer, format="PNG")
+            pseudo_webp_bytes = buffer.getvalue()
+
+            with (
+                mock.patch.object(MODULE, "REPO_ROOT", repo_root),
+                mock.patch.object(MODULE, "PROFILE_IMAGES_ROOT", images_root),
+                mock.patch.object(
+                    MODULE.blog_post_automation,
+                    "download_attachment",
+                    return_value=(pseudo_webp_bytes, "image/webp"),
+                ),
+                mock.patch.object(
+                    MODULE.blog_post_automation,
+                    "optimize_image_asset",
+                    return_value=(pseudo_webp_bytes, ".webp"),
+                ),
+            ):
+                relative_asset_path, profile_image_value, warnings, file_changed = MODULE.save_profile_photo_attachment(
+                    profile_path,
+                    {"image": "people/naoto_inui.jpg"},
+                    "https://github.com/user-attachments/assets/profile-photo",
+                )
+
+            self.assertEqual(relative_asset_path, "assets/img/people/naoto_inui.png")
+            self.assertEqual(profile_image_value, "people/naoto_inui.png")
+            self.assertTrue(any("Converted unsupported profile photo format .webp to .png" in warning for warning in warnings))
+            self.assertTrue(file_changed)
+            self.assertTrue((images_root / "naoto_inui.png").exists())
+
+    def test_main_accepts_photo_only_update_and_outputs_add_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            profiles_root = repo_root / "_profiles"
+            images_root = repo_root / "assets" / "img" / "people"
+            profiles_root.mkdir(parents=True)
+            images_root.mkdir(parents=True)
+
+            profile_path = profiles_root / "naoto_inui.md"
+            profile_path.write_text(
+                textwrap.dedent(
+                    """\
+                    ---
+                    name: Naoto Inui
+                    github: ninui23
+                    image: people/naoto_inui.jpg
+                    ---
+                    """
+                ),
+                encoding="utf-8",
+            )
+
+            buffer = io.BytesIO()
+            Image.new("RGB", (16, 16), color=(12, 34, 56)).save(buffer, format="PNG")
+            output_path = repo_root / "github_output.txt"
+            issue = {
+                "number": 17,
+                "html_url": "https://github.com/example/repo/issues/17",
+                "user": {"login": "ninui23"},
+                "body": textwrap.dedent(
+                    """\
+                    ### 確認 / Confirmation
+                    - [x] これは自分自身のプロフィール更新です / This updates my own profile
+
+                    ### プロフィール写真 / Profile Photo (drag and drop one image, optional)
+                    ![Profile photo](https://github.com/user-attachments/assets/profile-photo)
+                    """
+                ),
+            }
+
+            with (
+                mock.patch.object(MODULE, "REPO_ROOT", repo_root),
+                mock.patch.object(MODULE, "PROFILES_ROOT", profiles_root),
+                mock.patch.object(MODULE, "PROFILE_IMAGES_ROOT", images_root),
+                mock.patch.object(MODULE, "load_issue_from_event", return_value=issue),
+                mock.patch.object(
+                    MODULE.blog_post_automation,
+                    "download_attachment",
+                    return_value=(buffer.getvalue(), "image/png"),
+                ),
+                mock.patch.dict("os.environ", {"GITHUB_OUTPUT": str(output_path)}, clear=False),
+            ):
+                result = MODULE.main()
+
+            self.assertEqual(result, 0)
+            self.assertIn("image: people/naoto_inui.png", profile_path.read_text(encoding="utf-8"))
+            self.assertTrue((images_root / "naoto_inui.png").exists())
+
+            output_text = output_path.read_text(encoding="utf-8")
+            self.assertIn("add_paths<<__EOF__", output_text)
+            self.assertIn("_profiles/naoto_inui.md", output_text)
+            self.assertIn("assets/img/people/naoto_inui.png", output_text)
 
 
 if __name__ == "__main__":
