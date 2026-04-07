@@ -80,6 +80,7 @@ rss_icon: true
 
 navbar_fixed: true
 footer_fixed: true
+show_footer: false
 search_enabled: true
 socials_in_search: true
 bib_search: true
