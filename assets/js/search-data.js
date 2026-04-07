@@ -12,10 +12,11 @@ if ("".length > 0) {
 // get the ninja-keys element
 const ninja = document.querySelector('ninja-keys');
 
-// add the home and posts menu items
+// command palette items
 ninja.data = [{
     id: "nav-about",
     title: "About",
+    description: "",
     section: "Navigation menu",
     handler: () => {
       window.location.href = "/";
@@ -62,32 +63,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/access/";
           },
-        },{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
-          description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/announcement_1/";
-            },},{id: "projects-research-interests",
-          title: 'Research Interests',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/1_project/";
-            },},{id: "projects-approaches",
-          title: 'Approaches',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/2_project/";
-            },},{id: "projects-study-organisms",
-          title: 'Study Organisms',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/3_project/";
-            },},{id: "projects-facilities-amp-environment",
-          title: 'Facilities &amp;amp; Environment',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/4_project/";
-            },},{
+        },{
         id: 'social-email',
         title: 'Send an email',
         section: 'Socials',
