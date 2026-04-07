@@ -97,13 +97,27 @@
                 <td class="organism-first-year">{{ genus.first_year }}</td>
                 <td class="organism-last-year">{{ genus.last_year }}</td>
                 <td>
-                  <a href="{{ genus.wikipedia_url }}" target="_blank" rel="noopener noreferrer">{{ wikipedia_link_label }}</a>
+                  <a
+                    href="https://en.wikipedia.org/wiki/{{ genus.label | replace: ' ', '_' | uri_escape }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{- wikipedia_link_label -}}
+                  </a>
                 </td>
                 <td>
-                  <a href="{{ genus.ncbi_taxonomy_url }}" target="_blank" rel="noopener noreferrer">{{ ncbi_link_label }}</a>
+                  <a
+                    href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name={{ genus.label | uri_escape }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{- ncbi_link_label -}}
+                  </a>
                 </td>
                 <td>
-                  <a href="{{ genus.gbif_url }}" target="_blank" rel="noopener noreferrer">{{ gbif_link_label }}</a>
+                  <a href="https://www.gbif.org/species/search?q={{ genus.label | uri_escape }}" target="_blank" rel="noopener noreferrer">
+                    {{- gbif_link_label -}}
+                  </a>
                 </td>
               </tr>
             {% endfor %}

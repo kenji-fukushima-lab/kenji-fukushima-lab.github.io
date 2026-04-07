@@ -28,9 +28,29 @@ document.addEventListener("DOMContentLoaded", () => {
         na: "n/a",
       };
 
+  function renderMessage(container, message) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = message;
+    container.replaceChildren(paragraph);
+  }
+
+  function createDetailList(rows) {
+    const list = document.createElement("dl");
+    rows.forEach(([label, value]) => {
+      const wrapper = document.createElement("div");
+      const term = document.createElement("dt");
+      const description = document.createElement("dd");
+      term.textContent = label;
+      description.textContent = String(value);
+      wrapper.append(term, description);
+      list.appendChild(wrapper);
+    });
+    return list;
+  }
+
   if (!network || network.error) {
     if (detailsElement) {
-      detailsElement.innerHTML = `<p>${network && network.error ? network.error : i18n.unavailable}</p>`;
+      renderMessage(detailsElement, network && network.error ? network.error : i18n.unavailable);
     }
     return;
   }
@@ -57,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
     currentGraph: null,
     currentNodeMap: new Map(),
     nodeElementById: new Map(),
-    detailMarkupById: new Map(),
     renderedDetailNodeId: null,
     pendingDetailNodeId: null,
     previewFrameId: null,
@@ -245,7 +264,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const graph = filteredGraph();
     state.currentGraph = graph;
     state.currentNodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
-    state.detailMarkupById = new Map(graph.nodes.map((node) => [node.id, detailMarkup(node)]));
     const query = state.search.trim().toLowerCase();
     const matchedIds = new Set(
       graph.nodes
@@ -486,24 +504,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function detailMarkup(node) {
-    return `
-      <dl>
-        <div><dt>${i18n.detailYear}</dt><dd>${node.year || i18n.na}</dd></div>
-        <div><dt>${i18n.detailConnections}</dt><dd>${node.currentDegree}</dd></div>
-        <div><dt>${i18n.detailScore}</dt><dd>${node.currentWeightSum}</dd></div>
-        <div><dt>${i18n.detailAuthors}</dt><dd>${node.authors.join(", ")}</dd></div>
-        <div><dt>${i18n.detailSharedAuthors}</dt><dd>${node.currentSharedAuthors.join(", ") || i18n.noSharedAuthors}</dd></div>
-      </dl>
-    `;
-  }
-
   function updateDetails(nodeId) {
     if (!detailsElement) {
       return;
     }
     if (!state.currentNodeMap.has(nodeId)) {
-      detailsElement.innerHTML = "";
+      detailsElement.replaceChildren();
       state.renderedDetailNodeId = null;
       return;
     }
@@ -511,7 +517,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    detailsElement.innerHTML = state.detailMarkupById.get(nodeId) || "";
+    const node = state.currentNodeMap.get(nodeId);
+    detailsElement.replaceChildren(
+      createDetailList([
+        [i18n.detailYear, node.year || i18n.na],
+        [i18n.detailConnections, node.currentDegree],
+        [i18n.detailScore, node.currentWeightSum],
+        [i18n.detailAuthors, node.authors.join(", ")],
+        [i18n.detailSharedAuthors, node.currentSharedAuthors.join(", ") || i18n.noSharedAuthors],
+      ])
+    );
     state.renderedDetailNodeId = nodeId;
   }
 

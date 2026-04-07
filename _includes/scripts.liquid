@@ -223,7 +223,7 @@
 
 {% assign load_mathjax = false %}
 {% if site.enable_math %}
-  {% if page.math == true or page.enable_math == true or page.layout == 'distill' or page.tikzjax or page.pseudocode %}
+  {% if page.math == true or page.enable_math == true or page.tikzjax or page.pseudocode %}
     {% assign load_mathjax = true %}
   {% elsif page.content %}
     {% if page.content contains '$$' or page.content contains '\(' or page.content contains '\[' or page.content contains '\begin{' %}

@@ -2,6 +2,7 @@
 
 require 'jekyll'
 require 'json'
+require 'nokogiri'
 require 'set'
 require 'time'
 require 'cgi'
@@ -257,9 +258,6 @@ module OrganismMap
       {
         'id' => normalize_key(genus_name),
         'label' => genus_name,
-        'wikipedia_url' => wikipedia_url_for(genus_name),
-        'ncbi_taxonomy_url' => ncbi_taxonomy_url_for(genus_name),
-        'gbif_url' => gbif_url_for(genus_name),
         'mention_count' => 0,
         'paper_count' => 0,
         'first_year' => nil,
@@ -279,18 +277,6 @@ module OrganismMap
 
     def clean_species_epithet(value)
       value.to_s.downcase.gsub(/\A-+|-+\z/, '')
-    end
-
-    def wikipedia_url_for(genus_name)
-      "#{WIKIPEDIA_BASE_URL}#{CGI.escape(genus_name.tr(' ', '_'))}"
-    end
-
-    def ncbi_taxonomy_url_for(genus_name)
-      "#{NCBI_TAXONOMY_BASE_URL}#{CGI.escape(genus_name)}"
-    end
-
-    def gbif_url_for(genus_name)
-      "#{GBIF_BASE_URL}#{CGI.escape(genus_name)}"
     end
 
     def validated_genus_name?(genus_name)
@@ -402,7 +388,7 @@ module OrganismMap
     end
 
     def strip_markup(value)
-      value.to_s.gsub(/<[^>]+>/, '').gsub(/[{}]/, '').strip
+      Nokogiri::HTML::DocumentFragment.parse(value.to_s).text.gsub(/[{}]/, '').strip
     end
 
     def extract_year(entry)

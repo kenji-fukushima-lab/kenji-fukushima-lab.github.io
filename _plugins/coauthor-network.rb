@@ -2,6 +2,7 @@
 
 require 'jekyll'
 require 'json'
+require 'nokogiri'
 require 'time'
 
 begin
@@ -268,7 +269,7 @@ module CoauthorNetwork
     end
 
     def strip_markup(value)
-      value.gsub(/<[^>]+>/, '').gsub(/[{}]/, '').strip
+      Nokogiri::HTML::DocumentFragment.parse(value.to_s).text.gsub(/[{}]/, '').strip
     end
 
     def canonicalize_name(raw_name, alias_lookup)

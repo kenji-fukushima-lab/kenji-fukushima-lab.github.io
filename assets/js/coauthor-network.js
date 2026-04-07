@@ -34,9 +34,29 @@ document.addEventListener("DOMContentLoaded", () => {
     return i18n.lang === "en" ? node.role_label_en : node.role_label_ja;
   }
 
+  function renderMessage(container, message) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = message;
+    container.replaceChildren(paragraph);
+  }
+
+  function createDetailList(rows) {
+    const list = document.createElement("dl");
+    rows.forEach(([label, value]) => {
+      const wrapper = document.createElement("div");
+      const term = document.createElement("dt");
+      const description = document.createElement("dd");
+      term.textContent = label;
+      description.textContent = String(value);
+      wrapper.append(term, description);
+      list.appendChild(wrapper);
+    });
+    return list;
+  }
+
   if (!network || network.error) {
     if (detailsElement) {
-      detailsElement.innerHTML = `<p>${network && network.error ? network.error : i18n.unavailable}</p>`;
+      renderMessage(detailsElement, network && network.error ? network.error : i18n.unavailable);
     }
     return;
   }
@@ -68,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
     currentGraph: null,
     currentNodeMap: new Map(),
     nodeElementById: new Map(),
-    detailMarkupById: new Map(),
     renderedDetailNodeId: null,
     pendingDetailNodeId: null,
     previewFrameId: null,
@@ -296,7 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const graph = filteredGraph();
     state.currentGraph = graph;
     state.currentNodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
-    state.detailMarkupById = new Map(graph.nodes.map((node) => [node.id, detailMarkup(node)]));
     const query = state.search.trim().toLowerCase();
     const matchedIds = new Set(graph.nodes.filter((node) => !query || node.name.toLowerCase().includes(query)).map((node) => node.id));
     const highlightedNodeIds = query ? matchedIds : new Set();
@@ -494,7 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     if (!state.currentNodeMap.has(nodeId)) {
-      detailsElement.innerHTML = "";
+      detailsElement.replaceChildren();
       state.renderedDetailNodeId = null;
       return;
     }
@@ -502,7 +520,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    detailsElement.innerHTML = state.detailMarkupById.get(nodeId) || "";
+    const node = state.currentNodeMap.get(nodeId);
+    detailsElement.replaceChildren(
+      createDetailList([
+        [i18n.detailPaperCount, node.focus_paper_count],
+        [i18n.detailFirstYear, node.first_year || i18n.na],
+        [i18n.detailLastYear, node.last_year || i18n.na],
+      ])
+    );
     state.renderedDetailNodeId = nodeId;
   }
 
@@ -516,16 +541,6 @@ document.addEventListener("DOMContentLoaded", () => {
       state.previewFrameId = null;
       updateDetails(state.pendingDetailNodeId);
     });
-  }
-
-  function detailMarkup(node) {
-    return `
-      <dl>
-        <div><dt>${i18n.detailPaperCount}</dt><dd>${node.focus_paper_count}</dd></div>
-        <div><dt>${i18n.detailFirstYear}</dt><dd>${node.first_year || i18n.na}</dd></div>
-        <div><dt>${i18n.detailLastYear}</dt><dd>${node.last_year || i18n.na}</dd></div>
-      </dl>
-    `;
   }
 
   function edgeKey(link) {

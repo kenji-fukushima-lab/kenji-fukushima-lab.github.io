@@ -34,6 +34,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.createElement("div");
   list.className = "organism-bar-chart";
 
+  function buildReferenceUrl(kind, genusLabel) {
+    const normalizedLabel = (genusLabel || "").toString().trim();
+    if (!normalizedLabel) {
+      return null;
+    }
+
+    if (kind === "wikipedia") {
+      return `https://en.wikipedia.org/wiki/${encodeURIComponent(normalizedLabel.replace(/\s+/g, "_"))}`;
+    }
+    if (kind === "ncbi") {
+      return `https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${encodeURIComponent(normalizedLabel)}`;
+    }
+    if (kind === "gbif") {
+      return `https://www.gbif.org/species/search?q=${encodeURIComponent(normalizedLabel)}`;
+    }
+    return null;
+  }
+
   genera.forEach((genus) => {
     const row = document.createElement("article");
     row.className = "organism-bar-row";
@@ -57,10 +75,14 @@ document.addEventListener("DOMContentLoaded", () => {
     links.className = "organism-bar-links";
 
     [
-      [i18n.wikipediaLabel, genus.wikipedia_url],
-      [i18n.ncbiLabel, genus.ncbi_taxonomy_url],
-      [i18n.gbifLabel, genus.gbif_url],
-    ].forEach(([label, href]) => {
+      [i18n.wikipediaLabel, "wikipedia"],
+      [i18n.ncbiLabel, "ncbi"],
+      [i18n.gbifLabel, "gbif"],
+    ].forEach(([label, kind]) => {
+      const href = buildReferenceUrl(kind, genus.label);
+      if (!href) {
+        return;
+      }
       const link = document.createElement("a");
       link.className = "organism-bar-link";
       link.href = href;
