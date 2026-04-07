@@ -363,7 +363,7 @@
   {% endif %}
   <script src="/pagefind/pagefind-ui.js"></script>
   <script type="module" src="{{ '/assets/js/search/ninja-keys.min.js' | relative_url | bust_file_cache }}"></script>
-  <ninja-keys hideBreadcrumbs noAutoLoadMdIcons placeholder="{{ site.data[site.active_lang].strings.search.placeholder }}">
+  <ninja-keys hideBreadcrumbs noAutoLoadMdIcons openHotkey="" placeholder="{{ site.data[site.active_lang].strings.search.placeholder }}">
     {% comment %} modal footer and its components were extracted from assets/js/search/ninja-footer.min.js {% endcomment %}
     <div class="modal-footer" slot="footer">
       <span class="help">
@@ -428,6 +428,7 @@
       role="dialog"
       aria-modal="true"
       aria-label="{{ search_dialog_label }}"
+      tabindex="-1"
     >
       <button
         type="button"

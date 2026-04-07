@@ -332,6 +332,11 @@ html[data-theme="dark"] .pagefind-modal-shell__dialog {
   box-shadow: none;
 }
 
+.pagefind-search-root .pagefind-ui__search-clear.pagefind-ui__suppressed {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .pagefind-search-root .pagefind-ui__result-link,
 .pagefind-search-root .pagefind-ui__result-link:hover {
   color: var(--global-theme-color);
