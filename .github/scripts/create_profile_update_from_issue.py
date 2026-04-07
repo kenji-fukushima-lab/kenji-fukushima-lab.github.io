@@ -298,7 +298,7 @@ def resolve_profile_override(raw_value: str, profile_paths: List[pathlib.Path]) 
 
   raise InputError(
     f"Could not resolve profile override '{raw_value}'. "
-    "Use a file stem such as 'kenji_fukushima' or a path like '_profiles/kenji_fukushima.md'."
+    "Use a file stem such as 'kenji_fukushima' or a path like '_profiles/current_members/kenji_fukushima.md'."
   )
 
 

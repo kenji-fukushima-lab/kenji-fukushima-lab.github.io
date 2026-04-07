@@ -11,6 +11,8 @@ body:
 
         - 通常は GitHub ユーザー名とプロフィールの `github:` フィールドの一致で対象ファイルを自動判定します。
           The target profile file is usually detected from your GitHub username and the profile's `github:` field.
+        - 自分のプロフィールかどうかは自動判定されます。確認用チェック項目は不要です。
+          Whether this is your own profile is checked automatically, so no confirmation checkbox is needed.
         - Issue のタイトルは送信後に自動更新されます。
           The issue title is updated automatically after submission.
         - 入力しなかった項目は変更されません。
@@ -28,20 +30,12 @@ body:
         - プロフィールファイルの移動は自動化の対象外です。
           Moving profile files is out of scope for this automation.
 
-  - type: checkboxes
-    id: confirm_ownership
-    attributes:
-      label: 確認 / Confirmation
-      options:
-        - label: これは自分自身のプロフィール更新です / This updates my own profile
-          required: true
-
   - type: input
     id: profile_file
     attributes:
       label: プロフィールファイル指定 / Profile File Override (optional, maintainers only)
       description: 通常は空欄のままで構いません。自動判定できない場合のみ使用します。 / Leave blank in normal cases. Use only when auto-detection fails.
-      placeholder: 例) kenji_fukushima または _profiles/kenji_fukushima.md
+      placeholder: 例) kenji_fukushima または _profiles/current_members/kenji_fukushima.md
     validations:
       required: false
 

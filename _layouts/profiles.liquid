@@ -11,12 +11,16 @@ layout: page
     {% for position in position_order %}
       {% for profile in profiles %}
         {% assign show_profile = true %}
-        {% if profile.position_key == 'future' %}
+        {% assign is_template_profile = false %}
+        {% if profile.path contains 'template/template.md' %}
+          {% assign is_template_profile = true %}
+        {% endif %}
+        {% if profile.position_key == 'future' and is_template_profile == false %}
           {% assign show_profile = false %}
         {% endif %}
-        {% if profile.path contains 'prospective_members/' or profile.path contains 'alumni/' %}
+        {% unless profile.path contains 'current_members/' or is_template_profile %}
           {% assign show_profile = false %}
-        {% endif %}
+        {% endunless %}
         {% if profile.position_key == position and show_profile %}
           {% assign sorted_profiles = sorted_profiles | push: profile %}
         {% endif %}
