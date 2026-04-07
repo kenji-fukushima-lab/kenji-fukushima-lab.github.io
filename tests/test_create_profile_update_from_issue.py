@@ -58,8 +58,9 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
             profiles_root = repo_root / "_profiles"
-            profiles_root.mkdir(parents=True)
-            (profiles_root / "naoto_inui.md").write_text(
+            current_members_root = profiles_root / "current_members"
+            current_members_root.mkdir(parents=True)
+            (current_members_root / "naoto_inui.md").write_text(
                 textwrap.dedent(
                     """\
                     ---
@@ -79,8 +80,9 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
     def test_resolve_profile_override_rejects_ambiguous_stem(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
+            profiles_root = repo_root / "_profiles"
             alumni_root = repo_root / "_profiles" / "alumni"
-            current_root = repo_root / "_profiles"
+            current_root = repo_root / "_profiles" / "current_members"
             alumni_root.mkdir(parents=True)
             current_root.mkdir(parents=True, exist_ok=True)
             first = current_root / "member.md"
@@ -88,7 +90,7 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
             first.write_text("---\nname: First\ngithub: first-user\n---\n", encoding="utf-8")
             second.write_text("---\nname: Second\ngithub: second-user\n---\n", encoding="utf-8")
 
-            with mock.patch.object(MODULE, "REPO_ROOT", repo_root), mock.patch.object(MODULE, "PROFILES_ROOT", current_root):
+            with mock.patch.object(MODULE, "REPO_ROOT", repo_root), mock.patch.object(MODULE, "PROFILES_ROOT", profiles_root):
                 with self.assertRaisesRegex(MODULE.InputError, "matched multiple files"):
                     MODULE.resolve_profile_override("member", [first, second])
 
@@ -110,7 +112,7 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
             repo_root = pathlib.Path(tmpdir)
             images_root = repo_root / "assets" / "img" / "people"
             images_root.mkdir(parents=True)
-            profile_path = repo_root / "_profiles" / "naoto_inui.md"
+            profile_path = repo_root / "_profiles" / "current_members" / "naoto_inui.md"
             profile_path.parent.mkdir(parents=True)
             profile_path.write_text("---\nimage: people/naoto_inui.jpg\n---\n", encoding="utf-8")
 
@@ -135,7 +137,7 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
             repo_root = pathlib.Path(tmpdir)
             images_root = repo_root / "assets" / "img" / "people"
             images_root.mkdir(parents=True)
-            profile_path = repo_root / "_profiles" / "naoto_inui.md"
+            profile_path = repo_root / "_profiles" / "current_members" / "naoto_inui.md"
             profile_path.parent.mkdir(parents=True)
             profile_path.write_text("---\nimage: people/naoto_inui.jpg\n---\n", encoding="utf-8")
 
@@ -173,11 +175,12 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
             profiles_root = repo_root / "_profiles"
+            current_members_root = profiles_root / "current_members"
             images_root = repo_root / "assets" / "img" / "people"
-            profiles_root.mkdir(parents=True)
+            current_members_root.mkdir(parents=True)
             images_root.mkdir(parents=True)
 
-            profile_path = profiles_root / "naoto_inui.md"
+            profile_path = current_members_root / "naoto_inui.md"
             profile_path.write_text(
                 textwrap.dedent(
                     """\
@@ -200,9 +203,6 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
                 "user": {"login": "ninui23"},
                 "body": textwrap.dedent(
                     """\
-                    ### 確認 / Confirmation
-                    - [x] これは自分自身のプロフィール更新です / This updates my own profile
-
                     ### プロフィール写真 / Profile Photo (drag and drop one image, optional)
                     ![Profile photo](https://github.com/user-attachments/assets/profile-photo)
                     """
@@ -229,7 +229,7 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
 
             output_text = output_path.read_text(encoding="utf-8")
             self.assertIn("add_paths<<__EOF__", output_text)
-            self.assertIn("_profiles/naoto_inui.md", output_text)
+            self.assertIn("_profiles/current_members/naoto_inui.md", output_text)
             self.assertIn("assets/img/people/naoto_inui.png", output_text)
 
 
