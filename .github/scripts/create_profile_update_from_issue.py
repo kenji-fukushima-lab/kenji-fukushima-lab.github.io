@@ -105,6 +105,8 @@ FIELD_LABELS = {
   "researchmap": "researchmap",
   "tayo": "Tayo",
 }
+NO_UPDATES_PROVIDED_MESSAGE = "No update values were provided. Fill at least one field or use `CLEAR` to erase a value."
+NO_PROFILE_FIELDS_CHANGED_MESSAGE = "No profile fields changed. Fill at least one field with a new value."
 FIELD_TITLES = {
   "profile_file": ["プロフィールファイル指定 / Profile File Override (optional, maintainers only)"],
   "profile_photo": ["プロフィール写真 / Profile Photo (drag and drop one image, optional)"],
@@ -138,6 +140,14 @@ def write_output(name: str, value: str) -> None:
     return
   with open(output_path, "a", encoding="utf-8") as fh:
     fh.write(f"{name}<<__EOF__\n{value}\n__EOF__\n")
+
+
+def classify_input_error_message(message: str) -> str:
+  if message == NO_PROFILE_FIELDS_CHANGED_MESSAGE:
+    return "no_changes"
+  if message == NO_UPDATES_PROVIDED_MESSAGE:
+    return "no_input"
+  return "input_error"
 
 
 def load_issue_from_event() -> dict:
@@ -744,7 +754,7 @@ def main() -> int:
   updates = extract_updates(sections, issue_user_login, allow_arbitrary_github_change)
   profile_photo_source = extract_profile_photo_source(sections)
   if not updates and profile_photo_source is None:
-    raise InputError("No update values were provided. Fill at least one field or use `CLEAR` to erase a value.")
+    raise InputError(NO_UPDATES_PROVIDED_MESSAGE)
 
   changed_fields: List[str] = []
   if updates:
@@ -764,7 +774,7 @@ def main() -> int:
       photo_asset_path = relative_photo_asset_path
 
   if not changed_fields:
-    raise InputError("No profile fields changed. Fill at least one field with a new value.")
+    raise InputError(NO_PROFILE_FIELDS_CHANGED_MESSAGE)
 
   updated_profile_data = read_profile_data(profile_path)
   profile_name = updated_profile_data.get("name", profile_path.stem)
@@ -793,11 +803,14 @@ if __name__ == "__main__":
   try:
     sys.exit(main())
   except InputError as exc:
-    write_output("error_message", str(exc))
-    print(str(exc), file=sys.stderr)
+    message = str(exc)
+    write_output("error_message", message)
+    write_output("error_code", classify_input_error_message(message))
+    print(message, file=sys.stderr)
     sys.exit(1)
   except Exception:
     message = "Unexpected error while generating the profile update PR. Check the workflow logs or ask a maintainer."
     write_output("error_message", message)
+    write_output("error_code", "unexpected_error")
     traceback.print_exc()
     sys.exit(1)

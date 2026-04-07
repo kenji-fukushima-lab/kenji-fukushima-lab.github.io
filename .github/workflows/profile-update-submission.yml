@@ -91,8 +91,51 @@ jobs:
         if: steps.generate.outcome == 'success'
         run: npx prettier "${{ steps.generate.outputs.generated_profile }}" --write
 
+      - name: Upsert issue comment when no changes are detected
+        if: steps.generate.outcome == 'failure' && steps.generate.outputs.error_code == 'no_changes'
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            <!-- profile-update-automation -->
+            入力内容を確認しましたが、プロフィールに変更はありませんでした。既存の値と同じため、PR は作成していません。
+
+            値を変更したい場合は、別の値を入力して Issue を保存してください。
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const body = process.env.COMMENT_BODY;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+            const existing = comments.find(
+              (comment) =>
+                comment.user?.type === "Bot" &&
+                comment.body?.includes("<!-- profile-update-automation -->"),
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body,
+            });
+
       - name: Upsert issue comment when generation fails
-        if: steps.generate.outcome == 'failure'
+        if: steps.generate.outcome == 'failure' && steps.generate.outputs.error_code != 'no_changes'
         uses: actions/github-script@v7
         env:
           COMMENT_BODY: |
@@ -137,7 +180,7 @@ jobs:
             });
 
       - name: Stop workflow when generation fails
-        if: steps.generate.outcome == 'failure'
+        if: steps.generate.outcome == 'failure' && steps.generate.outputs.error_code != 'no_changes'
         run: exit 1
 
       - name: Update issue title
@@ -154,6 +197,7 @@ jobs:
 
       - name: Create pull request
         id: cpr
+        if: steps.generate.outcome == 'success'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
