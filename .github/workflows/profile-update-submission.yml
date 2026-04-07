@@ -14,12 +14,52 @@ permissions:
 
 jobs:
   create-profile-update-pr:
-    if: contains(github.event.issue.labels.*.name, 'profile-update')
+    if: contains(github.event.issue.body || '', '### 役職 / Position Key')
     runs-on: ubuntu-latest
     concurrency:
       group: profile-update-${{ github.event.issue.number }}
       cancel-in-progress: true
     steps:
+      - name: Ensure profile-update label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const labelName = "profile-update";
+            const labelColor = "0E8A16";
+            const labelDescription = "Profile submission issues";
+
+            try {
+              await github.rest.issues.getLabel({
+                owner,
+                repo,
+                name: labelName,
+              });
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: labelName,
+                color: labelColor,
+                description: labelDescription,
+              });
+            }
+
+            const existingLabels = (context.payload.issue.labels || []).map((label) => label.name);
+            if (!existingLabels.includes(labelName)) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number,
+                labels: [labelName],
+              });
+            }
+
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
