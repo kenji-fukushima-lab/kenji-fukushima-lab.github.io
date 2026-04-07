@@ -12,8 +12,17 @@ import traceback
 from typing import Dict, List, Tuple
 from urllib.parse import urlparse
 
+SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+  sys.path.insert(0, str(SCRIPT_DIR))
+
+import create_blog_post_from_issue as blog_post_automation
+
 REPO_ROOT = pathlib.Path(".").resolve()
 PROFILES_ROOT = REPO_ROOT / "_profiles"
+PROFILE_IMAGES_ROOT = REPO_ROOT / "assets" / "img" / "people"
+PROFILE_PHOTO_SOURCE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".webp", ".bmp"}
+PROFILE_PHOTO_FINAL_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".tiff"}
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\s*\n([\s\S]*?)(?=^###\s+|\Z)", re.MULTILINE)
 FRONT_MATTER_LINE_PATTERN = re.compile(r"^(?P<indent>\s*)(?P<key>[A-Za-z_][A-Za-z0-9_]*):(?P<rest>.*?)(?P<newline>\r?\n?)$")
 NO_RESPONSE = "_No response_"
@@ -80,6 +89,7 @@ FIELD_LABELS = {
   "name": "Name",
   "name_native": "Native script name",
   "position_key": "Position",
+  "profile_photo": "Profile photo",
   "email": "Email",
   "website": "Website",
   "orcid": "ORCID",
@@ -97,6 +107,7 @@ FIELD_LABELS = {
 }
 FIELD_TITLES = {
   "profile_file": ["プロフィールファイル指定 / Profile File Override (optional, maintainers only)"],
+  "profile_photo": ["プロフィール写真 / Profile Photo (drag and drop one image, optional)"],
   "name": ["氏名 / Name"],
   "name_native": ["母語表記の氏名 / Native Script Name"],
   "position_key": ["役職 / Position Key"],
@@ -479,21 +490,231 @@ def apply_updates(profile_path: pathlib.Path, updates: Dict[str, str]) -> List[s
     updated_lines.append(format_front_matter_line("", field, updates[field], "", "\n"))
     changed_fields.append(field)
 
-  if not changed_fields:
-    raise InputError("No profile fields changed. Fill at least one field with a new value.")
-
   updated_content = "".join([lines[0], *updated_lines, *lines[end_index:]])
   profile_path.write_text(updated_content, encoding="utf-8")
   return changed_fields
 
 
-def build_pr_body(issue: dict, profile_path: pathlib.Path, changed_fields: List[str], profile_name: str) -> str:
+def apply_single_front_matter_update(profile_path: pathlib.Path, key: str, value: str) -> bool:
+  lines = profile_path.read_text(encoding="utf-8").splitlines(keepends=True)
+  if not lines or lines[0].strip() != "---":
+    raise InputError(f"{profile_path} does not start with valid front matter.")
+
+  end_index = None
+  for index in range(1, len(lines)):
+    if lines[index].strip() == "---":
+      end_index = index
+      break
+  if end_index is None:
+    raise InputError(f"{profile_path} is missing the closing front matter delimiter.")
+
+  front_matter_lines = lines[1:end_index]
+  updated_lines: List[str] = []
+  changed = False
+  found = False
+
+  for line in front_matter_lines:
+    match = FRONT_MATTER_LINE_PATTERN.match(line)
+    if not match:
+      updated_lines.append(line)
+      continue
+
+    current_key = match.group("key")
+    if current_key != key:
+      updated_lines.append(line)
+      continue
+
+    found = True
+    current_value, comment = split_value_and_comment(match.group("rest"))
+    current_value = unquote_yaml_scalar(current_value)
+    if current_value == value:
+      updated_lines.append(line)
+      continue
+
+    updated_lines.append(
+      format_front_matter_line(match.group("indent"), current_key, value, comment, match.group("newline") or "\n")
+    )
+    changed = True
+
+  if not found:
+    updated_lines.append(format_front_matter_line("", key, value, "", "\n"))
+    changed = True
+
+  if not changed:
+    return False
+
+  updated_content = "".join([lines[0], *updated_lines, *lines[end_index:]])
+  profile_path.write_text(updated_content, encoding="utf-8")
+  return True
+
+
+def extract_profile_photo_source(sections: Dict[str, str]) -> Tuple[str, str] | None:
+  raw_value = first_non_empty(sections, FIELD_TITLES["profile_photo"])
+  if not raw_value:
+    return None
+
+  seen_urls = set()
+  sources: List[Tuple[str, str]] = []
+
+  for match in blog_post_automation.MARKDOWN_IMAGE_PATTERN.finditer(raw_value):
+    url = match.group("url").strip()
+    if not blog_post_automation.is_github_attachment_url(url) or url in seen_urls:
+      continue
+    seen_urls.add(url)
+    sources.append((url, match.group("alt").strip() or "Profile photo"))
+
+  for match in blog_post_automation.HTML_IMAGE_TAG_PATTERN.finditer(raw_value):
+    attributes = blog_post_automation.parse_html_attributes(match.group("attrs"))
+    url = attributes.get("src", "").strip()
+    if not url or not blog_post_automation.is_github_attachment_url(url) or url in seen_urls:
+      continue
+    seen_urls.add(url)
+    sources.append((url, attributes.get("alt", "").strip() or "Profile photo"))
+
+  if not sources:
+    raise InputError(
+      "Profile photo must be uploaded by dragging and dropping exactly one image into the profile photo field."
+    )
+  if len(sources) > 1:
+    raise InputError("Attach exactly one profile photo in the profile photo field.")
+  return sources[0]
+
+
+def choose_profile_photo_stem(profile_path: pathlib.Path, profile_data: Dict[str, str]) -> str:
+  current_image = profile_data.get("image", "").strip()
+  if current_image:
+    current_path = pathlib.PurePosixPath(current_image)
+    if len(current_path.parts) == 2 and current_path.parts[0] == "people" and current_path.stem and current_path.stem != "default":
+      return current_path.stem
+  return profile_path.stem
+
+
+def validate_profile_photo_source_extension(extension: str) -> str:
+  normalized = extension.lower()
+  if normalized not in PROFILE_PHOTO_SOURCE_EXTENSIONS:
+    raise InputError(
+      "Profile photo must be a supported raster image attachment (JPG, PNG, GIF, TIFF, WEBP, or BMP)."
+    )
+  if normalized == ".tif":
+    return ".tiff"
+  return normalized
+
+
+def ensure_supported_profile_photo_output(
+  data: bytes,
+  extension: str,
+  source_url: str,
+  warnings: List[str],
+) -> Tuple[bytes, str]:
+  normalized_extension = extension.lower()
+  if normalized_extension == ".tif":
+    normalized_extension = ".tiff"
+  if normalized_extension == ".jpeg":
+    normalized_extension = ".jpg"
+
+  if normalized_extension in PROFILE_PHOTO_FINAL_EXTENSIONS:
+    return data, normalized_extension
+
+  if normalized_extension not in {".webp", ".bmp"}:
+    raise InputError(
+      "Profile photo must be saved as a site-supported image format (JPG, PNG, GIF, or TIFF)."
+    )
+
+  if blog_post_automation.Image is None or blog_post_automation.ImageOps is None:
+    raise InputError(
+      "Profile photo could not be converted to a site-supported format because Pillow is unavailable."
+    )
+
+  try:
+    with blog_post_automation.Image.open(blog_post_automation.io.BytesIO(data)) as image:
+      if getattr(image, "is_animated", False) and getattr(image, "n_frames", 1) > 1:
+        raise InputError("Animated profile photos are not supported. Please upload a static image.")
+
+      normalized = blog_post_automation.ImageOps.exif_transpose(image)
+      icc_profile = image.info.get("icc_profile")
+      has_alpha = blog_post_automation.image_has_alpha(normalized)
+      candidate_extensions = (".png", ".jpg") if has_alpha else (".jpg", ".png")
+
+      try:
+        for scale in blog_post_automation.RESIZE_SCALE_STEPS:
+          resized = blog_post_automation.resize_image(normalized, scale)
+          try:
+            for candidate_extension in candidate_extensions:
+              for quality in blog_post_automation.budget_quality_steps(candidate_extension):
+                candidate_data = blog_post_automation.encode_image_candidate(
+                  resized,
+                  candidate_extension,
+                  quality=quality,
+                  icc_profile=icc_profile,
+                )
+                if len(candidate_data) <= blog_post_automation.MAX_IMAGE_BYTES:
+                  warnings.append(
+                    f"Converted unsupported profile photo format {normalized_extension} to {candidate_extension}"
+                  )
+                  return candidate_data, candidate_extension
+          finally:
+            resized.close()
+      finally:
+        normalized.close()
+  except InputError:
+    raise
+  except Exception as exc:
+    raise InputError(f"Failed to convert the profile photo into a supported image format: {source_url}") from exc
+
+  raise InputError(
+    f"Profile photo could not be converted to a site-supported format under {blog_post_automation.MAX_IMAGE_BYTES} bytes: {source_url}"
+  )
+
+
+def save_profile_photo_attachment(
+  profile_path: pathlib.Path,
+  profile_data: Dict[str, str],
+  source_url: str,
+) -> Tuple[str, str, List[str], bool]:
+  PROFILE_IMAGES_ROOT.mkdir(parents=True, exist_ok=True)
+
+  warnings: List[str] = []
+  try:
+    data, content_type = blog_post_automation.download_attachment(source_url)
+    extension = blog_post_automation.guess_extension(source_url, content_type)
+    if extension == ".bin":
+      extension = blog_post_automation.guess_extension_from_bytes(data)
+    extension = validate_profile_photo_source_extension(extension)
+    data, extension = blog_post_automation.optimize_image_asset(data, extension, source_url, warnings)
+    data, extension = ensure_supported_profile_photo_output(data, extension, source_url, warnings)
+  except blog_post_automation.InputError as exc:
+    raise InputError(str(exc)) from exc
+  except Exception as exc:
+    raise InputError(f"Failed to download or process the profile photo: {source_url} ({exc})") from exc
+
+  stem = choose_profile_photo_stem(profile_path, profile_data)
+  filename = f"{stem}{extension}"
+  output_path = PROFILE_IMAGES_ROOT / filename
+  relative_asset_path = output_path.relative_to(REPO_ROOT).as_posix()
+  profile_image_value = f"people/{filename}"
+
+  previous_bytes = output_path.read_bytes() if output_path.exists() else None
+  file_changed = previous_bytes != data
+  if file_changed:
+    output_path.write_bytes(data)
+
+  return relative_asset_path, profile_image_value, warnings, file_changed
+
+
+def build_pr_body(
+  issue: dict,
+  profile_path: pathlib.Path,
+  changed_fields: List[str],
+  profile_name: str,
+  photo_asset_path: str,
+  warnings: List[str],
+) -> str:
   issue_number = issue["number"]
   issue_url = issue["html_url"]
   issue_user = issue["user"]["login"]
   relative_profile_path = profile_path.relative_to(REPO_ROOT).as_posix()
   formatted_fields = "\n".join(f"- {FIELD_LABELS[field]}" for field in changed_fields)
-  return (
+  body = (
     f"Automated profile update PR for **{profile_name}**.\n\n"
     f"- Source issue: #{issue_number} ({issue_url})\n"
     f"- Submitted by: @{issue_user}\n"
@@ -501,6 +722,14 @@ def build_pr_body(issue: dict, profile_path: pathlib.Path, changed_fields: List[
     f"Updated fields:\n{formatted_fields}\n\n"
     f"Closes #{issue_number}"
   )
+  if photo_asset_path:
+    body = body.replace(
+      f"- Updated file: `{relative_profile_path}`\n\n",
+      f"- Updated file: `{relative_profile_path}`\n- Updated photo asset: `{photo_asset_path}`\n\n",
+    )
+  if warnings:
+    body = f"{body}\n\nWarnings:\n" + "\n".join(f"- {warning}" for warning in warnings)
+  return body
 
 
 def main() -> int:
@@ -510,12 +739,33 @@ def main() -> int:
   issue_user_login = issue["user"]["login"]
   sections = parse_sections(issue.get("body", ""))
   profile_path = resolve_profile_path(issue_user_login, sections)
+  profile_data = read_profile_data(profile_path)
   allow_arbitrary_github_change = issue_user_login.strip().lower() in MAINTAINERS
   updates = extract_updates(sections, issue_user_login, allow_arbitrary_github_change)
-  if not updates:
+  profile_photo_source = extract_profile_photo_source(sections)
+  if not updates and profile_photo_source is None:
     raise InputError("No update values were provided. Fill at least one field or use `CLEAR` to erase a value.")
 
-  changed_fields = apply_updates(profile_path, updates)
+  changed_fields: List[str] = []
+  if updates:
+    changed_fields.extend(apply_updates(profile_path, updates))
+
+  photo_asset_path = ""
+  photo_warnings: List[str] = []
+  if profile_photo_source is not None:
+    relative_photo_asset_path, profile_image_value, photo_warnings, photo_file_changed = save_profile_photo_attachment(
+      profile_path,
+      profile_data,
+      profile_photo_source[0],
+    )
+    image_field_changed = apply_single_front_matter_update(profile_path, "image", profile_image_value)
+    if photo_file_changed or image_field_changed:
+      changed_fields.append("profile_photo")
+      photo_asset_path = relative_photo_asset_path
+
+  if not changed_fields:
+    raise InputError("No profile fields changed. Fill at least one field with a new value.")
+
   updated_profile_data = read_profile_data(profile_path)
   profile_name = updated_profile_data.get("name", profile_path.stem)
 
@@ -524,9 +774,13 @@ def main() -> int:
   issue_title = f"Profile update for {profile_name}"
   commit_message = f"Update profile for {profile_name}"
   pr_title = f"Update profile for {profile_name}"
-  pr_body = build_pr_body(issue, profile_path, changed_fields, profile_name)
+  pr_body = build_pr_body(issue, profile_path, changed_fields, profile_name, photo_asset_path, photo_warnings)
+  add_paths = [relative_profile_path]
+  if photo_asset_path:
+    add_paths.append(photo_asset_path)
 
   write_output("generated_profile", relative_profile_path)
+  write_output("add_paths", "\n".join(add_paths))
   write_output("branch_name", branch_name)
   write_output("issue_title", issue_title)
   write_output("commit_message", commit_message)

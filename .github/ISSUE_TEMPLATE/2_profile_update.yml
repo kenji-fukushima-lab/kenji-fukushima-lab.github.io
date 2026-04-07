@@ -17,14 +17,16 @@ body:
           Fields you leave blank are not changed.
         - 値を消したい項目には `CLEAR` と入力してください。
           Enter `CLEAR` if you want to erase a value.
+        - プロフィール写真を差し替えたい場合は、専用欄に画像を1枚ドラッグ&ドロップしてください。保存先は `assets/img/people/` です。
+          To replace your profile photo, drag and drop one image into the profile photo field. It will be saved under `assets/img/people/`.
         - GitHub ユーザー名は、通常はこの Issue を送信した GitHub アカウントと一致している必要があります。
           The GitHub username must normally stay matched to the GitHub account that submitted this issue.
         - リンク欄は `https://` から始まる完全なURLを推奨します。`ORCID`、`X / Twitter`、`ResearchGate`、`researchmap` は ID / handle でも受け付け、自動でURL化します。
           Full URLs starting with `https://` are recommended for link fields. `ORCID`, `X / Twitter`, `ResearchGate`, and `researchmap` also accept IDs / handles and will be normalized automatically.
         - このフォームはプロフィール本文ではなく front matter の更新用です。
           This form updates front matter fields, not free-form profile body content.
-        - 画像差し替えやプロフィールファイルの移動は自動化の対象外です。
-          Photo replacement and moving profile files are out of scope for this automation.
+        - プロフィールファイルの移動は自動化の対象外です。
+          Moving profile files is out of scope for this automation.
 
   - type: checkboxes
     id: confirm_ownership
@@ -40,6 +42,17 @@ body:
       label: プロフィールファイル指定 / Profile File Override (optional, maintainers only)
       description: 通常は空欄のままで構いません。自動判定できない場合のみ使用します。 / Leave blank in normal cases. Use only when auto-detection fails.
       placeholder: 例) kenji_fukushima または _profiles/kenji_fukushima.md
+    validations:
+      required: false
+
+  - type: textarea
+    id: profile_photo
+    attributes:
+      label: プロフィール写真 / Profile Photo (drag and drop one image, optional)
+      description: 新しいプロフィール写真に差し替えたい場合だけ、ここに画像を1枚ドラッグ&ドロップしてください。 / Drag and drop one image here only if you want to replace your profile photo.
+      placeholder: |
+        写真を変更したい場合だけ、ここに画像を1枚ドラッグ&ドロップしてください。
+        Leave blank if you do not want to change the photo.
     validations:
       required: false
 

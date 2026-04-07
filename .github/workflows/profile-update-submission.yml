@@ -34,12 +34,17 @@ jobs:
           node-version: "22"
           cache: "npm"
 
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pillow
+
       - name: Install Node dependencies
         run: npm ci
 
       - name: Update profile markdown from issue
         id: generate
         continue-on-error: true
+        env:
+          MAX_IMAGE_BYTES: "900000"
         run: python .github/scripts/create_profile_update_from_issue.py
 
       - name: Format updated profile
@@ -117,7 +122,7 @@ jobs:
           body: ${{ steps.generate.outputs.pr_body }}
           branch: ${{ steps.generate.outputs.branch_name }}
           base: main
-          add-paths: ${{ steps.generate.outputs.generated_profile }}
+          add-paths: ${{ steps.generate.outputs.add_paths }}
           delete-branch: true
           assignees: kfuku52
 
