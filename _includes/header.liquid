@@ -111,10 +111,24 @@
               {% endif %}
             {% endif %}
           {% endfor %}
+          {% if site.active_lang == 'ja' %}
+            {% assign search_tooltip = 'サイト内検索' %}
+            {% assign theme_toggle_tooltip = '表示モードを切り替え' %}
+          {% else %}
+            {% assign search_tooltip = 'Search this site' %}
+            {% assign theme_toggle_tooltip = 'Change theme' %}
+          {% endif %}
           {% if site.search_enabled %}
             <!-- Search -->
             <li class="nav-item">
-              <button id="search-toggle" title="Search" onclick="openSearchModal()">
+              <button
+                id="search-toggle"
+                class="nav-tooltip-trigger"
+                type="button"
+                data-tooltip="{{ search_tooltip }}"
+                aria-label="{{ search_tooltip }}"
+                onclick="openSearchModal()"
+              >
                 <span class="nav-link"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
               </button>
             </li>
@@ -158,10 +172,8 @@
               <li class="nav-item active">
                 {% if site.active_lang == site.default_lang %}
                   <a
-                    class="nav-link"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    title="{{ switch_language_tooltip | strip }}"
+                    class="nav-link nav-tooltip-trigger"
+                    data-tooltip="{{ switch_language_tooltip | strip }}"
                     aria-label="{{ switch_language_tooltip | strip }}"
                     {% static_href -%}
                     href="{{ site.baseurl }}/{{ other_language }}{{ page.url }}"
@@ -181,10 +193,8 @@
                   </a>
                 {% else %}
                   <a
-                    class="nav-link"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    title="{{ switch_language_tooltip | strip }}"
+                    class="nav-link nav-tooltip-trigger"
+                    data-tooltip="{{ switch_language_tooltip | strip }}"
                     aria-label="{{ switch_language_tooltip | strip }}"
                     {% static_href -%}
                     href="{{ site.baseurl }}{{ page.url }}"
@@ -207,12 +217,12 @@
             {% else %}
               <li class="nav-item dropdown {% if page.title == p.title %}active{% endif %}">
                 <a
-                  class="nav-link dropdown-toggle"
+                  class="nav-link dropdown-toggle nav-tooltip-trigger"
                   href="#"
                   id="navbarDropdown"
                   role="button"
                   data-toggle="dropdown"
-                  title="{{ language_menu_tooltip }}"
+                  data-tooltip="{{ language_menu_tooltip }}"
                   aria-label="{{ language_menu_tooltip }}"
                   aria-haspopup="true"
                   aria-expanded="false"
@@ -278,7 +288,13 @@
           {% if site.enable_darkmode %}
             <!-- Toogle theme mode -->
             <li class="toggle-container">
-              <button id="light-toggle" title="Change theme">
+              <button
+                id="light-toggle"
+                class="nav-tooltip-trigger"
+                type="button"
+                data-tooltip="{{ theme_toggle_tooltip }}"
+                aria-label="{{ theme_toggle_tooltip }}"
+              >
                 <i class="fa-solid fa-circle-half-stroke" id="light-toggle-system" aria-hidden="true"></i>
                 <i class="fa-solid fa-moon" id="light-toggle-dark" aria-hidden="true"></i>
                 <i class="fa-solid fa-sun" id="light-toggle-light" aria-hidden="true"></i>

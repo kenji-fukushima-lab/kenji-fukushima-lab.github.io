@@ -434,6 +434,56 @@ ul.task-list input[type="checkbox"] {
   }
 }
 
+.nav-tooltip-trigger {
+  position: relative;
+}
+
+.nav-tooltip-trigger::before,
+.nav-tooltip-trigger::after {
+  position: absolute;
+  left: 50%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease,
+    visibility 0.14s ease;
+  z-index: 20;
+}
+
+.nav-tooltip-trigger::before {
+  content: "";
+  top: calc(100% + 0.1rem);
+  transform: translate(-50%, -0.18rem);
+  border-width: 0 0.28rem 0.32rem;
+  border-style: solid;
+  border-color: transparent transparent var(--global-text-color);
+}
+
+.nav-tooltip-trigger::after {
+  content: attr(data-tooltip);
+  top: calc(100% + 0.4rem);
+  transform: translate(-50%, -0.18rem);
+  padding: 0.18rem 0.42rem;
+  border-radius: 999px;
+  background: var(--global-text-color);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--global-text-color) 18%, transparent);
+  color: var(--global-bg-color);
+  font-size: 0.68rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.nav-tooltip-trigger:hover::before,
+.nav-tooltip-trigger:hover::after,
+.nav-tooltip-trigger:focus-visible::before,
+.nav-tooltip-trigger:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
 // Social (bottom)
 
 .social {

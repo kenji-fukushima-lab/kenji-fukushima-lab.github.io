@@ -25,7 +25,7 @@
   </head>
 
   <!-- Body -->
-  <body class="{% if site.navbar_fixed %}fixed-top-nav{% endif %} {% if site.show_footer == false or site.footer_fixed != true %}sticky-bottom-footer{% endif %}">
+  <body class="{% if site.navbar_fixed %}fixed-top-nav{% endif %} {% if site.show_footer == false or site.show_footer == 'false' or site.footer_fixed != true %}sticky-bottom-footer{% endif %}">
     <!-- Header -->
     {% include header.liquid %}
 
@@ -57,9 +57,9 @@
     </div>
 
     <!-- Footer -->
-    {% if site.show_footer != false %}
+    {% unless site.show_footer == false or site.show_footer == 'false' %}
       {% include footer.liquid %}
-    {% endif %}
+    {% endunless %}
 
     <!-- JavaScripts -->
     {% include scripts.liquid %}
