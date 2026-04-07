@@ -18,6 +18,20 @@ SPEC.loader.exec_module(MODULE)
 
 
 class CreateProfileUpdateFromIssueTests(unittest.TestCase):
+    def test_classify_input_error_message_distinguishes_no_changes(self) -> None:
+        self.assertEqual(
+            MODULE.classify_input_error_message(MODULE.NO_PROFILE_FIELDS_CHANGED_MESSAGE),
+            "no_changes",
+        )
+        self.assertEqual(
+            MODULE.classify_input_error_message(MODULE.NO_UPDATES_PROVIDED_MESSAGE),
+            "no_input",
+        )
+        self.assertEqual(
+            MODULE.classify_input_error_message("something else"),
+            "input_error",
+        )
+
     def test_split_value_and_comment_keeps_url_fragments_and_quoted_hashes(self) -> None:
         value, comment = MODULE.split_value_and_comment(' https://example.com/#fragment')
         self.assertEqual(value, "https://example.com/#fragment")
