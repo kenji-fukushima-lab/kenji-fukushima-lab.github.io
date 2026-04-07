@@ -28,6 +28,33 @@ layout: page
     {% endfor %}
 
     {% assign lang = page.lang | default: site.lang | default: 'en-us' %}
+    {% if site.active_lang == 'ja' %}
+      {% assign email_tooltip = 'メール' %}
+      {% assign website_tooltip = 'Webサイト' %}
+      {% assign orcid_tooltip = 'ORCID' %}
+      {% assign google_scholar_tooltip = 'Google Scholar' %}
+      {% assign github_tooltip = 'GitHub' %}
+      {% assign linkedin_tooltip = 'LinkedIn' %}
+      {% assign x_tooltip = 'X' %}
+      {% assign researchgate_tooltip = 'ResearchGate' %}
+      {% assign amazon_tooltip = 'Amazon' %}
+      {% assign amazon_author_tooltip = 'Amazon著者ページ' %}
+      {% assign researchmap_tooltip = 'researchmap' %}
+      {% assign tayo_tooltip = 'Tayo' %}
+    {% else %}
+      {% assign email_tooltip = 'Email' %}
+      {% assign website_tooltip = 'Website' %}
+      {% assign orcid_tooltip = 'ORCID' %}
+      {% assign google_scholar_tooltip = 'Google Scholar' %}
+      {% assign github_tooltip = 'GitHub' %}
+      {% assign linkedin_tooltip = 'LinkedIn' %}
+      {% assign x_tooltip = 'X' %}
+      {% assign researchgate_tooltip = 'ResearchGate' %}
+      {% assign amazon_tooltip = 'Amazon' %}
+      {% assign amazon_author_tooltip = 'Amazon Author Page' %}
+      {% assign researchmap_tooltip = 'researchmap' %}
+      {% assign tayo_tooltip = 'Tayo' %}
+    {% endif %}
 
     {% for profile in sorted_profiles %}
       <div class="people-card">
@@ -71,70 +98,124 @@ layout: page
               {% endif %}
               <div class="social-icons people-social-icons">
                 {% if profile.email -%}
-                  <a href="mailto:{{ profile.email }}" aria-label="Email {{ profile_name }}"><i class="fas fa-envelope" aria-hidden="true"></i></a>
+                  <a
+                    href="mailto:{{ profile.email }}"
+                    class="people-social-link"
+                    data-tooltip="{{ email_tooltip }}"
+                    aria-label="Email {{ profile_name }}"
+                    ><i class="fas fa-envelope" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.website -%}
-                  <a href="{{ profile.website }}" aria-label="Website of {{ profile_name }}"><i class="fas fa-globe" aria-hidden="true"></i></a>
+                  <a
+                    href="{{ profile.website }}"
+                    class="people-social-link"
+                    data-tooltip="{{ website_tooltip }}"
+                    aria-label="Website of {{ profile_name }}"
+                    ><i class="fas fa-globe" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.orcid -%}
-                  <a href="{{ profile.orcid }}" aria-label="ORCID profile of {{ profile_name }}"><i class="ai ai-orcid" aria-hidden="true"></i></a>
+                  <a
+                    href="{{ profile.orcid }}"
+                    class="people-social-link"
+                    data-tooltip="{{ orcid_tooltip }}"
+                    aria-label="ORCID profile of {{ profile_name }}"
+                    ><i class="ai ai-orcid" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.google_scholar -%}
-                  <a href="{{ profile.google_scholar }}" aria-label="Google Scholar profile of {{ profile_name }}"
+                  <a
+                    href="{{ profile.google_scholar }}"
+                    class="people-social-link"
+                    data-tooltip="{{ google_scholar_tooltip }}"
+                    aria-label="Google Scholar profile of {{ profile_name }}"
                     ><i class="ai ai-google-scholar" aria-hidden="true"></i
                   ></a>
                 {%- endif %}
                 {% if profile.github -%}
-                  <a href="https://github.com/{{ profile.github }}" aria-label="GitHub profile of {{ profile_name }}"
+                  <a
+                    href="https://github.com/{{ profile.github }}"
+                    class="people-social-link"
+                    data-tooltip="{{ github_tooltip }}"
+                    aria-label="GitHub profile of {{ profile_name }}"
                     ><i class="fab fa-github" aria-hidden="true"></i
                   ></a>
                 {%- endif %}
                 {% if profile.linkedin -%}
-                  <a href="{{ profile.linkedin }}" aria-label="LinkedIn profile of {{ profile_name }}"
+                  <a
+                    href="{{ profile.linkedin }}"
+                    class="people-social-link"
+                    data-tooltip="{{ linkedin_tooltip }}"
+                    aria-label="LinkedIn profile of {{ profile_name }}"
                     ><i class="fab fa-linkedin" aria-hidden="true"></i
                   ></a>
                 {%- endif %}
                 {% if profile.twitter -%}
-                  <a href="{{ profile.twitter }}" aria-label="X profile of {{ profile_name }}"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+                  <a
+                    href="{{ profile.twitter }}"
+                    class="people-social-link"
+                    data-tooltip="{{ x_tooltip }}"
+                    aria-label="X profile of {{ profile_name }}"
+                    ><i class="fab fa-x-twitter" aria-hidden="true"></i
+                  ></a>
                 {%- endif %}
                 {% if profile.researchgate -%}
-                  <a href="{{ profile.researchgate }}" aria-label="ResearchGate profile of {{ profile_name }}"
+                  <a
+                    href="{{ profile.researchgate }}"
+                    class="people-social-link"
+                    data-tooltip="{{ researchgate_tooltip }}"
+                    aria-label="ResearchGate profile of {{ profile_name }}"
                     ><i class="fab fa-researchgate" aria-hidden="true"></i
                   ></a>
                 {%- endif %}
                 {% if profile.amazon -%}
-                  <a href="{{ profile.amazon }}" aria-label="Amazon profile of {{ profile_name }}"
+                  <a
+                    href="{{ profile.amazon }}"
+                    class="people-social-link"
+                    data-tooltip="{{ amazon_tooltip }}"
+                    aria-label="Amazon profile of {{ profile_name }}"
                     ><i class="fab fa-amazon" aria-hidden="true"></i
                   ></a>
                 {%- elsif profile.amazon_author -%}
-                  <a href="{{ profile.amazon_author }}" aria-label="Amazon author page of {{ profile_name }}"
+                  <a
+                    href="{{ profile.amazon_author }}"
+                    class="people-social-link"
+                    data-tooltip="{{ amazon_author_tooltip }}"
+                    aria-label="Amazon author page of {{ profile_name }}"
                     ><i class="fab fa-amazon" aria-hidden="true"></i
                   ></a>
                 {%- endif %}
                 {% if profile.researchmap -%}
-                  <a href="{{ profile.researchmap }}" aria-label="researchmap profile of {{ profile_name }}">
-                    <img
-                      src="{{ '/assets/img/icons/researchmap.gif' | relative_url | bust_file_cache }}"
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
-                      decoding="async"
-                      width="14"
-                      height="14"
-                    >
+                  <a
+                    href="{{ profile.researchmap }}"
+                    class="people-social-link"
+                    data-tooltip="{{ researchmap_tooltip }}"
+                    aria-label="researchmap profile of {{ profile_name }}"
+                  >
+                    <svg class="people-social-svg" viewBox="0 0 16 16" aria-hidden="true">
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M 2 1 L 7 1 L 7 2 L 8 2 L 8 3 L 10 3 L 10 4 L 12 4 L 12 5 L 13 5 L 13 6 L 14 6 L 14 7 L 15 7 L 15 9 L 14 9 L 14 10 L 13 10 L 13 11 L 12 11 L 12 12 L 10 12 L 10 13 L 8 13 L 8 14 L 7 14 L 7 15 L 2 15 Z M 11 6 L 11 7 L 12 7 L 12 10 L 11 10 L 11 7 L 10 7 L 10 10 L 9 10 L 9 7 L 8 7 L 8 10 L 7 10 L 7 6 Z M 4 10 L 3 10 L 3 7 L 4 7 Z M 6 6 L 6 7 L 4 7 L 4 6 Z"
+                      />
+                    </svg>
                   </a>
                 {%- endif %}
                 {% if profile.tayo -%}
-                  <a href="{{ profile.tayo }}" aria-label="Tayo profile of {{ profile_name }}">
-                    <img
-                      src="{{ '/assets/img/icons/tayo.ico' | relative_url | bust_file_cache }}"
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
-                      decoding="async"
-                      width="14"
-                      height="14"
-                    >
+                  <a
+                    href="{{ profile.tayo }}"
+                    class="people-social-link"
+                    data-tooltip="{{ tayo_tooltip }}"
+                    aria-label="Tayo profile of {{ profile_name }}"
+                  >
+                    <svg class="people-social-svg" viewBox="0 0 48 48" aria-hidden="true">
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M 15 2 L 24 2 L 24 3 L 26 3 L 26 4 L 27 4 L 27 5 L 28 5 L 28 7 L 29 7 L 29 9 L 32 9 L 32 10 L 35 10 L 35 11 L 36 11 L 36 12 L 38 12 L 38 14 L 39 14 L 39 15 L 40 15 L 40 18 L 41 18 L 41 23 L 40 23 L 40 25 L 39 25 L 39 27 L 38 27 L 38 29 L 39 29 L 39 30 L 40 30 L 40 33 L 41 33 L 41 38 L 40 38 L 40 41 L 39 41 L 39 42 L 38 42 L 38 43 L 37 43 L 37 44 L 36 44 L 36 45 L 34 45 L 34 46 L 21 46 L 21 45 L 19 45 L 19 44 L 17 44 L 17 43 L 16 43 L 16 42 L 14 42 L 14 41 L 13 41 L 13 39 L 12 39 L 12 38 L 11 38 L 11 36 L 10 36 L 10 34 L 9 34 L 9 8 L 10 8 L 10 6 L 11 6 L 11 5 L 12 5 L 12 4 L 13 4 L 13 3 L 15 3 Z M 20 10 L 22 10 L 22 11 L 23 11 L 23 17 L 31 17 L 31 18 L 33 18 L 33 22 L 32 22 L 32 23 L 31 23 L 31 24 L 23 24 L 23 30 L 24 30 L 24 31 L 25 31 L 25 32 L 31 32 L 31 33 L 32 33 L 32 34 L 33 34 L 33 37 L 32 37 L 32 38 L 31 38 L 31 39 L 25 39 L 25 38 L 22 38 L 22 37 L 20 37 L 20 36 L 19 36 L 19 35 L 18 35 L 18 33 L 17 33 L 17 31 L 16 31 L 16 11 L 17 11 L 17 10 L 19 10 L 19 9 L 20 9 Z"
+                      />
+                    </svg>
                   </a>
                 {%- endif %}
               </div>
