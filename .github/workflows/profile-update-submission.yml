@@ -232,6 +232,11 @@ jobs:
             ${{ steps.cpr.outputs.pull-request-url }}
 
             レビュー後にマージされると、サイト上のプロフィールに反映されます。
+
+            A pull request for your profile update has been created.
+            ${{ steps.cpr.outputs.pull-request-url }}
+
+            After review and merge, the updated profile will appear on the website.
         with:
           script: |
             const { owner, repo } = context.repo;
