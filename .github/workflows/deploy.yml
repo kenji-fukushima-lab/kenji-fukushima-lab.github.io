@@ -97,6 +97,7 @@ jobs:
           bash .github/scripts/prepare-jekyll-build-env.sh
           export JEKYLL_ENV=production
           bundle exec jekyll build
+          python3 -m pagefind --site _site
       - name: Purge unused CSS 🧹
         run: |
           npm install -g purgecss

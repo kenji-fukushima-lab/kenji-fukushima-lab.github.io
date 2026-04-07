@@ -84,6 +84,9 @@
 {% elsif site.icon != blank %}
   <link rel="shortcut icon" href="{{ site.icon | prepend: '/assets/img/' | relative_url | bust_file_cache}}">
 {% endif %}
+{% if site.search_enabled %}
+  <link rel="stylesheet" {% static_href -%} href="/pagefind/pagefind-ui.css" {%- endstatic_href %}>
+{% endif %}
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url | bust_css_cache }}">
 <link rel="canonical" href="{{ canonical_url }}">
 {% assign has_alternate_links = false %}

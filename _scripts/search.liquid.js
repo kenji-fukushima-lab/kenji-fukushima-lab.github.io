@@ -19,14 +19,15 @@ if ("{{ lang }}".length > 0) {
 // get the ninja-keys element
 const ninja = document.querySelector('ninja-keys');
 
-// add the home and posts menu items
+// command palette items
 ninja.data = [
   {%- for page in site.pages -%}
     {%- if page.permalink == '/' -%}{%- assign about_title = page.title | strip -%}{%- endif -%}
   {%- endfor -%}
   {
     id: "nav-{{ about_title | slugify }}",
-    title: "{{ about_title | truncatewords: 13 }}",
+    title: {{ about_title | truncatewords: 13 | jsonify }},
+    description: {{ site.data[site.active_lang].site_description | strip_html | strip_newlines | strip | jsonify }},
     section: "{{ site.data[site.active_lang].strings.search.navigation }}",
     handler: () => {
       window.location.href = "{{ '/' | prepend: lang | relative_url }}";
@@ -56,60 +57,14 @@ ninja.data = [
           {%- assign title = p.title | escape | strip -%}
           {%- if p.permalink contains "/blog/" -%}{%- assign url = "/blog/" -%} {%- else -%}{%- assign url = p.url -%}{%- endif -%}
           id: "nav-{{ title | slugify }}",
-          title: "{{ title | truncatewords: 13 }}",
-          description: "{{ p.description | strip_html | strip_newlines | escape | strip }}",
+          title: {{ title | truncatewords: 13 | jsonify }},
+          description: {{ p.description | default: p.seo_description | default: '' | strip_html | normalize_whitespace | strip | jsonify }},
           section: "{{ site.data[site.active_lang].strings.search.navigation }}",
           handler: () => {
             window.location.href = "{{ url | prepend: lang | relative_url }}";
           },
         },
       {%- endif -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- for post in site.posts -%}
-    {
-      {%- assign title = post.title | escape | strip -%}
-      id: "post-{{ title | slugify }}",
-      {% if post.redirect == blank %}
-        title: "{{ title | truncatewords: 13 }}",
-      {% elsif post.redirect contains '://' %}
-        title: '{{ title | truncatewords: 13 }} <svg width="1.2rem" height="1.2rem" top=".5rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-      {% else %}
-        title: "{{ title | truncatewords: 13 }}",
-      {% endif %}
-      description: "{{ post.description | strip_html | strip_newlines | escape | strip }}",
-      section: "{{ site.data[site.active_lang].strings.search.posts }}",
-      handler: () => {
-        {% if post.redirect == blank %}
-          window.location.href = "{{ post.url | prepend: lang | relative_url }}";
-        {% elsif post.redirect contains '://' %}
-          window.open("{{ post.redirect }}", "_blank");
-        {% else %}
-          window.location.href = "{{ post.redirect | prepend: lang | relative_url }}";
-        {% endif %}
-      },
-    },
-  {%- endfor -%}
-  {%- for collection in site.collections -%}
-    {%- if collection.label != 'posts' and collection.output != false -%}
-      {%- for item in collection.docs -%}
-        {
-          {%- if item.inline -%}
-            {%- assign title = item.content | newline_to_br | replace: "<br />", " " | replace: "<br/>", " " | strip_html | strip_newlines | escape | strip -%}
-          {%- else -%}
-            {%- assign title = item.title | newline_to_br | replace: "<br />", " " | replace: "<br/>", " " | strip_html | strip_newlines | escape | strip -%}
-          {%- endif -%}
-          id: "{{ collection.label }}-{{ title | slugify }}",
-          title: '{{ title | escape | emojify | truncatewords: 13 }}',
-          description: "{{ item.description | strip_html | strip_newlines | escape | strip }}",
-          section: "{{ site.data[site.active_lang].strings.search[collection.label] }}",
-          {%- if item.url != blank -%}
-            handler: () => {
-              window.location.href = "{{ item.url | prepend: lang | relative_url }}";
-            },
-          {%- endif -%}
-        },
-      {%- endfor -%}
     {%- endif -%}
   {%- endfor -%}
   {%- if site.socials_in_search -%}

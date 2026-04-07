@@ -223,6 +223,149 @@ ul.task-list input[type="checkbox"] {
   }
 }
 
+// Pagefind search
+
+body.pagefind-modal-open {
+  overflow: hidden;
+}
+
+.pagefind-modal-shell {
+  --pagefind-ui-scale: 0.96;
+  --pagefind-ui-primary: var(--global-theme-color);
+  --pagefind-ui-text: var(--global-text-color);
+  --pagefind-ui-background: var(--global-card-bg-color);
+  --pagefind-ui-border: var(--global-divider-color);
+  --pagefind-ui-tag: var(--global-code-bg-color);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 14px;
+  --pagefind-ui-image-border-radius: 12px;
+  --pagefind-ui-font: inherit;
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.pagefind-modal-shell.is-open {
+  opacity: 1;
+}
+
+.pagefind-modal-shell__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme="dark"] .pagefind-modal-shell__backdrop {
+  background: rgba(0, 0, 0, 0.64);
+}
+
+.pagefind-modal-shell__dialog {
+  position: relative;
+  width: min(920px, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  background: var(--global-card-bg-color);
+  border: 1px solid var(--global-divider-color);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  transform: translateY(14px);
+  opacity: 0;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+html[data-theme="dark"] .pagefind-modal-shell__dialog {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+}
+
+.pagefind-modal-shell.is-open .pagefind-modal-shell__dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.pagefind-modal-shell__close {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--global-text-color-light);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pagefind-modal-shell__close:hover,
+.pagefind-modal-shell__close:focus-visible {
+  background: var(--global-code-bg-color);
+  color: var(--global-text-color);
+  outline: none;
+}
+
+.pagefind-modal-shell__close span {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.pagefind-search-root {
+  margin-top: -0.5rem;
+}
+
+.pagefind-search-root .pagefind-ui__search-input {
+  box-shadow: none;
+}
+
+.pagefind-search-root .pagefind-ui__result-link,
+.pagefind-search-root .pagefind-ui__result-link:hover {
+  color: var(--global-theme-color);
+}
+
+.pagefind-search-root .pagefind-ui__message,
+.pagefind-search-root .pagefind-ui__result-excerpt,
+.pagefind-search-root .pagefind-ui__button {
+  color: var(--global-text-color);
+}
+
+.pagefind-search-root mark {
+  background: color-mix(in srgb, var(--global-theme-color) 18%, transparent);
+  color: inherit;
+  border-radius: 0.2rem;
+  padding: 0 0.15rem;
+}
+
+@media (max-width: 767.98px) {
+  .pagefind-modal-shell {
+    padding: 0.75rem;
+  }
+
+  .pagefind-modal-shell__dialog {
+    max-height: calc(100vh - 1.5rem);
+    border-radius: 16px;
+    padding: 0.875rem;
+  }
+
+  .pagefind-search-root {
+    margin-top: -0.25rem;
+  }
+}
+
 .profile-avatar {
   width: 140px !important;
   height: auto !important;
