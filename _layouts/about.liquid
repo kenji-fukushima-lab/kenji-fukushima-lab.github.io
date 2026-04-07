@@ -54,6 +54,13 @@ layout: default
       | append: default_branch
       | append: '&label=last%20updated&logo=github&style=flat-square'
     %}
+    {% if is_ja %}
+      {% assign link_health_tooltip = 'リンク健全性ワークフローを開く' %}
+      {% assign recent_commits_tooltip = '最新コミット履歴を開く' %}
+    {% else %}
+      {% assign link_health_tooltip = 'Open link health workflow' %}
+      {% assign recent_commits_tooltip = 'Open recent commits' %}
+    {% endif %}
 
     <section class="home-lab-dashboard" aria-label="{% if is_ja %}ラボ統計{% else %}Lab statistics{% endif %}">
       <div class="home-lab-dashboard-header">
@@ -96,7 +103,9 @@ layout: default
             rel="external nofollow noopener noreferrer"
             class="external-link-track"
             data-analytics-label="home_status_link_health"
-            aria-label="{% if is_ja %}リンク健全性ワークフローを開く{% else %}Open link health workflow{% endif %}"
+            data-toggle="tooltip"
+            title="{{ link_health_tooltip }}"
+            aria-label="{{ link_health_tooltip }}"
           >
             <img
               src="{{ link_health_badge }}"
@@ -113,7 +122,9 @@ layout: default
             rel="external nofollow noopener noreferrer"
             class="external-link-track"
             data-analytics-label="home_status_last_updated"
-            aria-label="{% if is_ja %}最新コミット履歴を開く{% else %}Open recent commits{% endif %}"
+            data-toggle="tooltip"
+            title="{{ recent_commits_tooltip }}"
+            aria-label="{{ recent_commits_tooltip }}"
           >
             <img
               src="{{ last_updated_badge }}"

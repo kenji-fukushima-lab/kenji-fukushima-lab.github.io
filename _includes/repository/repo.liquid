@@ -2,6 +2,25 @@
 {% assign username = repo_parts.first %}
 {% assign repo_name = repo_parts.last %}
 {% assign fallback_about = site.data.repo_about[include.repository] | default: '' %}
+{% if site.active_lang == 'ja' %}
+  {% capture repo_stars_aria_label %}{{ include.repository }} のスター一覧を開く{% endcapture %}
+  {% capture repo_forks_aria_label %}{{ include.repository }} のフォーク一覧を開く{% endcapture %}
+  {% capture repo_commits_aria_label %}{{ include.repository }} のコミット履歴を開く{% endcapture %}
+  {% capture repo_issues_aria_label %}{{ include.repository }} の Issue を開く{% endcapture %}
+  {% assign repo_stars_tooltip = 'スター' %}
+  {% assign repo_forks_tooltip = 'フォーク' %}
+  {% assign repo_commits_tooltip = '最新コミット' %}
+  {% assign repo_issues_tooltip = 'Issue' %}
+{% else %}
+  {% capture repo_stars_aria_label %}Open stargazers for {{ include.repository }}{% endcapture %}
+  {% capture repo_forks_aria_label %}Open forks for {{ include.repository }}{% endcapture %}
+  {% capture repo_commits_aria_label %}Open commit history for {{ include.repository }}{% endcapture %}
+  {% capture repo_issues_aria_label %}Open issues for {{ include.repository }}{% endcapture %}
+  {% assign repo_stars_tooltip = 'Stars' %}
+  {% assign repo_forks_tooltip = 'Forks' %}
+  {% assign repo_commits_tooltip = 'Last commit' %}
+  {% assign repo_issues_tooltip = 'Issues' %}
+{% endif %}
 
 <div class="repo repo-compact">
   <div class="repo-compact-main">
@@ -37,7 +56,9 @@
       rel="external nofollow noopener noreferrer"
       target="_blank"
       class="external-link-track"
-      aria-label="Open stargazers for {{ include.repository }}"
+      data-toggle="tooltip"
+      title="{{ repo_stars_tooltip }}"
+      aria-label="{{ repo_stars_aria_label | strip }}"
       data-analytics-label="repository_stargazers"
     >
       <img
@@ -54,7 +75,9 @@
       rel="external nofollow noopener noreferrer"
       target="_blank"
       class="external-link-track"
-      aria-label="Open forks for {{ include.repository }}"
+      data-toggle="tooltip"
+      title="{{ repo_forks_tooltip }}"
+      aria-label="{{ repo_forks_aria_label | strip }}"
       data-analytics-label="repository_forks"
     >
       <img
@@ -71,7 +94,9 @@
       rel="external nofollow noopener noreferrer"
       target="_blank"
       class="external-link-track"
-      aria-label="Open commit history for {{ include.repository }}"
+      data-toggle="tooltip"
+      title="{{ repo_commits_tooltip }}"
+      aria-label="{{ repo_commits_aria_label | strip }}"
       data-analytics-label="repository_commits"
     >
       <img
@@ -88,7 +113,9 @@
       rel="external nofollow noopener noreferrer"
       target="_blank"
       class="external-link-track"
-      aria-label="Open issues for {{ include.repository }}"
+      data-toggle="tooltip"
+      title="{{ repo_issues_tooltip }}"
+      aria-label="{{ repo_issues_aria_label | strip }}"
       data-analytics-label="repository_issues"
     >
       <img
