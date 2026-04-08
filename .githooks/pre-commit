@@ -1,13 +1,39 @@
-#!/bin/sh
-set -eu
+#!/usr/bin/env bash
+set -euo pipefail
 
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
-echo "Running Prettier check before commit..."
+staged_files=()
+while IFS= read -r -d '' file; do
+  staged_files+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [ ${#staged_files[@]} -eq 0 ]; then
+  exit 0
+fi
+
+partially_staged_files=()
+for file in "${staged_files[@]}"; do
+  if ! git diff --quiet -- "$file"; then
+    partially_staged_files+=("$file")
+  fi
+done
+
+if [ ${#partially_staged_files[@]} -gt 0 ]; then
+  cat >&2 <<'EOF'
+Prettier pre-commit would overwrite unstaged changes in partially staged files.
+Stage or stash the remaining edits in these files and commit again:
+EOF
+  printf ' - %s\n' "${partially_staged_files[@]}" >&2
+  exit 1
+fi
+
+echo "Running Prettier on staged files before commit..."
 
 if [ -x "./node_modules/.bin/prettier" ]; then
-  ./node_modules/.bin/prettier . --check
+  ./node_modules/.bin/prettier --write --ignore-unknown "${staged_files[@]}"
+  git add -- "${staged_files[@]}"
   exit 0
 fi
 
@@ -16,12 +42,13 @@ if command -v docker >/dev/null 2>&1; then
     -v "$repo_root:/work" \
     -w /work \
     node:20 \
-    sh -lc 'npm install -g prettier@3.8.1 @shopify/prettier-plugin-liquid@1.4.0 >/tmp/npm.log 2>&1 && prettier . --check --plugin=@shopify/prettier-plugin-liquid'
+    sh -lc 'npm install -g prettier@3.8.1 @shopify/prettier-plugin-liquid@1.4.0 >/tmp/npm.log 2>&1 && prettier --write --ignore-unknown --plugin=@shopify/prettier-plugin-liquid "$@"' sh "${staged_files[@]}"
+  git add -- "${staged_files[@]}"
   exit 0
 fi
 
 cat >&2 <<'EOF'
-Prettier pre-commit check could not run.
+Prettier pre-commit formatting could not run.
 Install dependencies with `npm install`, or install Docker so the hook can use the fallback container.
 EOF
 exit 1

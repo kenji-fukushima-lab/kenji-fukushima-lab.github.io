@@ -32,12 +32,9 @@ const collapseNavbarIfNeeded = () => {
   }
 };
 
-const isSearchModalOpen = () =>
-  Boolean(pagefindShell && !pagefindShell.hidden && pagefindShell.getAttribute("aria-hidden") === "false");
+const isSearchModalOpen = () => Boolean(pagefindShell && !pagefindShell.hidden && pagefindShell.getAttribute("aria-hidden") === "false");
 
-const isEditableTarget = (target) =>
-  target instanceof HTMLElement &&
-  (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+const isEditableTarget = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
 
 const isRestorableFocusTarget = (target) =>
   target instanceof HTMLElement &&
@@ -92,10 +89,13 @@ const focusPagefindInput = (attempt = 0) => {
   }
 
   clearPendingFocusRetry();
-  focusRetryTimer = window.setTimeout(() => {
-    focusRetryTimer = null;
-    focusPagefindInput(attempt + 1);
-  }, attempt < 2 ? 60 : 120);
+  focusRetryTimer = window.setTimeout(
+    () => {
+      focusRetryTimer = null;
+      focusPagefindInput(attempt + 1);
+    },
+    attempt < 2 ? 60 : 120
+  );
 
   return false;
 };
@@ -107,18 +107,12 @@ const getSearchModalFocusableElements = () =>
     ) || []
   ).filter(
     (element) =>
-      element instanceof HTMLElement &&
-      !element.hidden &&
-      element.getAttribute("aria-hidden") !== "true" &&
-      element.getClientRects().length > 0
+      element instanceof HTMLElement && !element.hidden && element.getAttribute("aria-hidden") !== "true" && element.getClientRects().length > 0
   );
 
 const restoreFocusAfterClose = () => {
   const fallbackTarget = searchToggleButton instanceof HTMLElement ? searchToggleButton : null;
-  const target =
-    isRestorableFocusTarget(lastFocusedElement) && document.contains(lastFocusedElement)
-      ? lastFocusedElement
-      : fallbackTarget;
+  const target = isRestorableFocusTarget(lastFocusedElement) && document.contains(lastFocusedElement) ? lastFocusedElement : fallbackTarget;
 
   target?.focus({ preventScroll: true });
   lastFocusedElement = null;
@@ -212,11 +206,7 @@ document.addEventListener("focusin", (event) => {
 });
 
 const handleGlobalSearchKeydown = (event) => {
-  const isSearchShortcut =
-    (event.metaKey || event.ctrlKey) &&
-    !event.altKey &&
-    !event.shiftKey &&
-    event.key.toLowerCase() === "k";
+  const isSearchShortcut = (event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "k";
 
   if (isSearchShortcut && (!isEditableTarget(event.target) || isSearchModalOpen())) {
     event.preventDefault();

@@ -91,7 +91,7 @@ To run the same Prettier check before every local commit, install the repository
 npm run hooks:install
 ```
 
-The hook runs `prettier . --check` before each commit. It uses local `node_modules` when available and falls back to Docker (`node:20`) if Node.js dependencies are not installed locally.
+The hook runs Prettier only on staged files before each commit, writes any formatting fixes automatically, and re-stages those files for you. To avoid unexpectedly staging extra edits, it stops if any staged file also has unstaged changes. It uses local `node_modules` when available and falls back to Docker (`node:20`) if Node.js dependencies are not installed locally.
 
 ### Local pre-push hook
 
