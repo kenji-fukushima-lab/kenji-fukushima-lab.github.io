@@ -201,9 +201,10 @@ module OrganismMap
           taxa << genus_name
         end
 
-        next unless cleaned.match?(/\A([A-Z][a-z]{2,})\z/)
+        single_genus_match = cleaned.match(/\A([A-Z][a-z]{2,})\z/)
+        next unless single_genus_match
 
-        genus_name = Regexp.last_match(1)
+        genus_name = single_genus_match[1]
         next unless accepted_genus_candidate?(genus_name)
 
         taxa << genus_name
@@ -226,7 +227,32 @@ module OrganismMap
         taxa << "#{genus_name} #{normalized_epithet}"
       end
 
+      extract_contextual_abstract_genera(plain_text).each do |genus_name|
+        taxa << genus_name
+      end
+
       taxa
+    end
+
+    def extract_contextual_abstract_genera(plain_text)
+      genera = Set.new
+
+      plain_text.scan(/\bgenus\s+([A-Z][a-z]{2,})\b/) do |genus_name|
+        candidate = Array(genus_name).first.to_s
+        next unless accepted_genus_candidate?(candidate)
+
+        genera << candidate
+      end
+
+      plain_text.scan(/\bgenera\s+([A-Z][a-z]{2,}(?:\s*(?:,|and|or)\s+[A-Z][a-z]{2,})*)\b/) do |segment|
+        Array(segment).first.to_s.split(/\s*(?:,|and|or)\s+/).each do |genus_name|
+          next unless accepted_genus_candidate?(genus_name)
+
+          genera << genus_name
+        end
+      end
+
+      genera
     end
 
     def extract_genus_counts(text, catalog)
