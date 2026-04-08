@@ -98,7 +98,7 @@
                 <td class="organism-last-year">{{ genus.last_year }}</td>
                 <td>
                   <a
-                    href="https://en.wikipedia.org/wiki/{{ genus.label | replace: ' ', '_' | uri_escape }}"
+                    href="{% if genus.wikipedia_url %}{{ genus.wikipedia_url }}{% else %}https://en.wikipedia.org/wiki/{{ genus.label | replace: ' ', '_' | uri_escape }}{% endif %}"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

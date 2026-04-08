@@ -36,6 +36,10 @@ module OrganismMap
     ]).freeze
     EXCLUDED_TAXON_SUFFIXES = %w[aceae ales inae oideae phyceae phyta mycota viridae virinae].freeze
     WIKIPEDIA_BASE_URL = 'https://en.wikipedia.org/wiki/'.freeze
+    WIKIPEDIA_TITLE_OVERRIDES = {
+      'Byblis' => 'Byblis_(plant)',
+      'Dionaea' => 'Dionaea_(plant)'
+    }.freeze
     NCBI_TAXONOMY_BASE_URL = 'https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name='.freeze
     GBIF_BASE_URL = 'https://www.gbif.org/species/search?q='.freeze
     GBIF_SEARCH_API_URL = 'https://api.gbif.org/v1/species/search?rank=GENUS&limit=5&q='.freeze
@@ -284,6 +288,7 @@ module OrganismMap
       {
         'id' => normalize_key(genus_name),
         'label' => genus_name,
+        'wikipedia_url' => wikipedia_url_for(genus_name),
         'mention_count' => 0,
         'paper_count' => 0,
         'first_year' => nil,
@@ -295,6 +300,11 @@ module OrganismMap
 
     def word_pattern(word)
       /\b#{Regexp.escape(word)}\b/
+    end
+
+    def wikipedia_url_for(genus_name)
+      title = WIKIPEDIA_TITLE_OVERRIDES.fetch(genus_name, genus_name.tr(' ', '_'))
+      "#{WIKIPEDIA_BASE_URL}#{CGI.escape(title)}"
     end
 
     def species_name?(taxon_name)

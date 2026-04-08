@@ -34,13 +34,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.createElement("div");
   list.className = "organism-bar-chart";
 
-  function buildReferenceUrl(kind, genusLabel) {
+  function buildReferenceUrl(kind, genus) {
+    const genusLabel = genus?.label;
     const normalizedLabel = (genusLabel || "").toString().trim();
     if (!normalizedLabel) {
       return null;
     }
 
     if (kind === "wikipedia") {
+      if (genus?.wikipedia_url) {
+        return genus.wikipedia_url;
+      }
       return `https://en.wikipedia.org/wiki/${encodeURIComponent(normalizedLabel.replace(/\s+/g, "_"))}`;
     }
     if (kind === "ncbi") {
@@ -79,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       [i18n.ncbiLabel, "ncbi"],
       [i18n.gbifLabel, "gbif"],
     ].forEach(([label, kind]) => {
-      const href = buildReferenceUrl(kind, genus.label);
+      const href = buildReferenceUrl(kind, genus);
       if (!href) {
         return;
       }
