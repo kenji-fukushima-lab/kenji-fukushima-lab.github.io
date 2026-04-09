@@ -1,57 +1,69 @@
-name: Quality Budgets
+name: UI Smoke Tests
 
 on:
   push:
-    branches: [main, master]
+    branches:
+      - main
+      - master
     paths:
       - "assets/**"
       - "_sass/**"
       - "_includes/**"
       - "_layouts/**"
       - "_plugins/**"
+      - "_pages/**"
+      - "_projects/**"
+      - "_profiles/**"
+      - "_posts/**"
+      - "_news/**"
+      - "_data/**"
+      - "_bibliography/**"
       - "_config.yml"
       - "Gemfile"
       - "Gemfile.lock"
-      - ".lighthouserc.json"
-      - ".github/scripts/check-image-budget.sh"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.js"
+      - "tests/ui/**"
       - ".github/scripts/prepare-jekyll-build-env.sh"
-      - ".github/workflows/quality-budgets.yml"
+      - ".github/workflows/ui-smoke.yml"
   pull_request:
-    branches: [main, master]
+    branches:
+      - main
+      - master
     paths:
       - "assets/**"
       - "_sass/**"
       - "_includes/**"
       - "_layouts/**"
       - "_plugins/**"
+      - "_pages/**"
+      - "_projects/**"
+      - "_profiles/**"
+      - "_posts/**"
+      - "_news/**"
+      - "_data/**"
+      - "_bibliography/**"
       - "_config.yml"
       - "Gemfile"
       - "Gemfile.lock"
-      - ".lighthouserc.json"
-      - ".github/scripts/check-image-budget.sh"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.js"
+      - "tests/ui/**"
       - ".github/scripts/prepare-jekyll-build-env.sh"
-      - ".github/workflows/quality-budgets.yml"
+      - ".github/workflows/ui-smoke.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: quality-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ui-smoke-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  image-budget:
-    name: Image Budget
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Enforce image size threshold
-        run: bash .github/scripts/check-image-budget.sh
-
-  lighthouse:
-    name: Lighthouse
+  smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -66,15 +78,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: "npm"
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
           cache: "pip"
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
       - name: Build site
         run: |
           bash .github/scripts/prepare-jekyll-build-env.sh
           export JEKYLL_ENV=production
           bundle exec jekyll build
-      - name: Run Lighthouse assertions
-        run: npx --yes @lhci/cli@0.14.0 autorun --config=.lighthouserc.json
+      - name: Start local server
+        run: |
+          python3 -m http.server 8080 --directory _site >/tmp/ui-smoke-http.log 2>&1 &
+          sleep 1
+      - name: Run UI smoke tests
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:8080
+        run: npm run test:ui

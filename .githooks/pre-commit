@@ -31,7 +31,7 @@ fi
 
 echo "Running Prettier on staged files before commit..."
 
-if [ -x "./node_modules/.bin/prettier" ]; then
+if [ -x "./node_modules/.bin/prettier" ] && command -v node >/dev/null 2>&1; then
   ./node_modules/.bin/prettier --write --ignore-unknown "${staged_files[@]}"
   git add -- "${staged_files[@]}"
   exit 0

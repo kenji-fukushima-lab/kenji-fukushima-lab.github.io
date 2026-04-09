@@ -3,9 +3,11 @@
     "checks:push": "bash .github/scripts/run-local-push-checks.sh",
     "prettier": "prettier . --check",
     "prettier:fix": "prettier . --write",
-    "hooks:install": "git config core.hooksPath .githooks"
+    "hooks:install": "git config core.hooksPath .githooks",
+    "test:ui": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@shopify/prettier-plugin-liquid": "1.4.0",
     "prettier": "3.8.1"
   }
