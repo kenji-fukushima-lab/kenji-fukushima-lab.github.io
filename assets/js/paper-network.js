@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const width = graphElement.clientWidth || 960;
   const height = 720;
+  const isolateHubId = "__paper-network-isolate-hub__";
   const fitViewButton = document.getElementById("paper-network-fit-view");
   const zoomInButton = document.getElementById("paper-network-zoom-in");
   const zoomOutButton = document.getElementById("paper-network-zoom-out");
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     minWeight: Number(network.config?.min_shared_authors_default || 1),
     minYear: yearDomain[0],
     maxYear: yearDomain[1],
-    hideIsolates: network.config?.hide_isolates_default !== false,
+    hideIsolates: Boolean(network.config?.hide_isolates_default),
     search: "",
     selectedNodeId: network.nodes.find((node) => !node.isolated)?.id || network.nodes[0]?.id || null,
     hoveredNodeId: null,
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const zoom = d3
     .zoom()
-    .scaleExtent([0.35, 4])
+    .scaleExtent([0.35, 8])
     .filter((event) => {
       if (event.type === "dblclick") {
         return false;
@@ -134,16 +135,43 @@ document.addEventListener("DOMContentLoaded", () => {
         .distance((link) => 105 - Math.min(link.weight, 4) * 10)
     )
     .force(
+      "isolate-link",
+      d3
+        .forceLink()
+        .id((d) => d.id)
+        .distance((link) => {
+          const targetNode = typeof link.target === "object" ? link.target : null;
+          return 56 + nodeRadius(targetNode) * 2.1;
+        })
+        .strength(0.16)
+    )
+    .force(
       "charge",
-      d3.forceManyBody().strength((node) => -240 - Math.min(node.currentWeightSum || 0, 12) * 12)
+      d3.forceManyBody().strength((node) => {
+        if (node.isVirtualHub) {
+          return 0;
+        }
+        if (node.currentDegree === 0) {
+          return -56;
+        }
+        return -240 - Math.min(node.currentWeightSum || 0, 12) * 12;
+      })
     )
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force(
       "collision",
-      d3.forceCollide().radius((node) => nodeRadius(node) + 10)
+      d3.forceCollide().radius((node) => {
+        if (node.isVirtualHub) {
+          return 0;
+        }
+        return nodeRadius(node) + (node.currentDegree === 0 ? 8 : 10);
+      })
     );
 
   function nodeRadius(node) {
+    if (!node || node.isVirtualHub) {
+      return 0;
+    }
     return 7 + Math.min(node.currentWeightSum || node.shared_author_weight_sum || 0, 12);
   }
 
@@ -166,10 +194,9 @@ document.addEventListener("DOMContentLoaded", () => {
     svg.transition().duration(180).call(zoom.scaleBy, factor);
   }
 
-  function fitGraphToView(padding = 48) {
-    const nodes = nodeLayer.selectAll("circle").data();
+  function fitTransformForNodes(nodes, padding = 48, maxScale = 4) {
     if (!nodes.length) {
-      return;
+      return null;
     }
 
     const minX = d3.min(nodes, (node) => node.x - nodeRadius(node));
@@ -178,10 +205,72 @@ document.addEventListener("DOMContentLoaded", () => {
     const maxY = d3.max(nodes, (node) => node.y + nodeRadius(node));
     const graphWidth = Math.max(maxX - minX, 1);
     const graphHeight = Math.max(maxY - minY, 1);
-    const scale = Math.max(0.35, Math.min(2.5, Math.min((width - padding * 2) / graphWidth, (height - padding * 2) / graphHeight)));
+    const scale = Math.max(0.35, Math.min(maxScale, Math.min((width - padding * 2) / graphWidth, (height - padding * 2) / graphHeight)));
     const translateX = width / 2 - ((minX + maxX) / 2) * scale;
     const translateY = height / 2 - ((minY + maxY) / 2) * scale;
-    transitionToTransform(d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+    return d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+  }
+
+  function fitNodesToView(nodes, padding = 48, maxScale = 4) {
+    const transform = fitTransformForNodes(nodes, padding, maxScale);
+    if (!transform) {
+      return;
+    }
+    transitionToTransform(transform);
+  }
+
+  function fitGraphToView(padding = 48, options = {}) {
+    const { includeIsolates = true, maxScale = 4 } = options;
+    const allNodes = nodeLayer.selectAll("circle").data();
+    const nodes = includeIsolates ? allNodes : allNodes.filter((node) => node.currentDegree > 0);
+    const fitNodes = nodes.length ? nodes : allNodes;
+    fitNodesToView(fitNodes, padding, maxScale);
+  }
+
+  function autoFitCandidateNodes(nodes) {
+    if (nodes.length < 12) {
+      return nodes;
+    }
+
+    const centerX = d3.mean(nodes, (node) => node.x);
+    const centerY = d3.mean(nodes, (node) => node.y);
+    const distances = nodes
+      .map((node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node))
+      .sort(d3.ascending);
+    const cutoffIndex = Math.max(0, Math.ceil(nodes.length * 0.85) - 1);
+    const cutoffDistance = distances[Math.min(cutoffIndex, distances.length - 1)];
+    const trimmedNodes = nodes.filter(
+      (node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node) <= cutoffDistance
+    );
+
+    if (trimmedNodes.length < Math.ceil(nodes.length * 0.7)) {
+      return nodes;
+    }
+
+    const fullTransform = fitTransformForNodes(nodes, 24, 6);
+    const trimmedTransform = fitTransformForNodes(trimmedNodes, 24, 6);
+    if (!fullTransform || !trimmedTransform) {
+      return nodes;
+    }
+
+    const fullScale = fullTransform.k;
+    const trimmedScale = trimmedTransform.k;
+    if (trimmedScale < fullScale * 1.35) {
+      return nodes;
+    }
+
+    return trimmedNodes;
+  }
+
+  function autoFitGraphToView(graph) {
+    const connectedNodes = graph.nodes.filter((node) => node.currentDegree > 0 && hasPosition(node));
+    if (connectedNodes.length) {
+      fitNodesToView(autoFitCandidateNodes(connectedNodes), 24, 6);
+      return;
+    }
+
+    const positionedNodes = graph.nodes.filter(hasPosition);
+    fitNodesToView(positionedNodes, 24, 5.5);
   }
 
   function centerNode(node, minScale = null) {
@@ -203,6 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function filteredGraph() {
+    const previousNodeMap = state.currentNodeMap;
     const nodeMap = new Map(
       network.nodes.map((node) => [
         node.id,
@@ -241,15 +331,172 @@ document.addEventListener("DOMContentLoaded", () => {
       nodes = nodes.filter((node) => node.currentDegree > 0);
     }
 
-    nodes = nodes.map((node) => ({
-      ...node,
-      currentSharedAuthors: Array.from(new Set(node.currentSharedAuthors)).sort(),
-    }));
+    nodes = nodes.map((node) => {
+      const nextNode = {
+        ...node,
+        currentSharedAuthors: Array.from(new Set(node.currentSharedAuthors)).sort(),
+      };
+      const previousNode = previousNodeMap.get(nextNode.id);
+      if (previousNode) {
+        if (Number.isFinite(previousNode.x) && Number.isFinite(previousNode.y)) {
+          nextNode.x = previousNode.x;
+          nextNode.y = previousNode.y;
+        }
+        const reuseVelocity = nextNode.currentDegree > 0 && previousNode.currentDegree > 0;
+        if (reuseVelocity && Number.isFinite(previousNode.vx) && Number.isFinite(previousNode.vy)) {
+          nextNode.vx = previousNode.vx;
+          nextNode.vy = previousNode.vy;
+        } else if (nextNode.currentDegree === 0) {
+          nextNode.vx = 0;
+          nextNode.vy = 0;
+        }
+      } else if (nextNode.currentDegree === 0) {
+        nextNode.vx = 0;
+        nextNode.vy = 0;
+      }
+      return nextNode;
+    });
 
     const visibleIds = new Set(nodes.map((node) => node.id));
     return {
       nodes,
       links: links.filter((link) => visibleIds.has(link.source) && visibleIds.has(link.target)),
+    };
+  }
+
+  function hasPosition(node) {
+    return Number.isFinite(node.x) && Number.isFinite(node.y);
+  }
+
+  function largestConnectedComponentIds(graph) {
+    const nodeMap = new Map();
+    const adjacency = new Map();
+    graph.nodes.forEach((node) => {
+      if (node.currentDegree > 0) {
+        nodeMap.set(node.id, node);
+        adjacency.set(node.id, []);
+      }
+    });
+
+    graph.links.forEach((link) => {
+      if (!adjacency.has(link.source) || !adjacency.has(link.target)) {
+        return;
+      }
+      adjacency.get(link.source).push(link.target);
+      adjacency.get(link.target).push(link.source);
+    });
+
+    let bestIds = [];
+    let bestScore = -Infinity;
+    const visited = new Set();
+
+    adjacency.forEach((_, nodeId) => {
+      if (visited.has(nodeId)) {
+        return;
+      }
+
+      const stack = [nodeId];
+      const componentIds = [];
+      let componentScore = 0;
+      visited.add(nodeId);
+
+      while (stack.length) {
+        const currentId = stack.pop();
+        componentIds.push(currentId);
+        componentScore += nodeMap.get(currentId)?.currentWeightSum || 0;
+
+        (adjacency.get(currentId) || []).forEach((neighborId) => {
+          if (visited.has(neighborId)) {
+            return;
+          }
+          visited.add(neighborId);
+          stack.push(neighborId);
+        });
+      }
+
+      if (
+        componentIds.length > bestIds.length ||
+        (componentIds.length === bestIds.length && componentScore > bestScore)
+      ) {
+        bestIds = componentIds;
+        bestScore = componentScore;
+      }
+    });
+
+    return new Set(bestIds);
+  }
+
+  function buildSimulationGraph(graph) {
+    const isolatedNodes = graph.nodes
+      .filter((node) => node.currentDegree === 0)
+      .sort((left, right) => {
+        const leftYear = Number.isFinite(left.year) ? left.year : -Infinity;
+        const rightYear = Number.isFinite(right.year) ? right.year : -Infinity;
+        if (leftYear !== rightYear) {
+          return leftYear - rightYear;
+        }
+        return left.title.localeCompare(right.title);
+      });
+
+    if (!isolatedNodes.length) {
+      return {
+        nodes: graph.nodes,
+        isolateLinks: [],
+      };
+    }
+
+    const mainComponentIds = largestConnectedComponentIds(graph);
+    const mainComponentNodes = graph.nodes.filter((node) => mainComponentIds.has(node.id));
+    const positionedMainNodes = mainComponentNodes.filter(hasPosition);
+    const centerX = positionedMainNodes.length ? d3.mean(positionedMainNodes, (node) => node.x) : width / 2;
+    const centerY = positionedMainNodes.length ? d3.mean(positionedMainNodes, (node) => node.y) : height / 2;
+    const clusterRadius = positionedMainNodes.length
+      ? d3.max(positionedMainNodes, (node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node))
+      : 0;
+    const seedRadius = Math.max(54, Math.min(110, clusterRadius * 0.34 + 42));
+    const maxSeedRadius = Math.max(seedRadius * 1.8, clusterRadius + 90, 180);
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+    isolatedNodes.forEach((node, index) => {
+      const angle = index * goldenAngle;
+      const preferredRadius = seedRadius + Math.sqrt(index + 1) * 18;
+      node.vx = 0;
+      node.vy = 0;
+
+      if (!hasPosition(node)) {
+        node.x = centerX + Math.cos(angle) * preferredRadius;
+        node.y = centerY + Math.sin(angle) * preferredRadius;
+        return;
+      }
+
+      const distance = Math.hypot(node.x - centerX, node.y - centerY);
+      if (distance <= maxSeedRadius) {
+        return;
+      }
+
+      const direction = distance > 0 ? Math.atan2(node.y - centerY, node.x - centerX) : angle;
+      node.x = centerX + Math.cos(direction) * maxSeedRadius;
+      node.y = centerY + Math.sin(direction) * maxSeedRadius;
+    });
+
+    const isolateHub = {
+      id: isolateHubId,
+      isVirtualHub: true,
+      x: centerX,
+      y: centerY,
+      fx: centerX,
+      fy: centerY,
+      currentDegree: 0,
+      currentWeightSum: 0,
+    };
+
+    return {
+      nodes: [...graph.nodes, isolateHub],
+      isolateLinks: isolatedNodes.map((node) => ({
+        source: isolateHubId,
+        target: node.id,
+        virtual: true,
+      })),
     };
   }
 
@@ -262,6 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function render() {
     const graph = filteredGraph();
+    const simulationGraph = buildSimulationGraph(graph);
     state.currentGraph = graph;
     state.currentNodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
     const query = state.search.trim().toLowerCase();
@@ -337,15 +585,16 @@ document.addEventListener("DOMContentLoaded", () => {
       .attr("text-anchor", "middle")
       .text((node) => node.short_title);
 
-    simulation.nodes(graph.nodes).on("tick", ticked);
+    simulation.nodes(simulationGraph.nodes).on("tick", ticked);
     simulation.force("link").links(graph.links);
+    simulation.force("isolate-link").links(simulationGraph.isolateLinks);
     simulation.on("end", () => {
       if (graph.nodes.length) {
         const matchedNode = query ? firstMatchedNode(graph, matchedIds) : null;
         if (matchedNode) {
           centerNode(matchedNode, 1);
         } else {
-          fitGraphToView();
+          autoFitGraphToView(graph);
         }
       }
     });
@@ -666,6 +915,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (hideIsolatesInput) {
+    hideIsolatesInput.checked = state.hideIsolates;
     hideIsolatesInput.addEventListener("change", () => {
       state.hideIsolates = hideIsolatesInput.checked;
       render();
