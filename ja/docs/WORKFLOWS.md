@@ -105,12 +105,21 @@ Before each push, the hook runs:
 
 - Python syntax checks for files in `.github/scripts/`
 - `python3 -m unittest discover -s tests`
+- `bundle exec ruby -Itest test/paper_network_test.rb`
 - `.github/scripts/check-image-budget.sh`
+
+For the Paper Network Ruby test, the script prefers your local Ruby/Bundler setup and falls back to `docker compose` when local gems are not available.
 
 You can run the same checks manually with:
 
 ```bash
 npm run checks:push
+```
+
+For frontend-heavy changes such as the `resources` page networks, also run:
+
+```bash
+npm run test:ui
 ```
 
 If you intentionally need to bypass the hook once, use:

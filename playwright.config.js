@@ -1,0 +1,1 @@
+const{defineConfig:defineConfig}=require("@playwright/test");module.exports=defineConfig({testDir:"./tests/ui",timeout:3e4,use:{baseURL:process.env.PLAYWRIGHT_BASE_URL||"http://127.0.0.1:8080",headless:!0,viewport:{width:1440,height:1400}},reporter:process.env.CI?"github":"list"});
