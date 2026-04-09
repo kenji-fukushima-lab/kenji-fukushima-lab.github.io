@@ -16,6 +16,7 @@ on:
       - "!.github/workflows/axe.yml"
       - "!.github/workflows/prettier.yml"
       - "!lighthouse_results/**"
+      - "!lighthouse-results-ci/**"
   pull_request:
     branches:
       - master
@@ -31,6 +32,7 @@ on:
       - "!.github/workflows/axe.yml"
       - "!.github/workflows/prettier.yml"
       - "!lighthouse_results/**"
+      - "!lighthouse-results-ci/**"
 
 concurrency:
   group: links-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

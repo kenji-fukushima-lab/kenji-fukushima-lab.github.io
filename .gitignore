@@ -14,3 +14,12 @@ vendor
 .DS_Store
 _site/
 .github/scripts/__pycache__/
+lighthouse_results/
+lighthouse-results-ci/
+readme_preview/
+playwright-report/
+test-results/
+.lighthouseci/
+.ruby-lsp/
+changed-files.txt
+upstream-commits.txt

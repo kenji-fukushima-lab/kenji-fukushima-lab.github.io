@@ -28,6 +28,7 @@ on:
       - "package-lock.json"
       - ".github/workflows/prettier.yml"
       - "!lighthouse_results/**"
+      - "!lighthouse-results-ci/**"
   push:
     branches:
       - master
@@ -55,6 +56,7 @@ on:
       - "package-lock.json"
       - ".github/workflows/prettier.yml"
       - "!lighthouse_results/**"
+      - "!lighthouse-results-ci/**"
 
 concurrency:
   group: prettier-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

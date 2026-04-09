@@ -36,9 +36,10 @@ Useful local checks:
 
 ```bash
 npm run checks:push
-bundle exec ruby -Itest test/paper_network_test.rb
 npm run test:ui
 ```
+
+`npm run checks:push` covers the local pre-push hook checks, including the Paper Network Ruby unit test. Run `npm run test:ui` as an extra smoke test for frontend-heavy changes such as the `resources` page networks.
 
 ## More docs
 
