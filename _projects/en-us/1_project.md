@@ -45,12 +45,12 @@ Convergent evolution is not limited to form and function. When we examine conver
 
 #### Phenotypic plasticity
 
-<div class="project-media-split">
+<div class="project-media-split" data-media-layout="half">
   <div class="project-media-split__body" markdown="1">
 Organisms can alter their body plans in response to the environment. When those changes are especially pronounced, the phenomenon is called phenotypic plasticity. Some carnivorous plants show this plasticity by producing both trapping leaves and photosynthetic leaves. Because trapping leaves always evolved from photosynthetic leaves, this plasticity may preserve clues to how carnivorous leaves originated. We are tackling this question using the Australian pitcher plant _Cephalotus follicularis_.
   </div>
   <div class="project-media-split__media">
-    <img src="/assets/img/projects/cephalotus_heterophylly.jpg" alt="Cephalotus follicularis" width="900"/>
+    <img src="/assets/img/projects/cephalotus_heterophylly.jpg" alt="Cephalotus follicularis" width="450"/>
   </div>
 </div>
 

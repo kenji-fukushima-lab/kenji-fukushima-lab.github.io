@@ -32,12 +32,12 @@ schema_type: WebPage
 
 #### フクロユキノシタ(_Cephalotus follicularis_)
 
-<div class="project-media-split">
+<div class="project-media-split" data-media-layout="half">
   <div class="project-media-split__body" markdown="1">
 オーストラリア南西部にのみ自生する一科一属一種の食虫植物で、落とし穴式に小昆虫を捕らえます。この種は顕著な表現型可塑性を示し、生育環境に応じて、袋型捕虫葉と光合成葉を作り分けます。捕虫葉の進化が常に光合成葉から始まっていることを考えれば、この植物には祖先と子孫の形質が同居しているようなもので、これは進化の研究にとても都合のよい性質です。
   </div>
   <div class="project-media-split__media">
-    <img src="/assets/img/projects/cephalotus_heterophylly.jpg" alt="Cephalotus follicularis" width="900"/>
+    <img src="/assets/img/projects/cephalotus_heterophylly.jpg" alt="Cephalotus follicularis" width="450"/>
   </div>
 </div>
 
