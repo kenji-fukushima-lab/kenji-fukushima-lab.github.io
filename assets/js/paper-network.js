@@ -234,14 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const centerX = d3.mean(nodes, (node) => node.x);
     const centerY = d3.mean(nodes, (node) => node.y);
-    const distances = nodes
-      .map((node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node))
-      .sort(d3.ascending);
+    const distances = nodes.map((node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node)).sort(d3.ascending);
     const cutoffIndex = Math.max(0, Math.ceil(nodes.length * 0.85) - 1);
     const cutoffDistance = distances[Math.min(cutoffIndex, distances.length - 1)];
-    const trimmedNodes = nodes.filter(
-      (node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node) <= cutoffDistance
-    );
+    const trimmedNodes = nodes.filter((node) => Math.hypot(node.x - centerX, node.y - centerY) + nodeRadius(node) <= cutoffDistance);
 
     if (trimmedNodes.length < Math.ceil(nodes.length * 0.7)) {
       return nodes;
@@ -414,10 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      if (
-        componentIds.length > bestIds.length ||
-        (componentIds.length === bestIds.length && componentScore > bestScore)
-      ) {
+      if (componentIds.length > bestIds.length || (componentIds.length === bestIds.length && componentScore > bestScore)) {
         bestIds = componentIds;
         bestScore = componentScore;
       }

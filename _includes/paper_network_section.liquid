@@ -161,7 +161,13 @@
         </div>
         <div>
           <label class="paper-network-inline-toggle" for="paper-network-hide-isolates">
-            <input id="paper-network-hide-isolates" type="checkbox" {% if network.config.hide_isolates_default %}checked{% endif %}>
+            <input
+              id="paper-network-hide-isolates"
+              type="checkbox"
+              {% if network.config.hide_isolates_default %}
+                checked
+              {% endif %}
+            >
             {{ hide_isolates_label }}
           </label>
         </div>
