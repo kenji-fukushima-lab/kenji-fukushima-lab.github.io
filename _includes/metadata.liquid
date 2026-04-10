@@ -41,7 +41,7 @@
     | default: parent_organization_alternate_names_localized
   %}
 {% endif %}
-{% assign site_name_for_meta = organization_name_localized | default: title %}
+{% assign site_name_for_meta = organization_name_localized | default: title | strip_html | normalize_whitespace %}
 {% assign archive_description = null %}
 {% if page.title != null and page.title != '' %}
   {% assign page_title = page.title %}
@@ -201,16 +201,19 @@
     {{ title }}
   {% endif %}
 {% endcapture %}
-{% assign meta_title = meta_title | strip | normalize_whitespace %}
+{% assign meta_title = meta_title | strip | normalize_whitespace | strip_html %}
+{% assign meta_title_html = meta_title | escape_once %}
+{% assign description_html = description | escape_once %}
+{% assign schema_name = page.schema_name | default: page_title_for_meta | default: title | strip_html | normalize_whitespace %}
 
-<title>{{ meta_title }}</title>
-<meta name="author" content="{{ author_name }}">
-<meta name="description" content="{{ description }}">
+<title>{{ meta_title_html }}</title>
+<meta name="author" content="{{ author_name | escape_once }}">
+<meta name="description" content="{{ description_html }}">
 {% if page.robots %}
-  <meta name="robots" content="{{ page.robots }}">
+  <meta name="robots" content="{{ page.robots | escape_once }}">
 {% endif %}
 {% if page.keywords or site.keywords %}
-  <meta name="keywords" content="{% if page.keywords %}{{ page.keywords }}{% else %}{{ site.keywords }}{% endif %}">
+  <meta name="keywords" content="{% if page.keywords %}{{ page.keywords | escape_once }}{% else %}{{ site.keywords | escape_once }}{% endif %}">
 {% endif %}
 
 {% assign is_article_page = false %}
@@ -229,17 +232,17 @@
 
 {% if site.serve_og_meta %}
   <!-- OpenGraph -->
-  <meta property="og:site_name" content="{{ site_name_for_meta }}">
+  <meta property="og:site_name" content="{{ site_name_for_meta | escape_once }}">
   <meta property="og:type" content="{% if is_article_page %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{{ meta_title }}">
+  <meta property="og:title" content="{{ meta_title_html }}">
   {% if canonical_url %}
-    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:url" content="{{ canonical_url | escape_once }}">
   {% else %}
-    <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
+    <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' | escape_once }}">
   {% endif %}
-  <meta property="og:description" content="{{ description }}">
+  <meta property="og:description" content="{{ description_html }}">
   {% if social_image != blank %}
-    <meta property="og:image" content="{{ social_image }}">
+    <meta property="og:image" content="{{ social_image | escape_once }}">
   {% endif %}
   {% if is_article_page and page.date %}
     <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
@@ -249,10 +252,10 @@
 
   <!-- Twitter card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{{ meta_title }}">
-  <meta name="twitter:description" content="{{ description }}">
+  <meta name="twitter:title" content="{{ meta_title_html }}">
+  <meta name="twitter:description" content="{{ description_html }}">
   {% if social_image != blank %}
-    <meta name="twitter:image" content="{{ social_image }}">
+    <meta name="twitter:image" content="{{ social_image | escape_once }}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">
@@ -404,17 +407,15 @@
   {% if schema_url == blank %}
     {% assign schema_url = page.url | prepend: site.baseurl | prepend: site.url %}
   {% endif %}
-  {% assign schema_name = page.schema_name | default: page_title_for_meta | default: title %}
-
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "{{ schema_type }}",
       "@id": "{{ schema_url }}#page",
       "url": "{{ schema_url }}",
-      "name": "{{ schema_name }}",
-      "headline": "{{ schema_name }}",
-      "description": "{{ description }}",
+      "name": {{ schema_name | jsonify }},
+      "headline": {{ schema_name | jsonify }},
+      "description": {{ description | jsonify }},
       "inLanguage": "{{ site.active_lang }}"{% if social_image != blank %},
       "image": "{{ social_image }}"{% endif %},
       "isPartOf": {

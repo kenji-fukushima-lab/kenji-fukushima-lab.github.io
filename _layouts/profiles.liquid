@@ -60,20 +60,21 @@ layout: page
       <div class="people-card">
         {% if profile.image %}
           {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
+          {% assign profile_image_alt = profile.name | strip_html %}
           <div class="people-avatar-wrapper">
-            {% include figure.liquid path=profile_image_path class="rounded people-avatar" width="96" alt=profile.name %}
+            {% include figure.liquid path=profile_image_path class="rounded people-avatar" width="96" alt=profile_image_alt %}
           </div>
         {% endif %}
         <div class="people-card-body">
           <h2 class="people-name">
-            {{ profile.name }}
+            {{ profile.name | strip_html | escape_once }}
             {% if site.active_lang == 'ja' and profile.name_native %}
-              <span class="people-name-native">{{ profile.name_native }}</span>
+              <span class="people-name-native">{{ profile.name_native | strip_html | escape_once }}</span>
             {% endif %}
           </h2>
 
           {% assign position = site.data[lang].strings.positions[profile.position_key] %}
-          {% assign profile_name = profile.name | strip %}
+          {% assign profile_name = profile.name | strip_html | strip %}
           {% assign has_social_links = false %}
           {% if profile.email
             or profile.website

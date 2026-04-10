@@ -85,6 +85,7 @@ EDITABLE_FIELDS = [
   "researchmap",
   "tayo",
 ]
+PLAIN_TEXT_FIELDS = {"name", "name_native"}
 FIELD_LABELS = {
   "name": "Name",
   "name_native": "Native script name",
@@ -417,6 +418,11 @@ def normalize_field_value(field: str, raw_value: str, issue_user_login: str, all
     return ""
   if "\n" in value or "\r" in value:
     raise InputError(f"{FIELD_LABELS[field]} must be a single line.")
+  if field in PLAIN_TEXT_FIELDS:
+    try:
+      return blog_post_automation.validate_plain_text_submission_value(FIELD_LABELS[field], value)
+    except blog_post_automation.InputError as exc:
+      raise InputError(str(exc)) from exc
   if field == "email" and not EMAIL_PATTERN.match(value):
     raise InputError("Email must look like a valid email address.")
   if field == "github":

@@ -40,6 +40,11 @@ HTML_ATTRIBUTE_PATTERN = re.compile(
     r"""(?P<name>[\w:-]+)\s*=\s*(?P<quote>["'])(?P<value>.*?)(?P=quote)""",
     re.IGNORECASE | re.DOTALL,
 )
+SAFE_FIGURE_INCLUDE_PATTERN = re.compile(r"{%\s+include\s+figure\.liquid\s+[^%]*%}")
+MARKDOWN_AUTOLINK_PATTERN = re.compile(r"<(?:https?://|mailto:)[^>\s]+>")
+RAW_HTML_TAG_PATTERN = re.compile(r"<\s*/?\s*[A-Za-z][^>]*>")
+INLINE_EVENT_HANDLER_PATTERN = re.compile(r"\bon[a-z]+\s*=", re.IGNORECASE)
+DANGEROUS_URI_PATTERN = re.compile(r"(?:javascript:|data:text/html)", re.IGNORECASE)
 NO_RESPONSE = "_No response_"
 EXIF_ORIENTATION_TAG = 274
 MAX_IMAGE_BYTES = int(os.environ.get("MAX_IMAGE_BYTES", "900000"))
@@ -144,6 +149,33 @@ def normalize_body_markdown(markdown: str) -> str:
     return normalized.strip("\n")
 
 
+def validate_plain_text_submission_value(field_label: str, value: str) -> str:
+    normalized = value.strip()
+    if "\n" in normalized or "\r" in normalized:
+        raise InputError(f"{field_label} must be a single line.")
+    if "<" in normalized or ">" in normalized:
+        raise InputError(f"{field_label} must not include HTML markup.")
+    if "{{" in normalized or "}}" in normalized or "{%" in normalized or "%}" in normalized:
+        raise InputError(f"{field_label} must not include Liquid markup.")
+    return normalized
+
+
+def validate_generated_body_markdown(markdown: str) -> None:
+    # Allow the exact figure include syntax that this automation generated, but reject
+    # any remaining raw HTML or Liquid syntax from the issue body.
+    sanitized = SAFE_FIGURE_INCLUDE_PATTERN.sub("", markdown)
+    sanitized = MARKDOWN_AUTOLINK_PATTERN.sub("", sanitized)
+
+    if "{{" in sanitized or "}}" in sanitized or "{%" in sanitized or "%}" in sanitized:
+        raise InputError("Body (Markdown) must not include Liquid markup.")
+    if DANGEROUS_URI_PATTERN.search(sanitized):
+        raise InputError("Body (Markdown) must not include javascript: or HTML data URLs.")
+    if INLINE_EVENT_HANDLER_PATTERN.search(sanitized):
+        raise InputError("Body (Markdown) must not include inline HTML event handlers.")
+    if RAW_HTML_TAG_PATTERN.search(sanitized):
+        raise InputError("Body (Markdown) must not contain raw HTML. Use Markdown syntax instead.")
+
+
 def parse_html_attributes(raw_attributes: str) -> Dict[str, str]:
     attributes: Dict[str, str] = {}
     for match in HTML_ATTRIBUTE_PATTERN.finditer(raw_attributes):
@@ -154,7 +186,12 @@ def parse_html_attributes(raw_attributes: str) -> Dict[str, str]:
 
 
 def build_figure_include(path: str, alt: str) -> str:
-    escaped_alt = html.escape(alt.strip(), quote=True)
+    escaped_alt = (
+        html.escape(alt.strip(), quote=True)
+        .replace("{", "&#123;")
+        .replace("}", "&#125;")
+        .replace("%", "&#37;")
+    )
     return (
         "{% include figure.liquid "
         f'path="{path}" '
@@ -541,10 +578,13 @@ def main() -> int:
 
     sections = parse_sections(issue_body)
 
-    title = first_non_empty(
-        sections,
-        ["記事タイトル / Post Title", "投稿タイトル", "Post title"],
-        required=True,
+    title = validate_plain_text_submission_value(
+        "Post title",
+        first_non_empty(
+            sections,
+            ["記事タイトル / Post Title", "投稿タイトル", "Post title"],
+            required=True,
+        ),
     )
     date_str = parse_iso_date(
         first_non_empty(
@@ -587,6 +627,7 @@ def main() -> int:
         slug=slug,
         issue_number=issue_number,
     )
+    validate_generated_body_markdown(content)
 
     post_path = choose_post_path(date_str=date_str, slug=slug, lang=lang, issue_number=issue_number)
 
