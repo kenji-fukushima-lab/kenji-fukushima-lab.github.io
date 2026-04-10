@@ -68,6 +68,23 @@ class CreateProfileUpdateFromIssueTests(unittest.TestCase):
                 allow_arbitrary_github_change=False,
             )
 
+    def test_normalize_field_value_rejects_markup_in_profile_names(self) -> None:
+        with self.assertRaisesRegex(MODULE.InputError, "must not include HTML markup"):
+            MODULE.normalize_field_value(
+                "name",
+                "<img src=x onerror=alert(1)>",
+                issue_user_login="ninui23",
+                allow_arbitrary_github_change=False,
+            )
+
+        with self.assertRaisesRegex(MODULE.InputError, "must not include Liquid markup"):
+            MODULE.normalize_field_value(
+                "name_native",
+                "{% include evil %}",
+                issue_user_login="ninui23",
+                allow_arbitrary_github_change=False,
+            )
+
     def test_resolve_profile_path_finds_matching_profile_by_github_username(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)

@@ -46,6 +46,24 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
         self.assertIn("line 1  \nline 2", markdown)
         self.assertIn("```text\na\n\n\nb\n```", markdown)
 
+    def test_validate_plain_text_submission_value_rejects_markup(self) -> None:
+        with self.assertRaisesRegex(MODULE.InputError, "must not include HTML markup"):
+            MODULE.validate_plain_text_submission_value("Post title", "<script>alert(1)</script>")
+
+        with self.assertRaisesRegex(MODULE.InputError, "must not include Liquid markup"):
+            MODULE.validate_plain_text_submission_value("Post title", "{% include evil %}")
+
+    def test_validate_generated_body_markdown_rejects_html_and_liquid(self) -> None:
+        with self.assertRaisesRegex(MODULE.InputError, "must not contain raw HTML"):
+            MODULE.validate_generated_body_markdown("<script>alert(1)</script>")
+
+        with self.assertRaisesRegex(MODULE.InputError, "must not include Liquid markup"):
+            MODULE.validate_generated_body_markdown("before {{ site.title }} after")
+
+    def test_validate_generated_body_markdown_allows_generated_figure_include(self) -> None:
+        markdown = '{% include figure.liquid path="assets/img/posts/sample.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="Image" %}'
+        MODULE.validate_generated_body_markdown(markdown)
+
     def test_optimize_image_asset_keeps_budget(self) -> None:
         image = Image.frombytes("RGB", (1200, 1200), os.urandom(1200 * 1200 * 3))
         buffer = io.BytesIO()
@@ -91,6 +109,11 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
         self.assertIn('width="450"', replaced_markdown)
         self.assertEqual(replaced_files, [f"/{expected_asset}"])
         self.assertEqual(warnings, [])
+
+    def test_build_figure_include_escapes_liquid_delimiters_in_alt_text(self) -> None:
+        figure = MODULE.build_figure_include("assets/img/posts/sample.jpg", 'brace {% %} "quote"')
+        self.assertIn("&#123;&#37;", figure)
+        self.assertIn("&quot;quote&quot;", figure)
 
 
 if __name__ == "__main__":
