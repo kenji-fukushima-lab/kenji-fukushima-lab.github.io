@@ -28,14 +28,20 @@ jobs:
       - name: Check for scheduled posts and move to posts
         run: |
           echo "Today is $TODAY"
+          mkdir -p _scheduled
           shopt -s nullglob globstar
+          found_posts=0
           for file in _scheduled/**/${TODAY}-*.md; do
+            found_posts=1
             echo "Found scheduled: $file"
             parent_dir="$(dirname "$file")"
             language_dir="$(basename "$parent_dir")"
             mv "$file" "_posts/$language_dir/"
             echo "Moved $file to _posts/$language_dir/"
           done
+          if [ "$found_posts" -eq 0 ]; then
+            echo "No scheduled posts found for $TODAY"
+          fi
 
       - name: Commit and push changes
         run: |
