@@ -88,14 +88,13 @@ module LabStats
 
       profiles_collection.docs.count do |profile|
         relative_path = profile.relative_path.to_s
-        basename = File.basename(relative_path, '.*')
         position_key = profile.data['position_key'].to_s.strip
         name = profile.data['name'].to_s.strip
-        is_template_profile = relative_path.include?('/template/template.md')
 
         next false if name.empty?
-        next false if position_key == 'future' && !is_template_profile
-        next false unless relative_path.include?('/current_members/') || is_template_profile
+        next false if relative_path.include?('/template/template.md')
+        next false if position_key == 'future'
+        next false unless relative_path.include?('/current_members/')
 
         true
       end
