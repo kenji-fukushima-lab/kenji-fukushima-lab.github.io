@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .attr("role", "img")
     .attr("aria-label", i18n.graphAriaLabel);
 
-  const viewport = svg.append("g").attr("class", "paper-network-viewport");
+  const viewport = svg.append("g").attr("class", "paper-network-viewport").attr("transform", d3.zoomIdentity);
   const linkLayer = viewport.append("g").attr("class", "paper-network-links");
   const nodeLayer = viewport.append("g").attr("class", "paper-network-nodes");
   const labelLayer = viewport.append("g").attr("class", "paper-network-labels");
