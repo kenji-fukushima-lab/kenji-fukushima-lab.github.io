@@ -397,7 +397,7 @@
 
   .join-content .project-media-split--double .project-media-split__body,
   .join-content .project-media-split[data-media-layout="double"] .project-media-split__body {
-    max-width: 60ch;
+    max-width: none;
   }
 
   .join-content .project-media-split--double .project-media-split__media,

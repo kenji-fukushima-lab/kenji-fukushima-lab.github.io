@@ -149,6 +149,7 @@
           {% endif %}
           {% if available_languages.size >= 2 %}
             {% if available_languages.size == 2 %}
+              {% assign current_language = site.active_lang %}
               {% if site.active_lang == available_languages.first %}
                 {% assign other_language = available_languages.last %}
               {% else %}
@@ -169,50 +170,55 @@
               {% else %}
                 {% capture switch_language_tooltip %}Switch to {{ other_language_name_en }}{% endcapture %}
               {% endif %}
-              <li class="nav-item active">
-                {% if site.active_lang == site.default_lang %}
-                  <a
-                    class="nav-link nav-tooltip-trigger"
-                    data-tooltip="{{ switch_language_tooltip | strip }}"
-                    aria-label="{{ switch_language_tooltip | strip }}"
-                    {% static_href -%}
-                    href="{{ site.baseurl }}/{{ other_language }}{{ page.url }}"
-                    {%- endstatic_href %}
-                  >
-                    {% if site.country_flag %}
-                      {% if other_language contains 'en' %}
-                        🇬🇧
-                      {% elsif other_language == 'ja' %}
-                        🇯🇵
-                      {% else %}
-                        {{ other_language | upcase }}
-                      {% endif %}
-                    {% else %}
-                      {{ other_language | upcase }}
-                    {%- endif -%}
-                  </a>
+              {% capture current_language_badge %}
+                {% if site.country_flag %}
+                  {% if current_language contains 'en' %}
+                    🇬🇧
+                  {% elsif current_language == 'ja' %}
+                    🇯🇵
+                  {% else %}
+                    {{ current_language | split: '-' | first | upcase }}
+                  {% endif %}
                 {% else %}
-                  <a
-                    class="nav-link nav-tooltip-trigger"
-                    data-tooltip="{{ switch_language_tooltip | strip }}"
-                    aria-label="{{ switch_language_tooltip | strip }}"
-                    {% static_href -%}
-                    href="{{ site.baseurl }}{{ page.url }}"
-                    {%- endstatic_href %}
-                  >
-                    {% if site.country_flag %}
-                      {% if site.default_lang contains 'en' %}
-                        🇬🇧
-                      {% elsif site.default_lang == 'ja' %}
-                        🇯🇵
-                      {% else %}
-                        {{ site.default_lang | upcase }}
-                      {% endif %}
-                    {% else %}
-                      {{ site.default_lang | upcase }}
-                    {%- endif -%}
-                  </a>
+                  {{ current_language | split: '-' | first | upcase }}
                 {% endif %}
+              {% endcapture %}
+              {% capture other_language_badge %}
+                {% if site.country_flag %}
+                  {% if other_language contains 'en' %}
+                    🇬🇧
+                  {% elsif other_language == 'ja' %}
+                    🇯🇵
+                  {% else %}
+                    {{ other_language | split: '-' | first | upcase }}
+                  {% endif %}
+                {% else %}
+                  {{ other_language | split: '-' | first | upcase }}
+                {% endif %}
+              {% endcapture %}
+              {% if other_language == site.default_lang %}
+                {% assign switch_href = site.baseurl | append: page.url %}
+              {% else %}
+                {% assign switch_href = site.baseurl | append: '/' | append: other_language | append: page.url %}
+              {% endif %}
+              <li class="nav-item active">
+                <a
+                  class="nav-link nav-tooltip-trigger nav-link-language-stack"
+                  data-tooltip="{{ switch_language_tooltip | strip }}"
+                  aria-label="{{ switch_language_tooltip | strip }}"
+                  {% static_href -%}
+                  href="{{ switch_href }}"
+                  {%- endstatic_href %}
+                >
+                  {% if site.country_flag %}
+                    <span class="lang-flag-stack" aria-hidden="true">
+                      <span class="lang-flag-stack__flag lang-flag-stack__flag--front">{{ current_language_badge | strip }}</span>
+                      <span class="lang-flag-stack__flag lang-flag-stack__flag--back">{{ other_language_badge | strip }}</span>
+                    </span>
+                  {% else %}
+                    {{ other_language | split: '-' | first | upcase }}
+                  {%- endif -%}
+                </a>
               </li>
             {% else %}
               <li class="nav-item dropdown {% if page.title == p.title %}active{% endif %}">

@@ -47,7 +47,7 @@ schema_type: WebPage
 
 #### 表現型可塑性
 
-<div class="project-media-split" data-media-layout="half">
+<div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
 生物は環境に応じて体のつくりを変えることができます。その変化が特に顕著な場合、表現型可塑性と呼ばれます。いくつかの食虫植物はこの表現型可塑性を示し、捕虫葉と光合成葉を作り分けます。捕虫葉は常に光合成葉を祖先として進化していることを考えると、この可塑性の中に捕虫葉進化のヒントが隠されているかもしれません。私たちは食虫植物フクロユキノシタを用いて、この謎に取り組んでいます。
   </div>

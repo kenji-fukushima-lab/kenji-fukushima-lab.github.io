@@ -32,7 +32,7 @@ We are collecting genome and transcriptome data across a broad diversity of carn
 
 #### _Cephalotus follicularis_
 
-<div class="project-media-split" data-media-layout="half">
+<div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
 _Cephalotus follicularis_ is a carnivorous plant endemic to southwestern Australia and the sole species in its family and genus. It captures small insects with pitfall traps. This species shows striking phenotypic plasticity, producing both pitcher-shaped trapping leaves and flat photosynthetic leaves depending on growing conditions. Because carnivorous leaves always evolved from photosynthetic leaves, this plant effectively preserves ancestral and derived traits side by side, making it an especially useful system for studying evolutionary transitions.
   </div>

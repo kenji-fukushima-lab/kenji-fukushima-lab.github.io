@@ -570,6 +570,63 @@ html[data-theme="dark"] .pagefind-modal-shell__dialog {
   }
 }
 
+.nav-link-language-stack {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lang-flag-stack {
+  position: relative;
+  display: inline-block;
+  width: 1.55rem;
+  height: 1.2rem;
+  vertical-align: middle;
+}
+
+.lang-flag-stack__flag {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  transform-origin: center;
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.28));
+  transition:
+    transform 0.16s ease,
+    filter 0.16s ease,
+    opacity 0.16s ease;
+}
+
+.lang-flag-stack__flag--front {
+  top: -0.02rem;
+  left: 0;
+  z-index: 2;
+  transform: rotate(-7deg);
+}
+
+.lang-flag-stack__flag--back {
+  top: 0.18rem;
+  left: 0.48rem;
+  z-index: 1;
+  opacity: 0.92;
+  transform: rotate(8deg) scale(0.92);
+}
+
+.nav-link-language-stack:hover .lang-flag-stack__flag--front,
+.nav-link-language-stack:focus-visible .lang-flag-stack__flag--front {
+  transform: translate(-0.04rem, -0.05rem) rotate(-10deg);
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.34));
+}
+
+.nav-link-language-stack:hover .lang-flag-stack__flag--back,
+.nav-link-language-stack:focus-visible .lang-flag-stack__flag--back {
+  transform: translate(0.05rem, 0.04rem) rotate(11deg) scale(0.94);
+}
+
 #light-toggle,
 #search-toggle {
   padding: 0;
