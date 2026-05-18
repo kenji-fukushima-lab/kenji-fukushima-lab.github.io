@@ -1,6 +1,7 @@
 "kfuku52/genegalleon": "Charting evolutionary histories across genes and species"
 "kfuku52/csubst": "Analyzing combinations of codon substitution histories"
 "kfuku52/amalgkit": "RNA-seq data amalgamation for a large-scale evolutionary transcriptomics"
+"kfuku52/msspack": "Build DDBJ MSS submission files from FASTA/GFF inputs"
 "kfuku52/RADTE": "Divergence time estimation in the complex history of gene family evolution"
 "kfuku52/cdskit": "Processing protein-coding DNA sequences in frame"
 "kfuku52/nwkit": "Newick tree processing"
