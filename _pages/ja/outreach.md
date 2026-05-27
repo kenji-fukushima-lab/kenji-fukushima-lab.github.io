@@ -3,7 +3,8 @@ page_id: outreach
 layout: page
 permalink: /outreach/
 title: アウトリーチ
-description: 福島研究室の書籍、講演、メディア出演などのアウトリーチ活動を紹介しています。
+description: 国立遺伝学研究所 植物進化研究室の書籍、講演、メディア出演などのアウトリーチ活動を紹介しています。
+seo_title: アウトリーチ | 国立遺伝学研究所 植物進化研究室
 nav: true
 nav_order: 6
 ---

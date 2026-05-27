@@ -6,15 +6,15 @@ img: assets/img/projects/incubator_IMG_20220124_115601_downsize.jpg
 importance: 4
 category: research
 related_publications: false
-seo_title: 遺伝研の研究環境 | 国立遺伝学研究所 植物進化研究室の設備
-seo_description: 国立遺伝学研究所にある植物進化研究室の実験設備、計算機資源、食虫植物の栽培環境を紹介します。
+seo_title: 設備・環境 | 国立遺伝学研究所 植物進化研究室
+seo_description: 国立遺伝学研究所 植物進化研究室の実験設備、計算機資源、食虫植物の栽培環境を紹介します。
 keywords: 遺伝研, 国立遺伝学研究所, 食虫植物, 植物進化研究室
 schema_type: WebPage
 ---
 
 #### 実験設備
 
-当研究室では、植物に特化した分子生物学実験が可能です。また、国立遺伝学研究所の豊富な[共通機器](https://www.nig.ac.jp/researchers/equipment/)にもアクセスできます。
+国立遺伝学研究所 植物進化研究室では、植物に特化した分子生物学実験が可能です。また、国立遺伝学研究所の豊富な[共通機器](https://www.nig.ac.jp/researchers/equipment/)にもアクセスできます。
 
 <div style="display: flex; justify-content: space-around;">
     <img src="/assets/img/projects/lab_equipment1.jpg" alt="Lab equipment 1" style="width: 45%; max-width: 450px;"/>

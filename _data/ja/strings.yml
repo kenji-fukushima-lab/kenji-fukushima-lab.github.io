@@ -56,7 +56,7 @@ cv:
   position: 役職
   postalCode: 郵便番号
   present: 現在
-  profiles: 当研究室のメンバー一覧です。
+  profiles: 国立遺伝学研究所 植物進化研究室のメンバー一覧です。
   projects: 研究プロジェクト一覧
   publications: 論文一覧
   publisher: 出版者
@@ -174,7 +174,7 @@ search:
 
 selected_publications: 主な論文
 
-site_description: 福島研究室のウェブサイト
+site_description: 国立遺伝学研究所 植物進化研究室のウェブサイト
 
 # [add] added at 2025-5-14
 positions:

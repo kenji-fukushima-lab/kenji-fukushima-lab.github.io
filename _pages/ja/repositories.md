@@ -4,6 +4,7 @@ layout: page
 permalink: /repositories/
 title: リソース
 description: Edit the `_data/repositories.yml` and change the `github_users` and `github_repos` lists to include your own GitHub profile and repositories.
+seo_title: リソース | 国立遺伝学研究所 植物進化研究室
 nav: false # ture
 nav_order: # 5
 ---

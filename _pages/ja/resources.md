@@ -3,7 +3,8 @@ page_id: resources
 layout: resources
 permalink: /resources/
 title: リソース
-description: 当研究室で提供している研究リソースの一覧です。
+description: 国立遺伝学研究所 植物進化研究室で提供している研究リソースの一覧です。
+seo_title: リソース | 国立遺伝学研究所 植物進化研究室
 nav: true
 nav_order: 5
 chart:
