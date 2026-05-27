@@ -6,9 +6,9 @@ img: assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg
 importance: 3
 category: research
 related_publications: false
-seo_title: Carnivorous plants and model plants | Study systems for plant evolution and convergent evolution
-seo_description: Meet the carnivorous plants and model plants we use to investigate plant evolution and convergent evolution.
-keywords: carnivorous plants, plant evolution, convergent evolution, Cephalotus, Nepenthes
+seo_title: Carnivorous plants and diverse study organisms | Study systems for plant evolution and convergent evolution
+seo_description: Meet the carnivorous plants, Cuscuta-based transport assays, gymnosperms, and other organisms we use to investigate plant evolution and convergent evolution.
+keywords: carnivorous plants, plant evolution, convergent evolution, Cephalotus, Nepenthes, Cuscuta, gymnosperms, cycads, ginkgo, archegonia
 schema_type: WebPage
 ---
 
@@ -92,30 +92,14 @@ To understand evolution, it is not enough to study carnivorous plants alone. Com
 </div>
 <div style="margin-top: 30px;"></div>
 
-## Organisms introduced by lab members
-
-Our lab is not limited to carnivorous plants. If a student or researcher already has deep experience with a particular organism, even one that our lab has not previously worked on, it can become the basis of a new project. As long as genome sequences can be obtained, we can analyze many kinds of organisms within a common framework. By combining that flexibility with our bioinformatics expertise, especially our distinctive methods for studying molecular convergence, each member can pursue the core biology of "their" organism.
-
-#### Study organism introduced by a lab member 1: Ferns
+## Parasitic plant _Cuscuta_ spp.
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
-Ferns have a unique life cycle in which both the haploid gametophyte and diploid sporophyte live as independent, autotrophic bodies. They are therefore key systems for studying the evolution of reproduction and development in land plants.
+We have successfully established _Cuscuta_ parasitism on carnivorous plants. We are now using this experimental system to develop new research focused on nutrient transport between the two plants.
   </div>
   <div class="project-media-split__media">
-    <img src="/assets/img/projects/hymenasplenium_murakami-hatanakae.jpeg" alt="Hymenasplenium murakami-hatanakae" width="450"/>
-  </div>
-</div>
-<div style="margin-top: 30px;"></div>
-
-#### Study organism introduced by a lab member 2: Isopod crustaceans
-
-<div class="project-media-split">
-  <div class="project-media-split__body" markdown="1">
-Transitions from aquatic ancestors to life on land have occurred repeatedly across the tree of life. Isopod crustaceans such as giant isopods, sea slaters, woodlice, and pill bugs are excellent material for exploring how terrestrialization occurred.
-  </div>
-  <div class="project-media-split__media">
-    <img src="/assets/img/projects/ligia_sp.jpg" alt="Ligia sp." width="450"/>
+    <img src="/assets/img/projects/cuscuta_sp.webp" alt="Cuscuta sp." width="450"/>
   </div>
 </div>
 <div style="margin-top: 30px;"></div>
@@ -128,6 +112,49 @@ These bacteria underpin much of our molecular biology. _E. coli_ is a dependable
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/ecoli_3d-representation-microscopic-pathogens.jpg" alt="Escherichia coli" width="450"/>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+## Organisms introduced by lab members
+
+Our lab is not limited to carnivorous plants. If a student or researcher already has deep experience with a particular organism, even one that our lab has not previously worked on, it can become the basis of a new project. As long as genome sequences can be obtained, we can analyze many kinds of organisms within a common framework. By combining that flexibility with our bioinformatics expertise, especially our distinctive methods for studying molecular convergence, each member can pursue the core biology of "their" organism.
+
+#### Study organism introduced by a lab member 1: Isopod crustaceans
+
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Transitions from aquatic ancestors to life on land have occurred repeatedly across the tree of life. Isopod crustaceans such as giant isopods, sea slaters, woodlice, and pill bugs are excellent material for exploring how terrestrialization occurred.
+  </div>
+  <div class="project-media-split__media">
+    <img src="/assets/img/projects/ligia_sp.jpg" alt="Ligia sp." width="450"/>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### Study organism introduced by a lab member 2: Ferns
+
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+Ferns have a unique life cycle in which both the haploid gametophyte and diploid sporophyte live as independent, autotrophic bodies. They are therefore key systems for studying the evolution of reproduction and development in land plants.
+  </div>
+  <div class="project-media-split__media">
+    <img src="/assets/img/projects/hymenasplenium_murakami-hatanakae.jpeg" alt="Hymenasplenium murakami-hatanakae" width="450"/>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### Study organism introduced by a lab member 3: Gymnosperms
+
+<div class="project-media-split" data-media-layout="double">
+  <div class="project-media-split__body" markdown="1">
+Gymnosperms such as cycads and ginkgo are plant lineages with reproductive modes that differ from those of flowering plants. Many species become large trees, yet they are indispensable for understanding the evolution of land plants.
+  </div>
+  <div class="project-media-split__media">
+    <div class="project-image-grid">
+      <img src="/assets/img/projects/cycas_ovulate_cone.webp" alt="Cycas ovulate cone" width="450"/>
+      <img src="/assets/img/projects/ginkgo_ovules.webp" alt="Ginkgo ovules" width="450"/>
+    </div>
   </div>
 </div>
 <div style="margin-top: 30px;"></div>

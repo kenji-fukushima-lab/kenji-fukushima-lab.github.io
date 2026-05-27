@@ -6,9 +6,9 @@ img: assets/img/projects/greenhouse_IMG_20200811_173741_downsize.jpg
 importance: 3
 category: research
 related_publications: false
-seo_title: 食虫植物とモデル植物 | 植物進化・収斂進化の研究材料
-seo_description: フクロユキノシタ、ウツボカズラ、ブロッキニアなどの食虫植物を中心に、植物進化と収斂進化の研究材料を紹介します。
-keywords: 食虫植物, 植物進化, 収斂進化, フクロユキノシタ, ウツボカズラ
+seo_title: 食虫植物と多様な実験生物 | 植物進化・収斂進化の研究材料
+seo_description: フクロユキノシタ、ウツボカズラ、ブロッキニアなどの食虫植物に加え、Cuscutaを用いた食虫植物の輸送実験や、裸子植物の生殖進化研究を紹介します。
+keywords: 食虫植物, 植物進化, 収斂進化, フクロユキノシタ, ウツボカズラ, Cuscuta, ネナシカズラ, 裸子植物, ソテツ, イチョウ, 造卵器
 schema_type: WebPage
 ---
 
@@ -92,30 +92,14 @@ schema_type: WebPage
 </div>
 <div style="margin-top: 30px;"></div>
 
-## ラボメンバーが独自に持ち込んだ実験生物
-
-当研究室の研究対象は食虫植物に限りません。学生・研究員が特定の生物の取り扱いに熟達していれば、これまで当研究室で扱ってこなかった生物であっても、新たな研究テーマとして立ち上げることが可能です。ゲノム配列さえ得られれば、どの生物であっても共通の枠組みで解析できます。そのため、当研究室のバイオインフォマティクス技術、とりわけ独自性の高い分子収斂解析法を組み合わせることで、各メンバーが「自分の生物」を軸に、その本質に迫る研究を進めています。
-
-#### ラボメンバーが独自に持ち込んだ実験生物１：シダ植物
+## 寄生植物ネナシカズラ(_Cuscuta_ spp.)
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
-シダ植物は、単相世代（配偶体）と複相世代（胞子体）がいずれも独立栄養体として生活するユニークな生活史をもっています。陸上植物の生殖や発生の進化を探る上で鍵となる研究材料です。
+ネナシカズラを食虫植物に寄生させることに成功しました。現在、この実験系を用いて、両者の間での栄養輸送を切り口とした新しい研究を進めています。
   </div>
   <div class="project-media-split__media">
-    <img src="/assets/img/projects/hymenasplenium_murakami-hatanakae.jpeg" alt="Hymenasplenium murakami-hatanakae" width="450"/>
-  </div>
-</div>
-<div style="margin-top: 30px;"></div>
-
-#### ラボメンバーが独自に持ち込んだ実験生物２：等脚目甲殻類
-
-<div class="project-media-split">
-  <div class="project-media-split__body" markdown="1">
-水中生活性の祖先からの「陸上進出」は、動植物を問わずさまざまな生物系統で起こっています。グソクムシ・フナムシ・ワラジムシ・ダンゴムシといった等脚目甲殻類は、陸上進出の秘密を探るのに適した研究材料です。
-  </div>
-  <div class="project-media-split__media">
-    <img src="/assets/img/projects/ligia_sp.jpg" alt="Ligia sp." width="450"/>
+    <img src="/assets/img/projects/cuscuta_sp.webp" alt="Cuscuta sp." width="450"/>
   </div>
 </div>
 <div style="margin-top: 30px;"></div>
@@ -128,6 +112,49 @@ schema_type: WebPage
   </div>
   <div class="project-media-split__media">
     <img src="/assets/img/projects/ecoli_3d-representation-microscopic-pathogens.jpg" alt="Escherichia coli" width="450"/>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+## ラボメンバーが独自に持ち込んだ実験生物
+
+当研究室の研究対象は食虫植物に限りません。学生・研究員が特定の生物の取り扱いに熟達していれば、これまで当研究室で扱ってこなかった生物であっても、新たな研究テーマとして立ち上げることが可能です。ゲノム配列さえ得られれば、どの生物であっても共通の枠組みで解析できます。そのため、当研究室のバイオインフォマティクス技術、とりわけ独自性の高い分子収斂解析法を組み合わせることで、各メンバーが「自分の生物」を軸に、その本質に迫る研究を進めています。
+
+#### ラボメンバーが独自に持ち込んだ実験生物１：等脚目甲殻類
+
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+水中生活性の祖先からの「陸上進出」は、動植物を問わずさまざまな生物系統で起こっています。グソクムシ・フナムシ・ワラジムシ・ダンゴムシといった等脚目甲殻類は、陸上進出の秘密を探るのに適した研究材料です。
+  </div>
+  <div class="project-media-split__media">
+    <img src="/assets/img/projects/ligia_sp.jpg" alt="Ligia sp." width="450"/>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### ラボメンバーが独自に持ち込んだ実験生物２：シダ植物
+
+<div class="project-media-split">
+  <div class="project-media-split__body" markdown="1">
+シダ植物は、単相世代（配偶体）と複相世代（胞子体）がいずれも独立栄養体として生活するユニークな生活史をもっています。陸上植物の生殖や発生の進化を探る上で鍵となる研究材料です。
+  </div>
+  <div class="project-media-split__media">
+    <img src="/assets/img/projects/hymenasplenium_murakami-hatanakae.jpeg" alt="Hymenasplenium murakami-hatanakae" width="450"/>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### ラボメンバーが独自に持ち込んだ実験生物３：裸子植物
+
+<div class="project-media-split" data-media-layout="double">
+  <div class="project-media-split__body" markdown="1">
+ソテツやイチョウなどの裸子植物は、被子植物とは異なる生殖様式をもつ植物群です。大型の樹木となる種も多い一方で、陸上植物の進化を理解するうえで欠かせない重要な系統です。
+  </div>
+  <div class="project-media-split__media">
+    <div class="project-image-grid">
+      <img src="/assets/img/projects/cycas_ovulate_cone.webp" alt="ソテツの雌球果" width="450"/>
+      <img src="/assets/img/projects/ginkgo_ovules.webp" alt="イチョウの胚珠" width="450"/>
+    </div>
   </div>
 </div>
 <div style="margin-top: 30px;"></div>
