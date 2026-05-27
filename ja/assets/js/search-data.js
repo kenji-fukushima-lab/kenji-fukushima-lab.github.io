@@ -23,56 +23,56 @@ ninja.data = [{
     },
   },{id: "nav-メンバー",
           title: "メンバー",
-          description: "当研究室のメンバー一覧です。",
+          description: "国立遺伝学研究所 植物進化研究室のメンバー一覧です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/people/";
           },
         },{id: "nav-論文",
           title: "論文",
-          description: "当研究室から発表した論文を、最新のものから順にリストしています。当研究室のメンバーとして論文に貢献した著者を太字で示しています。当研究室のメンバーが筆頭あるいは責任著者を務める論文にはプレビュー画像を付しています。†: 共筆頭著者. *: (共)責任著者.",
+          description: "国立遺伝学研究所 植物進化研究室から発表した論文を、最新のものから順にリストしています。研究室のメンバーとして論文に貢献した著者を太字で示しています。研究室のメンバーが筆頭あるいは責任著者を務める論文にはプレビュー画像を付しています。†: 共筆頭著者. *: (共)責任著者.",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/publications/";
           },
         },{id: "nav-研究内容",
           title: "研究内容",
-          description: "当研究室で取り組む研究の紹介です。",
+          description: "国立遺伝学研究所 植物進化研究室で取り組む研究の紹介です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/projects/";
           },
         },{id: "nav-リソース",
           title: "リソース",
-          description: "当研究室で提供している研究リソースの一覧です。",
+          description: "国立遺伝学研究所 植物進化研究室で提供している研究リソースの一覧です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/resources/";
           },
         },{id: "nav-アウトリーチ",
           title: "アウトリーチ",
-          description: "福島研究室の書籍、講演、メディア出演などのアウトリーチ活動を紹介しています。",
+          description: "国立遺伝学研究所 植物進化研究室の書籍、講演、メディア出演などのアウトリーチ活動を紹介しています。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/outreach/";
           },
         },{id: "nav-ブログ",
           title: "ブログ",
-          description: "研究室の活動記録やお知らせを掲載しています。",
+          description: "国立遺伝学研究所 植物進化研究室の活動記録やお知らせを掲載しています。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/blog/";
           },
         },{id: "nav-メンバー募集",
           title: "メンバー募集",
-          description: "福島研究室への参加を希望する博士課程学生・博士研究員向けの案内です。",
+          description: "国立遺伝学研究所 植物進化研究室への参加を希望する博士課程学生・博士研究員向けの案内です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/join/";
           },
         },{id: "nav-アクセス",
           title: "アクセス",
-          description: "国立遺伝学研究所・植物進化研究室へのアクセスと連絡先の案内です。",
+          description: "国立遺伝学研究所 植物進化研究室へのアクセスと連絡先の案内です。",
           section: "ナビゲーション",
           handler: () => {
             window.location.href = "/ja/access/";
