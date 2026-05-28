@@ -7,8 +7,8 @@ importance: 3
 category: research
 related_publications: false
 seo_title: 実験生物 | 国立遺伝学研究所 植物進化研究室
-seo_description: フクロユキノシタ、ウツボカズラ、ブロッキニアなどの食虫植物に加え、Cuscutaを用いた食虫植物の輸送実験や、裸子植物の生殖進化研究を紹介します。
-keywords: 食虫植物, 植物進化, 収斂進化, フクロユキノシタ, ウツボカズラ, Cuscuta, ネナシカズラ, 裸子植物, ソテツ, イチョウ, 造卵器
+seo_description: フクロユキノシタ、ウツボカズラ、ブロッキニアなどの食虫植物に加え、Cuscutaを用いた食虫植物の輸送実験や、裸子植物・タケ類の進化研究を紹介します。
+keywords: 食虫植物, 植物進化, 収斂進化, フクロユキノシタ, ウツボカズラ, Cuscuta, ネナシカズラ, 裸子植物, ソテツ, イチョウ, タケ類, 竹, ハチク, クロチク, キッコウチク, 造卵器
 schema_type: WebPage
 ---
 
@@ -154,6 +154,21 @@ schema_type: WebPage
     <div class="project-image-grid">
       <img src="/assets/img/projects/cycas_ovulate_cone.webp" alt="ソテツの雌球果" width="450"/>
       <img src="/assets/img/projects/ginkgo_ovules.webp" alt="イチョウの胚珠" width="450"/>
+    </div>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### ラボメンバーが独自に持ち込んだ実験生物４：タケ類
+
+<div class="project-media-split" data-media-layout="double">
+  <div class="project-media-split__body" markdown="1">
+タケ類はイネ科タケ亜科に属し、クローン繁殖とまれな開花で知られる植物群です。オミクス解析を糸口に、その謎に迫っています。
+  </div>
+  <div class="project-media-split__media">
+    <div class="project-image-grid">
+      <img src="/assets/img/projects/bamboo_kurochiku_flower.webp" alt="クロチクの花" width="450"/>
+      <img src="/assets/img/projects/bamboo_kikkouchiku.webp" alt="キッコウチクの稈" width="450"/>
     </div>
   </div>
 </div>

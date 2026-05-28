@@ -7,8 +7,8 @@ importance: 3
 category: research
 related_publications: false
 seo_title: Carnivorous plants and diverse study organisms | Study systems for plant evolution and convergent evolution
-seo_description: Meet the carnivorous plants, Cuscuta-based transport assays, gymnosperms, and other organisms we use to investigate plant evolution and convergent evolution.
-keywords: carnivorous plants, plant evolution, convergent evolution, Cephalotus, Nepenthes, Cuscuta, gymnosperms, cycads, ginkgo, archegonia
+seo_description: Meet the carnivorous plants, Cuscuta-based transport assays, gymnosperms, bamboos, and other organisms we use to investigate plant evolution and convergent evolution.
+keywords: carnivorous plants, plant evolution, convergent evolution, Cephalotus, Nepenthes, Cuscuta, gymnosperms, cycads, ginkgo, bamboos, Bambusoideae, Phyllostachys nigra, Kikkouchiku, archegonia
 schema_type: WebPage
 ---
 
@@ -154,6 +154,21 @@ Gymnosperms such as cycads and ginkgo are plant lineages with reproductive modes
     <div class="project-image-grid">
       <img src="/assets/img/projects/cycas_ovulate_cone.webp" alt="Cycas ovulate cone" width="450"/>
       <img src="/assets/img/projects/ginkgo_ovules.webp" alt="Ginkgo ovules" width="450"/>
+    </div>
+  </div>
+</div>
+<div style="margin-top: 30px;"></div>
+
+#### Study organism introduced by a lab member 4: Bamboos
+
+<div class="project-media-split" data-media-layout="double">
+  <div class="project-media-split__body" markdown="1">
+Bamboos belong to the grass subfamily Bambusoideae and are known for clonal reproduction and rare flowering. We use omics analyses as an entry point to approach these mysteries.
+  </div>
+  <div class="project-media-split__media">
+    <div class="project-image-grid">
+      <img src="/assets/img/projects/bamboo_kurochiku_flower.webp" alt="Kurochiku bamboo flower" width="450"/>
+      <img src="/assets/img/projects/bamboo_kikkouchiku.webp" alt="Kikkouchiku bamboo culm" width="450"/>
     </div>
   </div>
 </div>
