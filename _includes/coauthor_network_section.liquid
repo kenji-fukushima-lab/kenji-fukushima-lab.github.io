@@ -228,9 +228,11 @@
     </details>
   </div>
 
-  <script id="coauthor-network-data" type="application/json">
-    {{ network | jsonify }}
-  </script>
+  <script
+    id="coauthor-network-data"
+    type="application/json"
+    data-src="{{ '/assets/data/coauthor-network.json' | relative_url }}?v={{ site.time | date: '%s' }}"
+  ></script>
   <script id="coauthor-network-i18n" type="application/json">
     {
       "lang": "{{ lang_code }}",

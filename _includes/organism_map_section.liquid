@@ -127,9 +127,11 @@
     </details>
   </div>
 
-  <script id="organism-map-data" type="application/json">
-    {{ dataset | jsonify }}
-  </script>
+  <script
+    id="organism-map-data"
+    type="application/json"
+    data-src="{{ '/assets/data/organism-map.json' | relative_url }}?v={{ site.time | date: '%s' }}"
+  ></script>
   <script id="organism-map-i18n" type="application/json">
     {
       "lang": "{{ lang_code }}",

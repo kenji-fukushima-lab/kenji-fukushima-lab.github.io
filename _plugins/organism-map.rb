@@ -6,6 +6,7 @@ require 'nokogiri'
 require 'set'
 require 'time'
 require 'cgi'
+require 'fileutils'
 require 'net/http'
 require 'uri'
 
@@ -45,6 +46,7 @@ module OrganismMap
     GBIF_SEARCH_API_URL = 'https://api.gbif.org/v1/species/search?rank=GENUS&limit=5&q='.freeze
     NCBI_TAXONOMY_ESEARCH_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='.freeze
     GBIF_SPECIES_SEARCH_API_URL = 'https://api.gbif.org/v1/species/search?rank=SPECIES&limit=5&q='.freeze
+    TAXONOMY_CACHE_VERSION = 1
 
     safe true
     priority :low
@@ -61,6 +63,7 @@ module OrganismMap
         return
       end
 
+      initialize_taxonomy_cache(site)
       focus_name = focus_author_name(site)
       known_catalog = build_taxon_catalog(bibliography_path, focus_name)
       genera = {}
@@ -132,9 +135,61 @@ module OrganismMap
         'generated_at' => Time.now.utc.iso8601,
         'error' => e.message
       }
+    ensure
+      write_taxonomy_cache
     end
 
     private
+
+    def initialize_taxonomy_cache(site)
+      cache_dir = site.config['cache_dir'].to_s
+      cache_dir = '.jekyll-cache' if cache_dir.empty?
+      @taxonomy_cache_path = File.join(site.source, cache_dir, 'organism-map-taxonomy.json')
+      @taxonomy_cache_dirty = false
+      @taxonomy_cache = {
+        'version' => TAXONOMY_CACHE_VERSION,
+        'genus' => {},
+        'species' => {}
+      }
+
+      return unless File.file?(@taxonomy_cache_path)
+
+      stored_cache = JSON.parse(File.read(@taxonomy_cache_path))
+      return unless stored_cache.is_a?(Hash) && stored_cache['version'] == TAXONOMY_CACHE_VERSION
+
+      @taxonomy_cache['genus'] = stored_cache['genus'] if stored_cache['genus'].is_a?(Hash)
+      @taxonomy_cache['species'] = stored_cache['species'] if stored_cache['species'].is_a?(Hash)
+    rescue StandardError => e
+      Jekyll.logger.warn('Organism map taxonomy cache:', e.message)
+    end
+
+    def cached_taxonomy_value(kind, name)
+      bucket = @taxonomy_cache && @taxonomy_cache[kind]
+      return [false, nil] unless bucket.is_a?(Hash) && bucket.key?(name)
+
+      [true, bucket[name]]
+    end
+
+    def store_taxonomy_value(kind, name, value)
+      @taxonomy_cache ||= {
+        'version' => TAXONOMY_CACHE_VERSION,
+        'genus' => {},
+        'species' => {}
+      }
+      @taxonomy_cache[kind] ||= {}
+      @taxonomy_cache[kind][name] = !!value
+      @taxonomy_cache_dirty = true
+      value
+    end
+
+    def write_taxonomy_cache
+      return unless @taxonomy_cache_path && @taxonomy_cache_dirty
+
+      FileUtils.mkdir_p(File.dirname(@taxonomy_cache_path))
+      File.write(@taxonomy_cache_path, JSON.pretty_generate(@taxonomy_cache))
+    rescue StandardError => e
+      Jekyll.logger.warn('Organism map taxonomy cache:', e.message)
+    end
 
     def bibliography_path_for(site)
       bib_file = site.config.dig('scholar', 'bibliography').to_s
@@ -319,7 +374,14 @@ module OrganismMap
       @validated_genus_cache ||= {}
       return @validated_genus_cache[genus_name] if @validated_genus_cache.key?(genus_name)
 
-      @validated_genus_cache[genus_name] = gbif_genus_match?(genus_name) || ncbi_genus_match?(genus_name)
+      cache_hit, cached_value = cached_taxonomy_value('genus', genus_name)
+      if cache_hit
+        @validated_genus_cache[genus_name] = cached_value
+        return cached_value
+      end
+
+      result = gbif_genus_match?(genus_name) || ncbi_genus_match?(genus_name)
+      @validated_genus_cache[genus_name] = store_taxonomy_value('genus', genus_name, result)
     rescue StandardError => e
       Jekyll.logger.warn('Organism map taxonomy validation:', "#{genus_name}: #{e.message}")
       @validated_genus_cache[genus_name] = false
@@ -343,7 +405,14 @@ module OrganismMap
       @validated_species_cache ||= {}
       return @validated_species_cache[species_name] if @validated_species_cache.key?(species_name)
 
-      @validated_species_cache[species_name] = gbif_species_match?(species_name) || ncbi_species_match?(species_name)
+      cache_hit, cached_value = cached_taxonomy_value('species', species_name)
+      if cache_hit
+        @validated_species_cache[species_name] = cached_value
+        return cached_value
+      end
+
+      result = gbif_species_match?(species_name) || ncbi_species_match?(species_name)
+      @validated_species_cache[species_name] = store_taxonomy_value('species', species_name, result)
     rescue StandardError => e
       Jekyll.logger.warn('Organism map taxonomy validation:', "#{species_name}: #{e.message}")
       @validated_species_cache[species_name] = false
