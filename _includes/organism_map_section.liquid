@@ -6,8 +6,8 @@
   {% assign stat_papers_label = 'Papers scanned' %}
   {% assign stat_genera_label = 'Detected genera' %}
   {% assign stat_mentions_label = 'Max papers per genus' %}
-  {% assign note_text = 'The chart counts how many papers mention each genus in titles or abstracts. Each genus links to Wikipedia, NCBI Taxonomy, and GBIF.' %}
-  {% assign chart_label = 'Genus counts by number of papers' %}
+  {% assign note_text = 'Each filled circle links to a paper whose title or abstract mentions the genus. Taxonomy links remain available in the table below.' %}
+  {% assign chart_label = 'Genus paper links by number of papers' %}
   {% assign table_label = 'Detected genera' %}
   {% assign genus_col = 'Genus' %}
   {% assign count_col = 'Papers' %}
@@ -24,8 +24,8 @@
   {% assign stat_papers_label = '対象論文数' %}
   {% assign stat_genera_label = '抽出された属数' %}
   {% assign stat_mentions_label = '属ごとの最大論文数' %}
-  {% assign note_text = '各属について、論文タイトルまたはアブストラクトに出現した論文数を数えています。各属から Wikipedia、NCBI Taxonomy、GBIF に移動できます。' %}
-  {% assign chart_label = '属名ごとの出現論文数' %}
+  {% assign note_text = '各丸は、その属名がタイトルまたはアブストラクトに出現した論文へのリンクです。分類情報へのリンクは下の表に残しています。' %}
+  {% assign chart_label = '属名ごとの論文リンク' %}
   {% assign table_label = '抽出された属名' %}
   {% assign genus_col = '属名' %}
   {% assign count_col = '論文数' %}
@@ -134,8 +134,10 @@
     {
       "lang": "{{ lang_code }}",
       "unavailable": "{% if lang_code == 'en' %}Genus-count data is unavailable.{% else %}属名カウントのデータがありません。{% endif %}",
-      "chartAriaLabel": "{% if lang_code == 'en' %}Genus count bar chart{% else %}属名カウントのバー chart{% endif %}",
+      "chartAriaLabel": "{% if lang_code == 'en' %}Genus paper link list{% else %}属名ごとの論文リンク一覧{% endif %}",
       "countLabel": "{{ count_col }}",
+      "paperLinkLabel": "{% if lang_code == 'en' %}Open paper{% else %}論文を開く{% endif %}",
+      "publicationBaseUrl": "{% if lang_code == 'en' %}{{ '/publications/' | relative_url }}{% else %}{{ '/ja/publications/' | relative_url }}{% endif %}",
       "wikipediaLabel": "{{ wikipedia_link_label }}",
       "ncbiLabel": "{{ ncbi_link_label }}",
       "gbifLabel": "{{ gbif_link_label }}",

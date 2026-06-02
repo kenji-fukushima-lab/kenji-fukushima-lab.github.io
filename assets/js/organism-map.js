@@ -12,11 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ? JSON.parse(i18nElement.textContent)
     : {
         unavailable: "Genus-count data is unavailable.",
-        chartAriaLabel: "Genus count bar chart",
+        chartAriaLabel: "Genus paper link list",
         countLabel: "Papers",
-        wikipediaLabel: "Wikipedia",
-        ncbiLabel: "NCBI",
-        gbifLabel: "GBIF",
+        paperLinkLabel: "Open paper",
+        publicationBaseUrl: "/publications/",
         yearRange: "{first}-{last}",
       };
 
@@ -26,86 +25,84 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const genera = dataset.genera;
-  const maxPaperCount = Math.max(...genera.map((genus) => Number(genus.paper_count) || 0), 1);
+  const publicationBaseUrl = typeof i18n.publicationBaseUrl === "string" ? i18n.publicationBaseUrl : "/publications/";
 
-  chartElement.setAttribute("role", "img");
   chartElement.setAttribute("aria-label", i18n.chartAriaLabel);
 
   const list = document.createElement("div");
-  list.className = "organism-bar-chart";
+  list.className = "organism-paper-list";
+  list.setAttribute("role", "list");
 
-  function buildReferenceUrl(kind, genus) {
-    const genusLabel = genus?.label;
-    const normalizedLabel = (genusLabel || "").toString().trim();
-    if (!normalizedLabel) {
+  function localPublicationUrl(paper) {
+    const key = paper?.key?.toString().trim();
+    if (!key) {
       return null;
     }
 
-    if (kind === "wikipedia") {
-      if (genus?.wikipedia_url) {
-        return genus.wikipedia_url;
-      }
-      return `https://en.wikipedia.org/wiki/${encodeURIComponent(normalizedLabel.replace(/\s+/g, "_"))}`;
-    }
-    if (kind === "ncbi") {
-      return `https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${encodeURIComponent(normalizedLabel)}`;
-    }
-    if (kind === "gbif") {
-      return `https://www.gbif.org/species/search?q=${encodeURIComponent(normalizedLabel)}`;
-    }
-    return null;
+    const separator = publicationBaseUrl.includes("#") ? "" : "#";
+    return `${publicationBaseUrl}${separator}${encodeURIComponent(key)}`;
+  }
+
+  function paperHref(paper) {
+    const url = paper?.url?.toString().trim();
+    return url || localPublicationUrl(paper);
+  }
+
+  function isExternalUrl(url) {
+    return /^https?:\/\//i.test(url);
+  }
+
+  function paperLabel(paper) {
+    const title = paper?.title?.toString().trim();
+    const year = paper?.year ? ` (${paper.year})` : "";
+    return title ? `${i18n.paperLinkLabel}: ${title}${year}` : i18n.paperLinkLabel;
   }
 
   genera.forEach((genus) => {
     const row = document.createElement("article");
-    row.className = "organism-bar-row";
+    row.className = "organism-paper-row";
+    row.setAttribute("role", "listitem");
 
     const infoLine = document.createElement("div");
-    infoLine.className = "organism-bar-info";
+    infoLine.className = "organism-paper-info";
 
     const labelText = document.createElement("i");
-    labelText.className = "organism-bar-label";
+    labelText.className = "organism-paper-label";
     labelText.textContent = genus.label;
 
-    const track = document.createElement("div");
-    track.className = "organism-bar-track";
-
-    const fill = document.createElement("span");
-    fill.className = "organism-bar-fill";
-    fill.style.width = `${((Number(genus.paper_count) || 0) / maxPaperCount) * 100}%`;
-    track.appendChild(fill);
-
-    const links = document.createElement("div");
-    links.className = "organism-bar-links";
-
-    [
-      [i18n.wikipediaLabel, "wikipedia"],
-      [i18n.ncbiLabel, "ncbi"],
-      [i18n.gbifLabel, "gbif"],
-    ].forEach(([label, kind]) => {
-      const href = buildReferenceUrl(kind, genus);
-      if (!href) {
-        return;
-      }
-      const link = document.createElement("a");
-      link.className = "organism-bar-link";
-      link.href = href;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = label;
-      links.appendChild(link);
-    });
-
     const meta = document.createElement("p");
-    meta.className = "organism-bar-meta";
+    meta.className = "organism-paper-meta";
     const yearText =
       genus.first_year && genus.last_year
         ? i18n.yearRange.replace("{first}", String(genus.first_year)).replace("{last}", String(genus.last_year))
         : "";
     meta.textContent = `${i18n.countLabel}: ${genus.paper_count || 0}${yearText ? ` / ${yearText}` : ""}`;
 
-    infoLine.append(labelText, meta, links);
-    row.append(infoLine, track);
+    const paperLinks = document.createElement("div");
+    paperLinks.className = "organism-paper-links";
+    paperLinks.setAttribute("aria-label", `${genus.label} ${i18n.countLabel}`);
+
+    const papers = Array.isArray(genus.papers) ? genus.papers : [];
+    papers.forEach((paper) => {
+      const href = paperHref(paper);
+      if (!href) {
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.className = "organism-paper-link";
+      link.href = href;
+      link.title = paperLabel(paper);
+      link.setAttribute("aria-label", paperLabel(paper));
+      if (isExternalUrl(href)) {
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      }
+      paperLinks.appendChild(link);
+    });
+
+    infoLine.append(labelText, meta);
+    row.append(infoLine, paperLinks);
     list.appendChild(row);
   });
 
