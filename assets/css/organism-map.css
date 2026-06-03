@@ -86,20 +86,20 @@ html[data-theme="dark"] .organism-map-note {
 
 #organism-map-chart {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.35rem;
 }
 
 .organism-paper-list {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.18rem;
 }
 
 .organism-paper-row {
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   display: grid;
-  gap: 0.45rem;
-  grid-template-columns: minmax(8rem, 15rem) 1fr;
-  padding: 0.42rem 0;
+  gap: 0.3rem;
+  grid-template-columns: minmax(24rem, max-content) minmax(0, 1fr);
+  padding: 0.24rem 0;
 }
 
 .organism-paper-row:last-child {
@@ -111,11 +111,12 @@ html[data-theme="dark"] .organism-paper-row {
 }
 
 .organism-paper-info {
-  align-items: baseline;
+  align-items: center;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.22rem 0.55rem;
+  flex-wrap: nowrap;
+  gap: 0.15rem 0.48rem;
   line-height: 1.15;
+  white-space: nowrap;
 }
 
 .organism-paper-label {
@@ -137,25 +138,49 @@ html[data-theme="dark"] .organism-paper-row {
   margin: 0;
 }
 
+.organism-taxonomy-links {
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+}
+
+.organism-taxonomy-link {
+  color: var(--global-theme-color);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.organism-taxonomy-link:hover,
+.organism-taxonomy-link:focus-visible {
+  text-decoration: underline;
+}
+
+.organism-taxonomy-link:focus-visible {
+  outline: 2px solid rgba(14, 116, 144, 0.3);
+  outline-offset: 2px;
+}
+
 .organism-paper-links {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 0.08rem 0.16rem;
-  min-height: 1.15rem;
+  min-height: 0.95rem;
 }
 
 .organism-paper-link {
   align-items: center;
   border-radius: 999px;
   display: inline-flex;
-  height: 1.05rem;
+  height: 0.9rem;
   justify-content: center;
   text-decoration: none;
   transition:
     transform 140ms ease,
     background-color 140ms ease;
-  width: 1.05rem;
+  width: 0.9rem;
 }
 
 .organism-paper-link::before {
@@ -163,8 +188,8 @@ html[data-theme="dark"] .organism-paper-row {
   border-radius: 999px;
   content: "";
   display: block;
-  height: 0.55rem;
-  width: 0.55rem;
+  height: 0.46rem;
+  width: 0.46rem;
 }
 
 .organism-paper-link:hover,
@@ -187,6 +212,15 @@ html[data-theme="dark"] .organism-paper-meta {
   color: #cbd5e1;
 }
 
+html[data-theme="dark"] .organism-taxonomy-link {
+  color: #67e8f9;
+}
+
+html[data-theme="dark"] .organism-taxonomy-link:hover,
+html[data-theme="dark"] .organism-taxonomy-link:focus-visible {
+  color: #a5f3fc;
+}
+
 html[data-theme="dark"] .organism-paper-link::before {
   background: #fdba74;
 }
@@ -203,12 +237,64 @@ html[data-theme="dark"] .organism-paper-link:focus-visible::before {
 
 @media (max-width: 991px) {
   .organism-paper-row {
+    gap: 0.12rem;
     grid-template-columns: 1fr;
+    padding: 0.14rem 0;
   }
 
   .organism-paper-info {
-    align-items: baseline;
-    gap: 0.28rem 0.55rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.16rem 0.32rem;
+    white-space: nowrap;
+  }
+
+  .organism-paper-label {
+    font-size: 0.86rem;
+  }
+
+  .organism-paper-meta {
+    font-size: 0.76rem;
+  }
+
+  .organism-taxonomy-links {
+    gap: 0.32rem;
+    font-size: 0.72rem;
+  }
+
+  .organism-paper-links {
+    gap: 0.04rem 0.12rem;
+    min-height: 0.82rem;
+  }
+
+  .organism-paper-link {
+    height: 0.82rem;
+    width: 0.82rem;
+  }
+
+  .organism-paper-link::before {
+    height: 0.4rem;
+    width: 0.4rem;
+  }
+}
+
+@media (max-width: 359px) {
+  .organism-paper-info {
+    gap: 0.12rem 0.22rem;
+    line-height: 1;
+  }
+
+  .organism-paper-label {
+    font-size: 0.78rem;
+  }
+
+  .organism-paper-meta {
+    font-size: 0.68rem;
+  }
+
+  .organism-taxonomy-links {
+    gap: 0.24rem;
+    font-size: 0.64rem;
   }
 }
 

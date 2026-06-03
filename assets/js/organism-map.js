@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
         countLabel: "Papers",
         paperLinkLabel: "Open paper",
         publicationBaseUrl: "/publications/",
+        wikipediaLabel: "Wikipedia",
+        ncbiLabel: "NCBI",
+        gbifLabel: "GBIF",
         yearRange: "{first}-{last}",
       };
 
@@ -102,6 +105,58 @@ document.addEventListener("DOMContentLoaded", () => {
       return title ? `${i18n.paperLinkLabel}: ${title}${year}` : i18n.paperLinkLabel;
     }
 
+    function genusName(genus) {
+      return genus?.label?.toString().trim() || "";
+    }
+
+    function wikipediaHref(genus) {
+      const url = genus?.wikipedia_url?.toString().trim();
+      if (url) {
+        return url;
+      }
+
+      const name = genusName(genus);
+      return name ? `https://en.wikipedia.org/wiki/${encodeURIComponent(name.replace(/\s+/g, "_"))}` : null;
+    }
+
+    function taxonomyHref(service, genus) {
+      const name = genusName(genus);
+      if (!name) {
+        return null;
+      }
+
+      const encodedName = encodeURIComponent(name);
+      if (service === "ncbi") {
+        return `https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${encodedName}`;
+      }
+
+      if (service === "gbif") {
+        return `https://www.gbif.org/species/search?q=${encodedName}`;
+      }
+
+      return null;
+    }
+
+    function taxonomyLabel(label, genus) {
+      const name = genusName(genus);
+      return name ? `${label}: ${name}` : label;
+    }
+
+    function appendTaxonomyLink(container, href, label, genus) {
+      if (!href) {
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.className = "organism-taxonomy-link";
+      link.href = href;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = label;
+      link.setAttribute("aria-label", taxonomyLabel(label, genus));
+      container.appendChild(link);
+    }
+
     genera.forEach((genus) => {
       const row = document.createElement("article");
       row.className = "organism-paper-row";
@@ -121,6 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
           ? i18n.yearRange.replace("{first}", String(genus.first_year)).replace("{last}", String(genus.last_year))
           : "";
       meta.textContent = `${i18n.countLabel}: ${genus.paper_count || 0}${yearText ? ` / ${yearText}` : ""}`;
+
+      const taxonomyLinks = document.createElement("div");
+      taxonomyLinks.className = "organism-taxonomy-links";
+      appendTaxonomyLink(taxonomyLinks, wikipediaHref(genus), i18n.wikipediaLabel || "Wikipedia", genus);
+      appendTaxonomyLink(taxonomyLinks, taxonomyHref("ncbi", genus), i18n.ncbiLabel || "NCBI", genus);
+      appendTaxonomyLink(taxonomyLinks, taxonomyHref("gbif", genus), i18n.gbifLabel || "GBIF", genus);
 
       const paperLinks = document.createElement("div");
       paperLinks.className = "organism-paper-links";
@@ -145,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         paperLinks.appendChild(link);
       });
 
-      infoLine.append(labelText, meta);
+      infoLine.append(labelText, meta, taxonomyLinks);
       row.append(infoLine, paperLinks);
       list.appendChild(row);
     });

@@ -29,6 +29,7 @@ layout: default
       {% assign is_ja = true %}
     {% endif %}
     {% assign lab_stats = site.data.lab_stats %}
+    {% assign organism_stats = site.data.organism_map.stats %}
     {% assign repo_slug = site.giscus.repo | default: site.repository | default: 'kenji-fukushima-lab/kenji-fukushima-lab.github.io' %}
     {% assign default_branch = 'main' %}
     {% assign workflow_file = 'broken-links.yml' %}
@@ -83,6 +84,12 @@ layout: default
           <p class="home-stat-value">{{ lab_stats.github_repositories | default: 0 }}</p>
           <p class="home-stat-label">
             {% if is_ja %}GitHubリポジトリ{% else %}GitHub repositories{% endif %}
+          </p>
+        </article>
+        <article class="home-stat-card">
+          <p class="home-stat-value">{{ organism_stats.genus_count | default: 0 }}</p>
+          <p class="home-stat-label">
+            {% if is_ja %}論文タイトル・要旨に含まれる属名の数{% else %}Genera mentioned in publication titles and abstracts{% endif %}
           </p>
         </article>
       </div>
