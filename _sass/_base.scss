@@ -851,8 +851,8 @@ footer.sticky-bottom {
 }
 
 .repositories.repo-list-compact {
-  gap: 8px;
-  margin-bottom: 1.5rem;
+  gap: 4px;
+  margin-bottom: 1.25rem;
 }
 
 .repositories.repo-list-compact .repo-compact {
@@ -863,19 +863,19 @@ footer.sticky-bottom {
 .repo-compact {
   border: 1px solid var(--global-divider-color);
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 5px 10px;
   margin: 0;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
 .repo-compact-main {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
   flex: 1 1 auto;
 }
@@ -883,11 +883,12 @@ footer.sticky-bottom {
 .repo-compact-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex: 0 0 auto;
   min-width: 0;
   color: var(--global-theme-color);
   font-weight: 600;
+  line-height: 1.15;
   text-decoration: none;
 
   svg {
@@ -911,6 +912,7 @@ footer.sticky-bottom {
 .repo-compact-about {
   color: var(--global-text-color-light);
   font-size: 0.88rem;
+  line-height: 1.25;
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
@@ -934,16 +936,57 @@ footer.sticky-bottom {
 .repo-compact-badges {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: nowrap;
   max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 
+  a {
+    flex: 0 0 auto;
+    text-decoration: none;
+  }
+
   img {
     height: 18px;
+    width: auto;
+    max-width: none;
     display: block;
   }
+}
+
+.repo-compact-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 3px;
+  background: var(--global-card-bg-color);
+  color: var(--global-text-color);
+  font-size: 0.72rem;
+  line-height: 1;
+  white-space: nowrap;
+
+  svg {
+    flex: 0 0 auto;
+    fill: currentColor;
+  }
+}
+
+.repo-compact-stat-label {
+  font-weight: 600;
+}
+
+.repo-compact-stat-value {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.repo-compact-stat.is-loading .repo-compact-stat-value {
+  opacity: 0.65;
 }
 
 .ncbi-genome-embed {
