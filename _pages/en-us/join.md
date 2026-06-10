@@ -20,17 +20,25 @@ Research topics for new members are chosen collaboratively by the candidate and 
 
 ## Joining as a PhD student
 
+Our lab considers applications from prospective PhD students through the NIG/SOKENDAI graduate program. Before applying, please contact Kenji to discuss research fit and supervision.
+
+### Admissions
+
 At NIG, PhD courses are offered in English. Although NIG is primarily a research institute, we are affiliated with [SOKENDAI (The Graduate University for Advanced Studies)](https://www.soken.ac.jp/en/), which offers an extensive PhD program. SOKENDAI offers both a 3-year PhD program (for applicants with a master's degree) and a 5-year PhD program (for applicants without one). Please note that we generally do not have a master's-only program.
 
-For further details, including information on tuition and fellowships, please consult the links provided below. NIG also offers an internship program specifically designed for undergraduate students. If you are interested in this opportunity, we encourage you to contact us for more information.
-
-Major funding routes for PhD students include the following. Please note that eligibility, application timing, and rules on combining awards change over time, so applicants should always check the latest official guidelines.
+For further details, including information on admissions and tuition, please consult the official links below. NIG also offers an internship program specifically designed for undergraduate students. If you are interested in this opportunity, we encourage you to contact us for more information.
 
 - [SOKENDAI's tuition](https://www.soken.ac.jp/en/campuslife/tuition/payment/)
 
+- [NIGINTERN program](https://www.nig.ac.jp/en/students/nig-intern/)
+
+### Funding
+
+Many PhD students at NIG receive support through research assistant appointments and related institute or university programs. Additional fellowship and scholarship routes may also be available, depending on eligibility, timing, and program rules. SOKENDAI students in the Genetics Program may also be able to live in the NIG Long-Term Stay Facility under certain conditions, which can help reduce living costs.
+
 - [NIG research assistant program for PhD students](https://www.nig.ac.jp/en/students/program/student-aid/)
 
-- [NIGINTERN program](https://www.nig.ac.jp/en/students/nig-intern/)
+- [NIG Long-Term Stay Facility](https://www.nig.ac.jp/en/students/program/shukusha/)
 
 - [JSPS Research Fellowships for Young Scientists (DC1/DC2)](https://www.jsps.go.jp/english/e-pd/index.html)
 

@@ -144,6 +144,15 @@
   font-size: clamp(1.03rem, 1.8vw, 1.22rem);
 }
 
+.join-content > h3 {
+  margin: 0.82rem 0 0;
+  padding: 0.52rem 0.76rem;
+  border-left: 4px solid var(--global-theme-color);
+  border-radius: 0.58rem;
+  background: var(--join-surface);
+  font-size: clamp(0.98rem, 1.45vw, 1.08rem);
+}
+
 .join-content > h4 {
   margin: 1rem 0 0;
   padding: 0.55rem 0.78rem;
