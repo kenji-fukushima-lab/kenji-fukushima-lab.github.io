@@ -99,7 +99,7 @@ To understand evolution, it is not enough to study carnivorous plants alone. Com
 We have successfully established _Cuscuta_ parasitism on carnivorous plants. We are now using this experimental system to develop new research focused on nutrient transport between the two plants.
   </div>
   <div class="project-media-split__media">
-    <img src="/assets/img/projects/cuscuta_sp.webp" alt="Cuscuta sp." width="450"/>
+    <img src="/assets/img/projects/cuscuta_campestris.webp" alt="Cuscuta campestris" width="450"/>
   </div>
 </div>
 <div style="margin-top: 30px;"></div>

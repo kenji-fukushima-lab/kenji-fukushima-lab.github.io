@@ -99,7 +99,7 @@ schema_type: WebPage
 ネナシカズラを食虫植物に寄生させることに成功しました。現在、この実験系を用いて、両者の間での栄養輸送を切り口とした新しい研究を進めています。
   </div>
   <div class="project-media-split__media">
-    <img src="/assets/img/projects/cuscuta_sp.webp" alt="Cuscuta sp." width="450"/>
+    <img src="/assets/img/projects/cuscuta_campestris.webp" alt="Cuscuta campestris" width="450"/>
   </div>
 </div>
 <div style="margin-top: 30px;"></div>
