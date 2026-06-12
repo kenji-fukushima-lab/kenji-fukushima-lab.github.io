@@ -47,7 +47,11 @@ nav_order: 5
 </div>
 <div style="margin-top: 18px;"></div>
 {% endif %}
-  
+
+## Scientific Name Quizzes
+
+- [Carnivorous Plant Scientific Name Quiz]({{ '/carnivorous-plant-quiz/' | relative_url }}): A multiple-choice quiz that asks you to identify carnivorous plant scientific names from reusable iNaturalist photos.
+
 ## Genomes
 
 <p>The viewers below use NCBI's official API to display representative scaffolds for each assembly.</p>

@@ -48,7 +48,11 @@ nav_order: 5
 </div>
 <div style="margin-top: 18px;"></div>
 {% endif %}
-  
+
+## 学名クイズ
+
+- [食虫植物 学名クイズ]({{ '/carnivorous-plant-quiz/' | relative_url }}): iNaturalistの再利用可能な写真を見ながら、食虫植物の学名を4択で当てるクイズです。
+
 ## ゲノム
 
 <p>NCBIの埋め込みAPIを使って各ゲノムの代表 scaffold を表示できます。</p>
