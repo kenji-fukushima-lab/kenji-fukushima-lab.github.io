@@ -2,7 +2,7 @@
 page_id: projects
 layout: page
 title: research
-permalink: /projects/
+permalink: /research/
 description: Our research
 seo_title: Research | Carnivorous plants, plant evolution, and convergent evolution
 seo_description: Research themes, study systems, and approaches for carnivorous plants, plant evolution, and convergent evolution.

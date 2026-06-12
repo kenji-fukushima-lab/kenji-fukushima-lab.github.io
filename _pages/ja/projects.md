@@ -2,7 +2,7 @@
 page_id: projects
 layout: page
 title: 研究内容
-permalink: /projects/
+permalink: /research/
 description: 国立遺伝学研究所 植物進化研究室で取り組む研究の紹介です。
 seo_title: 研究内容 | 国立遺伝学研究所 植物進化研究室
 seo_description: 食虫植物を起点に、植物進化と収斂進化の研究テーマ、実験系、アプローチを紹介します。

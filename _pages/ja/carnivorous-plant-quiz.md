@@ -44,9 +44,7 @@ nav: false
         <span data-cp-score>正解 0</span>
       </div>
 
-      <figure class="cp-quiz-photo-frame">
-        <img data-cp-photo src="" alt="">
-      </figure>
+      <figure class="cp-quiz-photo-frame" data-cp-photo-frame></figure>
 
       <div class="cp-quiz-attribution" data-cp-attribution></div>
 

@@ -180,7 +180,7 @@ collections:
     permalink: /:collection/:title/
   projects:
     output: true
-    permalink: /:collection/:title/
+    permalink: /research/:title/
   # [add] added at 2025-5-14
   profiles:
     output: false

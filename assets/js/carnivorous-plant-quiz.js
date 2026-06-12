@@ -335,7 +335,8 @@
       results: root.querySelector("[data-cp-results]"),
       progress: root.querySelector("[data-cp-progress]"),
       score: root.querySelector("[data-cp-score]"),
-      photo: root.querySelector("[data-cp-photo]"),
+      photoFrame: root.querySelector("[data-cp-photo-frame]"),
+      photo: null,
       attribution: root.querySelector("[data-cp-attribution]"),
       choices: root.querySelector("[data-cp-choices]"),
       feedback: root.querySelector("[data-cp-feedback]"),
@@ -381,8 +382,8 @@
       elements.feedback.className = "cp-quiz-feedback";
       elements.choices.innerHTML = "";
       elements.attribution.textContent = "";
-      elements.photo.removeAttribute("src");
-      elements.photo.alt = "";
+      elements.photoFrame.innerHTML = "";
+      elements.photo = null;
       state.questions = [];
       state.currentIndex = 0;
       state.correctCount = 0;
@@ -677,6 +678,11 @@
 
       elements.progress.textContent = `${state.currentIndex + 1} / ${QUESTION_COUNT}`;
       elements.score.textContent = getScoreText();
+      if (!elements.photo) {
+        elements.photo = document.createElement("img");
+        elements.photo.dataset.cpPhoto = "";
+        elements.photoFrame.appendChild(elements.photo);
+      }
       elements.photo.src = question.imageUrl;
       elements.photo.alt = strings.photoAlt;
       elements.attribution.innerHTML = buildAttribution(question);
