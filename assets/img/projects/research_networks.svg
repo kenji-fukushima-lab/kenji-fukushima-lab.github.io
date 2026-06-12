@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Research network thumbnail</title>
+  <desc id="desc">A stylized network of papers and collaborators connected by curved links.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="0.5" stop-color="#edf7f2"/>
+      <stop offset="1" stop-color="#fff7ed"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="45%" r="62%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#15324a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="600" cy="380" r="430" fill="url(#halo)"/>
+
+  <g fill="none" stroke-linecap="round" stroke-opacity="0.56">
+    <path d="M300 266 C398 170 535 154 626 265" stroke="#2c7be5" stroke-width="7"/>
+    <path d="M300 266 C370 382 520 429 672 378" stroke="#22a06b" stroke-width="6"/>
+    <path d="M626 265 C731 180 878 210 955 317" stroke="#d97706" stroke-width="7"/>
+    <path d="M672 378 C764 501 916 531 1010 423" stroke="#2c7be5" stroke-width="6"/>
+    <path d="M300 266 C424 540 689 612 893 540" stroke="#22a06b" stroke-width="5"/>
+    <path d="M626 265 C552 390 582 512 724 585" stroke="#d97706" stroke-width="5"/>
+    <path d="M204 472 C352 392 500 426 606 548" stroke="#2c7be5" stroke-width="5"/>
+    <path d="M204 472 C347 646 587 698 724 585" stroke="#22a06b" stroke-width="6"/>
+    <path d="M955 317 C792 341 701 422 724 585" stroke="#d97706" stroke-width="5"/>
+    <path d="M1010 423 C887 320 744 309 626 265" stroke="#2c7be5" stroke-width="5"/>
+  </g>
+
+  <g filter="url(#soft-shadow)">
+    <circle cx="300" cy="266" r="66" fill="#2c7be5"/>
+    <circle cx="626" cy="265" r="52" fill="#1f9d76"/>
+    <circle cx="955" cy="317" r="60" fill="#f59e0b"/>
+    <circle cx="204" cy="472" r="46" fill="#38bdf8"/>
+    <circle cx="672" cy="378" r="74" fill="#475569"/>
+    <circle cx="1010" cy="423" r="42" fill="#0f766e"/>
+    <circle cx="606" cy="548" r="56" fill="#6366f1"/>
+    <circle cx="724" cy="585" r="64" fill="#ef7d2d"/>
+    <circle cx="893" cy="540" r="36" fill="#16a34a"/>
+  </g>
+
+  <g fill="#ffffff" fill-opacity="0.9">
+    <circle cx="276" cy="246" r="9"/>
+    <circle cx="322" cy="288" r="7"/>
+    <circle cx="610" cy="250" r="7"/>
+    <circle cx="647" cy="283" r="6"/>
+    <circle cx="936" cy="296" r="8"/>
+    <circle cx="978" cy="338" r="6"/>
+    <circle cx="654" cy="354" r="10"/>
+    <circle cx="697" cy="398" r="8"/>
+    <circle cx="704" cy="564" r="9"/>
+    <circle cx="744" cy="607" r="7"/>
+  </g>
+
+  <g fill="#15324a" opacity="0.18">
+    <circle cx="146" cy="190" r="12"/>
+    <circle cx="424" cy="122" r="8"/>
+    <circle cx="1068" cy="204" r="10"/>
+    <circle cx="1100" cy="590" r="14"/>
+    <circle cx="462" cy="680" r="11"/>
+    <circle cx="118" cy="622" r="9"/>
+  </g>
+</svg>

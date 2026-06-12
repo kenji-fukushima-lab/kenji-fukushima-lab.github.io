@@ -40,7 +40,7 @@ ninja.data = [{
           description: "国立遺伝学研究所 植物進化研究室で取り組む研究の紹介です。",
           section: "ナビゲーション",
           handler: () => {
-            window.location.href = "/ja/projects/";
+            window.location.href = "/ja/research/";
           },
         },{id: "nav-リソース",
           title: "リソース",
