@@ -6,11 +6,6 @@ title: resources
 description: List of research resources developed by the Fukushima Lab
 nav: true
 nav_order: 5
-chart:
-  d3: true
-coauthor_network: true
-paper_network: true
-organism_map: true
 ---
 
 {% if site.data.repositories.github_users %}
@@ -93,26 +88,6 @@ organism_map: true
   </div>
 </div>
 
-<div style="margin-top: 30px;"></div>
-
-## Collaboration Network
-
-{% include coauthor_network_section.liquid lang='en' %}
-
-<div style="margin-top: 30px;"></div>
-
-## Paper Network
-
-{% include paper_network_section.liquid lang='en' %}
-
-<div style="margin-top: 30px;"></div>
-
-## Study Organism Genus Counts
-
-{% include organism_map_section.liquid lang='en' %}
-
-<div style="margin-top: 30px;"></div>
-  
 ## Internal Resources
 
 [kflab](https://github.com/kfuku52/kflab): This repository serves as the main platform for coordinating activities in the Kenji Fukushima Lab. It includes more than code: lab supply logistics, experimental-design discussions, and research-progress updates. New members should create a GitHub account and request an invitation from Kenji Fukushima.

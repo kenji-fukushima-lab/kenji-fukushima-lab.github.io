@@ -10,6 +10,7 @@ seo_title: Carnivorous plants and diverse study organisms | Study systems for pl
 seo_description: Meet the carnivorous plants, Cuscuta-based transport assays, gymnosperms, bamboos, and other organisms we use to investigate plant evolution and convergent evolution.
 keywords: carnivorous plants, plant evolution, convergent evolution, Cephalotus, Nepenthes, Cuscuta, gymnosperms, cycads, ginkgo, bamboos, Bambusoideae, Phyllostachys nigra, Kikkouchiku, archegonia
 schema_type: WebPage
+organism_map: true
 ---
 
 This page introduces the organisms we work with in the lab.
@@ -177,3 +178,11 @@ Bamboos belong to the grass subfamily Bambusoideae and are known for clonal repr
 ## New study organisms
 
 If a project aligns with our research interests, new organisms can be added to this list. See the [Join](/join/) page for details.
+
+<div style="margin-top: 30px;"></div>
+
+## Study Organism Genus Counts
+
+This view summarizes study-organism genera detected in publication titles and abstracts.
+
+{% include organism_map_section.liquid lang='en' %}

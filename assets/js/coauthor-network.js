@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     : {
         lang: "ja",
         unavailable: "Network data is unavailable.",
-        graphAriaLabel: "共同研究ネットワーク図",
+        graphAriaLabel: "研究者ネットワーク図",
         filterSummary: "表示中: 著者 {authors}人 / 連携 {links}本 / 出版年 {minYear}-{maxYear}",
         minWeightValue: "{value}本以上",
         detailPaperCount: "論文数",

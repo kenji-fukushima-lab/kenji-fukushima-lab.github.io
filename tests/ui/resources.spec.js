@@ -38,14 +38,40 @@ async function graphScale(page, graphSelector) {
   return scaleFromTransform(await graphTransform(page, graphSelector));
 }
 
-test.describe("resources page smoke tests", () => {
-  test("renders both network graphs", async ({ page }) => {
-    await page.goto("/resources/");
-    await waitForGraphLayout(page, PAPER_GRAPH);
+test.describe("resources and research page smoke tests", () => {
+  test("renders research network and organism pages", async ({ page }) => {
+    await page.goto("/research/networks/");
     await waitForGraphLayout(page, COAUTHOR_GRAPH);
-
-    expect(await page.locator(`${PAPER_GRAPH} circle`).count()).toBeGreaterThan(30);
     await expect(page.locator(`${COAUTHOR_GRAPH} circle`).first()).toBeVisible();
+    await page.locator(PAPER_GRAPH).scrollIntoViewIfNeeded();
+    await waitForGraphLayout(page, PAPER_GRAPH);
+    expect(await page.locator(`${PAPER_GRAPH} circle`).count()).toBeGreaterThan(30);
+    await page.locator("#publication-word-cloud-chart").scrollIntoViewIfNeeded();
+    await expect(page.locator(".publication-word-cloud-term").first()).toBeVisible();
+    const wordCloudLayout = await page.evaluate(() => {
+      const svg = document.querySelector("#publication-word-cloud-chart svg");
+      const viewBox = (svg?.getAttribute("viewBox") || "").split(/\s+/).map(Number);
+      const viewBoxY = viewBox[1] || 0;
+      const height = viewBox[3] || 0;
+      const yValues = Array.from(document.querySelectorAll(".publication-word-cloud-term"))
+        .map((term) => Number(term.getAttribute("y")) - viewBoxY)
+        .sort((left, right) => left - right);
+      const maxYGap = yValues.slice(1).reduce((maxGap, y, index) => Math.max(maxGap, y - yValues[index]), 0);
+
+      return {
+        count: yValues.length,
+        height,
+        maxYGap,
+      };
+    });
+    expect(wordCloudLayout.count).toBeGreaterThan(60);
+    expect(wordCloudLayout.height).toBeLessThan(420);
+    expect(wordCloudLayout.maxYGap).toBeLessThan(wordCloudLayout.height * 0.08);
+
+    await page.goto("/projects/3_project/");
+    await page.locator("#organism-map-chart").waitFor({ state: "attached" });
+    await page.evaluate(() => document.getElementById("organism-map-chart").scrollIntoView({ block: "center" }));
+    await expect(page.locator(".organism-paper-row").first()).toBeVisible();
   });
 
   test("renders repository fork counts without compressed shield images", async ({ page }) => {
@@ -100,7 +126,8 @@ test.describe("resources page smoke tests", () => {
   test("paper network keeps isolates visible and avoids over-zooming out after year reset", async ({ page }) => {
     test.setTimeout(45_000);
 
-    await page.goto("/resources/");
+    await page.goto("/research/networks/");
+    await page.locator(PAPER_GRAPH).scrollIntoViewIfNeeded();
     const initialTransform = await waitForGraphLayout(page, PAPER_GRAPH);
 
     await expect(page.locator("#paper-network-hide-isolates")).not.toBeChecked();

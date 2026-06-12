@@ -197,8 +197,14 @@
 {% if page.paper_network %}
   <script defer src="{{ '/assets/js/paper-network.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
 {% endif %}
+{% if page.publication_word_cloud %}
+  <script defer src="{{ '/assets/js/publication-word-cloud.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
 {% if page.organism_map %}
   <script defer src="{{ '/assets/js/organism-map.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
+{% if page.page_id == 'carnivorous-plant-quiz' %}
+  <script defer src="{{ '/assets/js/carnivorous-plant-quiz.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
 {% endif %}
 
 <!-- Jupyter Open External Links New Tab -->

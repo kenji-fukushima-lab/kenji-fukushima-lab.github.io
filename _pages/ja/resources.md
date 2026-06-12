@@ -7,11 +7,6 @@ description: 国立遺伝学研究所 植物進化研究室で提供している
 seo_title: リソース | 国立遺伝学研究所 植物進化研究室
 nav: true
 nav_order: 5
-chart:
-  d3: true
-coauthor_network: true
-paper_network: true
-organism_map: true
 ---
 
 {% if site.data.repositories.github_users %}
@@ -94,26 +89,6 @@ organism_map: true
   </div>
 </div>
 
-<div style="margin-top: 30px;"></div>
-
-## 共同研究ネットワーク
-
-{% include coauthor_network_section.liquid lang='ja' %}
-
-<div style="margin-top: 30px;"></div>
-
-## 論文ネットワーク
-
-{% include paper_network_section.liquid lang='ja' %}
-
-<div style="margin-top: 30px;"></div>
-
-## 研究対象生物の属名カウント
-
-{% include organism_map_section.liquid lang='ja' %}
-
-<div style="margin-top: 30px;"></div>
-  
 ## 内部リソース
 
 [kflab](https://github.com/kfuku52/kflab): 研究室のタスク管理のためのプライベートリポジトリです。ここでは、試薬管理から実験計画の議論、そして研究の進捗報告まで、メンバー間で様々な調整が行われます。新メンバーはGitHubアカウントを作成して、福島に招待を依頼してください。

@@ -8,6 +8,12 @@ layout: page
 {% if page.paper_network %}
   <link rel="stylesheet" href="{{ '/assets/css/paper-network.css' | relative_url | bust_file_cache }}">
 {% endif %}
+{% if page.publication_word_cloud %}
+  <link rel="stylesheet" href="{{ '/assets/css/publication-word-cloud.css' | relative_url | bust_file_cache }}">
+{% endif %}
+{% if page.page_id == 'research_networks' %}
+  <link rel="stylesheet" href="{{ '/assets/css/research-networks.css' | relative_url | bust_file_cache }}">
+{% endif %}
 {% if page.organism_map %}
   <link rel="stylesheet" href="{{ '/assets/css/organism-map.css' | relative_url | bust_file_cache }}">
 {% endif %}

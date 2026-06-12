@@ -1,0 +1,102 @@
+{% assign cloud = site.data.publication_word_cloud %}
+{% assign lang_code = include.lang | default: 'ja' %}
+
+{% if lang_code == 'en' %}
+  {% assign cloud_error_prefix = 'Failed to generate the publication word cloud:' %}
+  {% assign stat_papers_label = 'Papers scanned' %}
+  {% assign stat_terms_label = 'Terms shown' %}
+  {% assign stat_years_label = 'Year range' %}
+  {% assign note_text = 'Terms are counted from titles and abstracts of publications used on this page after removing common English function words.' %}
+  {% assign chart_label = 'Frequent publication terms' %}
+  {% assign table_label = 'Top terms' %}
+  {% assign term_col = 'Term' %}
+  {% assign count_col = 'Mentions' %}
+  {% assign paper_col = 'Papers' %}
+{% else %}
+  {% assign cloud_error_prefix = '論文ワードクラウドを生成できませんでした:' %}
+  {% assign stat_papers_label = '対象論文数' %}
+  {% assign stat_terms_label = '表示語数' %}
+  {% assign stat_years_label = '出版年範囲' %}
+  {% assign note_text = 'このページのネットワーク生成に使っている論文のタイトル・アブストラクトから、英語の一般的な機能語を除いて頻出語を集計しています。' %}
+  {% assign chart_label = '頻出する論文語彙' %}
+  {% assign table_label = '上位語' %}
+  {% assign term_col = '語' %}
+  {% assign count_col = '出現回数' %}
+  {% assign paper_col = '論文数' %}
+{% endif %}
+
+{% if cloud.error %}
+  <div class="alert alert-warning" role="alert">
+    {{ cloud_error_prefix }}
+    {{ cloud.error }}
+  </div>
+{% else %}
+  {% assign stats = cloud.stats %}
+  <div class="publication-word-cloud-page">
+    <section class="publication-word-cloud-supporting">
+      <div class="publication-word-cloud-stat-grid">
+        <div class="publication-word-cloud-stat-card">
+          <span class="publication-word-cloud-stat-label">{{ stat_papers_label }}</span>
+          <strong class="publication-word-cloud-stat-value">{{ stats.paper_count | default: 0 }}</strong>
+        </div>
+        <div class="publication-word-cloud-stat-card">
+          <span class="publication-word-cloud-stat-label">{{ stat_terms_label }}</span>
+          <strong class="publication-word-cloud-stat-value">{{ stats.term_count | default: 0 }}</strong>
+        </div>
+        <div class="publication-word-cloud-stat-card">
+          <span class="publication-word-cloud-stat-label">{{ stat_years_label }}</span>
+          <strong class="publication-word-cloud-stat-value">{{ stats.year_first }}-{{ stats.year_last }}</strong>
+        </div>
+      </div>
+      <p class="publication-word-cloud-note">{{ note_text }}</p>
+    </section>
+
+    <section class="publication-word-cloud-layout">
+      <div class="publication-word-cloud-chart-panel">
+        <h3 class="publication-word-cloud-chart-title">{{ chart_label }}</h3>
+        <div id="publication-word-cloud-chart"></div>
+      </div>
+    </section>
+
+    <details class="publication-word-cloud-table">
+      <summary>{{ table_label }}</summary>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>{{ term_col }}</th>
+              <th>{{ count_col }}</th>
+              <th>{{ paper_col }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for word in cloud.words limit: 30 %}
+              <tr>
+                <td>{{ word.text }}</td>
+                <td>{{ word.count }}</td>
+                <td>{{ word.paper_count }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <script
+    id="publication-word-cloud-data"
+    type="application/json"
+    data-src="{{ '/assets/data/publication-word-cloud.json' | relative_url }}?v={{ site.time | date: '%s' }}"
+  ></script>
+  <script id="publication-word-cloud-i18n" type="application/json">
+    {
+      "lang": "{{ lang_code }}",
+      "unavailable": "{% if lang_code == 'en' %}Word-cloud data is unavailable.{% else %}ワードクラウドのデータがありません。{% endif %}",
+      "chartAriaLabel": "{% if lang_code == 'en' %}Publication word cloud{% else %}論文ワードクラウド{% endif %}",
+      "termLabel": "{{ term_col }}",
+      "countLabel": "{{ count_col }}",
+      "paperLabel": "{{ paper_col }}",
+      "termSummary": "{% if lang_code == 'en' %}{term}: {count} mentions in {papers} papers{% else %}{term}: {count}回 / {papers}本{% endif %}"
+    }
+  </script>
+{% endif %}
