@@ -31,6 +31,39 @@
   font-size: 0.98rem;
 }
 
+@supports selector(.content-figure:has(+ .content-figure)) {
+  @media (min-width: 576px) {
+    .post-content #markdown-content::after {
+      display: block;
+      clear: both;
+      content: "";
+    }
+
+    .post-content #markdown-content > .content-figure:has(+ .content-figure),
+    .post-content #markdown-content > .content-figure + .content-figure {
+      float: left;
+      width: calc(50% - 1rem);
+      margin: 0 1rem 1rem 0;
+    }
+
+    .post-content #markdown-content > .content-figure:has(+ .content-figure) picture,
+    .post-content #markdown-content > .content-figure + .content-figure picture {
+      display: block;
+    }
+
+    .post-content #markdown-content > .content-figure:has(+ .content-figure) img,
+    .post-content #markdown-content > .content-figure + .content-figure img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .post-content #markdown-content > .content-figure + :not(.content-figure) {
+      clear: both;
+    }
+  }
+}
+
 .related-posts-list {
   list-style: disc;
   list-style-position: outside;
