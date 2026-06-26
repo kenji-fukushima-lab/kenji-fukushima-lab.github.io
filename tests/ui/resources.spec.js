@@ -68,7 +68,7 @@ test.describe("resources and research page smoke tests", () => {
     expect(wordCloudLayout.height).toBeLessThan(420);
     expect(wordCloudLayout.maxYGap).toBeLessThan(wordCloudLayout.height * 0.08);
 
-    await page.goto("/projects/3_project/");
+    await page.goto("/research/3_project/");
     await page.locator("#organism-map-chart").waitFor({ state: "attached" });
     await page.evaluate(() => document.getElementById("organism-map-chart").scrollIntoView({ block: "center" }));
     await expect(page.locator(".organism-paper-row").first()).toBeVisible();
