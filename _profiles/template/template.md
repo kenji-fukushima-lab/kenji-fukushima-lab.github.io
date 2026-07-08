@@ -11,7 +11,7 @@ email: # Your email address. e.g., kfuku52@gmail.com
 website: # Your website URL. e.g., https://sites.google.com/site/kfuku52/
 orcid: # Your ORCID ID. e.g., 0000-0002-2353-9274
 google_scholar: # Your Google Scholar page. e.g., https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
-github: # Your GitHub account. e.g., kfuku52
+github: # Required. Your GitHub account. e.g., kfuku52
 linkedin: # Your LinkedIn account. e.g., kenji-fukushima-80a6258b
 twitter: # Your Twitter account. e.g., kfuku0502
 researchgate: # Your ResearchGate account. e.g., Kenji-Fukushima-3
