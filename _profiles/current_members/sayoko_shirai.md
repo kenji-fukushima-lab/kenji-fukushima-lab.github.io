@@ -11,7 +11,7 @@ email:
 website:
 orcid:
 google_scholar:
-github:
+github: SayokoShirai
 linkedin:
 twitter:
 researchgate:

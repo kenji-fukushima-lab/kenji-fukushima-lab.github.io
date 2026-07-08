@@ -7,7 +7,7 @@ image: people/jiawei_li.jpg
 content:
 image_circular: false
 more_info:
-email: s2330263@u.tsukuba.ac.jp
+email: li.jiawei@nig.ac.jp
 website:
 orcid:
 google_scholar:
