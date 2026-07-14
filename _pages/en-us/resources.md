@@ -95,3 +95,11 @@ nav_order: 5
 ## Internal Resources
 
 [kflab](https://github.com/kfuku52/kflab): This repository serves as the main platform for coordinating activities in the Kenji Fukushima Lab. It includes more than code: lab supply logistics, experimental-design discussions, and research-progress updates. New members should create a GitHub account and request an invitation from Kenji Fukushima.
+
+## Related Websites
+
+### NIG Badminton Club
+
+This is the website of the NIG Badminton Club, managed by Kenji Fukushima in his role as faculty advisor. It provides practice schedules, attendance information, and details on how to join.
+
+[NIG Badminton Club website](https://nig-badminton-club.github.io/)
