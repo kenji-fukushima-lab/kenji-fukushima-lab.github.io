@@ -1,0 +1,224 @@
+.modern-requests {
+  --request-accent-soft: color-mix(in srgb, var(--global-theme-color) 13%, var(--global-bg-color));
+  --request-warning: color-mix(in srgb, #d99700 78%, var(--global-text-color));
+}
+
+.request-notice {
+  border: 1px solid color-mix(in srgb, var(--request-warning) 58%, var(--modern-border));
+  border-left: 0.3rem solid var(--request-warning);
+  border-radius: 0.85rem;
+  background: color-mix(in srgb, var(--global-bg-color) 93%, #f2b632);
+  padding: 0.82rem 1rem;
+}
+
+.request-notice p,
+.request-section > p,
+.request-footer-note {
+  margin: 0.48rem 0 0;
+  line-height: 1.6;
+}
+
+.request-section h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.request-step-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.72rem;
+  margin: 0.72rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.request-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.58rem;
+  align-items: start;
+  border: 1px solid var(--modern-border);
+  border-radius: 0.75rem;
+  background: var(--global-bg-color);
+  padding: 0.72rem;
+}
+
+.request-step-number {
+  display: inline-grid;
+  width: 1.6rem;
+  height: 1.6rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--global-theme-color);
+  color: var(--global-bg-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.request-step p,
+.request-form-grid p,
+.request-company-note p,
+.request-submit-grid p,
+.request-contact-grid p,
+.request-faq p {
+  margin: 0.4rem 0 0;
+  line-height: 1.52;
+}
+
+.request-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0.7rem 0 0;
+}
+
+.request-info-grid > div {
+  border: 1px solid var(--modern-border);
+  border-radius: 0.7rem;
+  background: var(--global-bg-color);
+  padding: 0.65rem 0.75rem;
+}
+
+.request-info-grid dt {
+  color: var(--modern-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.request-info-grid dd {
+  margin: 0.18rem 0 0;
+  line-height: 1.48;
+}
+
+.request-info-wide {
+  grid-column: 1 / -1;
+}
+
+.request-form-grid,
+.request-submit-grid,
+.request-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.72rem;
+}
+
+.request-contact-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.request-form-grid article,
+.request-submit-grid article,
+.request-contact-grid article {
+  border: 1px solid var(--modern-border);
+  border-radius: 0.75rem;
+  background: var(--global-bg-color);
+  padding: 0.78rem 0.85rem;
+}
+
+.request-form-download {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.72rem;
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 55%, var(--modern-border));
+  border-radius: 0.75rem;
+  background: var(--request-accent-soft);
+  padding: 0.78rem 0.85rem;
+}
+
+.request-form-download p {
+  margin: 0.28rem 0 0;
+  line-height: 1.5;
+}
+
+.request-form-download .quick-link {
+  flex: 0 0 auto;
+}
+
+.request-form-label {
+  display: inline-block;
+  margin: 0 0 0.35rem !important;
+  border-radius: 999px;
+  background: var(--request-accent-soft);
+  padding: 0.18rem 0.5rem;
+  color: var(--global-theme-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.request-company-note {
+  margin-top: 0.72rem;
+  border-left: 0.22rem solid var(--global-theme-color);
+  background: var(--request-accent-soft);
+  padding: 0.66rem 0.8rem;
+}
+
+.request-source-note,
+.request-footer-note {
+  color: var(--modern-muted);
+  font-size: 0.86rem;
+}
+
+.request-submit-grid address {
+  margin: 0.5rem 0 0;
+  font-style: normal;
+  line-height: 1.52;
+}
+
+.request-faq {
+  display: grid;
+  gap: 0.48rem;
+  margin-top: 0.68rem;
+}
+
+.request-faq details {
+  border: 1px solid var(--modern-border);
+  border-radius: 0.68rem;
+  background: var(--global-bg-color);
+  padding: 0.62rem 0.75rem;
+}
+
+.request-faq summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.request-faq summary:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 3px;
+}
+
+.request-footer-note {
+  margin: 0 0.15rem;
+}
+
+@media (max-width: 900px) {
+  .request-step-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .request-step-grid,
+  .request-info-grid,
+  .request-form-grid,
+  .request-submit-grid,
+  .request-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .request-info-wide {
+    grid-column: auto;
+  }
+
+  .request-form-download {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .request-form-download .quick-link {
+    text-align: center;
+  }
+}

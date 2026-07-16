@@ -24,6 +24,7 @@ nav_order: 6
     </p>
     <div class="quick-links">
       <a class="quick-link" href="https://researchmap.jp/kenji_fukushima/social_contribution">アウトリーチ活動一覧（researchmap）</a>
+      <a class="quick-link" href="{{ '/requests/' | relative_url }}">講演・執筆・取材等のご依頼</a>
     </div>
   </section>
 
@@ -105,6 +106,14 @@ nav_order: 6
           <img src="/assets/img/people/kenji_fukushima.jpg" alt="国立遺伝学研究所 教員インタビュー">
           <span class="feature-thumb-text">国立遺伝学研究所 教員インタビュー</span>
         </a>
+      </div>
+    </article>
+
+    <article class="modern-card">
+      <h3>講演・執筆・取材等のご依頼</h3>
+      <p>当研究室スタッフへのご依頼に伴う、国立遺伝学研究所の兼業手続き、依頼状の記入情報、提出方法をご案内しています。</p>
+      <div class="quick-links">
+        <a class="quick-link" href="{{ '/requests/' | relative_url }}">兼業手続きの案内を見る</a>
       </div>
     </article>
 
