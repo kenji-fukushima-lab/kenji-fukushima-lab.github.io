@@ -205,6 +205,10 @@ kramdown:
 # Includes & excludes
 include: ["_pages", "_scripts"]
 exclude:
+  - automation/
+  - assets/html/relativity.html
+  - assets/jupyter/
+  - assets/plotly/demo.html
   - bin/
   - CONTRIBUTING.md
   - CUSTOMIZE.md
@@ -220,11 +224,14 @@ exclude:
   - lighthouse_results/
   - package.json
   - package-lock.json
+  - playwright.config.js
   - _pages/en-us/about_einstein.md
   - _pages/pt-br/about_einstein.md
   - purgecss.config.js
   - README.md
   - readme_preview/
+  - tests/
+  - tmp/
   - UPGRADING.md
   - vendor
 keep_files:

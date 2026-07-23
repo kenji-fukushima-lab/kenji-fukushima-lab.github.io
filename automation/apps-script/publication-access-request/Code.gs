@@ -6,8 +6,11 @@ const CONFIG = Object.freeze({
   DOWNLOAD_PASSWORD_PROPERTY: "DOWNLOAD_PASSWORD",
   TOKEN_VALID_HOURS: 24,
   MAX_REQUESTS_PER_ADDRESS_PER_DAY: 1,
-  MAX_REQUESTS_PER_DAY: 100,
-  RETENTION_DAYS: 365,
+  // Consumer Gmail accounts can send to 100 recipients per day. Each completed
+  // request uses two recipients (verification and access), leaving 10 in reserve.
+  MAX_REQUESTS_PER_DAY: 45,
+  MIN_FORM_FILL_MILLISECONDS: 1500,
+  MAX_FORM_FILL_MILLISECONDS: 2 * 60 * 60 * 1000,
   SENDER_NAME: "Fukushima Lab",
 });
 
@@ -71,6 +74,9 @@ function doPost(e) {
     if (String(params.website || "").trim()) {
       return renderRequestAccepted_();
     }
+    if (!isPlausibleFormTiming_(params.form_started_at)) {
+      return renderRequestAccepted_();
+    }
     if (String(params.consent || "") !== "yes") {
       throw new Error("Consent is required");
     }
@@ -81,12 +87,8 @@ function doPost(e) {
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
 
-    let sheet;
-    let rowNumber;
-    let token;
     try {
-      sheet = getRequestSheet_();
-      purgeOldRows_(sheet);
+      const sheet = getRequestSheet_();
 
       const today = formatRequestDate_(new Date());
       const existingCounts = countRequestsForDate_(sheet, today, request.email);
@@ -94,8 +96,13 @@ function doPost(e) {
         return renderRequestAccepted_();
       }
 
-      token = createToken_();
       const now = new Date();
+      const pendingAccessReservations = countActiveAccessReservations_(sheet, now);
+      if (MailApp.getRemainingDailyQuota() < pendingAccessReservations + 2) {
+        return renderRequestAccepted_();
+      }
+
+      const token = createToken_();
       const expiresAt = new Date(now.getTime() + CONFIG.TOKEN_VALID_HOURS * 60 * 60 * 1000);
 
       sheet.appendRow([
@@ -111,17 +118,17 @@ function doPost(e) {
         "",
         "verification_pending",
       ]);
-      rowNumber = sheet.getLastRow();
+      const rowNumber = sheet.getLastRow();
+
+      try {
+        sendVerificationEmail_(request, token);
+        sheet.getRange(rowNumber, COL.STATUS).setValue("verification_sent");
+      } catch (error) {
+        sheet.getRange(rowNumber, COL.STATUS).setValue("verification_error");
+        throw error;
+      }
     } finally {
       lock.releaseLock();
-    }
-
-    try {
-      sendVerificationEmail_(request, token);
-      sheet.getRange(rowNumber, COL.STATUS).setValue("verification_sent");
-    } catch (error) {
-      sheet.getRange(rowNumber, COL.STATUS).setValue("verification_error");
-      throw error;
     }
 
     return renderRequestAccepted_();
@@ -136,12 +143,9 @@ function verifyTokenAndSendAccess_(token) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
 
-  let sheet;
-  let rowNumber;
-  let request;
   try {
-    sheet = getRequestSheet_();
-    rowNumber = findRowByTokenHash_(sheet, tokenHash);
+    const sheet = getRequestSheet_();
+    const rowNumber = findRowByTokenHash_(sheet, tokenHash);
     if (!rowNumber) {
       return renderInvalidLink_();
     }
@@ -157,24 +161,29 @@ function verifyTokenAndSendAccess_(token) {
       return renderInvalidLink_();
     }
 
-    request = {
+    const request = {
       name: String(row[COL.NAME - 1]),
       affiliation: String(row[COL.AFFILIATION - 1]),
       email: String(row[COL.EMAIL - 1]),
     };
-    sheet.getRange(rowNumber, COL.STATUS).setValue("sending_access");
-  } finally {
-    lock.releaseLock();
-  }
 
-  try {
-    sendAccessEmail_(request);
+    if (MailApp.getRemainingDailyQuota() < 1) {
+      return renderPage_("Email could not be sent", "<p>Please wait and open the verification link again later.</p>");
+    }
+
+    sheet.getRange(rowNumber, COL.STATUS).setValue("sending_access");
+    try {
+      sendAccessEmail_(request);
+    } catch (error) {
+      sheet.getRange(rowNumber, COL.STATUS).setValue("verification_sent");
+      console.error(error);
+      return renderPage_("Email could not be sent", "<p>Please wait a few minutes and open the verification link again.</p>");
+    }
+
     const sentAt = new Date();
     sheet.getRange(rowNumber, COL.VERIFIED_AT, 1, 3).setValues([[sentAt, sentAt, "access_sent"]]);
-  } catch (error) {
-    sheet.getRange(rowNumber, COL.STATUS).setValue("verification_sent");
-    console.error(error);
-    return renderPage_("Email could not be sent", "<p>Please wait a few minutes and open the verification link again.</p>");
+  } finally {
+    lock.releaseLock();
   }
 
   return renderPage_("Email address verified", "<p>Publication-access information has been sent to your email address.</p>");
@@ -323,19 +332,39 @@ function countRequestsForDate_(sheet, requestDate, email) {
     return { total: 0, forAddress: 0 };
   }
 
-  const values = sheet.getRange(2, COL.REQUEST_DATE, lastRow - 1, 4).getDisplayValues();
+  const values = sheet.getRange(2, COL.REQUEST_DATE, lastRow - 1, COL.STATUS - COL.REQUEST_DATE + 1).getDisplayValues();
   let total = 0;
   let forAddress = 0;
   values.forEach((row) => {
-    if (row[0] !== requestDate) {
+    const status = String(row[COL.STATUS - COL.REQUEST_DATE]).trim();
+    if (row[0] !== requestDate || status === "verification_error") {
       return;
     }
     total += 1;
-    if (String(row[3]).trim().toLowerCase() === email) {
+    if (
+      String(row[COL.EMAIL - COL.REQUEST_DATE])
+        .trim()
+        .toLowerCase() === email
+    ) {
       forAddress += 1;
     }
   });
   return { total, forAddress };
+}
+
+function countActiveAccessReservations_(sheet, now) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    return 0;
+  }
+
+  const values = sheet.getRange(2, COL.TOKEN_EXPIRES_AT, lastRow - 1, COL.STATUS - COL.TOKEN_EXPIRES_AT + 1).getValues();
+  return values.reduce((count, row) => {
+    const expiresAt = new Date(row[0]);
+    const status = String(row[COL.STATUS - COL.TOKEN_EXPIRES_AT]).trim();
+    const reservesAccessEmail = status === "verification_pending" || status === "verification_sent" || status === "sending_access";
+    return reservesAccessEmail && !Number.isNaN(expiresAt.getTime()) && expiresAt > now ? count + 1 : count;
+  }, 0);
 }
 
 function findRowByTokenHash_(sheet, tokenHash) {
@@ -351,20 +380,13 @@ function findRowByTokenHash_(sheet, tokenHash) {
   return match ? match.getRow() : null;
 }
 
-function purgeOldRows_(sheet) {
-  const lastRow = sheet.getLastRow();
-  if (lastRow < 2) {
-    return;
+function isPlausibleFormTiming_(rawStartedAt) {
+  const startedAt = Number(rawStartedAt);
+  if (!Number.isFinite(startedAt)) {
+    return false;
   }
-
-  const cutoff = Date.now() - CONFIG.RETENTION_DAYS * 24 * 60 * 60 * 1000;
-  const submitted = sheet.getRange(2, COL.SUBMITTED_AT, lastRow - 1, 1).getValues();
-  for (let index = submitted.length - 1; index >= 0; index -= 1) {
-    const date = new Date(submitted[index][0]);
-    if (!Number.isNaN(date.getTime()) && date.getTime() < cutoff) {
-      sheet.deleteRow(index + 2);
-    }
-  }
+  const elapsed = Date.now() - startedAt;
+  return elapsed >= CONFIG.MIN_FORM_FILL_MILLISECONDS && elapsed <= CONFIG.MAX_FORM_FILL_MILLISECONDS;
 }
 
 function renderRequestAccepted_() {

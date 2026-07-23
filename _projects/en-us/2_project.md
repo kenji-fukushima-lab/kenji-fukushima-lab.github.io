@@ -14,7 +14,7 @@ schema_type: WebPage
 
 In our lab, we combine methods from multiple disciplines according to the question at hand. Here we introduce our research topics and the techniques we use through the lens of the fields they draw on.
 
-#### Evolutionary Biology
+## Evolutionary Biology
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -27,7 +27,7 @@ Just as children differ slightly from their parents, organisms also change gradu
 
 <div style="margin-top: 30px;"></div>
 
-#### Plant Molecular Biology
+## Plant Molecular Biology
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -43,7 +43,7 @@ Molecular biology, centered on nucleic acids and proteins, is a core foundation 
 
 <div style="margin-top: 30px;"></div>
 
-#### Evo-Devo
+## Evo-Devo
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -56,7 +56,7 @@ Carnivorous trapping leaves have highly complex forms, but how were they acquire
 
 <div style="margin-top: 30px;"></div>
 
-#### Plant Physiology and Electrophysiology
+## Plant Physiology and Electrophysiology
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -72,7 +72,7 @@ Electricity is also often important. When people hear "bioelectricity," they ten
 
 <div style="margin-top: 30px;"></div>
 
-#### Biochemistry and Protein Engineering
+## Biochemistry and Protein Engineering
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -85,7 +85,7 @@ Proteins can be synthesized and modified relatively easily in vitro. With carefu
 
 <div style="margin-top: 30px;"></div>
 
-#### Synthetic Biology
+## Synthetic Biology
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -101,7 +101,7 @@ At the protein level, the idea is even more tractable: we can introduce mutation
 
 <div style="margin-top: 30px;"></div>
 
-#### Genomics
+## Genomics
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -114,7 +114,7 @@ The vast amount of information encoded in genomes provides crucial clues to the 
 
 <div style="margin-top: 30px;"></div>
 
-#### Bioinformatics
+## Bioinformatics
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -127,7 +127,7 @@ When we confront complex biological phenomena, bioinformatics is an extremely po
 
 <div style="margin-top: 30px;"></div>
 
-#### Phylogenetics
+## Phylogenetics
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -140,7 +140,7 @@ Phylogenetics is a classical area within bioinformatics, but it remains a core f
 
 <div style="margin-top: 30px;"></div>
 
-#### Statistics
+## Statistics
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">

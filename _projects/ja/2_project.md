@@ -14,7 +14,7 @@ schema_type: WebPage
 
 国立遺伝学研究所 植物進化研究室では、各プロジェクトの課題に応じて、複数の研究分野の手法を組み合わせています。ここでは、研究課題と使用技術の関わりを、分野ごとに紹介します。
 
-#### 進化生物学
+## 進化生物学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -27,7 +27,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 植物分子生物学
+## 植物分子生物学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -43,7 +43,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 発生進化学
+## 発生進化学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -56,7 +56,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 植物生理学・電気生理学
+## 植物生理学・電気生理学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -72,7 +72,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 生化学・タンパク質工学
+## 生化学・タンパク質工学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -85,7 +85,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 合成生物学
+## 合成生物学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -98,7 +98,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### ゲノム生物学
+## ゲノム生物学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -111,7 +111,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 生命情報科学
+## 生命情報科学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -124,7 +124,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 分子系統学
+## 分子系統学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -137,7 +137,7 @@ schema_type: WebPage
 
 <div style="margin-top: 30px;"></div>
 
-#### 統計学
+## 統計学
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">

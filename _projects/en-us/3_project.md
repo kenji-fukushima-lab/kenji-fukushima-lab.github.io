@@ -31,7 +31,7 @@ We are collecting genome and transcriptome data across a broad diversity of carn
 
 <div style="margin-top: 30px;"></div>
 
-#### _Cephalotus follicularis_
+### _Cephalotus follicularis_
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -44,7 +44,7 @@ _Cephalotus follicularis_ is a carnivorous plant endemic to southwestern Austral
 
 <div style="margin-top: 30px;"></div>
 
-#### _Nepenthes_ spp.
+### _Nepenthes_ spp.
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -57,7 +57,7 @@ In contrast to taxonomically isolated _Cephalotus_, the genus _Nepenthes_ contai
 
 <div style="margin-top: 30px;"></div>
 
-#### _Brocchinia reducta_
+### _Brocchinia reducta_
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -70,7 +70,7 @@ This bromeliad is thought to represent one of the youngest carnivorous-plant lin
 
 <div style="margin-top: 30px;"></div>
 
-#### _Triphyophyllum peltatum_ and its relatives
+### _Triphyophyllum peltatum_ and its relatives
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -121,7 +121,7 @@ These bacteria underpin much of our molecular biology. _E. coli_ is a dependable
 
 Our lab is not limited to carnivorous plants. If a student or researcher already has deep experience with a particular organism, even one that our lab has not previously worked on, it can become the basis of a new project. As long as genome sequences can be obtained, we can analyze many kinds of organisms within a common framework. By combining that flexibility with our bioinformatics expertise, especially our distinctive methods for studying molecular convergence, each member can pursue the core biology of "their" organism.
 
-#### Study organism introduced by a lab member 1: Isopod crustaceans
+### Study organism introduced by a lab member 1: Isopod crustaceans
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -133,7 +133,7 @@ Transitions from aquatic ancestors to life on land have occurred repeatedly acro
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Study organism introduced by a lab member 2: Ferns
+### Study organism introduced by a lab member 2: Ferns
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -145,7 +145,7 @@ Ferns have a unique life cycle in which both the haploid gametophyte and diploid
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Study organism introduced by a lab member 3: Gymnosperms
+### Study organism introduced by a lab member 3: Gymnosperms
 
 <div class="project-media-split" data-media-layout="double">
   <div class="project-media-split__body" markdown="1">
@@ -160,7 +160,7 @@ Gymnosperms such as cycads and ginkgo are plant lineages with reproductive modes
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Study organism introduced by a lab member 4: Bamboos
+### Study organism introduced by a lab member 4: Bamboos
 
 <div class="project-media-split" data-media-layout="double">
   <div class="project-media-split__body" markdown="1">

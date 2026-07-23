@@ -11,4 +11,4 @@ categories:
 
 実験室とオフィスに昇降式デスクを合計10台導入しました。
 
-{% twitter https://x.com/kfuku0502/status/1889833976380137945 %}
+[Xの投稿を見る](https://x.com/kfuku0502/status/1889833976380137945)

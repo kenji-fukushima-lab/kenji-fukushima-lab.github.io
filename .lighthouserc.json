@@ -15,13 +15,13 @@
         "categories:performance": [
           "error",
           {
-            "minScore": 0.25
+            "minScore": 0.5
           }
         ],
         "categories:accessibility": [
           "error",
           {
-            "minScore": 0.85
+            "minScore": 0.95
           }
         ],
         "largest-contentful-paint": [
@@ -30,7 +30,7 @@
             "maxNumericValue": 8000
           }
         ],
-        "errors-in-console": "off",
+        "errors-in-console": "warn",
         "bf-cache": "off",
         "document-title": "off"
       }

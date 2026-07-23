@@ -12,7 +12,7 @@ keywords: National Institute of Genetics, NIG, carnivorous plants, plant evoluti
 schema_type: WebPage
 ---
 
-#### Equipment
+## Equipment
 
 Our laboratory is equipped for plant-focused molecular biology experiments. We also have access to the extensive [common equipment](https://www.nig.ac.jp/en/researchers/equipment/) available at NIG.
 
@@ -27,7 +27,7 @@ Our laboratory is equipped for plant-focused molecular biology experiments. We a
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Computers
+## Computers
 
 <div class="project-media-split">
   <div class="project-media-split__body">
@@ -53,7 +53,7 @@ Our laboratory is equipped for plant-focused molecular biology experiments. We a
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Cultivation space
+## Cultivation space
 
 Our laboratory has dedicated cultivation rooms and plant incubators. Many of our carnivorous plant lines are maintained as sterile cultures.
 
@@ -72,7 +72,7 @@ Our laboratory has dedicated cultivation rooms and plant incubators. Many of our
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Office desks and bench space
+## Office desks and bench space
 
 Each lab member is assigned a dedicated desk. Lab benches are run on a shared basis, but during an active experimental period you may exclusively use the bench assigned to you.
 
@@ -82,7 +82,7 @@ Each lab member is assigned a dedicated desk. Lab benches are run on a shared ba
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Break and meeting space
+## Break and meeting space
 
 <div class="project-media-split">
   <div class="project-media-split__body">
@@ -94,6 +94,6 @@ Each lab member is assigned a dedicated desk. Lab benches are run on a shared ba
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### Conference participation
+## Conference participation
 
 If you present work conducted in our lab at a conference, we provide travel support. The exact level of support depends on the lab budget, but we do our best to help interested members attend both domestic and international meetings.

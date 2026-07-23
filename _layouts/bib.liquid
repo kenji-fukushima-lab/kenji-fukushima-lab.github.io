@@ -558,7 +558,6 @@
             <a
               class="citation-badge citation-badge-altmetric"
               href="https://www.altmetric.com/details.php?doi={{ doi_value | uri_escape }}"
-              aria-label="Altmetric score: {{ altmetric_count }}"
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >
@@ -567,7 +566,7 @@
             </a>
           {% endif %}
           {% if entry_has_crossref_badge %}
-            <span class="citation-badge citation-badge-crossref" aria-label="Crossref citations: {{ crossref_count }}">
+            <span class="citation-badge citation-badge-crossref">
               <span class="citation-badge-source">Crossref</span>
               <span class="citation-badge-count">{{ crossref_count }}</span>
             </span>
@@ -576,7 +575,6 @@
             <a
               class="citation-badge citation-badge-dimensions"
               href="https://badge.dimensions.ai/details/doi/{{ doi_value | uri_escape }}"
-              aria-label="Dimensions citations: {{ dimensions_count }}"
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >

@@ -14,7 +14,7 @@ schema_type: WebPage
 
 This page introduces the biological phenomena and evolutionary processes at the core of our research. Each theme is described separately here, but many of our projects sit at the intersection of several of them.
 
-#### Evolutionary innovations
+## Evolutionary innovations
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -27,7 +27,7 @@ The trapping leaves of carnivorous plants evolved from ordinary photosynthetic l
 
 <div style="margin-top: 30px;"></div>
 
-#### Convergent evolution
+## Convergent evolution
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -43,7 +43,7 @@ Convergent evolution is not limited to form and function. When we examine conver
 
 <div style="margin-top: 30px;"></div>
 
-#### Phenotypic plasticity
+## Phenotypic plasticity
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -56,25 +56,25 @@ Organisms can alter their body plans in response to the environment. When those 
 
 <div style="margin-top: 30px;"></div>
 
-#### Drastic morphological evolution
+## Drastic morphological evolution
 
 When people think of evolution, they often imagine gradual, continuous change. But some forms seem to appear abruptly, with no obvious intermediates. Pitcher-shaped trapping leaves in carnivorous plants are a good example. We think the key to this apparent leap lies in development, the process by which organs take shape.
 
 <div style="margin-top: 30px;"></div>
 
-#### Cell type evolution
+## Cell type evolution
 
 Organisms are assemblies of cells, and the evolution of body form can ultimately be understood as the evolution of cell types. Carnivorous plants possess many specialized cell types that are absent from other plants. How did these novel cells arise during the evolution of carnivory?
 
 <div style="margin-top: 30px;"></div>
 
-#### Co-option
+## Co-option
 
 Evolution rarely invents complex new functions from scratch. It is often more effective to reuse existing components in new contexts. When genes that originally served one trait are co-opted for another, an apparently sudden innovation can emerge. We previously showed that digestive enzymes in carnivorous plants evolved from enzymes involved in pathogen defense, and we continue to investigate other unexpected cases of co-option.
 
 <div style="margin-top: 30px;"></div>
 
-#### Gene duplication and whole-genome duplication
+## Gene duplication and whole-genome duplication
 
 New genes often appear in the background of trait evolution. Many of them arise through duplication of pre-existing genes, a process that is indispensable in evolution. We search genomes for traces of gene duplications that coincide with major trait innovations, and we ask how duplication interacts with other modes of molecular evolution.
 
@@ -82,25 +82,25 @@ Gene duplication does not always occur one gene at a time. Whole-genome duplicat
 
 <div style="margin-top: 30px;"></div>
 
-#### Gene sequence evolution
+## Gene sequence evolution
 
 DNA sequence determines amino-acid sequence, amino-acid sequence shapes protein structure, protein structure influences protein function, and protein function ultimately affects organismal traits through higher levels of biological organization. Even though many layers separate sequence from phenotype, a single amino-acid change can sometimes have direct consequences for survival. We search for the sequence changes that drove trait evolution.
 
 <div style="margin-top: 30px;"></div>
 
-#### Gene expression evolution
+## Gene expression evolution
 
 Gene function can evolve even when the encoded protein sequence does not change. Regulatory changes that alter when, where, or how strongly a gene is expressed can also reshape traits. We are especially interested in this process because it is closely tied to evolutionary co-option.
 
 <div style="margin-top: 30px;"></div>
 
-#### Gene loss
+## Gene loss
 
 Evolution is not only about gaining something new. Losing genes is also an important component of evolutionary change. The emergence of new traits is often accompanied by the loss of specific genes. Gene loss is the counterpart of gene duplication, and its evolutionary significance can be just as great.
 
 <div style="margin-top: 30px;"></div>
 
-#### Genetic background
+## Genetic background
 
 The same mutation does not always produce the same evolutionary outcome. Gene function depends on interactions with many other genes. When we focus on one locus, the collective influence of all the others is called genetic background. This is a key factor in convergent evolution. If genetic background has a strong effect, phenotypic convergence driven by the same molecular changes should be less likely; if its effect is weaker, such convergence should be more likely. We investigate these relationships.
 

@@ -49,6 +49,18 @@ table.table a {
   }
 }
 
+.post article p a:not(.btn):not(.citation-badge),
+.post article li a:not(.btn):not(.citation-badge),
+.post article dd a:not(.btn):not(.citation-badge),
+.post-header .post-description a,
+.post-meta a,
+.post-tags a {
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+}
+
 .table-dark {
   background-color: transparent;
   &.table-bordered {
@@ -1161,7 +1173,7 @@ footer.sticky-bottom {
   }
 
   h2.category {
-    color: var(--global-divider-color);
+    color: var(--global-text-color-light);
     border-bottom: 1px solid var(--global-divider-color);
     padding-top: 0.5rem;
     margin-top: 2rem;
@@ -1192,7 +1204,7 @@ footer.sticky-bottom {
   }
 
   h2.bibliography {
-    color: var(--global-divider-color);
+    color: var(--global-text-color-light);
     border-top: 1px solid var(--global-divider-color);
     padding-top: 1rem;
     margin-top: 2rem;

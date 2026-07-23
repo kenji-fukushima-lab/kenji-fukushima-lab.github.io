@@ -13,17 +13,17 @@
 
 .badge-type-original {
   color: #fff;
-  background-color: #007bff;
+  background-color: #0056b3;
 }
 
 .badge-type-preprint {
   color: #fff;
-  background-color: #f80;
+  background-color: #9a4f00;
 }
 
 .badge-type-other {
   color: #fff;
-  background-color: #28a745;
+  background-color: #176b2c;
 }
 
 .publications-controls {
@@ -235,7 +235,7 @@
 
 .publications ol.bibliography li .links,
 .publications .publication-entry .links {
-  margin-right: 0.35rem;
+  margin-right: 0.5rem;
 }
 
 .publications ol.bibliography li .badges,
@@ -249,16 +249,16 @@
   align-items: center;
   justify-content: center;
   gap: 0.24rem;
-  height: 20px;
-  min-height: 20px;
+  height: 32px;
+  min-height: 32px;
   box-sizing: border-box;
   margin: 0;
-  padding: 0.08rem 0.36rem !important;
+  padding: 0.15rem 0.55rem !important;
   border: 1px solid var(--global-divider-color) !important;
   border-radius: 999px !important;
   background: var(--global-bg-color) !important;
   color: var(--global-text-color) !important;
-  font-size: 0.62rem !important;
+  font-size: 0.68rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.01em;
   line-height: 1 !important;
@@ -295,10 +295,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.24rem;
-  height: 20px;
-  min-height: 20px;
+  height: 32px;
+  min-height: 32px;
   box-sizing: border-box;
-  padding: 0.08rem 0.36rem;
+  padding: 0.15rem 0.55rem;
   border: 1px solid var(--global-divider-color);
   border-radius: 999px;
   background: var(--global-bg-color);
@@ -321,7 +321,7 @@
 
 .publications ol.bibliography li .badges .citation-badge-source,
 .publications .publication-entry .badges .citation-badge-source {
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--global-text-color);
@@ -330,7 +330,7 @@
 
 .publications ol.bibliography li .badges .citation-badge-count,
 .publications .publication-entry .badges .citation-badge-count {
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   font-weight: 700;
   color: var(--global-text-color);
 }

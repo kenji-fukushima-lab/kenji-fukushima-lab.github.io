@@ -17,4 +17,4 @@ categories:
 
 <div style="margin-top: 30px;"></div>
 
-{% twitter https://x.com/kfuku0502/status/1776418457833406946 %}
+[Xの投稿を見る](https://x.com/kfuku0502/status/1776418457833406946)

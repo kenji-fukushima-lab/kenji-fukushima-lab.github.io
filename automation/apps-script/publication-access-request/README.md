@@ -10,7 +10,7 @@ website.
 3. A verification link valid for 24 hours is emailed to the submitted address.
 4. Opening the link sends the researchmap URL and the shared download password.
 5. Request state is recorded in a private Google Sheet owned by the deploying
-   account. Rows older than 365 days are removed when a new request is processed.
+   account. Records are retained so that suspected misuse can be investigated.
 
 Outgoing messages intentionally do not set `Reply-To`.
 
@@ -29,6 +29,10 @@ Outgoing messages intentionally do not set `Reply-To`.
 The request log spreadsheet ID is kept in the script property
 `REQUEST_SPREADSHEET_ID`. The download password is read from
 `DOWNLOAD_PASSWORD`; it is not stored in the repository.
+
+To open the request log from Apps Script, run `setup()` and follow the URL shown
+in the execution result. The current log is also in the deploying account's
+Google Drive under `KFLAB Publication Access Requests`.
 
 Current production web app:
 

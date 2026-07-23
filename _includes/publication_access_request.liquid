@@ -72,8 +72,11 @@
     action="{{ publication_access_config.web_app_url }}"
     method="post"
     target="_blank"
+    rel="noopener"
     data-publication-access-form
   >
+    <input name="form_started_at" type="hidden" value="" data-publication-access-started-at>
+
     <label>
       <span>
         {%- if publication_access_is_ja %}氏名{% else %}Full name{% endif -%}
@@ -104,12 +107,10 @@
       <input name="consent" type="checkbox" value="yes" required>
       <span>
         {% if publication_access_is_ja %}
-          アクセス管理と不正利用防止のため、氏名・所属・メールアドレス・申請および確認日時が最長
-          {{- publication_access_config.retention_days -}}
-          日間保存されることに同意します。
+          アクセス管理と不正利用防止のため、氏名・所属・メールアドレス・申請および確認情報を利用することに同意します。
         {% else %}
-          I agree that my name, affiliation, email address, and request and verification timestamps may be stored for up to
-          {{ publication_access_config.retention_days }} days for access administration and abuse prevention.
+          I agree that my name, affiliation, email address, and request and verification information may be used for access administration and abuse
+          prevention.
         {% endif %}
       </span>
     </label>

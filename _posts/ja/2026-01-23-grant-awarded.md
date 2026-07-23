@@ -13,4 +13,4 @@ categories:
 
 関連ページ: <https://www.suntory.co.jp/news/article/2026/14976.html>
 
-{% twitter https://x.com/kfuku0502/status/2014617322120753351 %}
+[Xの投稿を見る](https://x.com/kfuku0502/status/2014617322120753351)

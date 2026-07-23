@@ -40,7 +40,7 @@
 
 .publication-access-limit,
 .publication-access-form-note {
-  color: var(--global-text-color-light);
+  color: var(--global-text-color);
   font-size: 0.82rem;
 }
 
@@ -149,7 +149,7 @@
   grid-template-columns: auto 1fr;
   gap: 0.55rem;
   align-items: start;
-  color: var(--global-text-color-light);
+  color: var(--global-text-color);
   font-size: 0.8rem;
   line-height: 1.45;
 }

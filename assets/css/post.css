@@ -3,6 +3,11 @@
   --post-heading-surface: color-mix(in srgb, var(--global-bg-color) 94%, var(--global-theme-color));
 }
 
+.post-content #markdown-content img {
+  max-width: 100%;
+  height: auto;
+}
+
 .post > h2,
 .post-content #markdown-content > h2 {
   margin: 0.65rem 0 0;

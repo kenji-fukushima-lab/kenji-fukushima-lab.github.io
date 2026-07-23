@@ -31,8 +31,14 @@ RUN apt-get update -y && \
         nodejs \
         procps \
         python3-pip \
+        python3-venv \
         zlib1g-dev && \
-    pip --no-cache-dir install --upgrade --break-system-packages nbconvert
+    python3 -m venv /opt/site-python && \
+    /opt/site-python/bin/pip install --no-cache-dir --upgrade pip jupyter nbconvert "pagefind[extended]"
+
+# Login shells can reset PATH, while the notebook converter invokes `jupyter`
+# by name. Keep that executable available from the system command path.
+RUN ln -sf /opt/site-python/bin/jupyter /usr/local/bin/jupyter
 
 # clean up
 RUN apt-get clean && \
@@ -46,6 +52,8 @@ RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
 # set environment variables
 ENV EXECJS_RUNTIME=Node \
     JEKYLL_ENV=production \
+    PAGEFIND_PYTHON=/opt/site-python/bin/python \
+    PATH="/opt/site-python/bin:${PATH}" \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8

@@ -31,7 +31,7 @@ organism_map: true
 
 <div style="margin-top: 30px;"></div>
 
-#### フクロユキノシタ(_Cephalotus follicularis_)
+### フクロユキノシタ(_Cephalotus follicularis_)
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -44,7 +44,7 @@ organism_map: true
 
 <div style="margin-top: 30px;"></div>
 
-#### ウツボカズラ(_Nepenthes_ spp.)
+### ウツボカズラ(_Nepenthes_ spp.)
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -57,7 +57,7 @@ organism_map: true
 
 <div style="margin-top: 30px;"></div>
 
-#### ブロッキニア(_Brocchinia reducta_)
+### ブロッキニア(_Brocchinia reducta_)
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -70,7 +70,7 @@ organism_map: true
 
 <div style="margin-top: 30px;"></div>
 
-#### トリフィオフィルムとその近縁種(_Triphyophyllum peltatum_ and its relatives)
+### トリフィオフィルムとその近縁種(_Triphyophyllum peltatum_ and its relatives)
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -121,7 +121,7 @@ organism_map: true
 
 国立遺伝学研究所 植物進化研究室の研究対象は食虫植物に限りません。学生・研究員が特定の生物の取り扱いに熟達していれば、これまで扱ってこなかった生物であっても、新たな研究テーマとして立ち上げることが可能です。ゲノム配列さえ得られれば、どの生物であっても共通の枠組みで解析できます。そのため、研究室のバイオインフォマティクス技術、とりわけ独自性の高い分子収斂解析法を組み合わせることで、各メンバーが「自分の生物」を軸に、その本質に迫る研究を進めています。
 
-#### ラボメンバーが独自に持ち込んだ実験生物１：等脚目甲殻類
+### ラボメンバーが独自に持ち込んだ実験生物１：等脚目甲殻類
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -133,7 +133,7 @@ organism_map: true
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### ラボメンバーが独自に持ち込んだ実験生物２：シダ植物
+### ラボメンバーが独自に持ち込んだ実験生物２：シダ植物
 
 <div class="project-media-split">
   <div class="project-media-split__body" markdown="1">
@@ -145,7 +145,7 @@ organism_map: true
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### ラボメンバーが独自に持ち込んだ実験生物３：裸子植物
+### ラボメンバーが独自に持ち込んだ実験生物３：裸子植物
 
 <div class="project-media-split" data-media-layout="double">
   <div class="project-media-split__body" markdown="1">
@@ -160,7 +160,7 @@ organism_map: true
 </div>
 <div style="margin-top: 30px;"></div>
 
-#### ラボメンバーが独自に持ち込んだ実験生物４：タケ類
+### ラボメンバーが独自に持ち込んだ実験生物４：タケ類
 
 <div class="project-media-split" data-media-layout="double">
   <div class="project-media-split__body" markdown="1">

@@ -45,16 +45,19 @@ fi
 
 echo "Running local push checks..."
 
-echo "1/4 Python syntax checks"
+echo "1/5 Python syntax checks"
 find .github/scripts -name '*.py' -exec python3 -m py_compile {} +
 
-echo "2/4 Python unit tests"
+echo "2/5 Python unit tests"
 python3 -m unittest discover -s tests
 
-echo "3/4 Paper Network Ruby unit test"
+echo "3/5 JavaScript unit tests"
+npm run test:unit:js
+
+echo "4/5 Paper Network Ruby unit test"
 run_paper_network_tests
 
-echo "4/4 Image budget"
+echo "5/5 Image budget"
 bash .github/scripts/check-image-budget.sh
 
 echo "Local push checks passed."

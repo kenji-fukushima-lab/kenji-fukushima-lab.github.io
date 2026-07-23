@@ -302,11 +302,11 @@ def request_url(url: str) -> tuple[bool, str]:
                     status = response.status
                     if 200 <= status < 400:
                         return True, f"{status}"
-                    if status in (403, 405):
+                    if status in (403, 405, 429):
                         return True, f"{status}"
                     return False, f"{status}"
             except urllib.error.HTTPError as error:
-                if error.code in (403, 405):
+                if error.code in (403, 405, 429):
                     return True, str(error.code)
                 if method == "HEAD" and error.code in (400, 404, 405, 429, 500, 501):
                     break

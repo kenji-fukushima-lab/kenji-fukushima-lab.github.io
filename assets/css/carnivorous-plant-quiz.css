@@ -73,6 +73,10 @@
     filter 120ms ease;
 }
 
+.cp-quiz-command span {
+  color: #fff;
+}
+
 .cp-quiz-command:hover:not(:disabled) {
   transform: translateY(-1px);
   filter: brightness(1.04);

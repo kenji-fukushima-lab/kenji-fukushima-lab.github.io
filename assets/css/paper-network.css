@@ -5,6 +5,17 @@
   gap: 1rem;
 }
 
+.paper-network-toolbar .btn-outline-primary {
+  border-color: #0056b3;
+  color: #0056b3;
+}
+
+.paper-network-toolbar .btn-outline-primary:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+  color: #fff;
+}
+
 .paper-network-controls,
 .paper-network-layout,
 .paper-network-supporting,

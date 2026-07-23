@@ -12,6 +12,9 @@ test.describe("publication access request", () => {
     await expect(dialog.getByLabel("Full name")).toBeFocused();
     await expect(dialog.getByLabel("Affiliation", { exact: true })).toBeVisible();
     await expect(dialog.getByLabel("Email address", { exact: true })).toHaveAttribute("type", "email");
+    await expect(dialog.getByText(/may be used for access administration and abuse prevention/)).toBeVisible();
+    await expect(dialog).not.toContainText("365");
+    await expect(dialog.locator('input[name="form_started_at"]')).not.toHaveValue("");
     await expect(dialog.locator("form")).toHaveAttribute(
       "action",
       "https://script.google.com/macros/s/AKfycbzZgmU-msHncbv54IT0B034oEoUJYVUTbhrT2I8guNRq1VUf_pVKedw-AzzCRc25r03/exec"
@@ -29,6 +32,17 @@ test.describe("publication access request", () => {
     await page.getByRole("button", { name: "アクセスを申請" }).click();
     await expect(page.getByRole("dialog", { name: "論文ファイルへのアクセス申請" })).toBeVisible();
     await expect(page.getByRole("button", { name: "確認メールを送信" })).toBeVisible();
+    await expect(page.getByRole("dialog")).not.toContainText("365");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+
+  test("loads the Pagefind search interface only when requested", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('script[src="/pagefind/pagefind-ui.js"]')).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Search this site" }).click();
+    await expect(page.getByRole("dialog", { name: "Search this site" })).toBeVisible();
+    await expect(page.locator(".pagefind-ui__search-input")).toBeVisible();
+    await expect(page.locator('link[href="/pagefind/pagefind-ui.css"]')).toHaveCount(1);
   });
 });

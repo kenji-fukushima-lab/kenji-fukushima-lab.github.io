@@ -289,6 +289,12 @@
   font-size: 0.85rem;
 }
 
+.blog-content .post-list li .post-meta a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+}
+
 .blog-content .post-list li .post-tags a {
   color: var(--global-text-color);
 }

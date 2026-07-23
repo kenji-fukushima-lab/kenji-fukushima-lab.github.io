@@ -8,8 +8,12 @@
 
   const closeButtons = dialog.querySelectorAll("[data-publication-access-close]");
   const form = dialog.querySelector("[data-publication-access-form]");
+  const startedAtInput = dialog.querySelector("[data-publication-access-started-at]");
 
   openButton.addEventListener("click", () => {
+    if (startedAtInput instanceof HTMLInputElement) {
+      startedAtInput.value = String(Date.now());
+    }
     dialog.showModal();
     const firstInput = dialog.querySelector('input[name="name"]');
     if (firstInput instanceof HTMLInputElement) {

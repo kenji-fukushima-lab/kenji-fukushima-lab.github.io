@@ -24,17 +24,17 @@ This page compares publication-derived views of Fukushima Lab research: people a
 <div class="network-comparison-grid">
   <section class="network-comparison-item">
     <span class="network-comparison-label">People as nodes</span>
-    <h3>Researcher Network</h3>
+    <h2>Researcher Network</h2>
     <p>Authors are connected by shared papers, foregrounding the collaboration structure behind the publication record.</p>
   </section>
   <section class="network-comparison-item">
     <span class="network-comparison-label">Papers as nodes</span>
-    <h3>Paper Network</h3>
+    <h2>Paper Network</h2>
     <p>Papers are connected when they share coauthors, making recurring publication clusters visible from a different angle.</p>
   </section>
   <section class="network-comparison-item">
     <span class="network-comparison-label">Words as signals</span>
-    <h3>Publication Word Cloud</h3>
+    <h2>Publication Word Cloud</h2>
     <p>Frequent terms from titles and abstracts show the topic layer that sits underneath both network views.</p>
   </section>
 </div>

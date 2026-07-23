@@ -1,28 +1,15 @@
-const ninjaKeys = document.querySelector("ninja-keys");
 const searchToggleButton = document.getElementById("search-toggle");
 const pagefindShell = document.getElementById("pagefind-modal-shell");
 const pagefindDialog = pagefindShell?.querySelector(".pagefind-modal-shell__dialog");
 const pagefindRoot = document.getElementById("pagefind-search");
 
 let pagefindInstance = null;
+let pagefindLoadPromise = null;
 let lastFocusedElement = null;
 let focusRetryTimer = null;
 
 const syncSearchTheme = () => {
-  const theme = determineComputedTheme();
-
-  if (typeof setSearchTheme === "function") {
-    setSearchTheme(theme);
-    return;
-  }
-
-  if (!ninjaKeys) return;
-
-  if (theme === "dark") {
-    ninjaKeys.classList.add("dark");
-  } else {
-    ninjaKeys.classList.remove("dark");
-  }
+  document.documentElement.dataset.pagefindTheme = determineComputedTheme();
 };
 
 const collapseNavbarIfNeeded = () => {
@@ -76,6 +63,34 @@ const ensurePagefind = () => {
   return pagefindInstance;
 };
 
+const loadPagefind = () => {
+  if (typeof PagefindUI !== "undefined") {
+    return Promise.resolve();
+  }
+  if (pagefindLoadPromise) {
+    return pagefindLoadPromise;
+  }
+
+  pagefindLoadPromise = new Promise((resolve, reject) => {
+    if (!document.querySelector("link[data-pagefind-stylesheet]")) {
+      const stylesheet = document.createElement("link");
+      stylesheet.rel = "stylesheet";
+      stylesheet.href = "/pagefind/pagefind-ui.css";
+      stylesheet.dataset.pagefindStylesheet = "";
+      document.head.appendChild(stylesheet);
+    }
+
+    const script = document.createElement("script");
+    script.src = "/pagefind/pagefind-ui.js";
+    script.async = true;
+    script.addEventListener("load", resolve, { once: true });
+    script.addEventListener("error", () => reject(new Error("Pagefind could not be loaded")), { once: true });
+    document.head.appendChild(script);
+  });
+
+  return pagefindLoadPromise;
+};
+
 const focusPagefindInput = (attempt = 0) => {
   const input = pagefindRoot?.querySelector(".pagefind-ui__search-input");
   if (input instanceof HTMLElement) {
@@ -126,7 +141,6 @@ const openPagefindShell = () => {
   }
 
   clearPendingFocusRetry();
-  ninjaKeys?.close?.();
   pagefindShell.hidden = false;
   pagefindShell.setAttribute("aria-hidden", "false");
   document.body.classList.add("pagefind-modal-open");
@@ -157,16 +171,21 @@ const closeSearchModal = () => {
   window.setTimeout(restoreFocusAfterClose, 0);
 };
 
-const openSearchModal = () => {
+const openSearchModal = async () => {
   collapseNavbarIfNeeded();
   syncSearchTheme();
+  openPagefindShell();
 
-  if (ensurePagefind() && pagefindShell) {
-    openPagefindShell();
-    return;
+  try {
+    await loadPagefind();
+    ensurePagefind();
+    focusPagefindInput();
+  } catch (error) {
+    console.error(error);
+    if (pagefindRoot) {
+      pagefindRoot.innerHTML = '<p role="alert">Search is temporarily unavailable. Please try again later.</p>';
+    }
   }
-
-  ninjaKeys?.open();
 };
 
 const trapFocusWithinSearchModal = (event) => {

@@ -90,6 +90,8 @@ jobs:
           cache: "pip"
       - name: Install Node dependencies
         run: npm ci
+      - name: Run JavaScript unit tests
+        run: npm run test:unit:js
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Build site

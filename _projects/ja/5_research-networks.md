@@ -24,17 +24,17 @@ publication_word_cloud: true
 <div class="network-comparison-grid">
   <section class="network-comparison-item">
     <span class="network-comparison-label">人がノード</span>
-    <h3>研究者ネットワーク</h3>
+    <h2>研究者ネットワーク</h2>
     <p>著者どうしを共著論文で結び、publication record の背後にある共同研究構造を見ます。</p>
   </section>
   <section class="network-comparison-item">
     <span class="network-comparison-label">論文がノード</span>
-    <h3>論文ネットワーク</h3>
+    <h2>論文ネットワーク</h2>
     <p>共通著者をもつ論文どうしを結び、人ではなく成果物を単位にしたクラスターを見ます。</p>
   </section>
   <section class="network-comparison-item">
     <span class="network-comparison-label">語がシグナル</span>
-    <h3>論文ワードクラウド</h3>
+    <h2>論文ワードクラウド</h2>
     <p>タイトル・アブストラクトの頻出語から、2つのネットワークの下にある研究トピックを見ます。</p>
   </section>
 </div>
