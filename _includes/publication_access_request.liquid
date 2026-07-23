@@ -11,24 +11,27 @@
     </p>
     <h2 id="publication-access-title">
       {% if publication_access_is_ja %}
-        researchmap掲載ファイルへのアクセス
+        論文PDFの閲覧申請
       {% else %}
         Request access to publication files
       {% endif %}
     </h2>
     <p>
       {% if publication_access_is_ja %}
-        メールアドレスを確認後、researchmapに掲載した論文ファイルの共通ダウンロードパスワードを英語のメールでお送りします。同じパスワードを、ダウンロード可能なすべての論文ファイルに使用できます。
+        当研究室では、<a
+          href="https://researchmap.jp/kenji_fukushima/published_papers?lang=ja&amp;limit=100"
+          target="_blank"
+          rel="external noopener noreferrer"
+          >researchmap</a
+        >に論文のパスワード付きPDFコピーをアーカイブしています。これらのファイルへのアクセスを希望する方は、フォームから申請してください。
       {% else %}
-        Verify your email address to receive the shared download password for publication files on our researchmap page. The same password works for
-        every publication file available for download there.
-      {% endif %}
-    </p>
-    <p class="publication-access-limit">
-      {% if publication_access_is_ja %}
-        申請は1メールアドレスにつき1日1回までです。
-      {% else %}
-        Requests are limited to one per email address per day.
+        We archive password-protected PDF copies of our publications on
+        <a
+          href="https://researchmap.jp/kenji_fukushima/published_papers?lang=en&amp;limit=100"
+          target="_blank"
+          rel="external noopener noreferrer"
+          >researchmap</a
+        >. Those wishing to access these files are asked to complete the form and verify their email address.
       {% endif %}
     </p>
   </div>
@@ -54,7 +57,7 @@
         {% if publication_access_is_ja %}メール確認{% else %}Email verification{% endif %}
       </p>
       <h2 id="publication-access-dialog-title">
-        {% if publication_access_is_ja %}論文ファイルへのアクセス申請{% else %}Request publication access{% endif %}
+        {% if publication_access_is_ja %}論文PDFの閲覧申請{% else %}Request publication access{% endif %}
       </h2>
     </div>
     <button
@@ -107,10 +110,9 @@
       <input name="consent" type="checkbox" value="yes" required>
       <span>
         {% if publication_access_is_ja %}
-          アクセス管理と不正利用防止のため、氏名・所属・メールアドレス・申請および確認情報を利用することに同意します。
+          論文ファイルを再配布せず、ダウンロードパスワードを他者と共有しないことに同意します。
         {% else %}
-          I agree that my name, affiliation, email address, and request and verification information may be used for access administration and abuse
-          prevention.
+          I agree not to redistribute the publication files or share the download password with others.
         {% endif %}
       </span>
     </label>
