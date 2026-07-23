@@ -1,0 +1,134 @@
+{% assign publication_access_is_ja = false %}
+{% if site.active_lang == 'ja' %}
+  {% assign publication_access_is_ja = true %}
+{% endif %}
+{% assign publication_access_config = site.data.publication_access %}
+
+<section class="publication-access" aria-labelledby="publication-access-title">
+  <div class="publication-access-copy">
+    <p class="publication-access-kicker">
+      {% if publication_access_is_ja %}論文ファイル{% else %}Publication files{% endif %}
+    </p>
+    <h2 id="publication-access-title">
+      {% if publication_access_is_ja %}
+        researchmap掲載ファイルへのアクセス
+      {% else %}
+        Request access to publication files
+      {% endif %}
+    </h2>
+    <p>
+      {% if publication_access_is_ja %}
+        メールアドレスを確認後、researchmapに掲載した論文ファイルの共通ダウンロードパスワードを英語のメールでお送りします。同じパスワードを、ダウンロード可能なすべての論文ファイルに使用できます。
+      {% else %}
+        Verify your email address to receive the shared download password for publication files on our researchmap page. The same password works for
+        every publication file available for download there.
+      {% endif %}
+    </p>
+    <p class="publication-access-limit">
+      {% if publication_access_is_ja %}
+        申請は1メールアドレスにつき1日1回までです。
+      {% else %}
+        Requests are limited to one per email address per day.
+      {% endif %}
+    </p>
+  </div>
+  <button
+    class="publication-access-button"
+    type="button"
+    data-publication-access-open
+    aria-haspopup="dialog"
+    aria-controls="publication-access-dialog"
+  >
+    {% if publication_access_is_ja %}アクセスを申請{% else %}Request access{% endif %}
+  </button>
+</section>
+
+<dialog
+  class="publication-access-dialog"
+  id="publication-access-dialog"
+  aria-labelledby="publication-access-dialog-title"
+>
+  <div class="publication-access-dialog-header">
+    <div>
+      <p class="publication-access-kicker">
+        {% if publication_access_is_ja %}メール確認{% else %}Email verification{% endif %}
+      </p>
+      <h2 id="publication-access-dialog-title">
+        {% if publication_access_is_ja %}論文ファイルへのアクセス申請{% else %}Request publication access{% endif %}
+      </h2>
+    </div>
+    <button
+      class="publication-access-close"
+      type="button"
+      data-publication-access-close
+      aria-label="{% if publication_access_is_ja %}閉じる{% else %}Close{% endif %}"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form
+    class="publication-access-form"
+    action="{{ publication_access_config.web_app_url }}"
+    method="post"
+    target="_blank"
+    data-publication-access-form
+  >
+    <label>
+      <span>
+        {%- if publication_access_is_ja %}氏名{% else %}Full name{% endif -%}
+      </span>
+      <input name="name" type="text" autocomplete="name" minlength="2" maxlength="120" required>
+    </label>
+
+    <label>
+      <span>
+        {%- if publication_access_is_ja %}所属{% else %}Affiliation{% endif -%}
+      </span>
+      <input name="affiliation" type="text" autocomplete="organization" minlength="2" maxlength="200" required>
+    </label>
+
+    <label>
+      <span>
+        {%- if publication_access_is_ja %}メールアドレス{% else %}Email address{% endif -%}
+      </span>
+      <input name="email" type="email" autocomplete="email" maxlength="254" required>
+    </label>
+
+    <label class="publication-access-honeypot" aria-hidden="true">
+      <span>Website</span>
+      <input name="website" type="text" autocomplete="off" tabindex="-1">
+    </label>
+
+    <label class="publication-access-consent">
+      <input name="consent" type="checkbox" value="yes" required>
+      <span>
+        {% if publication_access_is_ja %}
+          アクセス管理と不正利用防止のため、氏名・所属・メールアドレス・申請および確認日時が最長
+          {{- publication_access_config.retention_days -}}
+          日間保存されることに同意します。
+        {% else %}
+          I agree that my name, affiliation, email address, and request and verification timestamps may be stored for up to
+          {{ publication_access_config.retention_days }} days for access administration and abuse prevention.
+        {% endif %}
+      </span>
+    </label>
+
+    <p class="publication-access-form-note">
+      {% if publication_access_is_ja %}
+        送信後に届く英語のメールを開き、24時間以内にメールアドレスを確認してください。
+      {% else %}
+        After submitting, open the verification email and confirm your address within 24 hours.
+      {% endif %}
+    </p>
+
+    <div class="publication-access-actions">
+      <button class="publication-access-button publication-access-button-secondary" type="button" data-publication-access-close>
+        {% if publication_access_is_ja %}キャンセル{% else %}Cancel{% endif %}
+      </button>
+      <button class="publication-access-button" type="submit">
+        {% if publication_access_is_ja %}確認メールを送信{% else %}Send verification email{% endif %}
+      </button>
+    </div>
+  </form>
+</dialog>

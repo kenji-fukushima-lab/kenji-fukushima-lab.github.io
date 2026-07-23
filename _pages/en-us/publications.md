@@ -13,8 +13,12 @@ chart:
 <!-- _pages/publications.md -->
 
 <link rel="stylesheet" href="{{ 'assets/css/publications.css' | relative_url }}">
+<link rel="stylesheet" href="{{ 'assets/css/publication-access.css' | relative_url }}">
+<script defer src="{{ '/assets/js/publication-access.js' | relative_url | bust_file_cache }}"></script>
 
 <!-- Bibsearch Feature -->
+
+{% include publication_access_request.liquid %}
 
 {% include bib_search.liquid %}
 
