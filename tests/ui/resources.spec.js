@@ -123,6 +123,34 @@ test.describe("resources and research page smoke tests", () => {
     await expect(firstRepo.locator(".repo-compact-stat-commits [data-repo-stat-value]")).toHaveText("2 days ago");
   });
 
+  test("keeps relative commit times current while the page stays open", async ({ page }) => {
+    const currentTime = new Date("2026-07-29T12:00:00Z");
+    const pushedAt = new Date("2026-07-29T11:30:00Z");
+    await page.clock.install({ time: currentTime });
+
+    await page.route("https://api.github.com/repos/**", async (route) => {
+      const repo = new URL(route.request().url()).pathname.replace(/^\/repos\//, "");
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          description: `${repo} description`,
+          open_issues_count: 2,
+          forks_count: 7,
+          pushed_at: pushedAt.toISOString(),
+          stargazers_count: 11,
+        }),
+      });
+    });
+
+    await page.goto("/resources/");
+
+    const lastCommit = page.locator(".repo-compact-stat-commits [data-repo-stat-value]").first();
+    await expect(lastCommit).toHaveText("30 minutes ago");
+
+    await page.clock.fastForward(31 * 60 * 1000);
+    await expect(lastCommit).toHaveText("1 hour ago");
+  });
+
   test("paper network keeps isolates visible and avoids over-zooming out after year reset", async ({ page }) => {
     test.setTimeout(45_000);
 

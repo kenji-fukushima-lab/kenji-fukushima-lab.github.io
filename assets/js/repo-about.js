@@ -122,6 +122,20 @@
     return "--";
   };
 
+  const refreshRelativeDates = () => {
+    for (const node of statNodes) {
+      if (node.dataset.repoStat !== "commits") {
+        continue;
+      }
+
+      const dateValue = node.dataset.repoStatDate;
+      const valueNode = node.querySelector("[data-repo-stat-value]");
+      if (dateValue && valueNode) {
+        valueNode.textContent = formatRelativeDate(dateValue);
+      }
+    }
+  };
+
   const applyRepoStats = (repo, data) => {
     const nodes = repoStatNodeMap.get(repo) || [];
 
@@ -129,10 +143,28 @@
       const valueNode = node.querySelector("[data-repo-stat-value]");
       node.classList.remove("is-loading");
       if (valueNode) {
+        if (node.dataset.repoStat === "commits") {
+          const dateValue = data && typeof data.pushed_at === "string" ? data.pushed_at : "";
+          if (dateValue) {
+            node.dataset.repoStatDate = dateValue;
+          } else {
+            delete node.dataset.repoStatDate;
+          }
+        }
         valueNode.textContent = statText(node.dataset.repoStat, data);
       }
     }
   };
+
+  if (Array.from(statNodes).some((node) => node.dataset.repoStat === "commits")) {
+    window.setInterval(refreshRelativeDates, 60 * 1000);
+    window.addEventListener("pageshow", refreshRelativeDates);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        refreshRelativeDates();
+      }
+    });
+  }
 
   const readCachePayload = (key) => {
     try {
