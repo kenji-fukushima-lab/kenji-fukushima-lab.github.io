@@ -1,6 +1,8 @@
 **/*.map
 **/*.min.css
 **/*.min.js
+# Managed verbatim from kf-agent-policy; formatting would invalidate its hash.
+AGENTS.md
 assets/css/main.scss
 assets/js/distillpub/template.v2.js
 assets/js/cronitor-analytics-setup.js
