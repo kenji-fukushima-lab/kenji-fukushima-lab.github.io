@@ -31,18 +31,37 @@
     return urlObject.origin !== window.location.origin;
   };
 
+  const eventForLink = (link, parsed) => {
+    const explicitEvent = trimText(link.dataset.analyticsEvent);
+    if (explicitEvent) return explicitEvent.slice(0, 40);
+    if (link.closest('[data-analytics-context="recruitment"]') && /^https?:$/.test(parsed.protocol)) {
+      return "recruitment_link_click";
+    }
+    return "";
+  };
+
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[href]");
     if (!link) return;
 
     const href = link.getAttribute("href");
-    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+    if (!href || href.startsWith("#") || href.startsWith("tel:")) return;
 
     let parsed;
     try {
       parsed = new URL(href, window.location.href);
     } catch (_error) {
       return;
+    }
+
+    const eventName = eventForLink(link, parsed);
+    if (eventName) {
+      sendEvent(eventName, {
+        page_path: window.location.pathname,
+        link_host: parsed.hostname,
+        link_url: parsed.href,
+        link_label: normalizeLabel(link),
+      });
     }
 
     if (!isExternalUrl(parsed)) return;

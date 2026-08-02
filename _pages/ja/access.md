@@ -20,10 +20,10 @@ nav_order: 9
     <h2>植物進化研究室（国立遺伝学研究所）</h2>
     <p>国立遺伝学研究所 C棟6階に研究室があります。</p>
     <div class="quick-links">
-      <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Googleマップでみる</a>
+      <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A" data-analytics-event="map_open">Googleマップでみる</a>
       <a class="quick-link" href="https://www.nig.ac.jp/public/access/">遺伝研へのアクセス</a>
       <a class="quick-link" href="https://www.nig.ac.jp/public/campus-map/">遺伝研施設マップ</a>
-      <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp">Eメール</a>
+      <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp" data-analytics-event="contact_email_click">Eメール</a>
     </div>
   </section>
 

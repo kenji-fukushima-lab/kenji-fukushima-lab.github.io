@@ -21,10 +21,10 @@ nav_order: 9
       Find us in Building C (6F), National Institute of Genetics, Mishima, Japan.
     </p>
     <div class="quick-links">
-      <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Google Maps</a>
+      <a class="quick-link" href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A" data-analytics-event="map_open">Google Maps</a>
       <a class="quick-link" href="https://www.nig.ac.jp/en/public/access/">Access to NIG</a>
       <a class="quick-link" href="https://www.nig.ac.jp/en/public/campus-map/">Campus Map</a>
-      <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp">E-mail</a>
+      <a class="quick-link" href="mailto:kenji.fukushima@nig.ac.jp" data-analytics-event="contact_email_click">E-mail</a>
     </div>
   </section>
 
