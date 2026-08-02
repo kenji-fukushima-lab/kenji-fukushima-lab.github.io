@@ -72,11 +72,11 @@ nav: false
         <p class="cp-quiz-share-title">結果を投稿する</p>
         <textarea class="cp-quiz-share-text" data-cp-share-text rows="2" readonly aria-label="投稿本文"></textarea>
         <div class="cp-quiz-share-links">
-          <a class="cp-quiz-share-link" href="#" target="_blank" rel="noopener noreferrer" data-cp-share-x>
+          <a class="cp-quiz-share-link" href="#" target="_blank" rel="noopener noreferrer" data-cp-share-x data-analytics-event="social_share_click" data-analytics-label="x">
             <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
             <span>X</span>
           </a>
-          <a class="cp-quiz-share-link" href="#" target="_blank" rel="noopener noreferrer" data-cp-share-line>
+          <a class="cp-quiz-share-link" href="#" target="_blank" rel="noopener noreferrer" data-cp-share-line data-analytics-event="social_share_click" data-analytics-label="line">
             <i class="fa-brands fa-line" aria-hidden="true"></i>
             <span>LINE</span>
           </a>

@@ -204,6 +204,8 @@
               <li class="nav-item active">
                 <a
                   class="nav-link nav-tooltip-trigger nav-link-language-stack"
+                  data-analytics-event="language_switch"
+                  data-analytics-label="{{ current_language }}_to_{{ other_language }}"
                   data-tooltip="{{ switch_language_tooltip | strip }}"
                   aria-label="{{ switch_language_tooltip | strip }}"
                   {% static_href -%}
@@ -256,7 +258,14 @@
                         <div class="dropdown-divider"></div>
                       {% endif %}
                       {% if l == site.default_lang %}
-                        <a class="dropdown-item" {% static_href -%} href="{{ site.baseurl }}{{ page.url }}" {%- endstatic_href %}>
+                        <a
+                          class="dropdown-item"
+                          data-analytics-event="language_switch"
+                          data-analytics-label="{{ site.active_lang }}_to_{{ l }}"
+                          {% static_href -%}
+                          href="{{ site.baseurl }}{{ page.url }}"
+                          {%- endstatic_href %}
+                        >
                           {% if site.country_flag %}
                             {% if l contains 'en' %}
                               🇬🇧
@@ -270,7 +279,14 @@
                           {%- endif -%}
                         </a>
                       {% else %}
-                        <a class="dropdown-item" {% static_href -%} href="{{ site.baseurl }}/{{ l }}{{ page.url }}" {%- endstatic_href %}>
+                        <a
+                          class="dropdown-item"
+                          data-analytics-event="language_switch"
+                          data-analytics-label="{{ site.active_lang }}_to_{{ l }}"
+                          {% static_href -%}
+                          href="{{ site.baseurl }}/{{ l }}{{ page.url }}"
+                          {%- endstatic_href %}
+                        >
                           {% if site.country_flag %}
                             {% if l contains 'en' %}
                               🇬🇧

@@ -31,11 +31,27 @@
     return urlObject.origin !== window.location.origin;
   };
 
+  const isDownloadUrl = (link, parsed) => {
+    if (link.hasAttribute("download")) return true;
+    return /\.(?:csv|fa|fasta|fastq|fq|gz|json|pdf|tar|tsv|txt|xlsx?|zip)(?:$|\?)/i.test(parsed.pathname);
+  };
+
   const eventForLink = (link, parsed) => {
     const explicitEvent = trimText(link.dataset.analyticsEvent);
     if (explicitEvent) return explicitEvent.slice(0, 40);
     if (link.closest('[data-analytics-context="recruitment"]') && /^https?:$/.test(parsed.protocol)) {
       return "recruitment_link_click";
+    }
+    if (link.closest('[data-analytics-context="publications"]')) {
+      if (parsed.hostname === "doi.org") return "publication_doi_click";
+      if (isDownloadUrl(link, parsed)) return "publication_pdf_click";
+    }
+    if (link.closest('[data-analytics-context="resources"]')) {
+      if (isDownloadUrl(link, parsed)) return "resource_download";
+      if (parsed.hostname === "github.com" || parsed.hostname.endsWith(".github.com")) {
+        return "github_repository_click";
+      }
+      if (/^https?:$/.test(parsed.protocol)) return "resource_link_click";
     }
     return "";
   };

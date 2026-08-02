@@ -4,7 +4,10 @@ layout: resources
 permalink: /resources/
 title: リソース
 description: 国立遺伝学研究所 植物進化研究室で提供している研究リソースの一覧です。
-seo_title: リソース | 国立遺伝学研究所 植物進化研究室
+seo_title: 進化解析ソフトウェア・食虫植物ゲノム | 国立遺伝学研究所 植物進化研究室
+seo_description: csubst、genegalleon、amalgkitなどの進化・ゲノム解析ソフトウェアと、Cephalotus・Nepenthesの食虫植物ゲノム、研究データ、GitHubリポジトリを公開しています。
+keywords: csubst, genegalleon, amalgkit, 食虫植物ゲノム, 収斂進化, ゲノム解析, バイオインフォマティクス
+schema_type: CollectionPage
 nav: true
 nav_order: 5
 ---

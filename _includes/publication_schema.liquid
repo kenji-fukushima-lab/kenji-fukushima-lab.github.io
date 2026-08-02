@@ -1,0 +1,26 @@
+{% if site.data.publication_schema.articles and site.data.publication_schema.articles.size > 0 %}
+  {% assign publication_page_path = page.url %}
+  {% if site.active_lang != site.default_lang %}
+    {% assign publication_page_path = page.url | prepend: site.active_lang | prepend: '/' %}
+  {% endif %}
+  {% assign publication_page_url = publication_page_path | replace: 'index.html', '' | prepend: site.baseurl | prepend: site.url %}
+  {% assign publication_schema_id = publication_page_url | append: '#scholarly-articles' %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "@id": {{ publication_schema_id | jsonify }},
+      "name": {{ page.seo_title | default: page.title | jsonify }},
+      "numberOfItems": {{ site.data.publication_schema.articles.size }},
+      "itemListElement": [
+        {% for article in site.data.publication_schema.articles %}
+          {
+            "@type": "ListItem",
+            "position": {{ forloop.index }},
+            "item": {{ article | jsonify }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+  </script>
+{% endif %}

@@ -4,6 +4,9 @@ layout: resources
 permalink: /resources/
 title: resources
 description: List of research resources developed by the Fukushima Lab
+seo_title: Evolutionary Analysis Software and Carnivorous Plant Genomes | Fukushima Lab
+seo_description: Research software including csubst, genegalleon, and amalgkit, plus carnivorous plant genome resources for Cephalotus and Nepenthes from the Fukushima Lab.
+schema_type: CollectionPage
 nav: true
 nav_order: 5
 ---

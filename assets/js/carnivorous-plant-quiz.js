@@ -810,19 +810,29 @@
 
     function updateShareLinks(percentage, questionTotal) {
       const pageUrl = window.location.href.split("#")[0].split("?")[0];
+      const campaignUrl = (source, medium = "social") => {
+        const url = new URL(pageUrl);
+        url.searchParams.set("utm_source", source);
+        url.searchParams.set("utm_medium", medium);
+        url.searchParams.set("utm_campaign", "carnivorous_plant_quiz_share");
+        return url.toString();
+      };
       const text = formatText(strings.shareText, {
         correct: state.correctCount,
         percentage,
         total: questionTotal,
       });
       const encodedText = encodeURIComponent(text);
-      const encodedUrl = encodeURIComponent(pageUrl);
-      state.shareText = `${text} ${pageUrl}`;
+      const xUrl = campaignUrl("x");
+      const lineUrl = campaignUrl("line");
+      const facebookUrl = campaignUrl("facebook");
+      const copyUrl = campaignUrl("copy", "referral");
+      state.shareText = `${text} ${copyUrl}`;
       setShareTextValue(state.shareText);
 
-      setShareLink(elements.shareX, `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`);
-      setShareLink(elements.shareLine, `https://social-plugins.line.me/lineit/share?url=${encodedUrl}&text=${encodedText}`);
-      setFacebookShareUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`);
+      setShareLink(elements.shareX, `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodeURIComponent(xUrl)}`);
+      setShareLink(elements.shareLine, `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}&text=${encodedText}`);
+      setFacebookShareUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}`);
       resetCopyShareButton();
     }
 

@@ -17,6 +17,6 @@ layout: page
 {% if page.organism_map %}
   <link rel="stylesheet" href="{{ '/assets/css/organism-map.css' | relative_url | bust_file_cache }}">
 {% endif %}
-<div class="resources-content">
+<div class="resources-content" data-analytics-context="resources">
   {{ content }}
 </div>

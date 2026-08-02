@@ -17,6 +17,19 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% if page.layout == 'about' %}
+  {% capture home_hero_sizes %}(min-width: {{ site.max_width }}) {{ site.max_width }}, (min-width: 576px) 55vw, 95vw{% endcapture %}
+  <link
+    rel="preload"
+    as="image"
+    type="image/webp"
+    href="{{ '/assets/img/00_tiles-800.webp' | relative_url }}"
+    imagesrcset="{{ '/assets/img/00_tiles-480.webp' | relative_url }} 480w, {{ '/assets/img/00_tiles-800.webp' | relative_url }} 800w, {{ '/assets/img/00_tiles-1400.webp' | relative_url }} 1400w"
+    imagesizes="{{ home_hero_sizes | strip }}"
+    fetchpriority="high"
+  >
+  <link rel="stylesheet" href="{{ '/assets/css/home-dashboard.css' | relative_url | bust_file_cache }}">
+{% endif %}
 
 <!-- Bootstrap & MDB -->
 <link rel="stylesheet" href="{{ '/assets/css/bootstrap.min.css' | relative_url | bust_file_cache }}">

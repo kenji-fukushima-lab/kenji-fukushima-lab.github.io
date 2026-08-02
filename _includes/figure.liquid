@@ -75,6 +75,12 @@
       {% elsif site.lazy_loading_images %}
         loading="lazy"
       {% endif %}
+      {% if include.fetchpriority %}
+        fetchpriority="{{ include.fetchpriority }}"
+      {% endif %}
+      {% if include.decoding %}
+        decoding="{{ include.decoding }}"
+      {% endif %}
       onerror="this.onerror=null; $('.responsive-img-srcset').remove();"
     >
   </picture>
