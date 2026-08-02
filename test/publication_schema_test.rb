@@ -29,6 +29,8 @@ class PublicationSchemaGeneratorTest < Minitest::Test
         source: dir,
         config: {
           'url' => 'https://example.test',
+          'first_name' => 'Kenji',
+          'last_name' => 'Fukushima',
           'scholar' => { 'bibliography' => 'papers.bib' }
         },
         data: {}
@@ -42,6 +44,8 @@ class PublicationSchemaGeneratorTest < Minitest::Test
       assert_equal 'ScholarlyArticle', article.fetch('@type')
       assert_equal 'Evolution of pitcher plants', article.fetch('headline')
       assert_equal ['Kenji Fukushima', 'Alberto Echevarría-Poza'], article.fetch('author').map { |author| author.fetch('name') }
+      assert_equal 'https://example.test#kenji-fukushima', article.fetch('author').first.fetch('@id')
+      refute article.fetch('author').last.key?('@id')
       assert_equal '2026', article.fetch('datePublished')
       assert_equal 'https://doi.org/10.1000/example', article.fetch('url')
       assert_equal '10.1000/example', article.dig('identifier', 'value')
