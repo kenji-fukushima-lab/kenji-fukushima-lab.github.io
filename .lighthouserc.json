@@ -7,7 +7,7 @@
       "startServerReadyPattern": "Available on:",
       "settings": {
         "chromeFlags": "--no-sandbox --headless=new",
-        "blockedUrlPatterns": ["https://metrics-api.dimensions.ai/*"]
+        "blockedUrlPatterns": ["https://metrics-api.dimensions.ai/*", "https://www.googletagmanager.com/*"]
       }
     },
     "assert": {

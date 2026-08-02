@@ -271,10 +271,21 @@
 
 {% if site.enable_google_analytics %}
   <!-- Analytics -->
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+  <!-- Queue analytics immediately, then download gtag after the page load so it does not compete with LCP assets. -->
   <script defer src="{{ '/assets/js/google-analytics-setup.js' | relative_url | bust_file_cache }}"></script>
   <script defer src="{{ '/assets/js/analytics-events.js' | relative_url | bust_file_cache }}"></script>
+  <script>
+    window.addEventListener(
+      'load',
+      function loadGoogleAnalytics() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}';
+        document.head.appendChild(script);
+      },
+      { once: true }
+    );
+  </script>
 {% endif %}
 
 {% if site.enable_cronitor_analytics %}
