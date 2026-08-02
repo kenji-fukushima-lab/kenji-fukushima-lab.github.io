@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'jekyll'
 gem 'activesupport', '8.1.2'
 gem 'bigdecimal', '3.1.9'
-gem 'json', '2.9.1'
+gem 'json', '2.19.9'
 
 # Core plugins that directly affect site building
 group :jekyll_plugins do
