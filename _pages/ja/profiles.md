@@ -5,6 +5,7 @@ permalink: /people/
 title: メンバー
 description: 国立遺伝学研究所 植物進化研究室のメンバー一覧です。
 seo_title: メンバー | 国立遺伝学研究所 植物進化研究室
+schema_type: CollectionPage
 nav: true
 nav_order: 2
 lang: ja

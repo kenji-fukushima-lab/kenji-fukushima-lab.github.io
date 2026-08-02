@@ -53,6 +53,21 @@ organization_region: 静岡県
 organization_postal_code: 411-8540
 organization_country: JP
 organization_image: /assets/img/00_tiles.jpg
+organization_same_as:
+  - https://www.nig.ac.jp/researchers/laboratories/Fukushima/
+  - https://github.com/kenji-fukushima-lab
+
+# Extra source files whose Git commit date should update the corresponding
+# page's <lastmod> value in sitemap.xml.
+sitemap_lastmod_dependencies:
+  publications:
+    - _bibliography/papers.bib
+    - _includes/publication_schema.liquid
+    - _plugins/publication-schema.rb
+  resources:
+    - _data/repositories.yml
+    - _layouts/resources.liquid
+    - _includes/repository/repo.liquid
 
 # -----------------------------------------------------------------------------
 # Theme

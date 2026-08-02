@@ -4,6 +4,7 @@ require "cgi"
 require "date"
 require "jekyll/page_without_a_file"
 require "nokogiri"
+require "open3"
 require "pathname"
 require "time"
 require "yaml"
@@ -28,7 +29,9 @@ module GeneratedSiteIndexes
       @languages = Array(site.config["languages"])
       @site_url = site.config["url"].to_s.sub(%r{/+\z}, "")
       @baseurl = site.config["baseurl"].to_s
+      @sitemap_lastmod_dependencies = site.config.fetch("sitemap_lastmod_dependencies", {})
       @blog_page_cache = {}
+      @git_lastmod_cache = {}
     end
 
     def posts_by_lang_for_liquid
@@ -96,8 +99,39 @@ module GeneratedSiteIndexes
 
       {
         :loc => absolute_url(localized_path(lang, permalink)),
-        :lastmod => parse_time(data["last_updated"])
+        :lastmod => page_lastmod(path, data)
       }
+    end
+
+    def page_lastmod(path, data)
+      dependency_paths = Array(@sitemap_lastmod_dependencies[data["page_id"].to_s])
+      source_paths = [path] + dependency_paths.map { |dependency| @source.join(dependency.to_s) }
+      git_times = source_paths.filter_map { |source_path| git_last_modified(source_path) }
+
+      ([parse_time(data["last_updated"])] + git_times).compact.max
+    end
+
+    def git_last_modified(path)
+      expanded_path = Pathname.new(path).expand_path
+      return nil unless expanded_path.to_s.start_with?("#{@source.expand_path}#{File::SEPARATOR}")
+      return nil unless expanded_path.file?
+
+      relative_path = expanded_path.relative_path_from(@source.expand_path).to_s
+      return @git_lastmod_cache[relative_path] if @git_lastmod_cache.key?(relative_path)
+
+      output, status = Open3.capture2e(
+        "git",
+        "-C",
+        @source.to_s,
+        "log",
+        "-1",
+        "--format=%cI",
+        "--",
+        relative_path
+      )
+      @git_lastmod_cache[relative_path] = status.success? ? parse_time(output.lines.first) : nil
+    rescue Errno::ENOENT, ArgumentError
+      nil
     end
 
     def news_entries

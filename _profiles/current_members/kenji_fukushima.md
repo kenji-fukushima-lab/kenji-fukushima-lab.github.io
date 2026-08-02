@@ -21,4 +21,11 @@ facebook:
 youtube:
 researchmap: https://researchmap.jp/kenji_fukushima
 tayo: https://tayo.jp/users/XPAZgh46EfUd9vCMIGNz8isozCu1
+same_as:
+  - https://orcid.org/0000-0002-2353-9274
+  - https://researchmap.jp/kenji_fukushima
+  - https://www.nig.ac.jp/researchers/laboratories/Fukushima/
+  - https://www.soken.ac.jp/en/faculty-directory/detail/genetics-fukushimakenji.html
+  - https://github.com/kfuku52
+  - https://x.com/kfuku0502
 ---

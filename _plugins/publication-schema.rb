@@ -67,7 +67,7 @@ module PublicationSchema
         '@id' => "#{article_id}#scholarly-article",
         'headline' => title,
         'name' => title,
-        'author' => authors.map { |name| { '@type' => 'Person', 'name' => name } }
+        'author' => authors.map { |name| author_entity(site, name) }
       }
 
       add_if_present(article, 'datePublished', entry[:year].to_s[/\d{4}/])
@@ -92,6 +92,18 @@ module PublicationSchema
       end
 
       article
+    end
+
+    def author_entity(site, name)
+      entity = { '@type' => 'Person', 'name' => name }
+      principal_name = [site.config['first_name'], site.config['middle_name'], site.config['last_name']]
+                       .compact
+                       .map(&:to_s)
+                       .reject(&:empty?)
+                       .join(' ')
+      site_url = site.config.fetch('url', '').to_s.sub(%r{/+\z}, '')
+      entity['@id'] = "#{site_url}#kenji-fukushima" if name == principal_name && !site_url.empty?
+      entity
     end
 
     def add_if_present(hash, key, value)

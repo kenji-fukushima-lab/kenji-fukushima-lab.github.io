@@ -4,6 +4,7 @@ layout: profiles
 permalink: /people/
 title: people
 description: Current lab members
+schema_type: CollectionPage
 nav: true
 nav_order: 2
 lang: en-us

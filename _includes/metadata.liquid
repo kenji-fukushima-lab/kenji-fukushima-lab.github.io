@@ -403,6 +403,40 @@
     {% capture link %}https://www.zotero.org/{{ site.zotero_username }}{% endcapture %}
     {% assign sameaslinks = sameaslinks | push: link %}
   {% endif %}
+  {% assign author_name_clean = author_name | strip %}
+  {% assign principal_profile = null %}
+  {% if site.profiles %}
+    {% assign principal_profile = site.profiles | where: 'name', author_name_clean | first %}
+  {% endif %}
+  {% assign person_sameaslinks = sameaslinks | uniq %}
+  {% if principal_profile.same_as and principal_profile.same_as.size > 0 %}
+    {% assign person_sameaslinks = principal_profile.same_as | uniq %}
+  {% endif %}
+  {% assign organization_sameaslinks = '' | split: ',' %}
+  {% if site.organization_same_as and site.organization_same_as.size > 0 %}
+    {% assign organization_sameaslinks = site.organization_same_as | uniq %}
+  {% endif %}
+  {% assign person_schema_id = site.url | append: '#kenji-fukushima' %}
+  {% assign organization_schema_id = site.url | append: '#organization' %}
+  {% assign person_page_path = '/people/' %}
+  {% if site.active_lang != site.default_lang %}
+    {% assign person_page_path = person_page_path | prepend: site.active_lang | prepend: '/' %}
+  {% endif %}
+  {% assign person_page_url = person_page_path | prepend: site.baseurl | prepend: site.url %}
+  {% assign person_job_title = null %}
+  {% if principal_profile.position_key and site.data[site.active_lang].strings.positions %}
+    {% assign person_job_title = site.data[site.active_lang].strings.positions[principal_profile.position_key] %}
+  {% endif %}
+  {% assign person_image = principal_profile.image %}
+  {% if person_image != blank %}
+    {% unless person_image contains '://' %}
+      {% assign person_image_first_char = person_image | slice: 0, 1 %}
+      {% if person_image_first_char != '/' %}
+        {% assign person_image = person_image | prepend: '/assets/img/' %}
+      {% endif %}
+      {% assign person_image = person_image | prepend: site.baseurl | prepend: site.url %}
+    {% endunless %}
+  {% endif %}
   {% assign schema_url = canonical_url %}
   {% if schema_url == blank %}
     {% assign schema_url = page.url | prepend: site.baseurl | prepend: site.url %}
@@ -425,19 +459,34 @@
         "url": "{{ site.url }}"
       }{% if organization_name_localized != blank %},
       "publisher": {
-        "@id": "{{ organization_url_localized }}#organization"
+        "@id": "{{ organization_schema_id }}"
       }{% endif %}{% if is_article_page %},
       "author": {
-        "@type": "Person",
-        "name": "{{ author_name }}"
+        "@id": "{{ person_schema_id }}"
       }{% endif %}{% if is_article_page and page.date %},
       "datePublished": "{{ page.date | date_to_xmlschema }}",
-      "dateModified": "{{ page.last_updated | default: page.date | date_to_xmlschema }}"{% endif %}{% if sameaslinks.size > 0 %},
-      "sameAs": {{ sameaslinks | jsonify }}{% endif %},
+      "dateModified": "{{ page.last_updated | default: page.date | date_to_xmlschema }}"{% endif %},
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "{{ schema_url }}"
       }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "{{ person_schema_id }}",
+      "name": {{ author_name_clean | jsonify }}{% if principal_profile.name_native != blank %},
+      "alternateName": {{ principal_profile.name_native | jsonify }}{% endif %},
+      "url": "{{ person_page_url }}"{% if person_image != blank %},
+      "image": "{{ person_image }}"{% endif %}{% if principal_profile.email != blank %},
+      "email": "mailto:{{ principal_profile.email }}"{% endif %}{% if person_job_title != blank %},
+      "jobTitle": {{ person_job_title | jsonify }}{% endif %}{% if organization_name_localized != blank %},
+      "worksFor": {
+        "@id": "{{ organization_schema_id }}"
+      }{% endif %}{% if person_sameaslinks.size > 0 %},
+      "sameAs": {{ person_sameaslinks | jsonify }}{% endif %}
     }
   </script>
   {% if organization_name_localized != blank %}
@@ -445,7 +494,7 @@
       {
         "@context": "https://schema.org",
         "@type": "ResearchOrganization",
-        "@id": "{{ organization_url_localized }}#organization",
+        "@id": "{{ organization_schema_id }}",
         "name": "{{ organization_name_localized }}"{% if site.organization_alternate_names and site.organization_alternate_names.size > 0 %},
         "alternateName": {{ site.organization_alternate_names | jsonify }}{% endif %},
         "url": "{{ organization_url_localized }}"{% if organization_image != blank %},
@@ -469,8 +518,11 @@
           "name": "{{ parent_organization_name_localized }}"{% if parent_organization_alternate_names_localized and parent_organization_alternate_names_localized.size > 0 %},
           "alternateName": {{ parent_organization_alternate_names_localized | jsonify }}{% endif %},
           "url": "{{ parent_organization_url_localized }}"
-        }{% if sameaslinks.size > 0 %},
-        "sameAs": {{ sameaslinks | jsonify }}{% endif %}
+        },
+        "member": {
+          "@id": "{{ person_schema_id }}"
+        }{% if organization_sameaslinks.size > 0 %},
+        "sameAs": {{ organization_sameaslinks | jsonify }}{% endif %}
       }
     </script>
   {% endif %}
