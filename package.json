@@ -4,13 +4,24 @@
     "prettier": "prettier . --check",
     "prettier:fix": "prettier . --write",
     "hooks:install": "git config core.hooksPath .githooks",
+    "test:unit": "npm run test:unit:python && npm run test:unit:js && npm run test:unit:ruby",
+    "test:unit:python": "python3 -m unittest discover -s tests",
     "test:unit:js": "node --test tests/js/*.test.js",
+    "test:unit:ruby": "bundle exec ruby -Itest test/run_all.rb",
+    "test:lighthouse": "bash .github/scripts/run-lighthouse.sh",
     "test:ui": "playwright test"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
-    "@playwright/test": "^1.55.1",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.62.1",
     "@shopify/prettier-plugin-liquid": "1.4.0",
-    "prettier": "3.8.1"
+    "http-server": "^14.1.1",
+    "prettier": "3.8.1",
+    "purgecss": "^6.0.0"
+  },
+  "overrides": {
+    "tmp": "^0.2.6",
+    "uuid": "^11.1.1"
   }
 }

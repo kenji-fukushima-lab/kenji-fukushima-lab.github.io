@@ -1,9 +1,6 @@
 # kenji-fukushima-lab.github.io
 
 [![Deploy site](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/deploy.yml)
-[![Quality Budgets](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/quality-budgets.yml/badge.svg?branch=main)](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/quality-budgets.yml)
-[![Check for broken links](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/broken-links.yml/badge.svg?branch=main)](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/broken-links.yml)
-[![Prettier code formatter](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/prettier.yml/badge.svg?branch=main)](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/actions/workflows/prettier.yml)
 
 This is the repository for the website of the [Fukushima Lab](https://kenji-fukushima-lab.github.io/), a research group at the [National Institute of Genetics](https://www.nig.ac.jp/nig/) in Mishima, Japan. The site was built using the [multi-language-al-folio](https://github.com/george-gca/multi-language-al-folio) template.
 
@@ -39,7 +36,7 @@ npm run checks:push
 npm run test:ui
 ```
 
-`npm run checks:push` covers the local pre-push hook checks, including the Paper Network Ruby unit test. Run `npm run test:ui` as an extra smoke test for frontend-heavy changes such as the `resources` page networks.
+`npm run checks:push` runs the Python, JavaScript, and Ruby unit suites together with bibliography, image-budget, and formatting checks. Run `npm run test:ui` as an extra browser test for frontend-heavy changes; Playwright starts the local `_site` server automatically.
 
 ## More docs
 

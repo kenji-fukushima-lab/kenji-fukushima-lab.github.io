@@ -3,7 +3,7 @@ layout: default
 ---
 <link rel="stylesheet" href="{{ '/assets/css/join.css' | relative_url | bust_file_cache }}">
 <link rel="stylesheet" href="{{ '/assets/css/blog.css' | relative_url | bust_file_cache }}">
-<div class="join-content blog-content">
+<div class="join-content blog-content" data-page-size="{{ page.blog_page_size | default: 20 }}">
   {{ content }}
 </div>
 <script>

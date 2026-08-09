@@ -247,6 +247,8 @@
   };
 
   const repos = new Set([...repoNodeMap.keys(), ...repoStatNodeMap.keys()]);
+  const loadButton = document.querySelector("[data-repo-stats-load]");
+  const loadStatus = document.querySelector("[data-repo-stats-status]");
 
   for (const repo of repos) {
     const fallback = repoFallbackMap.get(repo) || "";
@@ -268,32 +270,44 @@
       if (repoStatNodeMap.has(repo)) {
         applyRepoStats(repo, cachedRepo);
       }
+    } else if (repoStatNodeMap.has(repo)) {
+      applyRepoStats(repo, null);
     }
+  }
 
-    const needsDescriptionFetch = repoNodeMap.has(repo) && !fallback && cachedAbout === null && !cachedRepo;
-    const needsStatsFetch = repoStatNodeMap.has(repo) && !cachedRepo;
-    if (!needsDescriptionFetch && !needsStatsFetch) {
-      continue;
-    }
+  const loadLiveData = async () => {
+    if (!loadButton) return;
+    loadButton.disabled = true;
+    for (const node of statNodes) node.classList.add("is-loading");
+    if (loadStatus) loadStatus.textContent = loadButton.dataset.loadingLabel || "Loading GitHub statistics…";
 
-    fetchRepo(repo)
-      .then((data) => {
+    const results = await Promise.allSettled(
+      [...repos].map(async (repo) => {
+        const data = await fetchRepo(repo);
+        const fallback = repoFallbackMap.get(repo) || "";
+        const cachedAbout = readAboutCache(repo);
         if (repoNodeMap.has(repo) && !fallback && cachedAbout === null) {
           const description = data && typeof data.description === "string" ? data.description : "";
           writeAboutCache(repo, description);
           applyDescription(repo, description);
         }
-        if (repoStatNodeMap.has(repo)) {
-          applyRepoStats(repo, data);
-        }
+        if (repoStatNodeMap.has(repo)) applyRepoStats(repo, data);
       })
-      .catch((_err) => {
-        if (repoNodeMap.has(repo) && !fallback && cachedAbout === null) {
-          applyDescription(repo, fallback);
-        }
-        if (repoStatNodeMap.has(repo)) {
-          applyRepoStats(repo, null);
-        }
-      });
-  }
+    );
+
+    const failures = results.filter((result) => result.status === "rejected").length;
+    if (failures) {
+      for (const [repo, nodes] of repoStatNodeMap) {
+        if (nodes.some((node) => node.classList.contains("is-loading"))) applyRepoStats(repo, null);
+      }
+    }
+    if (loadStatus) {
+      loadStatus.textContent = failures
+        ? loadButton.dataset.errorLabel || "Some GitHub statistics could not be loaded."
+        : loadButton.dataset.loadedLabel || "GitHub statistics loaded.";
+    }
+    loadButton.disabled = false;
+  };
+
+  loadButton?.addEventListener("click", loadLiveData);
 })();

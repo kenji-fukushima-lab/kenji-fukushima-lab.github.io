@@ -9,8 +9,6 @@ assets/js/cronitor-analytics-setup.js
 assets/js/google-analytics-setup.js
 assets/js/open-panel-analytics-setup.js
 assets/js/photoswipe-setup.js
-assets/js/search/*.js
-assets/plotly/demo.html
 lighthouse_results/**
 lighthouse-results-ci/**
 .lighthouseci/**
@@ -18,5 +16,4 @@ _posts/en-us/2015-10-20-math.md
 _posts/pt-br/2015-10-20-math.md
 _sass/font-awesome/*.scss
 _sass/tabler-icons/*.scss
-_scripts/search.liquid.js
 tmp/**

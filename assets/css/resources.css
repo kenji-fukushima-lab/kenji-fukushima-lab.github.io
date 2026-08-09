@@ -59,3 +59,16 @@
     padding: 0.5rem 0.68rem;
   }
 }
+.repo-stats-loader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0.75rem;
+  min-height: 2rem;
+}
+
+.repo-stats-loader [data-repo-stats-status] {
+  color: var(--global-text-color-light);
+  font-size: 0.85rem;
+}

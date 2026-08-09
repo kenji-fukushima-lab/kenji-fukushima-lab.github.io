@@ -44,6 +44,18 @@ nav_order: 5
 
 ## GitHub リポジトリ
 
+<div class="repo-stats-loader">
+  <button
+    type="button"
+    class="btn btn-sm btn-dark"
+    data-repo-stats-load
+    data-loading-label="GitHub統計を読み込み中…"
+    data-loaded-label="GitHub統計を読み込みました。"
+    data-error-label="一部のGitHub統計を読み込めませんでした。"
+  >最新のGitHub統計を読み込む</button>
+  <span data-repo-stats-status aria-live="polite"></span>
+</div>
+
 <div class="repositories repo-list-compact d-flex flex-column align-items-stretch">
   {% for repo in site.data.repositories.github_repos %}
     {% include repository/repo.liquid repository=repo %}

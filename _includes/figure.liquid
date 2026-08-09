@@ -1,4 +1,4 @@
-{% assign img_path = include.path | remove: '.jpg' | remove: '.jpeg' | remove: '.png' | remove: '.tiff' | remove: '.gif' %}
+{% assign img_path = include.path | remove: '.jpg' | remove: '.jpeg' | remove: '.png' | remove: '.tiff' | remove: '.gif' | remove: '.webp' %}
 {% assign parts = include.path | split: '.' %}
 {% assign ext = parts.last %}
 
@@ -17,7 +17,7 @@
     {% if site.imagemagick.enabled %}
       <source
         class="responsive-img-srcset"
-        {% if ext == 'gif' or ext == 'jpeg' or ext == 'jpg' or ext == 'png' or ext == 'tiff' %}
+        {% if ext == 'gif' or ext == 'jpeg' or ext == 'jpg' or ext == 'png' or ext == 'tiff' or ext == 'webp' %}
           srcset="{% for i in site.imagemagick.widths %}{{ img_path | relative_url }}-{{ i }}.webp {{ i }}w,{% endfor %}"
           type="image/webp"
         {% else %}
@@ -25,25 +25,24 @@
         {% endif %}
         {% if include.sizes %}
           sizes="{{ include.sizes }}"
+        {% elsif include.width %}
+          sizes="(max-width: {{ include.width }}px) 95vw, {{ include.width }}px"
         {% else %}
           sizes="95vw"
         {% endif %}
       >
     {% endif %}
     <img
+      data-responsive-image
       src="{% if include.url %}{{ include.url }}{% elsif include.cache_bust %}{{ include.path | relative_url | bust_file_cache }}{% else %}{{ include.path | relative_url }}{% endif %}"
       {% if include.class %}
         class="{{ include.class }}"
       {% endif %}
       {% if include.width %}
         width="{{ include.width }}"
-      {% else %}
-        width="100%"
       {% endif %}
       {% if include.height %}
         height="{{ include.height }}"
-      {% else %}
-        height="auto"
       {% endif %}
       {% if include['min-width'] or include['min-height'] or include['max-width'] or include['max-height'] %}
         style="
@@ -81,7 +80,7 @@
       {% if include.decoding %}
         decoding="{{ include.decoding }}"
       {% endif %}
-      onerror="this.onerror=null; $('.responsive-img-srcset').remove();"
+      onerror="this.onerror=null; this.closest('picture')?.querySelector('.responsive-img-srcset')?.remove();"
     >
   </picture>
 

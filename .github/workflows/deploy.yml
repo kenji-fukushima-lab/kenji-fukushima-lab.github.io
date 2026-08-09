@@ -2,105 +2,379 @@ name: Deploy site
 
 on:
   push:
-    branches:
-      - master
-      - main
+    branches: [main, master]
     paths:
       - "assets/**"
-      - "_sass/**"
+      - "_bibliography/**"
+      - "_data/**"
+      - "_includes/**"
+      - "_layouts/**"
+      - "_news/**"
+      - "_pages/**"
       - "_plugins/**"
-      - "**.bib"
-      - "**.html"
-      - "**.js"
-      - "**.liquid"
-      - "**/**.md"
-      - "**.yml"
+      - "_posts/**"
+      - "_profiles/**"
+      - "_projects/**"
+      - "_sass/**"
+      - "test/**"
+      - "tests/**"
+      - ".github/scripts/**"
+      - ".github/workflows/**"
+      - "**/*.css"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.json"
+      - "**/*.liquid"
+      - "**/*.md"
+      - "**/*.mjs"
+      - "**/*.py"
+      - "**/*.rb"
+      - "**/*.scss"
+      - "**/*.yaml"
+      - "**/*.yml"
+      - ".lighthouserc.cjs"
+      - "Dockerfile"
       - "Gemfile"
       - "Gemfile.lock"
-      - ".github/scripts/prepare-jekyll-build-env.sh"
-      - "!.github/workflows/axe.yml"
-      - "!.github/workflows/broken-links.yml"
-      - "!.github/workflows/prettier.yml"
-      - "!lighthouse_results/**"
-      - "!lighthouse-results-ci/**"
-      - "!CONTRIBUTING.md"
-      - "!CUSTOMIZE.md"
-      - "!FAQ.md"
-      - "!INSTALL.md"
-      - "!README.md"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.js"
+      - "purgecss.config.js"
+      - "requirements*.txt"
   pull_request:
-    branches:
-      - master
-      - main
+    branches: [main, master]
     paths:
       - "assets/**"
-      - "_sass/**"
+      - "_bibliography/**"
+      - "_data/**"
+      - "_includes/**"
+      - "_layouts/**"
+      - "_news/**"
+      - "_pages/**"
       - "_plugins/**"
-      - "**.bib"
-      - "**.html"
-      - "**.js"
-      - "**.liquid"
-      - "**/**.md"
-      - "**.yml"
+      - "_posts/**"
+      - "_profiles/**"
+      - "_projects/**"
+      - "_sass/**"
+      - "test/**"
+      - "tests/**"
+      - ".github/scripts/**"
+      - ".github/workflows/**"
+      - "**/*.css"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.json"
+      - "**/*.liquid"
+      - "**/*.md"
+      - "**/*.mjs"
+      - "**/*.py"
+      - "**/*.rb"
+      - "**/*.scss"
+      - "**/*.yaml"
+      - "**/*.yml"
+      - ".lighthouserc.cjs"
+      - "Dockerfile"
       - "Gemfile"
       - "Gemfile.lock"
-      - ".github/scripts/prepare-jekyll-build-env.sh"
-      - "!.github/workflows/axe.yml"
-      - "!.github/workflows/broken-links.yml"
-      - "!.github/workflows/prettier.yml"
-      - "!lighthouse_results/**"
-      - "!lighthouse-results-ci/**"
-      - "!CONTRIBUTING.md"
-      - "!CUSTOMIZE.md"
-      - "!FAQ.md"
-      - "!INSTALL.md"
-      - "!README.md"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.js"
+      - "purgecss.config.js"
+      - "requirements*.txt"
   workflow_dispatch:
+    inputs:
+      axe_path:
+        description: "Optional single path for the accessibility tests (for example: blog/)"
+        required: false
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: deploy-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: site-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    # available images: https://github.com/actions/runner-images#available-images
+  preflight:
+    name: Changed paths
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      site_changed: ${{ steps.changes.outputs.site_changed }}
+      build_required: ${{ steps.changes.outputs.build_required }}
+      browser_required: ${{ steps.changes.outputs.browser_required }}
+      lighthouse_required: ${{ steps.changes.outputs.lighthouse_required }}
+      source_links_changed: ${{ steps.changes.outputs.source_links_changed }}
+      lighthouse_urls: ${{ steps.changes.outputs.lighthouse_urls }}
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup Ruby 💎
+      - name: Classify changed paths
+        id: changes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          changed_paths="${RUNNER_TEMP}/site-ci-changed-paths.txt"
+          if [ "${EVENT_NAME}" = "pull_request" ]; then
+            git diff --name-only --diff-filter=ACMRD "${BASE_SHA}...${HEAD_SHA}" > "${changed_paths}"
+          elif [ "${EVENT_NAME}" = "push" ] && [ -n "${BEFORE_SHA}" ] && [ "${BEFORE_SHA}" != "0000000000000000000000000000000000000000" ]; then
+            git diff --name-only --diff-filter=ACMRD "${BEFORE_SHA}..${HEAD_SHA}" > "${changed_paths}"
+          else
+            git ls-files > "${changed_paths}"
+          fi
+          python3 .github/scripts/classify_ci_changes.py --event "${EVENT_NAME}" < "${changed_paths}" >> "${GITHUB_OUTPUT}"
+          sed -n '1,200p' "${changed_paths}"
+
+  external-links:
+    name: External links
+    needs: preflight
+    if: needs.preflight.outputs.source_links_changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check source links
+        uses: lycheeverse/lychee-action@v2.1.0
+        with:
+          fail: true
+          args: >-
+            --base https://kenji-fukushima-lab.github.io
+            --max-retries 3
+            --accept 100..=103,200..=299,302,403,429
+            --user-agent curl/7.54
+            --exclude https://scholar[.]google[.][^/]+/citations.*
+            --exclude https://github[.]com/kfuku52/kflab/?$
+            --exclude https://kenji-fukushima-lab[.]github[.]io/assets/.*
+            --exclude-path README.md
+            --exclude-path CUSTOMIZE.md
+            --exclude-path FAQ.md
+            --exclude-path CONTRIBUTING.md
+            --exclude-path UPGRADING.md
+            --exclude-path _pages/en-us/404.md
+            --exclude-path _pages/pt-br/404.md
+            --exclude-path _pages/en-us/blog.md
+            --exclude-path _pages/pt-br/blog.md
+            --exclude-path _pages/ja/blog.md
+            --exclude-path _pages/en-us/people.md
+            --exclude-path _pages/ja/people.md
+            --exclude-path _pages/en-us/profiles.md
+            --exclude-path _pages/ja/profiles.md
+            --exclude-path _pages/en-us/publications.md
+            --exclude-path _pages/ja/publications.md
+            --exclude-path _posts/en-us/2018-12-22-distill.md
+            --exclude-path _posts/pt-br/2018-12-22-distill.md
+            --exclude-path _posts/en-us/2023-04-24-videos.md
+            --exclude-path _posts/pt-br/2023-04-24-videos.md
+            --exclude-path _books/en-us/the_godfather.md
+            --exclude-path _books/pt-br/the_godfather.md
+            --verbose --no-progress ./**/*.md ./**/*.html
+
+  build:
+    name: Fast checks and production build
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3.5"
           bundler-cache: true
-      - name: Setup Python 🐍
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: "pip" # caching pip dependencies
-      - name: Update _config.yml ⚙️
-        uses: fjogeleit/yaml-update-action@main
+          cache: pip
+          cache-dependency-path: |
+            requirements-build.txt
+            requirements-test.txt
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Install Python test dependencies
+        run: python3 -m pip install --disable-pip-version-check -r requirements-test.txt
+      - name: Python syntax checks
+        run: find .github/scripts -name '*.py' -exec python3 -m py_compile {} +
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Validate papers.bib
+        run: python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib
+      - name: Enforce image size threshold
+        run: bash .github/scripts/check-image-budget.sh
+      - name: Check formatting
+        id: prettier
+        continue-on-error: true
+        run: npm run prettier
+      - name: Create formatting diff
+        if: steps.prettier.outcome == 'failure'
+        run: |
+          npm run prettier:fix
+          git diff -- . ':(exclude)package-lock.json' ':(exclude)package.json' > formatting.diff
+      - name: Upload formatting diff
+        if: steps.prettier.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: formatting-diff
+          path: formatting.diff
+          retention-days: 7
+      - name: Fail on formatting differences
+        if: steps.prettier.outcome == 'failure'
+        run: exit 1
+      - name: Restore responsive image cache
+        if: needs.preflight.outputs.build_required == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .jekyll-cache/imagemagick
+          key: imagemagick-${{ runner.os }}-${{ hashFiles('assets/img/**', '_config.yml', '_plugins/imagemagick_guard.rb', '_plugins/responsive_images.rb') }}
+          restore-keys: |
+            imagemagick-${{ runner.os }}-
+      - name: Configure repository metadata
+        if: needs.preflight.outputs.build_required == 'true'
+        uses: fjogeleit/yaml-update-action@dffe9a5223d84653c13374032382f6bb5de8e5ef # v0.17.0
         with:
           commitChange: false
           valueFile: "_config.yml"
-          propertyPath: "giscus.repo"
-          value: ${{ github.repository }}
-      - name: Install and Build 🔧
+          changes: |
+            {
+              "giscus.repo": "${{ github.repository }}",
+              "baseurl": ""
+            }
+      - name: Build site once
+        if: needs.preflight.outputs.build_required == 'true'
+        env:
+          JEKYLL_ENV: production
         run: |
           bash .github/scripts/prepare-jekyll-build-env.sh
-          export JEKYLL_ENV=production
           bundle exec jekyll build
-      - name: Purge unused CSS 🧹
-        run: |
-          npm install -g purgecss
-          purgecss -c purgecss.config.js
-      - name: Deploy 🚀
-        if: github.event_name != 'pull_request'
+      - name: Purge unused CSS
+        if: needs.preflight.outputs.build_required == 'true'
+        run: npx --no-install purgecss -c purgecss.config.js
+      - name: Check generated local links
+        if: needs.preflight.outputs.build_required == 'true'
+        uses: lycheeverse/lychee-action@v2.1.0
+        with:
+          fail: true
+          args: --offline --root-dir _site --verbose --no-progress --max-retries 3 '_site/**/*.html'
+      - name: Upload production site
+        if: needs.preflight.outputs.build_required == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-site-${{ github.sha }}
+          path: _site
+          compression-level: 0
+          retention-days: 1
+
+  browser:
+    name: UI and accessibility
+    needs: [preflight, build]
+    if: needs.preflight.outputs.browser_required == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Download production site
+        uses: actions/download-artifact@v4
+        with:
+          name: production-site-${{ github.sha }}
+          path: _site
+      - name: Run browser tests
+        env:
+          AXE_PATHS: ${{ github.event_name == 'workflow_dispatch' && inputs.axe_path || '' }}
+        run: npm run test:ui
+      - name: Upload browser failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failure-${{ github.sha }}
+          path: test-results
+          if-no-files-found: ignore
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse
+    needs: [preflight, build]
+    if: needs.preflight.outputs.lighthouse_required == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Download production site
+        uses: actions/download-artifact@v4
+        with:
+          name: production-site-${{ github.sha }}
+          path: _site
+      - name: Run Lighthouse assertions
+        env:
+          LHCI_URL_PATHS: ${{ needs.preflight.outputs.lighthouse_urls }}
+          LHCI_NUMBER_OF_RUNS: "3"
+        run: npm run test:lighthouse
+      - name: Upload Lighthouse failure reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-failure-${{ github.sha }}
+          path: lighthouse-results-ci
+          if-no-files-found: ignore
+          retention-days: 7
+
+  deploy:
+    name: Deploy
+    needs: [preflight, external-links, build, browser, lighthouse]
+    if: >-
+      always() &&
+      github.event_name != 'pull_request' &&
+      needs.preflight.outputs.site_changed == 'true' &&
+      needs.preflight.result == 'success' &&
+      (needs.external-links.result == 'success' || needs.external-links.result == 'skipped') &&
+      needs.build.result == 'success' &&
+      needs.browser.result == 'success' &&
+      needs.lighthouse.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download tested production site
+        uses: actions/download-artifact@v4
+        with:
+          name: production-site-${{ github.sha }}
+          path: _site
+      - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: _site

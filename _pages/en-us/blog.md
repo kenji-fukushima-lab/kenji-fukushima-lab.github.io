@@ -10,18 +10,7 @@ sitemap: false
 robots: "noindex, nofollow"
 seo_alternate_languages: ["en-us"]
 post_path_contains: "/en-us/"
-pagination:
-  enabled: false
-  collection: posts
-  permalink: /page/:num/
-  per_page: 20
-  sort_field: date
-  sort_reverse: true
-  trail:
-    before: 1
-    after: 3
-chart:
-  chartjs: true
+blog_page_size: 20
 ---
 
 {% include blog/index.liquid %}

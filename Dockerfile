@@ -7,11 +7,13 @@ FROM ruby:slim
 # ARG USERID=901
 # ARG USERNAME=jekyll
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 LABEL authors="Amir Pourmand,George Araújo" \
       description="Docker image for al-folio academic template" \
       maintainer="George Araújo"
+
+COPY requirements-build.txt requirements-test.txt /tmp/
 
 # uncomment these if you are having this issue with the build:
 # /usr/local/bundle/gems/jekyll-4.3.4/lib/jekyll/site.rb:509:in `initialize': Permission denied @ rb_sysopen - /srv/jekyll/.jekyll-cache/.gitignore (Errno::EACCES)
@@ -34,7 +36,9 @@ RUN apt-get update -y && \
         python3-venv \
         zlib1g-dev && \
     python3 -m venv /opt/site-python && \
-    /opt/site-python/bin/pip install --no-cache-dir --upgrade pip jupyter nbconvert "pagefind[extended]"
+    /opt/site-python/bin/pip install --no-cache-dir --disable-pip-version-check \
+        -r /tmp/requirements-build.txt \
+        -r /tmp/requirements-test.txt
 
 # Login shells can reset PATH, while the notebook converter invokes `jupyter`
 # by name. Keep that executable available from the system command path.

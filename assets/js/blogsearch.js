@@ -9,8 +9,9 @@
   };
 
   document.addEventListener("DOMContentLoaded", () => {
-    const PAGE_SIZE = 20;
     const blogRoot = document.querySelector(".blog-content");
+    const configuredPageSize = Number.parseInt(blogRoot?.dataset.pageSize ?? "20", 10);
+    const PAGE_SIZE = Number.isFinite(configuredPageSize) && configuredPageSize > 0 ? configuredPageSize : 20;
     const list = blogRoot?.querySelector(".post-list");
     const searchInput = document.getElementById("blogsearch");
     const sortSelect = document.getElementById("blog-sort");
@@ -18,7 +19,6 @@
     const yearSelect = document.getElementById("blog-facet-year");
     const authorSelect = document.getElementById("blog-facet-author");
     const activeCountNode = document.getElementById("blog-active-count");
-    const chartCanvas = document.getElementById("blog-chart-year");
 
     if (!blogRoot || !list || !searchInput || !sortSelect || !resetButton || !yearSelect || !authorSelect) {
       return;
@@ -36,8 +36,6 @@
       showing: isJa ? "表示中" : "Showing",
       of: isJa ? "全" : "of",
       posts: isJa ? "件" : "posts",
-      axisLabel: isJa ? "記事数" : "Number of posts",
-      tooltipLabel: isJa ? "記事数" : "Posts",
       previous: isJa ? "前へ" : "Previous",
       next: isJa ? "次へ" : "Next",
       pageLabel: isJa ? "ページ" : "Page",
@@ -63,11 +61,6 @@
         searchText: `${title} ${cardText} ${bodyText}`,
       };
     });
-
-    const availableYears = entries.map((entry) => entry.year).filter((year) => Number.isInteger(year) && year > 0);
-    const minYear = availableYears.length ? Math.min(...availableYears) : new Date().getFullYear();
-    const maxYear = availableYears.length ? Math.max(...availableYears) : minYear;
-    const fullYearRange = Array.from({ length: maxYear - minYear + 1 }, (_, offset) => (minYear + offset).toString());
 
     const paginationNav = document.createElement("nav");
     paginationNav.className = "blog-pagination";
@@ -132,30 +125,16 @@
       authorSelect.value = authorCurrent;
     }
 
-    let chart = null;
     let currentPage = 1;
 
-    const getChartPalette = () => {
-      const rootStyle = getComputedStyle(document.documentElement);
-      const resetButtonStyle = getComputedStyle(resetButton);
-      const resetButtonColor = (resetButtonStyle.backgroundColor || "").trim();
-      const fallbackThemeColor = rootStyle.getPropertyValue("--global-theme-color").trim() || "#2f7f75";
-      const themeColor =
-        resetButtonColor && resetButtonColor !== "transparent" && resetButtonColor !== "rgba(0, 0, 0, 0)" ? resetButtonColor : fallbackThemeColor;
-      return {
-        themeColor,
-        textColor: rootStyle.getPropertyValue("--global-text-color").trim() || "#334155",
-        dividerColor: rootStyle.getPropertyValue("--global-divider-color").trim() || "#cbd5e1",
-      };
-    };
-
-    const updateCountLabel = (shownCount, totalCount) => {
+    const updateCountLabel = (startIndex, endIndex, totalCount) => {
       if (!activeCountNode) return;
+      const visibleRange = endIndex > 0 ? `${startIndex}–${endIndex}` : "0";
       if (isJa) {
-        activeCountNode.textContent = `${i18n.showing} ${shownCount}${i18n.posts} / ${i18n.of}${totalCount}${i18n.posts}`;
+        activeCountNode.textContent = `${i18n.showing} ${visibleRange}${i18n.posts} / ${i18n.of}${totalCount}${i18n.posts}`;
         return;
       }
-      activeCountNode.textContent = `${i18n.showing} ${shownCount} ${i18n.of} ${totalCount} ${i18n.posts}`;
+      activeCountNode.textContent = `${i18n.showing} ${visibleRange} ${i18n.of} ${totalCount} ${i18n.posts}`;
     };
 
     const createPaginationButton = (label, page, { disabled = false, active = false, ariaLabel = "" } = {}) => {
@@ -248,96 +227,6 @@
       return totalPages;
     };
 
-    const updateYearChart = (filteredEntries) => {
-      if (!chartCanvas || typeof window.Chart !== "function") return;
-
-      const counts = new Map(fullYearRange.map((yearLabel) => [yearLabel, 0]));
-      filteredEntries.forEach((entry) => {
-        const key = entry.year.toString();
-        if (counts.has(key)) counts.set(key, counts.get(key) + 1);
-      });
-
-      const labels = fullYearRange;
-      const values = labels.map((label) => counts.get(label) ?? 0);
-      const palette = getChartPalette();
-      const datasets = [
-        {
-          label: i18n.tooltipLabel,
-          data: values,
-          backgroundColor: palette.themeColor,
-          borderColor: palette.themeColor,
-          borderWidth: 0,
-        },
-      ];
-
-      if (chart) {
-        chart.data.labels = labels;
-        chart.data.datasets = datasets;
-        if (chart.options?.scales?.x?.ticks) chart.options.scales.x.ticks.color = palette.textColor;
-        if (chart.options?.scales?.x?.grid) chart.options.scales.x.grid.color = palette.dividerColor;
-        if (chart.options?.scales?.x) chart.options.scales.x.stacked = false;
-        if (chart.options?.scales?.y?.ticks) chart.options.scales.y.ticks.color = palette.textColor;
-        if (chart.options?.scales?.y?.grid) chart.options.scales.y.grid.color = palette.dividerColor;
-        if (chart.options?.scales?.y) chart.options.scales.y.stacked = false;
-        if (chart.options?.scales?.y?.ticks) chart.options.scales.y.ticks.stepSize = 1;
-        if (chart.options?.scales?.y?.title) chart.options.scales.y.title.color = palette.textColor;
-        if (chart.options?.plugins?.legend?.labels) {
-          chart.options.plugins.legend.labels.color = palette.textColor;
-        }
-        chart.update();
-        return;
-      }
-
-      chart = new window.Chart(chartCanvas, {
-        type: "bar",
-        data: {
-          labels,
-          datasets,
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false,
-              labels: { color: palette.textColor },
-            },
-            tooltip: {
-              callbacks: {
-                label: (context) => {
-                  const value = Number(context.raw) || 0;
-                  return `${i18n.tooltipLabel}: ${value}`;
-                },
-              },
-            },
-          },
-          scales: {
-            x: {
-              stacked: false,
-              ticks: {
-                color: palette.textColor,
-                autoSkip: true,
-                maxRotation: 0,
-                minRotation: 0,
-              },
-              grid: { color: palette.dividerColor },
-            },
-            y: {
-              stacked: false,
-              beginAtZero: true,
-              ticks: { color: palette.textColor, precision: 0, stepSize: 1 },
-              title: {
-                display: true,
-                text: i18n.axisLabel,
-                color: palette.textColor,
-              },
-              grid: { color: palette.dividerColor },
-            },
-          },
-        },
-      });
-    };
-
     const getActiveFilters = () => ({
       query: normalize(searchInput.value),
       year: normalize(yearSelect.value),
@@ -365,9 +254,7 @@
     };
 
     let searchDebounceTimer = null;
-    let chartRetryAttempts = 0;
-
-    const render = (resetPage = false) => {
+    const render = (resetPage = false, preserveOrder = false) => {
       if (resetPage) currentPage = 1;
       const filters = getActiveFilters();
       const filtered = entries.filter((entry) => matchesFilters(entry, filters));
@@ -384,23 +271,14 @@
         entry.card.style.display = visible ? "" : "none";
       });
 
-      pageEntries.forEach((entry) => list.appendChild(entry.card));
+      if (!preserveOrder) {
+        pageEntries.forEach((entry) => list.appendChild(entry.card));
+      }
 
       emptyState.hidden = sorted.length > 0;
-      updateCountLabel(sorted.length, entries.length);
-
-      const updateChartWithRetry = () => {
-        if (typeof window.Chart === "function") {
-          updateYearChart(sorted);
-          return;
-        }
-        if (chartRetryAttempts > 25) return;
-        chartRetryAttempts += 1;
-        window.setTimeout(updateChartWithRetry, 120);
-      };
-
-      chartRetryAttempts = 0;
-      updateChartWithRetry();
+      const rangeStart = pageEntries.length > 0 ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
+      const rangeEnd = rangeStart > 0 ? rangeStart + pageEntries.length - 1 : 0;
+      updateCountLabel(rangeStart, rangeEnd, sorted.length);
     };
 
     searchInput.addEventListener("input", () => {
@@ -428,11 +306,8 @@
       render(true);
     });
 
-    const themeObserver = new MutationObserver(() => {
-      render();
-    });
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
-    render(true);
+    // The server output already contains the newest first page. Keeping those
+    // nodes in place prevents the LCP image from being repainted after JS loads.
+    render(true, true);
   });
 })();

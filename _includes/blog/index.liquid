@@ -91,6 +91,7 @@
     {% if site.active_lang == 'ja' %}投稿一覧{% else %}Post list{% endif %}
   </h2>
   <ul class="post-list">
+    {% assign blog_page_size = page.blog_page_size | default: 20 %}
     {% assign postlist = site.posts %}
     {% if page.post_path_contains %}
       {% assign postlist = postlist | where_exp: 'post', 'post.path contains page.post_path_contains' %}
@@ -160,11 +161,7 @@
 
       {% assign tag_values = post.tags | join: '||' %}
       {% assign category_values = post.categories | join: '||' %}
-      {% if post.external_source == blank %}
-        {% assign post_search_content = post.content %}
-      {% else %}
-        {% assign post_search_content = post.feed_content %}
-      {% endif %}
+      {% assign post_search_content = post.description | default: post.excerpt %}
       <li
         class="post-card{% if preview_image != blank %} has-thumb{% endif %}"
         data-href="{{ post_url }}"
@@ -177,6 +174,9 @@
         data-content="{{ post_search_content | strip_html | strip_newlines | downcase | escape }}"
         {% if post_target != blank %}
           data-target="{{ post_target }}"
+        {% endif %}
+        {% if forloop.index > blog_page_size %}
+          hidden
         {% endif %}
         tabindex="0"
       >
@@ -247,15 +247,59 @@
               {% assign preview_src = preview_src | relative_url %}
             {% endunless %}
             <div class="post-card-thumb">
-              <img src="{{ preview_src }}" alt="{{ post.title | escape }}">
+              {% assign preview_parts = preview_image | split: '.' %}
+              {% assign preview_ext = preview_parts.last | downcase %}
+              {% assign responsive_preview = false %}
+              {% if preview_image contains '://' %}
+                {% assign responsive_preview = false %}
+              {% elsif preview_ext == 'gif'
+                or preview_ext == 'jpeg'
+                or preview_ext == 'jpg'
+                or preview_ext == 'png'
+                or preview_ext == 'tiff'
+                or preview_ext == 'webp'
+              %}
+                {% assign responsive_preview = site.imagemagick.enabled %}
+              {% endif %}
+              {% if responsive_preview %}
+                {% assign preview_stem = preview_image
+                  | remove: '.jpg'
+                  | remove: '.jpeg'
+                  | remove: '.png'
+                  | remove: '.tiff'
+                  | remove: '.gif'
+                  | remove: '.webp'
+                %}
+                <img
+                  src="{{ preview_src }}"
+                  srcset="{% for width in site.imagemagick.widths %}{{ preview_stem | relative_url }}-{{ width }}.webp {{ width }}w{% unless forloop.last %}, {% endunless %}{% endfor %}"
+                  sizes="(min-width: 860px) 156px, 55vw"
+                  alt="{{ post.title | escape }}"
+                  width="480"
+                  height="300"
+                  loading="{% if forloop.index == 1 %}eager{% else %}lazy{% endif %}"
+                  {% if forloop.index == 1 %}
+                    fetchpriority="high"
+                  {% endif %}
+                  decoding="async"
+                >
+              {% else %}
+                <img
+                  src="{{ preview_src }}"
+                  alt="{{ post.title | escape }}"
+                  width="480"
+                  height="300"
+                  loading="{% if forloop.index == 1 %}eager{% else %}lazy{% endif %}"
+                  {% if forloop.index == 1 %}
+                    fetchpriority="high"
+                  {% endif %}
+                  decoding="async"
+                >
+              {% endif %}
             </div>
           {% endif %}
         </div>
       </li>
     {% endfor %}
   </ul>
-
-  {% if page.pagination.enabled %}
-    {% include pagination.liquid %}
-  {% endif %}
 </div>

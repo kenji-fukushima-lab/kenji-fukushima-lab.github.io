@@ -23,7 +23,7 @@ jobs:
 
       - name: Get the date for today
         id: date
-        run: echo "TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        run: echo "TODAY=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
 
       - name: Check for scheduled posts and move to posts
         run: |
@@ -31,7 +31,7 @@ jobs:
           mkdir -p _scheduled
           shopt -s nullglob globstar
           found_posts=0
-          for file in _scheduled/**/${TODAY}-*.md; do
+          for file in _scheduled/**/"${TODAY}"-*.md; do
             found_posts=1
             echo "Found scheduled: $file"
             parent_dir="$(dirname "$file")"

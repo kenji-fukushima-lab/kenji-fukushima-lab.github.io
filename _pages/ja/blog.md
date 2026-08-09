@@ -9,18 +9,7 @@ seo_title: ブログ | 国立遺伝学研究所 植物進化研究室
 nav: true
 nav_order: 7
 seo_alternate_languages: ["ja"]
-pagination:
-  enabled: false
-  collection: posts
-  permalink: /page/:num/
-  per_page: 20
-  sort_field: date
-  sort_reverse: true
-  trail:
-    before: 1 # The number of links before the current page
-    after: 3 # The number of links after the current page
-chart:
-  chartjs: true
+blog_page_size: 20
 ---
 
 {% include blog/index.liquid %}

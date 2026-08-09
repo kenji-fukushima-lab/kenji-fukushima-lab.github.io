@@ -15,8 +15,6 @@
 
 <!-- Connection hints -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {% if page.layout == 'about' %}
   {% capture home_hero_sizes %}(min-width: {{ site.max_width }}) {{ site.max_width }}, (min-width: 576px) 55vw, 95vw{% endcapture %}
   <link
@@ -33,12 +31,7 @@
 
 <!-- Bootstrap & MDB -->
 <link rel="stylesheet" href="{{ '/assets/css/bootstrap.min.css' | relative_url | bust_file_cache }}">
-<link
-  rel="stylesheet"
-  href="{{ site.third_party_libraries.mdb.url.css }}"
-  integrity="{{ site.third_party_libraries.mdb.integrity.css }}"
-  crossorigin="anonymous"
->
+<link rel="stylesheet" href="{{ '/assets/css/mdb.min.css' | relative_url | bust_file_cache }}">
 
 {% if page.pretty_table %}
   <!-- Bootstrap Table -->
@@ -51,18 +44,9 @@
 {% endif %}
 
 <!-- Fonts & Icons -->
-<link rel="stylesheet" href="{{ '/assets/css/academicons.min.css' | relative_url | bust_file_cache }}">
-<link rel="stylesheet" href="{{ '/assets/css/scholar-icons.css' | relative_url | bust_file_cache }}">
-<link
-  rel="preload"
-  as="style"
-  type="text/css"
-  href="{{ site.third_party_libraries.google_fonts.url.fonts }}"
-  onload="this.onload=null;this.rel='stylesheet'"
->
-<noscript>
-  <link rel="stylesheet" type="text/css" href="{{ site.third_party_libraries.google_fonts.url.fonts }}">
-</noscript>
+{% if page.layout == 'profiles' %}
+  <link rel="stylesheet" href="{{ '/assets/css/academicons.min.css' | relative_url | bust_file_cache }}">
+{% endif %}
 
 <!-- Code Syntax Highlighting -->
 <link

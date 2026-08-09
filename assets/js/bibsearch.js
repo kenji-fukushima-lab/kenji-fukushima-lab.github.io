@@ -74,6 +74,10 @@ const i18n = {
   altmetricHint: isJapanesePage
     ? "Altmetric順は`altmetric_score`がある論文を優先して並び替えます。"
     : "Altmetric sort prioritizes publications with `altmetric_score` metadata.",
+  previous: isJapanesePage ? "前へ" : "Previous",
+  next: isJapanesePage ? "次へ" : "Next",
+  pageLabel: isJapanesePage ? "ページ" : "Page",
+  paginationAria: isJapanesePage ? "論文ページネーション" : "Publication pagination",
 };
 
 const trackAnalyticsEvent = (eventName, params = {}) => {
@@ -125,6 +129,7 @@ const defaultFacetConfig = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
+  const PAGE_SIZE = 25;
   const publicationsRoot = document.querySelector(".publications");
   const searchInput = document.getElementById("bibsearch");
   if (!publicationsRoot || !searchInput) {
@@ -206,6 +211,13 @@ document.addEventListener("DOMContentLoaded", () => {
   publicationsRoot.querySelectorAll("h2.bibliography, ol.bibliography").forEach((node) => node.remove());
   publicationsRoot.appendChild(resultsContainer);
 
+  const paginationNav = createElement("nav", "publications-pagination");
+  paginationNav.setAttribute("aria-label", i18n.paginationAria);
+  paginationNav.hidden = true;
+  const paginationList = createElement("ul", "pagination");
+  paginationNav.appendChild(paginationList);
+  publicationsRoot.appendChild(paginationNav);
+
   let currentSort = sortSelect?.value || "newest";
   if (currentSort === "citations") {
     currentSort = "crossref-citations";
@@ -223,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastTrackedSearch = "";
   let chartsReadyAttempts = 0;
   let charts = { byYear: null };
+  let currentPage = 1;
 
   if (!hasExternalAltmetricEmbeds) {
     if (badgeLoadButton) badgeLoadButton.style.display = "none";
@@ -391,9 +404,61 @@ document.addEventListener("DOMContentLoaded", () => {
     resultsContainer.append(heading, list);
   };
 
-  const updateActiveCount = (visibleCount) => {
+  const createPaginationButton = (label, page, { disabled = false, active = false } = {}) => {
+    const item = createElement("li", "page-item");
+    if (disabled) item.classList.add("disabled");
+    if (active) item.classList.add("active");
+
+    const button = createElement("button", "page-link");
+    button.type = "button";
+    button.textContent = label;
+    button.dataset.page = page.toString();
+    button.setAttribute("aria-label", label === i18n.previous || label === i18n.next ? label : `${i18n.pageLabel} ${label}`);
+    if (disabled) {
+      button.disabled = true;
+      button.setAttribute("aria-disabled", "true");
+    }
+    if (active) button.setAttribute("aria-current", "page");
+    item.appendChild(button);
+    return item;
+  };
+
+  const updatePagination = (totalEntries) => {
+    const totalPages = Math.max(1, Math.ceil(totalEntries / PAGE_SIZE));
+    currentPage = Math.min(currentPage, totalPages);
+    paginationList.innerHTML = "";
+    paginationNav.hidden = totalPages <= 1;
+    if (totalPages <= 1) return totalPages;
+
+    paginationList.appendChild(createPaginationButton(i18n.previous, Math.max(1, currentPage - 1), { disabled: currentPage === 1 }));
+    const start = Math.max(1, currentPage - 2);
+    const end = Math.min(totalPages, currentPage + 2);
+    if (start > 1) paginationList.appendChild(createPaginationButton("1", 1, { active: currentPage === 1 }));
+    if (start > 2) {
+      const ellipsis = createElement("li", "page-item disabled");
+      const label = createElement("span", "page-link");
+      label.textContent = "…";
+      ellipsis.appendChild(label);
+      paginationList.appendChild(ellipsis);
+    }
+    for (let page = start; page <= end; page += 1) {
+      paginationList.appendChild(createPaginationButton(page.toString(), page, { active: page === currentPage }));
+    }
+    if (end < totalPages - 1) {
+      const ellipsis = createElement("li", "page-item disabled");
+      const label = createElement("span", "page-link");
+      label.textContent = "…";
+      ellipsis.appendChild(label);
+      paginationList.appendChild(ellipsis);
+    }
+    if (end < totalPages) paginationList.appendChild(createPaginationButton(totalPages.toString(), totalPages));
+    paginationList.appendChild(createPaginationButton(i18n.next, Math.min(totalPages, currentPage + 1), { disabled: currentPage === totalPages }));
+    return totalPages;
+  };
+
+  const updateActiveCount = (visibleCount, pageStart, pageEnd) => {
     if (!activeCountNode) return;
-    activeCountNode.textContent = `${i18n.showing}: ${visibleCount} / ${entries.length}`;
+    activeCountNode.textContent = `${i18n.showing}: ${pageStart}-${pageEnd} / ${visibleCount}`;
   };
 
   const highlightSearch = (search) => {
@@ -803,8 +868,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const filtered = entries.filter((entry) => matchesFilters(entry, searchTerm, filters));
     const sorted = sortEntries(filtered);
 
-    renderResultGroups(sorted);
-    updateActiveCount(sorted.length);
+    updatePagination(sorted.length);
+    const pageStartIndex = (currentPage - 1) * PAGE_SIZE;
+    const pageEntries = sorted.slice(pageStartIndex, pageStartIndex + PAGE_SIZE);
+    renderResultGroups(pageEntries);
+    updateActiveCount(sorted.length, sorted.length ? pageStartIndex + 1 : 0, pageStartIndex + pageEntries.length);
     highlightSearch(searchTerm);
     updateDashboard(sorted);
 
@@ -827,6 +895,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const onSearchInput = () => {
     clearTimeout(inputDebounceId);
     inputDebounceId = setTimeout(() => {
+      currentPage = 1;
       syncHashWithSearch();
       applyFiltersAndRender();
       const normalizedSearch = normalize(searchInput.value);
@@ -840,6 +909,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const resetFilters = () => {
+    currentPage = 1;
     searchInput.value = "";
     defaultFacetConfig.forEach((facet) => {
       const select = document.getElementById(facet.id);
@@ -864,6 +934,7 @@ document.addEventListener("DOMContentLoaded", () => {
   searchInput.addEventListener("input", onSearchInput);
   window.addEventListener("hashchange", () => {
     initializeFromHash();
+    currentPage = 1;
     applyFiltersAndRender();
   });
 
@@ -871,6 +942,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const select = document.getElementById(facet.id);
     if (!select) return;
     select.addEventListener("change", () => {
+      currentPage = 1;
       applyFiltersAndRender();
       trackAnalyticsEvent("publications_filter_change", {
         filter_name: facet.key,
@@ -881,6 +953,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (sortSelect) {
     sortSelect.addEventListener("change", () => {
+      currentPage = 1;
       currentSort = sortSelect.value;
       applyFiltersAndRender();
 
@@ -916,6 +989,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (resetButton) {
     resetButton.addEventListener("click", resetFilters);
   }
+
+  paginationList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-page]");
+    if (!button || button.disabled) return;
+    const nextPage = Number.parseInt(button.dataset.page ?? "0", 10);
+    if (!Number.isFinite(nextPage) || nextPage < 1 || nextPage === currentPage) return;
+    currentPage = nextPage;
+    applyFiltersAndRender();
+    resultsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
   if (badgeLoadButton) {
     badgeLoadButton.addEventListener("click", () => {

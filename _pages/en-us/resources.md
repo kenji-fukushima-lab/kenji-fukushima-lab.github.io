@@ -43,6 +43,18 @@ nav_order: 5
 
 ## GitHub Repositories
 
+<div class="repo-stats-loader">
+  <button
+    type="button"
+    class="btn btn-sm btn-dark"
+    data-repo-stats-load
+    data-loading-label="Loading GitHub statistics…"
+    data-loaded-label="GitHub statistics loaded."
+    data-error-label="Some GitHub statistics could not be loaded."
+  >Load live GitHub statistics</button>
+  <span data-repo-stats-status aria-live="polite"></span>
+</div>
+
 <div class="repositories repo-list-compact d-flex flex-column align-items-stretch">
   {% for repo in site.data.repositories.github_repos %}
     {% include repository/repo.liquid repository=repo %}

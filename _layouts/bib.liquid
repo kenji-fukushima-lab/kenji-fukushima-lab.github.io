@@ -48,8 +48,6 @@
 {% endcase %}
 
 {% assign article_type_value = entry.article_type | default: '' | strip | downcase %}
-{% assign journal_value = entry.journal | default: entry.booktitle | default: entry.school | default: '' | strip %}
-{% assign keyword_value = entry.keywords | default: entry.keyword | default: '' | strip %}
 {% assign first_author_value = '' %}
 {% assign corresponding_authors = '' %}
 {% assign cofirst_authors = '' %}
@@ -57,7 +55,6 @@
 {% assign cofirst_raw = entry.cofirst_authors | default: '' | strip %}
 {% assign highlight_list = entry.highlight | downcase | strip | split: ' and ' %}
 {% assign lab_member_values = '' %}
-{% assign lab_member_count = 0 %}
 {% if corresponding_raw != '' %}
   {% assign explicit_corresponding_authors = corresponding_raw | downcase | split: ' and ' %}
   {% for corresponding_name in explicit_corresponding_authors %}
@@ -92,7 +89,6 @@
   {% endif %}
   {% if highlight_list contains full_name_normalized and full_name_normalized != '' %}
     {% assign lab_member_values = lab_member_values | append: full_name_normalized | append: '||' %}
-    {% assign lab_member_count = lab_member_count | plus: 1 %}
   {% endif %}
 {% endfor %}
 
@@ -105,10 +101,7 @@
   data-first-author="{{ first_author_value | downcase | escape }}"
   data-corresponding="{{ corresponding_authors | escape }}"
   data-co-first="{{ cofirst_authors | escape }}"
-  data-journal="{{ journal_value | downcase | escape }}"
-  data-keywords="{{ keyword_value | downcase | escape }}"
   data-lab-members="{{ lab_member_values | escape }}"
-  data-lab-member-count="{{ lab_member_count }}"
   data-crossref-count="{{ crossref_count }}"
   data-dimensions-count="{{ dimensions_count }}"
   data-citation-count="{{ crossref_count }}"
@@ -148,7 +141,7 @@
             include figure.liquid
             loading="lazy"
             path=entry_path
-            sizes = "200px"
+            sizes = "112px"
             class="preview z-depth-1 rounded"
             zoomable=true
             alt=entry.preview
@@ -160,7 +153,7 @@
           include figure.liquid
           loading="lazy"
           path=default_preview
-          sizes = "200px"
+          sizes = "112px"
           class="preview z-depth-1 rounded"
           zoomable=true
           alt='default publication preview'

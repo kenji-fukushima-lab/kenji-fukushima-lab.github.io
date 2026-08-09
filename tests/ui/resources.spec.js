@@ -90,6 +90,8 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/resources/");
+    await page.getByRole("button", { name: "Load live GitHub statistics", exact: true }).click();
+    await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
 
     const forkLink = page.locator('[data-analytics-label="repository_forks"]').first();
     const forkBadge = forkLink.locator(".repo-compact-stat-forks");
@@ -117,6 +119,8 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/ja/resources/");
+    await page.getByRole("button", { name: "最新のGitHub統計を読み込む", exact: true }).click();
+    await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub統計を読み込みました。");
 
     const firstRepo = page.locator(".repo-compact").first();
     await expect(firstRepo.locator(".repo-compact-stat-label")).toHaveText(["Stars", "Forks", "Last commit", "Issue"]);
@@ -143,6 +147,8 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/resources/");
+    await page.getByRole("button", { name: "Load live GitHub statistics", exact: true }).click();
+    await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
 
     const lastCommit = page.locator(".repo-compact-stat-commits [data-repo-stat-value]").first();
     await expect(lastCommit).toHaveText("30 minutes ago");
