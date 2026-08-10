@@ -173,7 +173,7 @@ jobs:
             --exclude-path _posts/pt-br/2023-04-24-videos.md
             --exclude-path _books/en-us/the_godfather.md
             --exclude-path _books/pt-br/the_godfather.md
-            --verbose --no-progress ./**/*.md ./**/*.html
+            --verbose --no-progress './**/*.md' './**/*.html'
 
   build:
     name: Fast checks and production build
@@ -268,7 +268,12 @@ jobs:
         uses: lycheeverse/lychee-action@v2.1.0
         with:
           fail: true
-          args: --offline --root-dir _site --verbose --no-progress --max-retries 3 '_site/**/*.html'
+          args: >-
+            --offline
+            --remap '_site(/?.*)/assets/(.*) _site/assets/$2'
+            --remap '_site(/?.*)/pagefind/(.*) _site/pagefind/$2'
+            --verbose --no-progress --max-retries 3
+            '_site/**/*.html'
       - name: Upload production site
         if: needs.preflight.outputs.build_required == 'true'
         uses: actions/upload-artifact@v4
