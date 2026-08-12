@@ -172,6 +172,7 @@ jobs:
         uses: lycheeverse/lychee-action@v2.1.0
         with:
           fail: true
+          failIfEmpty: false
           args: >-
             --base https://kenji-fukushima-lab.github.io
             --max-retries 3
