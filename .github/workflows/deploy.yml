@@ -139,6 +139,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare changed source files
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          input_dir=".link-check-inputs"
+          input_list="${RUNNER_TEMP}/source-link-inputs.txt"
+          mkdir -p "${input_dir}"
+
+          if [ "${EVENT_NAME}" = "pull_request" ]; then
+            git diff --name-only --diff-filter=ACMR "${BASE_SHA}...${HEAD_SHA}" -- '*.md' '*.html' > "${input_list}"
+          elif [ "${EVENT_NAME}" = "push" ] && [ -n "${BEFORE_SHA}" ] && [ "${BEFORE_SHA}" != "0000000000000000000000000000000000000000" ]; then
+            git diff --name-only --diff-filter=ACMR "${BEFORE_SHA}..${HEAD_SHA}" -- '*.md' '*.html' > "${input_list}"
+          else
+            git ls-files '*.md' '*.html' > "${input_list}"
+          fi
+
+          while IFS= read -r source_path; do
+            [ -f "${source_path}" ] || continue
+            mkdir -p "${input_dir}/$(dirname "${source_path}")"
+            cp -- "${source_path}" "${input_dir}/${source_path}"
+          done < "${input_list}"
+
+          echo "Checking source links in:"
+          sed -n '1,200p' "${input_list}"
       - name: Check source links
         uses: lycheeverse/lychee-action@v2.1.0
         with:
@@ -173,7 +202,7 @@ jobs:
             --exclude-path _posts/pt-br/2023-04-24-videos.md
             --exclude-path _books/en-us/the_godfather.md
             --exclude-path _books/pt-br/the_godfather.md
-            --verbose --no-progress './**/*.md' './**/*.html'
+            --verbose --no-progress '.link-check-inputs/**/*.md' '.link-check-inputs/**/*.html'
 
   build:
     name: Fast checks and production build
