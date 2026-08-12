@@ -1,1 +1,2 @@
-nbconvert
+-r requirements-build.txt
+-r requirements-test.txt
