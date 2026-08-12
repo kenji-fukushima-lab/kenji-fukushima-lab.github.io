@@ -140,6 +140,40 @@ document.addEventListener("DOMContentLoaded", () => {
       previewFrameId: null,
       visibleRoles: new Set(Object.keys(roleColors)),
     };
+    let layoutRequestId = 0;
+
+    function beginLayout() {
+      layoutRequestId += 1;
+      graphElement.dataset.layoutState = "running";
+      graphElement.setAttribute("aria-busy", "true");
+      return layoutRequestId;
+    }
+
+    function completeLayout(requestId) {
+      if (requestId !== layoutRequestId) {
+        return;
+      }
+
+      graphElement.dataset.layoutState = "complete";
+      graphElement.dataset.layoutVersion = String(requestId);
+      graphElement.setAttribute("aria-busy", "false");
+      graphElement.dispatchEvent(new CustomEvent("network-layout-complete", { detail: { version: requestId } }));
+    }
+
+    function refineLayout(requestId, onComplete) {
+      requestAnimationFrame(() => {
+        if (requestId !== layoutRequestId) {
+          return;
+        }
+
+        simulation.on("end", () => {
+          if (requestId === layoutRequestId) {
+            onComplete();
+          }
+        });
+        simulation.alpha(0.45).restart();
+      });
+    }
 
     const svg = d3
       .select(graphElement)
@@ -181,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const simulation = d3
       .forceSimulation()
+      .alphaDecay(0.05)
       .force(
         "link",
         d3
@@ -198,6 +233,33 @@ document.addEventListener("DOMContentLoaded", () => {
         d3.forceCollide().radius((node) => nodeRadius(node) + 8)
       );
 
+    function settleSimulation(ticked) {
+      simulation.alpha(0.9).stop();
+      simulation.tick(0);
+      ticked();
+    }
+
+    function seedGraphPositions(nodes) {
+      const peers = nodes.filter((node) => node.id !== focusId);
+      const peerIndexes = new Map(peers.map((node, index) => [node.id, index]));
+      const maxRadius = Math.min(width, height) * 0.43;
+      const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+      nodes.forEach((node) => {
+        if (node.id === focusId) {
+          node.x = width / 2;
+          node.y = height / 2;
+          return;
+        }
+
+        const index = peerIndexes.get(node.id);
+        const radius = 48 + Math.sqrt((index + 1) / Math.max(peers.length, 1)) * (maxRadius - 48);
+        const angle = index * goldenAngle;
+        node.x = width / 2 + Math.cos(angle) * radius;
+        node.y = height / 2 + Math.sin(angle) * radius;
+      });
+    }
+
     function nodeRadius(node) {
       if (node.id === focusId) {
         return 16;
@@ -209,18 +271,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return d3.zoomTransform(svg.node());
     }
 
-    function transitionToTransform(transform) {
-      svg.transition().duration(250).call(zoom.transform, transform);
+    function transitionToTransform(transform, onComplete = null) {
+      const transition = svg.transition().duration(250).call(zoom.transform, transform);
+      if (onComplete) {
+        transition.on("end.layout interrupt.layout", onComplete);
+      }
+      return transition;
     }
 
     function zoomBy(factor) {
       svg.transition().duration(180).call(zoom.scaleBy, factor);
     }
 
-    function fitGraphToView(padding = 48) {
+    function fitGraphToView(padding = 48, onComplete = null) {
       const nodes = nodeLayer.selectAll("circle").data();
       if (!nodes.length) {
-        return;
+        if (onComplete) {
+          onComplete();
+        }
+        return null;
       }
 
       const minX = d3.min(nodes, (node) => node.x - nodeRadius(node));
@@ -232,7 +301,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const scale = Math.max(0.35, Math.min(2.5, Math.min((width - padding * 2) / graphWidth, (height - padding * 2) / graphHeight)));
       const translateX = width / 2 - ((minX + maxX) / 2) * scale;
       const translateY = height / 2 - ((minY + maxY) / 2) * scale;
-      transitionToTransform(d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+      const transform = d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+      if (onComplete) {
+        svg.call(zoom.transform, transform);
+        onComplete();
+        return null;
+      }
+      return transitionToTransform(transform);
     }
 
     function centerFocusNode() {
@@ -246,15 +321,24 @@ document.addEventListener("DOMContentLoaded", () => {
       centerNode(node);
     }
 
-    function centerNode(node, minScale = null) {
+    function centerNode(node, minScale = null, onComplete = null) {
       if (!node) {
-        return;
+        if (onComplete) {
+          onComplete();
+        }
+        return null;
       }
       const transform = currentTransform();
       const scale = minScale === null ? transform.k : Math.max(transform.k, minScale);
       const translateX = width / 2 - node.x * scale;
       const translateY = height / 2 - node.y * scale;
-      transitionToTransform(d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+      const nextTransform = d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+      if (onComplete) {
+        svg.call(zoom.transform, nextTransform);
+        onComplete();
+        return null;
+      }
+      return transitionToTransform(nextTransform);
     }
 
     function firstMatchedNode(graph, matchedIds) {
@@ -359,6 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function render() {
+      const layoutId = beginLayout();
       const graph = filteredGraph();
       state.currentGraph = graph;
       state.currentNodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
@@ -431,19 +516,28 @@ document.addEventListener("DOMContentLoaded", () => {
         .attr("dy", (node) => nodeRadius(node) + 14)
         .text((node) => node.name);
 
+      seedGraphPositions(graph.nodes);
       simulation.nodes(graph.nodes).on("tick", ticked);
       simulation.force("link").links(graph.links);
-      simulation.on("end", () => {
-        if (graph.nodes.length) {
-          const matchedNode = query ? firstMatchedNode(graph, matchedIds) : null;
-          if (matchedNode) {
-            centerNode(matchedNode, 1);
-          } else {
-            fitGraphToView();
-          }
+      simulation.on("end", null);
+      settleSimulation(ticked);
+
+      if (!graph.nodes.length) {
+        completeLayout(layoutId);
+      } else {
+        const matchedNode = query ? firstMatchedNode(graph, matchedIds) : null;
+        if (matchedNode) {
+          centerNode(matchedNode, 1, () => {
+            completeLayout(layoutId);
+            refineLayout(layoutId, () => centerNode(matchedNode, 1));
+          });
+        } else {
+          fitGraphToView(48, () => {
+            completeLayout(layoutId);
+            refineLayout(layoutId, () => fitGraphToView());
+          });
         }
-      });
-      simulation.alpha(0.9).restart();
+      }
 
       function ticked() {
         linksEnter
