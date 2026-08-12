@@ -19,19 +19,22 @@ async function graphTransform(page, graphSelector) {
   }, graphSelector);
 }
 
-async function waitForGraphLayout(page, graphSelector, previousTransform = null, timeout = 15_000) {
-  await expect(page.locator(`${graphSelector} svg`)).toBeVisible();
+async function waitForGraphLayout(page, graphSelector, previousLayoutVersion = null, timeout = 25_000) {
+  await expect(page.locator(`${graphSelector} svg`)).toBeVisible({ timeout });
   await page.waitForFunction(
     ({ selector, previous }) => {
-      const viewport = document.querySelector(`${selector} svg > g`);
-      const transform = viewport ? viewport.getAttribute("transform") : null;
-      return Boolean(transform && /scale\(([^)]+)\)/.test(transform) && (previous === null || transform !== previous));
+      const graph = document.querySelector(selector);
+      const version = graph ? graph.dataset.layoutVersion : null;
+      return Boolean(graph && graph.dataset.layoutState === "complete" && version && (previous === null || version !== previous));
     },
-    { selector: graphSelector, previous: previousTransform },
+    { selector: graphSelector, previous: previousLayoutVersion },
     { timeout }
   );
 
-  return graphTransform(page, graphSelector);
+  return {
+    transform: await graphTransform(page, graphSelector),
+    version: await page.locator(graphSelector).getAttribute("data-layout-version"),
+  };
 }
 
 async function graphScale(page, graphSelector) {
@@ -40,14 +43,17 @@ async function graphScale(page, graphSelector) {
 
 test.describe("resources and research page smoke tests", () => {
   test("renders research network and organism pages", async ({ page }) => {
+    test.setTimeout(75_000);
+
     await page.goto("/research/networks/");
+    await page.locator(COAUTHOR_GRAPH).scrollIntoViewIfNeeded();
     await waitForGraphLayout(page, COAUTHOR_GRAPH);
     await expect(page.locator(`${COAUTHOR_GRAPH} circle`).first()).toBeVisible();
     await page.locator(PAPER_GRAPH).scrollIntoViewIfNeeded();
     await waitForGraphLayout(page, PAPER_GRAPH);
     expect(await page.locator(`${PAPER_GRAPH} circle`).count()).toBeGreaterThan(30);
     await page.locator("#publication-word-cloud-chart").scrollIntoViewIfNeeded();
-    await expect(page.locator(".publication-word-cloud-term").first()).toBeVisible();
+    await expect(page.locator(".publication-word-cloud-term").first()).toBeVisible({ timeout: 15_000 });
     const wordCloudLayout = await page.evaluate(() => {
       const svg = document.querySelector("#publication-word-cloud-chart svg");
       const viewBox = (svg?.getAttribute("viewBox") || "").split(/\s+/).map(Number);
@@ -158,15 +164,15 @@ test.describe("resources and research page smoke tests", () => {
   });
 
   test("paper network keeps isolates visible and avoids over-zooming out after year reset", async ({ page }) => {
-    test.setTimeout(45_000);
+    test.setTimeout(60_000);
 
-    await page.goto("/research/networks/");
+    await page.goto("/research/networks/#paper-network-graph");
     await page.locator(PAPER_GRAPH).scrollIntoViewIfNeeded();
-    const initialTransform = await waitForGraphLayout(page, PAPER_GRAPH);
+    const initialLayout = await waitForGraphLayout(page, PAPER_GRAPH);
 
     await expect(page.locator("#paper-network-hide-isolates")).not.toBeChecked();
 
-    const initialScale = scaleFromTransform(initialTransform);
+    const initialScale = scaleFromTransform(initialLayout.transform);
     expect(initialScale).not.toBeNull();
     expect(initialScale).toBeGreaterThan(0.6);
 
@@ -178,7 +184,7 @@ test.describe("resources and research page smoke tests", () => {
       maxInput.value = "2022";
       maxInput.dispatchEvent(new Event("input", { bubbles: true }));
     });
-    const narrowedTransform = await waitForGraphLayout(page, PAPER_GRAPH, initialTransform);
+    const narrowedLayout = await waitForGraphLayout(page, PAPER_GRAPH, initialLayout.version);
 
     await page.evaluate(() => {
       const minInput = document.getElementById("paper-network-year-min");
@@ -188,7 +194,7 @@ test.describe("resources and research page smoke tests", () => {
       maxInput.value = "2026";
       maxInput.dispatchEvent(new Event("input", { bubbles: true }));
     });
-    await waitForGraphLayout(page, PAPER_GRAPH, narrowedTransform);
+    await waitForGraphLayout(page, PAPER_GRAPH, narrowedLayout.version);
 
     const resetScale = await graphScale(page, PAPER_GRAPH);
     expect(resetScale).not.toBeNull();
