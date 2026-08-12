@@ -108,7 +108,7 @@ jobs:
       lighthouse_urls: ${{ steps.changes.outputs.lighthouse_urls }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Classify changed paths
@@ -138,7 +138,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Prepare changed source files
@@ -211,7 +211,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup Ruby
@@ -220,12 +220,12 @@ jobs:
           ruby-version: "3.3.5"
           bundler-cache: true
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.13"
           cache: pip
@@ -255,7 +255,7 @@ jobs:
           git diff -- . ':(exclude)package-lock.json' ':(exclude)package.json' > formatting.diff
       - name: Upload formatting diff
         if: steps.prettier.outcome == 'failure'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: formatting-diff
           path: formatting.diff
@@ -265,7 +265,7 @@ jobs:
         run: exit 1
       - name: Restore responsive image cache
         if: needs.preflight.outputs.build_required == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .jekyll-cache/imagemagick
           key: imagemagick-${{ runner.os }}-${{ hashFiles('assets/img/**', '_config.yml', '_plugins/imagemagick_guard.rb', '_plugins/responsive_images.rb') }}
@@ -289,6 +289,9 @@ jobs:
         run: |
           bash .github/scripts/prepare-jekyll-build-env.sh
           bundle exec jekyll build
+      - name: Write deployment marker
+        if: needs.preflight.outputs.build_required == 'true'
+        run: printf '%s\n' "${GITHUB_SHA}" > _site/deployment-version.txt
       - name: Purge unused CSS
         if: needs.preflight.outputs.build_required == 'true'
         run: npx --no-install purgecss -c purgecss.config.js
@@ -305,7 +308,7 @@ jobs:
             '_site/**/*.html'
       - name: Upload production site
         if: needs.preflight.outputs.build_required == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -320,9 +323,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
@@ -331,7 +334,7 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Download production site
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -341,7 +344,7 @@ jobs:
         run: npm run test:ui
       - name: Upload browser failure artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: browser-failure-${{ github.sha }}
           path: test-results
@@ -356,16 +359,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
       - name: Install Node.js dependencies
         run: npm ci
       - name: Download production site
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -376,7 +379,7 @@ jobs:
         run: npm run test:lighthouse
       - name: Upload Lighthouse failure reports
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lighthouse-failure-${{ github.sha }}
           path: lighthouse-results-ci
@@ -396,15 +399,16 @@ jobs:
       needs.browser.result == 'success' &&
       needs.lighthouse.result == 'success'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Download tested production site
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -412,3 +416,10 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: _site
+      - name: Verify public deployment
+        env:
+          PUBLIC_SITE_URL: https://kenji-fukushima-lab.github.io
+        run: >-
+          python3 .github/scripts/verify_public_deployment.py
+          --base-url "${PUBLIC_SITE_URL}"
+          --expected-sha "${GITHUB_SHA}"

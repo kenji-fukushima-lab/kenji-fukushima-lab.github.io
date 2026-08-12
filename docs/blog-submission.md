@@ -33,3 +33,13 @@ Generated files:
 
 - Post markdown: `_posts/<lang>/YYYY-MM-DD-<slug>.md`
 - Image assets: `assets/img/posts/YYYY-MM-DD_<slug>_issue<no>_<index>.<ext>`
+
+## Embedding an X post
+
+Use the shared include instead of adding `platform.twitter.com/widgets.js` or a raw `twitter-tweet` blockquote to a post:
+
+```liquid
+{% include x_embed.liquid username="account" id="1234567890" lang="ja" label="Xで投稿を見る" %}
+```
+
+The include always renders a direct link as a fallback. The site loads X's widget script once, and only when an embed is close to the viewport.

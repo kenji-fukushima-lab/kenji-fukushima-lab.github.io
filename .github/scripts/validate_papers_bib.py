@@ -54,6 +54,8 @@ URL_FIELDS = (
 HTTP_TIMEOUT_SECONDS = 12
 HTTP_MAX_RETRIES = 2
 WORKERS = 8
+RETRYABLE_HTTP_STATUSES = frozenset({408, 425, 500, 502, 503, 504})
+HEAD_GET_FALLBACK_STATUSES = frozenset({400, 404, 405, 429, 500, 501, 502, 503, 504})
 
 USER_AGENT = "Mozilla/5.0 (compatible; papers-bib-validator/1.0; +https://github.com)"
 
@@ -304,12 +306,24 @@ def request_url(url: str) -> tuple[bool, str]:
                         return True, f"{status}"
                     if status in (403, 405, 429):
                         return True, f"{status}"
+                    if method == "HEAD" and status in HEAD_GET_FALLBACK_STATUSES:
+                        break
+                    if status in RETRYABLE_HTTP_STATUSES:
+                        retries += 1
+                        if retries <= HTTP_MAX_RETRIES:
+                            time.sleep(0.5 * retries)
+                            continue
                     return False, f"{status}"
             except urllib.error.HTTPError as error:
                 if error.code in (403, 405, 429):
                     return True, str(error.code)
-                if method == "HEAD" and error.code in (400, 404, 405, 429, 500, 501):
+                if method == "HEAD" and error.code in HEAD_GET_FALLBACK_STATUSES:
                     break
+                if error.code in RETRYABLE_HTTP_STATUSES:
+                    retries += 1
+                    if retries <= HTTP_MAX_RETRIES:
+                        time.sleep(0.5 * retries)
+                        continue
                 return False, str(error.code)
             except (urllib.error.URLError, TimeoutError):
                 retries += 1

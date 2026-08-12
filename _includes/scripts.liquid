@@ -193,6 +193,9 @@
 {% if page.page_id == 'carnivorous-plant-quiz' %}
   <script defer src="{{ '/assets/js/carnivorous-plant-quiz.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
 {% endif %}
+{% if page.content contains 'data-x-embed' or page.content contains 'include x_embed.liquid' %}
+  <script defer src="{{ '/assets/js/x-embed.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
 
 <!-- Jupyter Open External Links New Tab -->
 <script defer src="{{ '/assets/js/jupyter_new_tab.js' | relative_url | bust_file_cache }}"></script>

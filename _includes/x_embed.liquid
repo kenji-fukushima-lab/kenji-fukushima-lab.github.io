@@ -1,0 +1,11 @@
+{% assign x_username = include.username | default: site.x_username %}
+{% assign x_post_id = include.id %}
+{% assign x_lang = include.lang | default: site.active_lang | default: site.lang | default: 'en' %}
+{% assign x_label = include.label | default: 'View this post on X' %}
+{% assign x_url = 'https://twitter.com/' | append: x_username | append: '/status/' | append: x_post_id %}
+
+<div class="x-embed" data-x-embed data-x-embed-state="pending">
+  <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-lang="{{ x_lang | escape }}">
+    <a href="{{ x_url }}" target="_blank" rel="external nofollow noopener">{{ x_label }}</a>
+  </blockquote>
+</div>

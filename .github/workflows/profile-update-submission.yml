@@ -21,7 +21,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Ensure profile-update label
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -61,15 +61,15 @@ jobs:
             }
 
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Python 🐍
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.13"
 
       - name: Setup Node.js ⚙️
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: "npm"
@@ -93,7 +93,7 @@ jobs:
 
       - name: Upsert issue comment when no changes are detected
         if: steps.generate.outcome == 'failure' && steps.generate.outputs.error_code == 'no_changes'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           COMMENT_BODY: |
             <!-- profile-update-automation -->
@@ -136,7 +136,7 @@ jobs:
 
       - name: Upsert issue comment when generation fails
         if: steps.generate.outcome == 'failure' && steps.generate.outputs.error_code != 'no_changes'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           COMMENT_BODY: |
             <!-- profile-update-automation -->
@@ -185,7 +185,7 @@ jobs:
 
       - name: Update issue title
         if: steps.generate.outcome == 'success'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           ISSUE_TITLE: ${{ steps.generate.outputs.issue_title }}
         with:
@@ -214,7 +214,7 @@ jobs:
 
       - name: Request maintainer review
         if: steps.cpr.outputs.pull-request-number != '' && github.event.issue.user.login != 'kfuku52'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             await github.rest.pulls.requestReviewers({
@@ -226,7 +226,7 @@ jobs:
 
       - name: Upsert issue comment with PR link
         if: steps.cpr.outputs.pull-request-url != ''
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           COMMENT_BODY: |
             <!-- profile-update-automation -->

@@ -167,21 +167,29 @@
   }
 }
 
-/* Center embedded tweets rendered by jekyll-twitter-plugin/X widgets */
-.post-content #markdown-content .jekyll-twitter-plugin {
+/* Keep a useful fallback link while X widgets are loading or unavailable. */
+.post-content #markdown-content .x-embed {
   display: flex;
+  width: 100%;
+  max-width: 550px;
+  min-height: 7.5rem;
+  margin: 1.25rem auto;
+  align-items: center;
   justify-content: center;
 }
 
-.post-content #markdown-content .jekyll-twitter-plugin > * {
-  margin-left: auto !important;
-  margin-right: auto !important;
+.post-content #markdown-content .x-embed blockquote.twitter-tweet {
+  width: 100%;
+  margin: 0 !important;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.8rem;
+  background: var(--post-heading-surface);
+  text-align: center;
 }
 
-.post-content #markdown-content blockquote.twitter-tweet,
-.post-content #markdown-content .twitter-tweet,
-.post-content #markdown-content iframe.twitter-tweet,
-.post-content #markdown-content iframe.twitter-tweet-rendered {
+.post-content #markdown-content .x-embed iframe.twitter-tweet,
+.post-content #markdown-content .x-embed iframe.twitter-tweet-rendered {
   margin-left: auto !important;
   margin-right: auto !important;
 }
