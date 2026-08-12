@@ -129,6 +129,40 @@ document.addEventListener("DOMContentLoaded", () => {
       pendingDetailNodeId: null,
       previewFrameId: null,
     };
+    let layoutRequestId = 0;
+
+    function beginLayout() {
+      layoutRequestId += 1;
+      graphElement.dataset.layoutState = "running";
+      graphElement.setAttribute("aria-busy", "true");
+      return layoutRequestId;
+    }
+
+    function completeLayout(requestId) {
+      if (requestId !== layoutRequestId) {
+        return;
+      }
+
+      graphElement.dataset.layoutState = "complete";
+      graphElement.dataset.layoutVersion = String(requestId);
+      graphElement.setAttribute("aria-busy", "false");
+      graphElement.dispatchEvent(new CustomEvent("network-layout-complete", { detail: { version: requestId } }));
+    }
+
+    function refineLayout(requestId, onComplete) {
+      requestAnimationFrame(() => {
+        if (requestId !== layoutRequestId) {
+          return;
+        }
+
+        simulation.on("end", () => {
+          if (requestId === layoutRequestId) {
+            onComplete();
+          }
+        });
+        simulation.alpha(0.45).restart();
+      });
+    }
 
     function formatMessage(template, values) {
       return Object.entries(values).reduce((message, [key, value]) => message.replaceAll(`{${key}}`, String(value)), template);
@@ -174,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const simulation = d3
       .forceSimulation()
+      .alphaDecay(0.05)
       .force(
         "link",
         d3
@@ -215,6 +250,12 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       );
 
+    function settleSimulation(ticked) {
+      simulation.alpha(0.9).stop();
+      simulation.tick(4);
+      ticked();
+    }
+
     function nodeRadius(node) {
       if (!node || node.isVirtualHub) {
         return 0;
@@ -233,8 +274,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return d3.zoomTransform(svg.node());
     }
 
-    function transitionToTransform(transform) {
-      svg.transition().duration(250).call(zoom.transform, transform);
+    function transitionToTransform(transform, onComplete = null) {
+      const transition = svg.transition().duration(250).call(zoom.transform, transform);
+      if (onComplete) {
+        transition.on("end.layout interrupt.layout", onComplete);
+      }
+      return transition;
     }
 
     function zoomBy(factor) {
@@ -258,12 +303,20 @@ document.addEventListener("DOMContentLoaded", () => {
       return d3.zoomIdentity.translate(translateX, translateY).scale(scale);
     }
 
-    function fitNodesToView(nodes, padding = 48, maxScale = 4) {
+    function fitNodesToView(nodes, padding = 48, maxScale = 4, onComplete = null) {
       const transform = fitTransformForNodes(nodes, padding, maxScale);
       if (!transform) {
-        return;
+        if (onComplete) {
+          onComplete();
+        }
+        return null;
       }
-      transitionToTransform(transform);
+      if (onComplete) {
+        svg.call(zoom.transform, transform);
+        onComplete();
+        return null;
+      }
+      return transitionToTransform(transform);
     }
 
     function fitGraphToView(padding = 48, options = {}) {
@@ -305,26 +358,34 @@ document.addEventListener("DOMContentLoaded", () => {
       return trimmedNodes;
     }
 
-    function autoFitGraphToView(graph) {
+    function autoFitGraphToView(graph, onComplete = null) {
       const connectedNodes = graph.nodes.filter((node) => node.currentDegree > 0 && hasPosition(node));
       if (connectedNodes.length) {
-        fitNodesToView(autoFitCandidateNodes(connectedNodes), 24, 6);
-        return;
+        return fitNodesToView(autoFitCandidateNodes(connectedNodes), 24, 6, onComplete);
       }
 
       const positionedNodes = graph.nodes.filter(hasPosition);
-      fitNodesToView(positionedNodes, 24, 5.5);
+      return fitNodesToView(positionedNodes, 24, 5.5, onComplete);
     }
 
-    function centerNode(node, minScale = null) {
+    function centerNode(node, minScale = null, onComplete = null) {
       if (!node) {
-        return;
+        if (onComplete) {
+          onComplete();
+        }
+        return null;
       }
       const transform = currentTransform();
       const scale = minScale === null ? transform.k : Math.max(transform.k, minScale);
       const translateX = width / 2 - node.x * scale;
       const translateY = height / 2 - node.y * scale;
-      transitionToTransform(d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+      const nextTransform = d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+      if (onComplete) {
+        svg.call(zoom.transform, nextTransform);
+        onComplete();
+        return null;
+      }
+      return transitionToTransform(nextTransform);
     }
 
     function visibleInYearRange(node) {
@@ -548,6 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function render() {
+      const layoutId = beginLayout();
       const graph = filteredGraph();
       const simulationGraph = buildSimulationGraph(graph);
       state.currentGraph = graph;
@@ -628,17 +690,25 @@ document.addEventListener("DOMContentLoaded", () => {
       simulation.nodes(simulationGraph.nodes).on("tick", ticked);
       simulation.force("link").links(graph.links);
       simulation.force("isolate-link").links(simulationGraph.isolateLinks);
-      simulation.on("end", () => {
-        if (graph.nodes.length) {
-          const matchedNode = query ? firstMatchedNode(graph, matchedIds) : null;
-          if (matchedNode) {
-            centerNode(matchedNode, 1);
-          } else {
-            autoFitGraphToView(graph);
-          }
+      simulation.on("end", null);
+      settleSimulation(ticked);
+
+      if (!graph.nodes.length) {
+        completeLayout(layoutId);
+      } else {
+        const matchedNode = query ? firstMatchedNode(graph, matchedIds) : null;
+        if (matchedNode) {
+          centerNode(matchedNode, 1, () => {
+            completeLayout(layoutId);
+            refineLayout(layoutId, () => centerNode(matchedNode, 1));
+          });
+        } else {
+          autoFitGraphToView(graph, () => {
+            completeLayout(layoutId);
+            refineLayout(layoutId, () => autoFitGraphToView(graph));
+          });
         }
-      });
-      simulation.alpha(0.9).restart();
+      }
 
       function ticked() {
         linksEnter
