@@ -11,7 +11,7 @@ The `Deploy site` workflow runs on relevant pushes, pull requests, and manual di
 3. **UI and accessibility** downloads that artifact and runs the Playwright UI and axe-core tests together. Independent tests run in parallel.
 4. **Lighthouse** downloads the same artifact. Pull requests test only routes affected by local content changes when that can be determined safely; global changes and main-branch pushes test all configured routes three times.
 5. **External links** runs only when Markdown or HTML sources change.
-6. **Deploy** runs only after all applicable checks pass, and never for pull requests.
+6. **Deploy** runs only after all applicable checks pass, and never for pull requests. It writes the commit SHA into the tested artifact, deploys it, then polls that cache-busted marker until the public GitHub Pages site serves the expected commit.
 
 Formatting, browser, and Lighthouse failure artifacts are retained for seven days. Successful production-site artifacts are retained for one day.
 
@@ -33,6 +33,8 @@ The pre-commit hook formats staged files. The pre-push hook runs:
 - bibliography validation
 - the image-size budget
 - Prettier
+
+Bibliography link validation retries temporary network failures and retryable HTTP 5xx responses with backoff before reporting a dead link.
 
 Run the same checks manually with:
 
