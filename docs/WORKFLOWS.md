@@ -7,7 +7,7 @@ The repository keeps the site build, browser tests, accessibility checks, perfor
 The `Deploy site` workflow runs on relevant pushes, pull requests, and manual dispatches.
 
 1. **Changed paths** classifies the commit in a small job so unrelated work can be skipped and external-link checks can start in parallel.
-2. **Fast checks and production build** runs all Python, JavaScript, and Ruby unit tests, bibliography validation, the image budget, and Prettier. When site output or browser tests require it, the same prepared job restores the responsive-image cache, builds Jekyll once, purges unused CSS, checks generated local links, and uploads `_site` without repeating dependency setup.
+2. **Fast checks and production build** runs all Python, JavaScript, and Ruby unit tests, bibliography validation, the image budget, and Prettier. When site output or browser tests require it, the same prepared job restores the responsive-image cache, builds Jekyll once, validates both generated Atom feeds, purges unused CSS, checks generated local links, and uploads `_site` without repeating dependency setup.
 3. **UI and accessibility** downloads that artifact and runs the Playwright UI and axe-core tests together. Independent tests run in parallel.
 4. **Lighthouse** downloads the same artifact. Pull requests test only routes affected by local content changes when that can be determined safely; global changes and main-branch pushes test all configured routes three times.
 5. **External links** runs only when Markdown or HTML sources change.

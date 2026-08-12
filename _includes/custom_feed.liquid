@@ -13,8 +13,10 @@
 {{ xml_declaration }}
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ feed_lang }}">
   <generator uri="https://jekyllrb.com/" version="{{ jekyll.version }}">Jekyll</generator>
-  <link href="{{ localized_feed_path | absolute_url }}" rel="self" type="application/atom+xml">
-  <link href="{{ localized_home_path | absolute_url }}" rel="alternate" type="text/html" hreflang="{{ feed_lang }}">
+  <!-- prettier-ignore -->
+  <link href="{{ localized_feed_path | absolute_url }}" rel="self" type="application/atom+xml" />
+  <!-- prettier-ignore -->
+  <link href="{{ localized_home_path | absolute_url }}" rel="alternate" type="text/html" hreflang="{{ feed_lang }}" />
   <updated>
     {%- if feed_posts.size > 0 %}{{ feed_posts.first.updated }}{% else %}{{ site.time | date_to_xmlschema }}{% endif -%}
   </updated>
@@ -30,7 +32,8 @@
     {% assign post_title = post.title | smartify | strip_html | normalize_whitespace | xml_escape %}
     <entry xml:lang="{{ feed_lang }}">
       <title type="html">{{ post_title }}</title>
-      <link href="{{ post.url | absolute_url }}" rel="alternate" type="text/html" title="{{ post_title }}">
+      <!-- prettier-ignore -->
+      <link href="{{ post.url | absolute_url }}" rel="alternate" type="text/html" title="{{ post_title }}" />
       <published>{{ post.date }}</published>
       <updated>{{ post.updated }}</updated>
       <id>{{ post.url | absolute_url | xml_escape }}</id>

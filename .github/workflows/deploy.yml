@@ -292,6 +292,12 @@ jobs:
       - name: Write deployment marker
         if: needs.preflight.outputs.build_required == 'true'
         run: printf '%s\n' "${GITHUB_SHA}" > _site/deployment-version.txt
+      - name: Validate generated Atom feeds
+        if: needs.preflight.outputs.build_required == 'true'
+        run: >-
+          python3 .github/scripts/validate_generated_feeds.py
+          _site/feed.xml
+          _site/ja/feed.xml
       - name: Purge unused CSS
         if: needs.preflight.outputs.build_required == 'true'
         run: npx --no-install purgecss -c purgecss.config.js
