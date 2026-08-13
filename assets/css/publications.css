@@ -157,39 +157,6 @@
   color: var(--global-text-color-light);
 }
 
-.publications-pagination {
-  margin: 0.9rem 0 0.2rem;
-}
-
-.publications-pagination .pagination {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-}
-
-.publications-pagination .page-link {
-  min-width: 2.1rem;
-  min-height: 2rem;
-  padding: 0.25rem 0.55rem;
-  border: 1px solid var(--global-divider-color);
-  border-radius: 0.55rem;
-  background: var(--global-bg-color);
-  color: var(--global-text-color);
-  font-size: 0.82rem;
-}
-
-.publications-pagination .page-item.active .page-link {
-  border-color: var(--global-theme-color);
-  background: var(--global-theme-color);
-  color: var(--global-bg-color);
-}
-
-.publications-pagination .page-item.disabled .page-link {
-  opacity: 0.5;
-}
-
 .pub-sorted-heading {
   display: flex;
   justify-content: space-between;
