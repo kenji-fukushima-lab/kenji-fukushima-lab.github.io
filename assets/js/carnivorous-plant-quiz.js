@@ -189,6 +189,13 @@
       familyTaxonId: 52649,
     },
     {
+      label: "Saxifraga candelabrum",
+      taxonIds: [772332],
+      genus: "Saxifraga",
+      family: "Saxifragaceae",
+      familyTaxonId: 48386,
+    },
+    {
       label: "Triantha",
       taxonIds: [79389],
       genus: "Triantha",
@@ -303,6 +310,8 @@
 
     choice("Roridula dentata", "Roridulaceae"),
     choice("Roridula gorgonias", "Roridulaceae"),
+
+    choice("Saxifraga candelabrum", "Saxifragaceae"),
 
     choice("Triantha glutinosa", "Tofieldiaceae"),
     choice("Triantha japonica", "Tofieldiaceae"),
