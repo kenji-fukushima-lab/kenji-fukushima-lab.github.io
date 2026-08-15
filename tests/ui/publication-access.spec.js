@@ -5,8 +5,11 @@ test.describe("publication access request", () => {
     await page.goto("/publications/");
 
     await expect(page.getByRole("heading", { name: "Request access to publication files" })).toBeVisible();
-    await expect(page.getByText(/We archive password-protected PDF copies of our publications on researchmap/)).toBeVisible();
-    await expect(page.getByText(/Those wishing to access these files are asked to complete the form and verify their email address/)).toBeVisible();
+    const accessDescription = page.locator(".publication-access-copy p").filter({ hasText: "We archive password-protected PDF copies" });
+    await expect(accessDescription).toContainText("We archive password-protected PDF copies of our publications on researchmap.");
+    await expect(accessDescription).toContainText(
+      "Those wishing to access these files are asked to complete the form and verify their email address."
+    );
     await expect(page.getByRole("link", { name: "researchmap", exact: true })).toHaveAttribute(
       "href",
       "https://researchmap.jp/kenji_fukushima/published_papers?lang=en&limit=100"

@@ -221,6 +221,34 @@
   margin-bottom: 0.14rem;
 }
 
+.publication-author-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin: 0.75rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.65rem;
+  color: var(--global-text-color-light);
+  background: color-mix(in srgb, var(--global-bg-color) 96%, var(--global-theme-color));
+  font-size: 0.82rem;
+}
+
+.lab-member-author {
+  padding: 0.02em 0.18em;
+  border-radius: 0.18em;
+  background: color-mix(in srgb, var(--global-theme-color) 16%, transparent);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: var(--global-text-color);
+  font-weight: 700;
+}
+
+.publication-author-legend .lab-member-author {
+  white-space: nowrap;
+}
+
 .publications ol.bibliography li .links,
 .publications ol.bibliography li .badges,
 .publications .publication-entry .links,

@@ -173,6 +173,12 @@ ul.task-list input[type="checkbox"] {
   text-align: center;
 }
 
+// Responsive images
+
+img[data-responsive-image] {
+  height: auto;
+}
+
 // Caption
 
 .caption {

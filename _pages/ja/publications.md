@@ -3,7 +3,7 @@ page_id: publications
 layout: page
 permalink: /publications/
 title: 論文
-description: "国立遺伝学研究所 植物進化研究室から発表した論文を、最新のものから順にリストしています。研究室のメンバーとして論文に貢献した著者を太字で示しています。研究室のメンバーが筆頭あるいは責任著者を務める論文にはプレビュー画像を付しています。†: 共筆頭著者. *: (共)責任著者."
+description: "国立遺伝学研究所 植物進化研究室から発表した論文を、最新のものから順にリストしています。研究室のメンバーとして論文に貢献した著者を、色付きのマーカーと太字で示しています。研究室のメンバーが筆頭あるいは責任著者を務める論文にはプレビュー画像を付しています。†: 共筆頭著者. *: (共)責任著者."
 seo_title: 食虫植物・植物進化・ゲノム研究の論文 | 国立遺伝学研究所 植物進化研究室
 seo_description: 国立遺伝学研究所 植物進化研究室による、食虫植物、収斂進化、植物ゲノム、遺伝子発現、バイオインフォマティクスに関する論文・プレプリント・研究データの一覧です。
 schema_type: CollectionPage
@@ -23,6 +23,11 @@ chart:
 {% include publication_access_request.liquid %}
 
 {% include bib_search.liquid %}
+
+<p class="publication-author-legend" aria-label="著者表示の凡例">
+  <span class="lab-member-author">ラボメンバー</span>
+  <span>この表示の著者名は、植物進化研究室のメンバーとして論文に貢献したことを示します。</span>
+</p>
 
 <div class="publications" data-analytics-context="publications">
 
