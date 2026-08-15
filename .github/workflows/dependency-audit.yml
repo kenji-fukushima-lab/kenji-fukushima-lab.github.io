@@ -52,4 +52,4 @@ jobs:
       - name: Audit Node.js dependencies
         run: |
           npm ci
-          npm audit
+          python3 .github/scripts/audit_node_dependencies.py
