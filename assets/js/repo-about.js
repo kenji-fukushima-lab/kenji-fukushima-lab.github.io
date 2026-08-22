@@ -166,52 +166,59 @@
     });
   }
 
-  const readCachePayload = (key) => {
+  const cacheTtlMs = 24 * 60 * 60 * 1000;
+
+  const dataSource = (data, fallbackTimestamp = NaN) => {
+    if (!data || typeof data !== "object") return null;
+    const fetchedAt = typeof data.fetched_at === "string" ? Date.parse(data.fetched_at) : fallbackTimestamp;
+    const timestamp = Number.isFinite(fetchedAt) ? fetchedAt : 0;
+    return {
+      data,
+      fresh: Number.isFinite(fetchedAt) && Date.now() - fetchedAt <= cacheTtlMs,
+      timestamp,
+    };
+  };
+
+  const staticRepoMap = new Map();
+  for (const node of document.querySelectorAll(".repo-compact[data-repo-repository][data-repo-static]")) {
+    const repo = (node.dataset.repoRepository || "").trim();
+    if (!repo) continue;
     try {
-      const raw = window.localStorage.getItem(key);
+      const data = JSON.parse(node.dataset.repoStatic);
+      const source = dataSource(data);
+      if (source) staticRepoMap.set(repo, source);
+    } catch (_err) {
+      // Ignore malformed generated data and use the browser cache or live API.
+    }
+  }
+
+  const readRepoCache = (repo) => {
+    try {
+      const raw = window.localStorage.getItem(`repo-meta:${repo}`);
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") return null;
-      if (typeof parsed.exp !== "number" || Date.now() > parsed.exp) return null;
-      return parsed;
+      if (!parsed || typeof parsed !== "object" || !parsed.data || typeof parsed.data !== "object") return null;
+      const fallbackTimestamp = typeof parsed.exp === "number" ? parsed.exp - cacheTtlMs : NaN;
+      return dataSource(parsed.data, fallbackTimestamp);
     } catch (_err) {
       return null;
     }
-  };
-
-  const readAboutCache = (repo) => {
-    const parsed = readCachePayload(`repo-about:${repo}`);
-    return parsed && typeof parsed.text === "string" ? parsed.text : null;
-  };
-
-  const writeAboutCache = (repo, text) => {
-    try {
-      const payload = {
-        text: text || "",
-        exp: Date.now() + 24 * 60 * 60 * 1000, // 24h
-      };
-      window.localStorage.setItem(`repo-about:${repo}`, JSON.stringify(payload));
-    } catch (_err) {
-      // Ignore storage errors (private mode / quota / disabled storage).
-    }
-  };
-
-  const readRepoCache = (repo) => {
-    const parsed = readCachePayload(`repo-meta:${repo}`);
-    return parsed && parsed.data && typeof parsed.data === "object" ? parsed.data : null;
   };
 
   const writeRepoCache = (repo, data) => {
     try {
       const payload = {
         data,
-        exp: Date.now() + 24 * 60 * 60 * 1000, // 24h
+        exp: Date.now() + cacheTtlMs,
       };
       window.localStorage.setItem(`repo-meta:${repo}`, JSON.stringify(payload));
     } catch (_err) {
       // Ignore storage errors (private mode / quota / disabled storage).
     }
   };
+
+  const newestSource = (...sources) =>
+    sources.filter(Boolean).reduce((newest, source) => (!newest || source.timestamp > newest.timestamp ? source : newest), null);
 
   const headers = {
     Accept: "application/vnd.github+json",
@@ -220,36 +227,38 @@
 
   const repoRequestMap = new Map();
 
-  const fetchRepo = (repo) => {
-    const cached = readRepoCache(repo);
-    if (cached) {
-      return Promise.resolve(cached);
+  const requestRepo = (repo) =>
+    fetch(`https://api.github.com/repos/${repo}`, { headers })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`GitHub API returned ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const fetchedData = { ...data, fetched_at: new Date().toISOString() };
+        writeRepoCache(repo, fetchedData);
+        return fetchedData;
+      });
+
+  const fetchRepo = (repo, { force = false } = {}) => {
+    if (!force) {
+      const cached = readRepoCache(repo);
+      if (cached?.fresh) return Promise.resolve(cached.data);
     }
 
+    if (force) return requestRepo(repo);
     if (!repoRequestMap.has(repo)) {
-      repoRequestMap.set(
-        repo,
-        fetch(`https://api.github.com/repos/${repo}`, { headers })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`GitHub API returned ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            writeRepoCache(repo, data);
-            return data;
-          })
-      );
+      const request = requestRepo(repo).finally(() => repoRequestMap.delete(repo));
+      repoRequestMap.set(repo, request);
     }
-
     return repoRequestMap.get(repo);
   };
 
   const repos = new Set([...repoNodeMap.keys(), ...repoStatNodeMap.keys()]);
   const loadButton = document.querySelector("[data-repo-stats-load]");
   const loadStatus = document.querySelector("[data-repo-stats-status]");
-  let shouldLoadLiveData = false;
+  const autoRefreshRepos = new Set();
 
   for (const repo of repos) {
     const fallback = repoFallbackMap.get(repo) || "";
@@ -257,52 +266,54 @@
       applyDescription(repo, fallback);
     }
 
-    const cachedAbout = readAboutCache(repo);
-    if (cachedAbout !== null) {
-      applyDescription(repo, cachedAbout);
-    }
-
-    const cachedRepo = readRepoCache(repo);
-    if (cachedRepo) {
-      if (!fallback && cachedAbout === null) {
-        const description = typeof cachedRepo.description === "string" ? cachedRepo.description : "";
+    const source = newestSource(readRepoCache(repo), staticRepoMap.get(repo));
+    if (source) {
+      if (!fallback) {
+        const description = typeof source.data.description === "string" ? source.data.description : "";
         applyDescription(repo, description);
       }
       if (repoStatNodeMap.has(repo)) {
-        applyRepoStats(repo, cachedRepo);
+        applyRepoStats(repo, source.data);
       }
     } else if (repoStatNodeMap.has(repo)) {
       applyRepoStats(repo, null);
-      shouldLoadLiveData = true;
     }
+
+    if (repoStatNodeMap.has(repo) && !source?.fresh) autoRefreshRepos.add(repo);
   }
 
-  const loadLiveData = async () => {
-    if (!loadButton) return;
+  const setRepoLoading = (repo, loading) => {
+    for (const node of repoStatNodeMap.get(repo) || []) node.classList.toggle("is-loading", loading);
+  };
+
+  const loadLiveData = async ({ force = false, repositories = [...repos] } = {}) => {
+    if (!loadButton || !repositories.length) return;
+    const targetRepos = [...new Set(repositories)].filter((repo) => repos.has(repo));
+    if (!targetRepos.length) return;
+
     loadButton.disabled = true;
-    for (const node of statNodes) node.classList.add("is-loading");
+    for (const repo of targetRepos) setRepoLoading(repo, true);
     if (loadStatus) loadStatus.textContent = loadButton.dataset.loadingLabel || "Loading GitHub statistics…";
 
-    const results = await Promise.allSettled(
-      [...repos].map(async (repo) => {
-        const data = await fetchRepo(repo);
-        const fallback = repoFallbackMap.get(repo) || "";
-        const cachedAbout = readAboutCache(repo);
-        if (repoNodeMap.has(repo) && !fallback && cachedAbout === null) {
-          const description = data && typeof data.description === "string" ? data.description : "";
-          writeAboutCache(repo, description);
-          applyDescription(repo, description);
+    const results = await Promise.all(
+      targetRepos.map(async (repo) => {
+        try {
+          const data = await fetchRepo(repo, { force });
+          const fallback = repoFallbackMap.get(repo) || "";
+          if (repoNodeMap.has(repo) && !fallback) {
+            const description = data && typeof data.description === "string" ? data.description : "";
+            applyDescription(repo, description);
+          }
+          if (repoStatNodeMap.has(repo)) applyRepoStats(repo, data);
+          return true;
+        } catch (_err) {
+          setRepoLoading(repo, false);
+          return false;
         }
-        if (repoStatNodeMap.has(repo)) applyRepoStats(repo, data);
       })
     );
 
-    const failures = results.filter((result) => result.status === "rejected").length;
-    if (failures) {
-      for (const [repo, nodes] of repoStatNodeMap) {
-        if (nodes.some((node) => node.classList.contains("is-loading"))) applyRepoStats(repo, null);
-      }
-    }
+    const failures = results.filter((result) => !result).length;
     if (loadStatus) {
       loadStatus.textContent = failures
         ? loadButton.dataset.errorLabel || "Some GitHub statistics could not be loaded."
@@ -311,6 +322,6 @@
     loadButton.disabled = false;
   };
 
-  loadButton?.addEventListener("click", loadLiveData);
-  if (shouldLoadLiveData) loadLiveData();
+  loadButton?.addEventListener("click", () => loadLiveData({ force: true }));
+  if (autoRefreshRepos.size) loadLiveData({ repositories: [...autoRefreshRepos] });
 })();

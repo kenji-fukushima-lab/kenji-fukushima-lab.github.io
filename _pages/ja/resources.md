@@ -52,7 +52,7 @@ nav_order: 5
     data-loading-label="GitHub統計を読み込み中…"
     data-loaded-label="GitHub統計を読み込みました。"
     data-error-label="一部のGitHub統計を読み込めませんでした。"
-  >最新のGitHub統計を読み込む</button>
+  >GitHub統計を更新する</button>
   <span data-repo-stats-status aria-live="polite"></span>
 </div>
 

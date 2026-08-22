@@ -66,6 +66,7 @@ sitemap_lastmod_dependencies:
     - _plugins/publication-schema.rb
   resources:
     - _data/repositories.yml
+    - _data/repo_stats.json
     - _layouts/resources.liquid
     - _includes/repository/repo.liquid
 

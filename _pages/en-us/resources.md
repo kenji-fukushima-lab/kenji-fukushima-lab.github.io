@@ -51,7 +51,7 @@ nav_order: 5
     data-loading-label="Loading GitHub statistics…"
     data-loaded-label="GitHub statistics loaded."
     data-error-label="Some GitHub statistics could not be loaded."
-  >Load live GitHub statistics</button>
+  >Refresh GitHub statistics</button>
   <span data-repo-stats-status aria-live="polite"></span>
 </div>
 

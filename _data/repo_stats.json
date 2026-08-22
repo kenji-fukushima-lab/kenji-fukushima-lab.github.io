@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-08-22T13:04:31Z",
+  "repositories": {
+    "kfuku52/RADTE": {
+      "description": "Divergence time estimation in the complex history of gene family evolution",
+      "forks_count": 4,
+      "open_issues_count": 2,
+      "pushed_at": "2026-08-12T07:51:40Z",
+      "stargazers_count": 11,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/amalgkit": {
+      "description": "RNA-seq data amalgamation for a large-scale evolutionary transcriptomics",
+      "forks_count": 3,
+      "open_issues_count": 2,
+      "pushed_at": "2026-08-21T07:09:31Z",
+      "stargazers_count": 12,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/averagers": {
+      "description": "Estimating average temperatures from historical daily extremes",
+      "forks_count": 1,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-12T07:51:48Z",
+      "stargazers_count": 0,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/cdskit": {
+      "description": "Processing protein-coding DNA sequences in frame",
+      "forks_count": 4,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-12T07:51:45Z",
+      "stargazers_count": 11,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/csubst": {
+      "description": "Analyzing combinations of codon substitution histories",
+      "forks_count": 6,
+      "open_issues_count": 4,
+      "pushed_at": "2026-08-12T07:51:47Z",
+      "stargazers_count": 48,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/genegalleon": {
+      "description": "Charting evolutionary histories across genes and species",
+      "forks_count": 0,
+      "open_issues_count": 3,
+      "pushed_at": "2026-08-21T01:02:31Z",
+      "stargazers_count": 6,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/github-activity-chart": {
+      "description": "Plot monthly GitHub commit counts as a stacked bar chart by repository.",
+      "forks_count": 0,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-12T07:51:46Z",
+      "stargazers_count": 0,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/kfl1ou": {
+      "description": "Independently maintained fork of l1ou for detecting evolutionary shifts and convergent regimes in comparative data.",
+      "forks_count": 0,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-18T23:43:19Z",
+      "stargazers_count": 1,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/kftools": {
+      "description": "miscellaneous functions for evolutionary genomics",
+      "forks_count": 0,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-12T07:51:54Z",
+      "stargazers_count": 0,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/msspack": {
+      "description": "Build DDBJ MSS submission files from FASTA/GFF inputs",
+      "forks_count": 0,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-14T23:08:56Z",
+      "stargazers_count": 2,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/nwkit": {
+      "description": "Process, visualize, and analyze phylogenetic trees",
+      "forks_count": 3,
+      "open_issues_count": 2,
+      "pushed_at": "2026-08-22T13:01:17Z",
+      "stargazers_count": 13,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "kfuku52/rkftools": {
+      "description": "R package for evolutionary biology",
+      "forks_count": 0,
+      "open_issues_count": 0,
+      "pushed_at": "2026-08-12T07:51:57Z",
+      "stargazers_count": 1,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "mkrg01/genome_assembly_pipeline": {
+      "description": "An integrated pipeline for eukaryotic genome assembly and gene annotation",
+      "forks_count": 1,
+      "open_issues_count": 4,
+      "pushed_at": "2026-07-14T02:47:23Z",
+      "stargazers_count": 4,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    },
+    "mkrg01/permucn": {
+      "description": "A tool to test associations between binary trait transitions and gene-family copy-number evolution from CAFE outputs",
+      "forks_count": 0,
+      "open_issues_count": 1,
+      "pushed_at": "2026-03-10T05:04:37Z",
+      "stargazers_count": 0,
+      "fetched_at": "2026-08-22T13:04:31Z"
+    }
+  }
+}

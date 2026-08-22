@@ -40,6 +40,7 @@ SITE_FILES = {
     "requirements.txt",
     "requirements-build.txt",
     ".lighthouserc.cjs",
+    ".github/scripts/fetch_repo_stats.py",
     ".github/scripts/prepare-jekyll-build-env.sh",
     ".github/workflows/deploy.yml",
 }
@@ -100,6 +101,16 @@ def _lighthouse_urls(paths: list[str], event: str) -> tuple[str, ...]:
 
 
 def classify(paths: list[str], event: str) -> dict[str, str]:
+    if event == "schedule":
+        return {
+            "site_changed": "true",
+            "build_required": "true",
+            "browser_required": "false",
+            "lighthouse_required": "false",
+            "source_links_changed": "false",
+            "lighthouse_urls": "",
+        }
+
     normalized = sorted({path.strip().removeprefix("./") for path in paths if path.strip()})
     site_changed = any(_is_site_path(path) for path in normalized)
     ui_tests_changed = any(path == "playwright.config.js" or path.startswith("tests/ui/") for path in normalized)

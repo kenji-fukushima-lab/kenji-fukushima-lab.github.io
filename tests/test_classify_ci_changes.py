@@ -46,6 +46,21 @@ class ClassifyCiChangesTest(unittest.TestCase):
         self.assertEqual("true", result["source_links_changed"])
         self.assertEqual("false", result["site_changed"])
 
+    def test_scheduled_stats_refresh_skips_expensive_browser_jobs(self):
+        result = MODULE.classify([], "schedule")
+
+        self.assertEqual("true", result["site_changed"])
+        self.assertEqual("true", result["build_required"])
+        self.assertEqual("false", result["browser_required"])
+        self.assertEqual("false", result["lighthouse_required"])
+        self.assertEqual("false", result["source_links_changed"])
+
+    def test_repo_stats_generator_change_rebuilds_the_site(self):
+        result = MODULE.classify([".github/scripts/fetch_repo_stats.py"], "pull_request")
+
+        self.assertEqual("true", result["site_changed"])
+        self.assertEqual("true", result["build_required"])
+
 
 if __name__ == "__main__":
     unittest.main()
