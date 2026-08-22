@@ -80,7 +80,7 @@ test.describe("resources and research page smoke tests", () => {
     await expect(page.locator(".organism-paper-row").first()).toBeVisible();
   });
 
-  test("renders repository fork counts without compressed shield images", async ({ page }) => {
+  test("automatically loads uncached repository stats without compressed shield images", async ({ page }) => {
     await page.route("https://api.github.com/repos/**", async (route) => {
       const repo = new URL(route.request().url()).pathname.replace(/^\/repos\//, "");
       await route.fulfill({
@@ -96,7 +96,6 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/resources/");
-    await page.getByRole("button", { name: "Load live GitHub statistics", exact: true }).click();
     await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
 
     const forkLink = page.locator('[data-analytics-label="repository_forks"]').first();
@@ -125,7 +124,6 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/ja/resources/");
-    await page.getByRole("button", { name: "最新のGitHub統計を読み込む", exact: true }).click();
     await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub統計を読み込みました。");
 
     const firstRepo = page.locator(".repo-compact").first();
@@ -153,7 +151,6 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/resources/");
-    await page.getByRole("button", { name: "Load live GitHub statistics", exact: true }).click();
     await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
 
     const lastCommit = page.locator(".repo-compact-stat-commits [data-repo-stat-value]").first();

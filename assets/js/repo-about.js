@@ -249,6 +249,7 @@
   const repos = new Set([...repoNodeMap.keys(), ...repoStatNodeMap.keys()]);
   const loadButton = document.querySelector("[data-repo-stats-load]");
   const loadStatus = document.querySelector("[data-repo-stats-status]");
+  let shouldLoadLiveData = false;
 
   for (const repo of repos) {
     const fallback = repoFallbackMap.get(repo) || "";
@@ -272,6 +273,7 @@
       }
     } else if (repoStatNodeMap.has(repo)) {
       applyRepoStats(repo, null);
+      shouldLoadLiveData = true;
     }
   }
 
@@ -310,4 +312,5 @@
   };
 
   loadButton?.addEventListener("click", loadLiveData);
+  if (shouldLoadLiveData) loadLiveData();
 })();
