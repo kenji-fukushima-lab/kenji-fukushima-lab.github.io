@@ -8,8 +8,12 @@ import sys
 
 ALL_LIGHTHOUSE_URLS = (
     "/",
+    "/people/",
     "/publications/",
     "/resources/",
+    "/access/",
+    "/research/",
+    "/carnivorous-plant-quiz/",
     "/ja/blog/",
     "/ja/research/3_project/",
 )
@@ -40,6 +44,7 @@ SITE_FILES = {
     "requirements.txt",
     "requirements-build.txt",
     ".lighthouserc.cjs",
+    ".github/lighthouse.config.cjs",
     ".github/scripts/fetch_repo_stats.py",
     ".github/scripts/prepare-jekyll-build-env.sh",
     ".github/workflows/deploy.yml",
@@ -107,14 +112,12 @@ def classify(paths: list[str], event: str) -> dict[str, str]:
             "build_required": "true",
             "browser_required": "false",
             "lighthouse_required": "false",
-            "source_links_changed": "false",
             "lighthouse_urls": "",
         }
 
     normalized = sorted({path.strip().removeprefix("./") for path in paths if path.strip()})
     site_changed = any(_is_site_path(path) for path in normalized)
     ui_tests_changed = any(path == "playwright.config.js" or path.startswith("tests/ui/") for path in normalized)
-    source_links_changed = any(path.endswith((".md", ".html")) for path in normalized)
     urls = _lighthouse_urls(normalized, event)
 
     return {
@@ -122,7 +125,6 @@ def classify(paths: list[str], event: str) -> dict[str, str]:
         "build_required": str(site_changed or ui_tests_changed).lower(),
         "browser_required": str(site_changed or ui_tests_changed).lower(),
         "lighthouse_required": str(site_changed).lower(),
-        "source_links_changed": str(source_links_changed).lower(),
         "lighthouse_urls": ",".join(urls),
     }
 

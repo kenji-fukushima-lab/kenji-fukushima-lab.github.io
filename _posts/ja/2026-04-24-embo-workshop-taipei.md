@@ -30,4 +30,4 @@ categories:
     allowfullscreen></iframe>
 </div>
 
-ワークショップサイト: <https://meetings.embo.org/event/26-bio-interactions>
+ワークショップ情報: <https://www.tsecb.org.tw/conferences/2026embo>

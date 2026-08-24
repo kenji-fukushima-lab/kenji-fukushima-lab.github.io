@@ -90,13 +90,26 @@ document.addEventListener("DOMContentLoaded", () => {
       return `${publicationBaseUrl}${separator}${encodeURIComponent(key)}`;
     }
 
+    function safeLinkUrl(value) {
+      const href = value?.toString().trim();
+      if (!href) {
+        return null;
+      }
+
+      try {
+        const url = new URL(href, window.location.origin);
+        return url.protocol === "http:" || url.protocol === "https:" ? url : null;
+      } catch (_error) {
+        return null;
+      }
+    }
+
     function paperHref(paper) {
-      const url = paper?.url?.toString().trim();
-      return url || localPublicationUrl(paper);
+      return safeLinkUrl(paper?.url) || safeLinkUrl(localPublicationUrl(paper));
     }
 
     function isExternalUrl(url) {
-      return /^https?:\/\//i.test(url);
+      return url.origin !== window.location.origin;
     }
 
     function paperLabel(paper) {
@@ -110,13 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function wikipediaHref(genus) {
-      const url = genus?.wikipedia_url?.toString().trim();
+      const url = safeLinkUrl(genus?.wikipedia_url);
       if (url) {
         return url;
       }
 
       const name = genusName(genus);
-      return name ? `https://en.wikipedia.org/wiki/${encodeURIComponent(name.replace(/\s+/g, "_"))}` : null;
+      return name ? safeLinkUrl(`https://en.wikipedia.org/wiki/${encodeURIComponent(name.replace(/\s+/g, "_"))}`) : null;
     }
 
     function taxonomyHref(service, genus) {
@@ -127,11 +140,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const encodedName = encodeURIComponent(name);
       if (service === "ncbi") {
-        return `https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${encodedName}`;
+        return safeLinkUrl(`https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${encodedName}`);
       }
 
       if (service === "gbif") {
-        return `https://www.gbif.org/species/search?q=${encodedName}`;
+        return safeLinkUrl(`https://www.gbif.org/species/search?q=${encodedName}`);
       }
 
       return null;
@@ -142,14 +155,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return name ? `${label}: ${name}` : label;
     }
 
-    function appendTaxonomyLink(container, href, label, genus) {
-      if (!href) {
+    function appendTaxonomyLink(container, url, label, genus) {
+      if (!url) {
         return;
       }
 
       const link = document.createElement("a");
       link.className = "organism-taxonomy-link";
-      link.href = href;
+      link.href = url.href;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.textContent = label;
@@ -189,17 +202,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const papers = Array.isArray(genus.papers) ? genus.papers : [];
       papers.forEach((paper) => {
-        const href = paperHref(paper);
-        if (!href) {
+        const url = paperHref(paper);
+        if (!url) {
           return;
         }
 
         const link = document.createElement("a");
         link.className = "organism-paper-link";
-        link.href = href;
+        link.href = url.href;
         link.title = paperLabel(paper);
         link.setAttribute("aria-label", paperLabel(paper));
-        if (isExternalUrl(href)) {
+        if (isExternalUrl(url)) {
           link.target = "_blank";
           link.rel = "noopener noreferrer";
         }

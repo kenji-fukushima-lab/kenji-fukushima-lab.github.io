@@ -35,6 +35,7 @@ on:
       - "**/*.yaml"
       - "**/*.yml"
       - ".lighthouserc.cjs"
+      - ".github/lighthouse.config.cjs"
       - "Dockerfile"
       - "Gemfile"
       - "Gemfile.lock"
@@ -75,6 +76,7 @@ on:
       - "**/*.yaml"
       - "**/*.yml"
       - ".lighthouserc.cjs"
+      - ".github/lighthouse.config.cjs"
       - "Dockerfile"
       - "Gemfile"
       - "Gemfile.lock"
@@ -106,11 +108,10 @@ jobs:
       build_required: ${{ steps.changes.outputs.build_required }}
       browser_required: ${{ steps.changes.outputs.browser_required }}
       lighthouse_required: ${{ steps.changes.outputs.lighthouse_required }}
-      source_links_changed: ${{ steps.changes.outputs.source_links_changed }}
       lighthouse_urls: ${{ steps.changes.outputs.lighthouse_urls }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - name: Classify changed paths
@@ -132,81 +133,6 @@ jobs:
           python3 .github/scripts/classify_ci_changes.py --event "${EVENT_NAME}" < "${changed_paths}" >> "${GITHUB_OUTPUT}"
           sed -n '1,200p' "${changed_paths}"
 
-  external-links:
-    name: External links
-    needs: preflight
-    if: needs.preflight.outputs.source_links_changed == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Prepare changed source files
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          BEFORE_SHA: ${{ github.event.before }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          input_dir=".link-check-inputs"
-          input_list="${RUNNER_TEMP}/source-link-inputs.txt"
-          mkdir -p "${input_dir}"
-
-          if [ "${EVENT_NAME}" = "pull_request" ]; then
-            git diff --name-only --diff-filter=ACMR "${BASE_SHA}...${HEAD_SHA}" -- '*.md' '*.html' > "${input_list}"
-          elif [ "${EVENT_NAME}" = "push" ] && [ -n "${BEFORE_SHA}" ] && [ "${BEFORE_SHA}" != "0000000000000000000000000000000000000000" ]; then
-            git diff --name-only --diff-filter=ACMR "${BEFORE_SHA}..${HEAD_SHA}" -- '*.md' '*.html' > "${input_list}"
-          else
-            git ls-files '*.md' '*.html' > "${input_list}"
-          fi
-
-          while IFS= read -r source_path; do
-            [ -f "${source_path}" ] || continue
-            mkdir -p "${input_dir}/$(dirname "${source_path}")"
-            cp -- "${source_path}" "${input_dir}/${source_path}"
-          done < "${input_list}"
-
-          echo "Checking source links in:"
-          sed -n '1,200p' "${input_list}"
-      - name: Check source links
-        uses: lycheeverse/lychee-action@v2.1.0
-        with:
-          fail: true
-          failIfEmpty: false
-          args: >-
-            --base https://kenji-fukushima-lab.github.io
-            --max-retries 3
-            --accept 100..=103,200..=299,302,403,429
-            --user-agent curl/7.54
-            --exclude https://scholar[.]google[.][^/]+/citations.*
-            --exclude https://github[.]com/kfuku52/kflab/?$
-            --exclude https://kenji-fukushima-lab[.]github[.]io/assets/.*
-            --exclude-path .link-check-inputs/README.md
-            --exclude-path .link-check-inputs/CUSTOMIZE.md
-            --exclude-path .link-check-inputs/FAQ.md
-            --exclude-path .link-check-inputs/CONTRIBUTING.md
-            --exclude-path .link-check-inputs/UPGRADING.md
-            --exclude-path .link-check-inputs/_pages/en-us/404.md
-            --exclude-path .link-check-inputs/_pages/pt-br/404.md
-            --exclude-path .link-check-inputs/_pages/en-us/blog.md
-            --exclude-path .link-check-inputs/_pages/pt-br/blog.md
-            --exclude-path .link-check-inputs/_pages/ja/blog.md
-            --exclude-path .link-check-inputs/_pages/en-us/people.md
-            --exclude-path .link-check-inputs/_pages/ja/people.md
-            --exclude-path .link-check-inputs/_pages/en-us/profiles.md
-            --exclude-path .link-check-inputs/_pages/ja/profiles.md
-            --exclude-path .link-check-inputs/_pages/en-us/publications.md
-            --exclude-path .link-check-inputs/_pages/ja/publications.md
-            --exclude-path .link-check-inputs/_posts/en-us/2018-12-22-distill.md
-            --exclude-path .link-check-inputs/_posts/pt-br/2018-12-22-distill.md
-            --exclude-path .link-check-inputs/_posts/en-us/2023-04-24-videos.md
-            --exclude-path .link-check-inputs/_posts/pt-br/2023-04-24-videos.md
-            --exclude-path .link-check-inputs/_books/en-us/the_godfather.md
-            --exclude-path .link-check-inputs/_books/pt-br/the_godfather.md
-            --verbose --no-progress '.link-check-inputs/**/*.md' '.link-check-inputs/**/*.html'
-
   build:
     name: Fast checks and production build
     needs: preflight
@@ -214,21 +140,21 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
         with:
           ruby-version: "3.3.5"
           bundler-cache: true
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: "22"
           cache: npm
       - name: Setup Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.13"
           cache: pip
@@ -258,7 +184,7 @@ jobs:
           git diff -- . ':(exclude)package-lock.json' ':(exclude)package.json' > formatting.diff
       - name: Upload formatting diff
         if: steps.prettier.outcome == 'failure'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: formatting-diff
           path: formatting.diff
@@ -268,7 +194,7 @@ jobs:
         run: exit 1
       - name: Restore responsive image cache
         if: needs.preflight.outputs.build_required == 'true'
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .jekyll-cache/imagemagick
           key: imagemagick-${{ runner.os }}-${{ hashFiles('assets/img/**', '_config.yml', '_plugins/imagemagick_guard.rb', '_plugins/responsive_images.rb') }}
@@ -306,23 +232,29 @@ jobs:
           python3 .github/scripts/validate_generated_feeds.py
           _site/feed.xml
           _site/ja/feed.xml
+      - name: Validate generated sitemap
+        if: needs.preflight.outputs.build_required == 'true'
+        run: >-
+          python3 .github/scripts/validate_generated_sitemap.py
+          _site/sitemap.xml
+          _site
+          --origin https://kenji-fukushima-lab.github.io
       - name: Purge unused CSS
         if: needs.preflight.outputs.build_required == 'true'
         run: npx --no-install purgecss -c purgecss.config.js
       - name: Check generated local links
         if: needs.preflight.outputs.build_required == 'true'
-        uses: lycheeverse/lychee-action@v2.1.0
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           fail: true
           args: >-
             --offline
-            --remap '_site(/?.*)/assets/(.*) _site/assets/$2'
-            --remap '_site(/?.*)/pagefind/(.*) _site/pagefind/$2'
+            --root-dir _site
             --verbose --no-progress --max-retries 3
             '_site/**/*.html'
       - name: Upload production site
         if: needs.preflight.outputs.build_required == 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -337,9 +269,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: "22"
           cache: npm
@@ -348,7 +280,7 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Download production site
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -358,7 +290,7 @@ jobs:
         run: npm run test:ui
       - name: Upload browser failure artifacts
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: browser-failure-${{ github.sha }}
           path: test-results
@@ -373,16 +305,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: "22"
           cache: npm
       - name: Install Node.js dependencies
         run: npm ci
       - name: Download production site
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: production-site-${{ github.sha }}
           path: _site
@@ -393,7 +325,7 @@ jobs:
         run: npm run test:lighthouse
       - name: Upload Lighthouse failure reports
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: lighthouse-failure-${{ github.sha }}
           path: lighthouse-results-ci
@@ -402,13 +334,12 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: [preflight, external-links, build, browser, lighthouse]
+    needs: [preflight, build, browser, lighthouse]
     if: >-
       always() &&
       github.event_name != 'pull_request' &&
       needs.preflight.outputs.site_changed == 'true' &&
       needs.preflight.result == 'success' &&
-      (needs.external-links.result == 'success' || needs.external-links.result == 'skipped') &&
       needs.build.result == 'success' &&
       (needs.browser.result == 'success' || needs.browser.result == 'skipped') &&
       (needs.lighthouse.result == 'success' || needs.lighthouse.result == 'skipped')
@@ -418,16 +349,16 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - name: Download tested production site
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: production-site-${{ github.sha }}
           path: _site
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4
         with:
           folder: _site
       - name: Verify public deployment

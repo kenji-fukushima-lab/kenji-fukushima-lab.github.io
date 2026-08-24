@@ -31,7 +31,7 @@ layout: default
     {% assign organism_stats = site.data.organism_map.stats %}
     {% assign repo_slug = site.giscus.repo | default: site.repository | default: 'kenji-fukushima-lab/kenji-fukushima-lab.github.io' %}
     {% assign default_branch = 'main' %}
-    {% assign workflow_file = 'broken-links.yml' %}
+    {% assign workflow_file = 'link-health.yml' %}
     {% assign workflow_url = 'https://github.com/'
       | append: repo_slug
       | append: '/actions/workflows/'

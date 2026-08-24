@@ -2,6 +2,7 @@ const searchToggleButton = document.getElementById("search-toggle");
 const pagefindShell = document.getElementById("pagefind-modal-shell");
 const pagefindDialog = pagefindShell?.querySelector(".pagefind-modal-shell__dialog");
 const pagefindRoot = document.getElementById("pagefind-search");
+const navbarToggleButton = document.querySelector(".navbar-toggler");
 
 let pagefindInstance = null;
 let pagefindLoadPromise = null;
@@ -28,7 +29,8 @@ const isRestorableFocusTarget = (target) =>
   target !== document.body &&
   target !== document.documentElement &&
   !pagefindShell?.contains(target) &&
-  target.getAttribute("inert") === null;
+  target.getAttribute("inert") === null &&
+  target.getClientRects().length > 0;
 
 const clearPendingFocusRetry = () => {
   if (focusRetryTimer !== null) {
@@ -126,18 +128,24 @@ const getSearchModalFocusableElements = () =>
   );
 
 const restoreFocusAfterClose = () => {
-  const fallbackTarget = searchToggleButton instanceof HTMLElement ? searchToggleButton : null;
-  const target = isRestorableFocusTarget(lastFocusedElement) && document.contains(lastFocusedElement) ? lastFocusedElement : fallbackTarget;
+  const target = [lastFocusedElement, searchToggleButton, navbarToggleButton].find(
+    (candidate) => isRestorableFocusTarget(candidate) && document.contains(candidate)
+  );
 
   target?.focus({ preventScroll: true });
   lastFocusedElement = null;
 };
 
-const openPagefindShell = () => {
+const openPagefindShell = (preferredRestoreTarget = null) => {
   if (!pagefindShell) return;
 
   if (!isSearchModalOpen()) {
-    lastFocusedElement = isRestorableFocusTarget(document.activeElement) ? document.activeElement : searchToggleButton;
+    lastFocusedElement =
+      isRestorableFocusTarget(preferredRestoreTarget) && document.contains(preferredRestoreTarget)
+        ? preferredRestoreTarget
+        : isRestorableFocusTarget(document.activeElement)
+          ? document.activeElement
+          : searchToggleButton;
   }
 
   clearPendingFocusRetry();
@@ -172,9 +180,10 @@ const closeSearchModal = () => {
 };
 
 const openSearchModal = async () => {
+  const preferredRestoreTarget = isRestorableFocusTarget(navbarToggleButton) ? navbarToggleButton : null;
   collapseNavbarIfNeeded();
   syncSearchTheme();
-  openPagefindShell();
+  openPagefindShell(preferredRestoreTarget);
 
   try {
     await loadPagefind();

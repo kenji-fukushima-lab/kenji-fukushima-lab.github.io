@@ -7,11 +7,23 @@ const DEFAULT_PATHS = [
   "/resources/",
   "/outreach/",
   "/join/",
+  "/people/",
+  "/access/",
+  "/research/",
+  "/research/3_project/",
+  "/carnivorous-plant-quiz/",
+  "/blog/",
   "/ja/",
   "/ja/publications/",
   "/ja/resources/",
   "/ja/outreach/",
   "/ja/join/",
+  "/ja/people/",
+  "/ja/access/",
+  "/ja/research/",
+  "/ja/research/3_project/",
+  "/ja/carnivorous-plant-quiz/",
+  "/ja/blog/",
 ];
 
 function checkedPaths() {

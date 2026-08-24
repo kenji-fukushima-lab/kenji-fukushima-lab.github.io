@@ -134,6 +134,39 @@ test.describe("resources and research page smoke tests", () => {
     await expect(page.locator(".organism-paper-row").first()).toBeVisible();
   });
 
+  test("rejects unsafe organism and paper URL schemes", async ({ page }) => {
+    await page.route("**/assets/data/organism-map.json?*", async (route) => {
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          genera: [
+            {
+              label: "Cephalotus",
+              paper_count: 1,
+              wikipedia_url: "javascript:alert('taxonomy')",
+              papers: [
+                {
+                  key: "safe-local-paper",
+                  title: "Safe fallback",
+                  url: "javascript:alert('paper')",
+                  year: 2026,
+                },
+              ],
+            },
+          ],
+        }),
+      });
+    });
+
+    await page.goto("/research/3_project/");
+    await page.locator("#organism-map-chart").scrollIntoViewIfNeeded();
+    await expect(page.locator(".organism-paper-row")).toBeVisible();
+
+    const links = page.locator(".organism-paper-row a");
+    expect(await links.evaluateAll((elements) => elements.map((link) => link.href))).not.toContainEqual(expect.stringMatching(/^javascript:/i));
+    await expect(page.locator(".organism-paper-link")).toHaveAttribute("href", /\/publications\/#safe-local-paper$/);
+  });
+
   test("automatically loads uncached repository stats without compressed shield images", async ({ page }) => {
     await removeStaticRepoStats(page);
     await page.route("https://api.github.com/repos/**", async (route) => {

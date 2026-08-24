@@ -27,11 +27,9 @@ start_jekyll() {
 start_jekyll
 
 while true; do
-    inotifywait -q -e modify,move,create,delete $CONFIG_FILE
-    if [ $? -eq 0 ]; then
+    if inotifywait -q -e modify,move,create,delete "$CONFIG_FILE"; then
         echo "Change detected to $CONFIG_FILE, restarting Jekyll"
-        jekyll_pid=$(pgrep -f jekyll)
-        kill -KILL $jekyll_pid
+        pkill -KILL -f '[j]ekyll' || true
         start_jekyll
     fi
 done

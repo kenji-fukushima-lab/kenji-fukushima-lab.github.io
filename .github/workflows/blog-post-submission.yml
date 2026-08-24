@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ensure blog-post label
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -58,15 +58,15 @@ jobs:
             }
 
       - name: Checkout 🛎️
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup Python 🐍
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.13"
 
       - name: Setup Node.js ⚙️
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: "22"
           cache: "npm"
@@ -90,7 +90,7 @@ jobs:
 
       - name: Comment issue when generation fails
         if: steps.generate.outcome == 'failure'
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
@@ -109,7 +109,7 @@ jobs:
 
       - name: Update issue title
         if: steps.generate.outcome == 'success'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           ISSUE_TITLE: ${{ steps.generate.outputs.issue_title }}
         with:
@@ -123,7 +123,7 @@ jobs:
 
       - name: Create pull request
         id: cpr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ steps.generate.outputs.commit_message }}
@@ -136,7 +136,7 @@ jobs:
 
       - name: Request maintainer review
         if: steps.cpr.outputs.pull-request-number != '' && github.event.issue.user.login != 'kfuku52'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             await github.rest.pulls.requestReviewers({
@@ -148,7 +148,7 @@ jobs:
 
       - name: Comment issue with PR link
         if: steps.cpr.outputs.pull-request-url != ''
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         with:
           issue-number: ${{ steps.generate.outputs.issue_number }}
           body: |

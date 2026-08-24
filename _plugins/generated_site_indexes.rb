@@ -29,6 +29,7 @@ module GeneratedSiteIndexes
       @languages = Array(site.config["languages"])
       @site_url = site.config["url"].to_s.sub(%r{/+\z}, "")
       @baseurl = site.config["baseurl"].to_s
+      @collections = site.config.fetch("collections", {})
       @sitemap_lastmod_dependencies = site.config.fetch("sitemap_lastmod_dependencies", {})
       @blog_page_cache = {}
       @git_lastmod_cache = {}
@@ -153,12 +154,20 @@ module GeneratedSiteIndexes
       lang = path.parent.basename.to_s
       slug = path.basename(".md").to_s
       permalink = data["permalink"].to_s.strip
-      permalink = "/#{collection_name}/#{slug}/" if permalink.empty?
+      permalink = collection_permalink(collection_name, slug) if permalink.empty?
 
       {
         :loc => absolute_url(localized_path(lang, permalink)),
         :lastmod => parse_time(data["last_updated"]) || parse_time(data["date"])
       }
+    end
+
+    def collection_permalink(collection_name, slug)
+      collection_config = @collections.fetch(collection_name, {})
+      template = collection_config.fetch("permalink", "/:collection/:title/").to_s
+      template
+        .gsub(":collection", collection_name)
+        .gsub(":title", slug)
     end
 
     def post_entries

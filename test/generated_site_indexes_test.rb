@@ -54,6 +54,22 @@ class GeneratedSiteIndexesTest < Minitest::Test
     end
   end
 
+  def test_collection_entry_uses_configured_permalink
+    Dir.mktmpdir('generated-site-indexes-collection-test') do |dir|
+      project_path = File.join(dir, '_projects', 'ja', '1_project.md')
+      FileUtils.mkdir_p(File.dirname(project_path))
+      File.write(project_path, <<~MARKDOWN)
+        ---
+        title: 研究興味
+        ---
+      MARKDOWN
+
+      entry = builder_for(dir).send(:collection_entry, Pathname.new(project_path), 'projects')
+
+      assert_equal 'https://example.test/ja/research/1_project/', entry.fetch(:loc)
+    end
+  end
+
   private
 
   def builder_for(dir)
@@ -64,6 +80,9 @@ class GeneratedSiteIndexesTest < Minitest::Test
         'baseurl' => '',
         'default_lang' => 'en-us',
         'languages' => %w[en-us ja],
+        'collections' => {
+          'projects' => { 'permalink' => '/research/:title/' }
+        },
         'sitemap_lastmod_dependencies' => {
           'publications' => ['_bibliography/papers.bib']
         }

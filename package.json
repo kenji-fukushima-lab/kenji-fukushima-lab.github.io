@@ -1,5 +1,5 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scripts": {
     "checks:push": "bash .github/scripts/run-local-push-checks.sh",
     "prettier": "prettier . --check",
@@ -14,12 +14,11 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
-    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.62.1",
     "@shopify/prettier-plugin-liquid": "1.4.0",
-    "http-server": "^14.1.1",
+    "lighthouse": "^13.4.1",
     "prettier": "3.8.1",
-    "purgecss": "^6.0.0"
+    "purgecss": "^8.0.0"
   },
   "overrides": {
     "tmp": "^0.2.6",

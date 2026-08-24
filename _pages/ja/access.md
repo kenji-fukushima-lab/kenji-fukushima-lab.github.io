@@ -13,6 +13,7 @@ nav_order: 9
 ---
 
 <link rel="stylesheet" href="/assets/css/access-outreach.css">
+<script defer src="{{ '/assets/js/access-map.js' | relative_url | bust_file_cache }}"></script>
 
 <div class="modern-page modern-access">
   <section class="modern-hero">
@@ -44,13 +45,19 @@ nav_order: 9
   <section class="modern-card">
     <h3>地図</h3>
     <div class="access-map-wrap">
-      <iframe
-        class="access-map"
-        title="Google Map"
-        src="https://www.google.com/maps?q=国立遺伝学研究所+静岡県三島市谷田1111&output=embed"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <button
+        class="access-map access-map-placeholder"
+        type="button"
+        data-access-map
+        data-map-title="Google Map"
+        data-map-src="https://www.google.com/maps?q=国立遺伝学研究所+静岡県三島市谷田1111&amp;output=embed"
+      >
+        <span class="access-map-placeholder-title">インタラクティブ地図を読み込む</span>
+        <span>このボタンを選択した後にのみ Google マップを読み込みます。</span>
+      </button>
+      <noscript>
+        <p class="access-map-fallback"><a href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Google マップを開く</a></p>
+      </noscript>
     </div>
   </section>
 

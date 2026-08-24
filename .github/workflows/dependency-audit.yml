@@ -34,9 +34,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
         with:
           ruby-version: "3.3.5"
           bundler-cache: true
@@ -45,11 +45,11 @@ jobs:
           gem install bundler-audit --version 0.9.3 --no-document
           bundle-audit check --update
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: "22"
           cache: "npm"
       - name: Audit Node.js dependencies
         run: |
           npm ci
-          python3 .github/scripts/audit_node_dependencies.py
+          npm audit

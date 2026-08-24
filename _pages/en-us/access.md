@@ -12,6 +12,7 @@ nav_order: 9
 ---
 
 <link rel="stylesheet" href="/assets/css/access-outreach.css">
+<script defer src="{{ '/assets/js/access-map.js' | relative_url | bust_file_cache }}"></script>
 
 <div class="modern-page modern-access">
   <section class="modern-hero">
@@ -45,13 +46,19 @@ nav_order: 9
   <section class="modern-card">
     <h3>Map</h3>
     <div class="access-map-wrap">
-      <iframe
-        class="access-map"
-        title="Google Map"
-        src="https://www.google.com/maps?q=National+Institute+of+Genetics+1111+Yata+Mishima+Shizuoka+411-8540+Japan&output=embed&hl=en&gl=US"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <button
+        class="access-map access-map-placeholder"
+        type="button"
+        data-access-map
+        data-map-title="Google Map"
+        data-map-src="https://www.google.com/maps?q=National+Institute+of+Genetics+1111+Yata+Mishima+Shizuoka+411-8540+Japan&amp;output=embed&amp;hl=en&amp;gl=US"
+      >
+        <span class="access-map-placeholder-title">Load interactive map</span>
+        <span>Google Maps loads only after you select this button.</span>
+      </button>
+      <noscript>
+        <p class="access-map-fallback"><a href="https://maps.app.goo.gl/5GbRsZsXAX4KVE55A">Open Google Maps</a></p>
+      </noscript>
     </div>
   </section>
 
