@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.6",
   "scripts": {
     "checks:push": "bash .github/scripts/run-local-push-checks.sh",
     "prettier": "prettier . --check",

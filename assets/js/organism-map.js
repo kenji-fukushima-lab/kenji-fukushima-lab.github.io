@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const encodedName = encodeURIComponent(name);
       if (service === "ncbi") {
-        return safeLinkUrl(`https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${encodedName}`);
+        return safeLinkUrl(`https://www.ncbi.nlm.nih.gov/datasets/taxonomy/?taxon=${encodedName}`);
       }
 
       if (service === "gbif") {
