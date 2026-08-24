@@ -4,10 +4,10 @@ The repository keeps the site build, browser tests, accessibility checks, perfor
 
 ## Site CI pipeline
 
-The `Deploy site` workflow runs on relevant pushes, pull requests, and manual dispatches.
+The `Deploy site` workflow runs on relevant pushes, pull requests, manual dispatches, and a daily schedule. Scheduled runs refresh the build-time GitHub repository statistics without repeating the browser and Lighthouse jobs.
 
 1. **Changed paths** classifies the commit in a small job so unrelated work can be skipped and external-link checks can start in parallel.
-2. **Fast checks and production build** runs all Python, JavaScript, and Ruby unit tests, bibliography validation, the image budget, and Prettier. When site output or browser tests require it, the same prepared job restores the responsive-image cache, builds Jekyll once, validates both generated Atom feeds, purges unused CSS, checks generated local links, and uploads `_site` without repeating dependency setup.
+2. **Fast checks and production build** runs all Python, JavaScript, and Ruby unit tests, bibliography validation, the image budget, and Prettier. For deployable runs it refreshes `_data/repo_stats.json` through the authenticated GitHub API, falling back to the last generated value if an individual repository is temporarily unavailable. When site output or browser tests require it, the same prepared job restores the responsive-image cache, builds Jekyll once, validates both generated Atom feeds, purges unused CSS, checks generated local links, and uploads `_site` without repeating dependency setup.
 3. **UI and accessibility** downloads that artifact and runs the Playwright UI and axe-core tests together. Independent tests run in parallel.
 4. **Lighthouse** downloads the same artifact. Pull requests test only routes affected by local content changes when that can be determined safely; global changes and main-branch pushes test all configured routes three times.
 5. **External links** runs only when Markdown or HTML sources change.
@@ -64,6 +64,14 @@ To reuse an existing Chromium-based browser instead, set its executable path:
 ```bash
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run test:ui
 ```
+
+Refresh the repository statistics before a local production build when current GitHub values are needed:
+
+```bash
+GITHUB_TOKEN="..." python3 .github/scripts/fetch_repo_stats.py
+```
+
+The token is optional for public repositories, but authenticated requests have more reliable API capacity.
 
 Run Lighthouse with all configured routes and three samples per route:
 
