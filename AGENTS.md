@@ -29,3 +29,11 @@ Repository-specific instructions override these defaults.
   version even if unrequested, using the repository's scheme or Semantic
   Versioning (`MAJOR.MINOR.PATCH`) if absent.
 <!-- END KF AGENT POLICY -->
+
+# Repository-specific policy
+
+- Direct pushes by Kenji Fukushima (`kfuku52`) to this repository's default
+  branch are permitted when the user requests a commit and push. A GitHub
+  notice that such a push bypassed a pull-request-only rule is expected and is
+  not by itself a blocker. This exception does not authorize force pushes,
+  branch-protection or ruleset changes, or bypasses for any other actor.
