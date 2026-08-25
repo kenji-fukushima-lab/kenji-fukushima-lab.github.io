@@ -104,6 +104,7 @@ jobs:
             --user-agent curl/7.54
             --exclude '^https://kenji-fukushima-lab[.]github[.]io(?:/|$)'
             --exclude '^https://(?:www[.])?linkedin[.]com/'
+            --exclude '^https://researchmap[.]jp(?:/|$)'
             --exclude '^https://scholar[.]google[.][^/]+/citations'
             --verbose --no-progress
             '_site/**/*.html'
