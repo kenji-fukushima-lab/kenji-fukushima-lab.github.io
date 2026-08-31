@@ -56,6 +56,10 @@ jobs:
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           fail: true
+          format: json
+          output: link-health.json
+          checkbox: false
+          jobSummary: false
           args: >-
             --base-url https://kenji-fukushima-lab.github.io
             --max-retries 3
@@ -66,7 +70,6 @@ jobs:
             --exclude '^https://(?:www[.])?linkedin[.]com/'
             --exclude '^https://researchmap[.]jp(?:/|$)'
             --exclude '^https://scholar[.]google[.][^/]+/citations'
-            --format json --output link-health.json
             --no-progress
             '_site/**/*.html' bibliography-links.txt
       - name: Retain link status and timeout diagnostics
