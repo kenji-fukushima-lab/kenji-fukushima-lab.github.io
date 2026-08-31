@@ -94,6 +94,8 @@ jobs:
         run: npm ci
       - name: Install Python test dependencies
         run: python3 -m pip install --disable-pip-version-check -r requirements-test.txt
+      - name: Prepare image test dependencies
+        run: bash .github/scripts/prepare-image-env.sh
       - name: Python syntax checks
         run: find .github/scripts -name '*.py' -exec python3 -m py_compile {} +
       - name: Unit tests

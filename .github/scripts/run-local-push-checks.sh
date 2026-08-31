@@ -14,7 +14,7 @@ done
 
 run_ruby_tests() {
   if command -v ruby >/dev/null 2>&1 && command -v bundle >/dev/null 2>&1; then
-    if bundle check >/dev/null 2>&1; then
+    if command -v convert >/dev/null 2>&1 && command -v identify >/dev/null 2>&1 && bundle check >/dev/null 2>&1; then
       bundle exec ruby -Itest test/run_all.rb
       return
     fi
@@ -27,7 +27,7 @@ run_ruby_tests() {
 
   cat >&2 <<'EOF'
 The Ruby unit tests require one of the following:
-- a local Ruby + Bundler environment with installed gems
+- a local Ruby + Bundler environment with installed gems and ImageMagick
 - Docker with `docker compose`
 
 Install the local Ruby dependencies or use Docker, then retry the push.

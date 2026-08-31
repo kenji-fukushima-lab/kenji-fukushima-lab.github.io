@@ -11,8 +11,9 @@ and the independent `Link health` workflow consume that artifact.
    an Apps Script `.gs` change. Backend/test-only changes run fast checks without
    Jekyll; feeds and ownership files are built and published without scoring XML.
 2. **Fast checks and production build** runs Python, JavaScript, and Ruby tests,
-   offline bibliography validation, the image budget, and Prettier. Deployable
-   runs refresh GitHub statistics, restore responsive-image caches, build Jekyll,
+   offline bibliography validation, the image budget, and Prettier. ImageMagick
+   is installed before the image regression tests, even on test-only runs.
+   Deployable runs refresh GitHub statistics, restore responsive-image caches, build Jekyll,
    validate feeds, sitemap targets and image dimensions, optimize CSS, and
    validate local links.
 3. **UI and accessibility** tests the artifact with Playwright and axe. The full
@@ -64,8 +65,8 @@ npm run checks:push
 ```
 
 It does not contact bibliography websites. A Ruby installation with the locked
-gems is used first; otherwise the common Compose image and persistent bundle
-volume run Ruby tests. Rebuild the image when Dockerfile/runtime requirements
+gems and ImageMagick is used first; otherwise the common Compose image and
+persistent bundle volume run Ruby tests. Rebuild the image when Dockerfile/runtime requirements
 change. Locked gems missing from an existing volume are installed without
 rewriting `Gemfile.lock`. For an intentional dependency update, use
 `BUNDLE_FROZEN=false bundle update <gem>` explicitly, then review the lockfile.
