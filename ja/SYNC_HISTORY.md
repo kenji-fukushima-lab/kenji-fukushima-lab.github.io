@@ -1,6 +1,15 @@
 # Upstream Synchronization History
 
-This document tracks synchronization with the upstream multi-language-al-folio repository.
+This is a historical record of the **2026-02-04** upstream synchronization, not
+a description of the current dependencies, workflows, member counts, or open
+tasks. Build timings below were recorded at that time and were not remeasured
+in the 2026-08-31 documentation audit. Current guidance is in
+[CUSTOMIZE.md](CUSTOMIZE.md), [UPGRADING.md](UPGRADING.md), and
+[docs/WORKFLOWS.md](docs/WORKFLOWS.md).
+
+The original numerical migration-risk and time-saving claims had no recorded
+measurement method. They have been replaced with qualitative historical
+rationale rather than presented as verified results.
 
 ## 2026-02-04: Phase 1 - Dependencies and Critical Fixes
 
@@ -138,8 +147,9 @@ After comprehensive analysis of 5 new upstream features, adopted a **risk-manage
 - ✅ **Adopted**: 2 low-risk, high-value changes (jekyll-socials, workflow enhancements)
 - ❌ **Deferred**: 3 high-risk migrations (jekyll-archives-v2, jekyll-cache-bust, jekyll-3rd-party-libraries)
 
-**Risk reduction**: 87% (from 50% with full adoption to 3% with selective adoption)
-**Time savings**: 83% (6 weeks → 1 week)
+**Historical rationale**: Selective adoption was expected to reduce integration
+risk and work. No measured reduction in failure probability or development time
+was recorded.
 
 ### Changes Applied
 
@@ -207,21 +217,21 @@ After comprehensive analysis of 5 new upstream features, adopted a **risk-manage
 
 - **Current**: Custom 254-line `_plugins/download-3rd-party.rb`
 - **Reason**: Feature not actively used (`third_party_libraries.download: false` in config)
-- **Risk if migrated**: 40% chance of breaking config parsing
+- **Risk considered at the time**: Incompatible configuration parsing; probability was not measured
 - **Value if migrated**: Zero (feature disabled)
 - **Decision**: Keep custom plugin, revisit if download feature becomes needed
 
 #### ❌ jekyll-cache-bust
 
 - **Current**: Custom 51-line `_plugins/cache-bust.rb`, used in 24+ locations
-- **Reason**: High risk (60% chance of breaking asset loading), zero value (no new features)
+- **Reason at the time**: Possible asset-loading regressions without a needed new feature; probability was not measured
 - **Impact if broken**: Site-wide failure (CSS, JS wouldn't load)
 - **Decision**: Keep custom plugin, add unit tests, monitor upstream
 
 #### ❌ jekyll-archives-v2
 
 - **Current**: `jekyll-archives` (classic) with 3 archive layouts
-- **Reason**: 70% probability of URL breakage, 2-3 weeks effort for unused features
+- **Reason at the time**: Possible archive-URL breakage and integration work for unused features; probability and effort were not measured
 - **SEO risk**: Breaking external links, Google results, bookmarks
 - **URLs at risk**: `/blog/2024/`, `/blog/tag/formatting/`, `/blog/category/external-services/`
 - **Decision**: Keep jekyll-archives (classic), revisit only if collection archives needed
@@ -279,7 +289,7 @@ All Phase 1 customizations remain intact:
 ### Lessons Learned
 
 1. **Selective adoption > blind following**: Not all upstream changes are valuable for our fork
-2. **Risk assessment crucial**: Deferred 3 high-risk migrations, saving 5 weeks and avoiding 50% failure risk
+2. **Risk assessment**: Deferred three migrations with compatibility concerns; actual time savings and avoided failure rates were not measured
 3. **Documentation matters**: Explaining _why_ we defer is as important as _what_ we adopt
 4. **Testing catches issues**: Found jekyll-socials syntax error during testing (include vs tag)
 5. **Upstream collaboration**: Using upstream-maintained plugins reduces long-term maintenance
@@ -361,11 +371,15 @@ All Phase 1 customizations remain intact:
 
 **Primary Maintainer**: Fukushima Lab Team
 **Upstream Repository**: https://github.com/george-gca/multi-language-al-folio
-**Sync Plan Document**: `/home/vscode/.claude/plans/rippling-tinkering-melody.md`
+**Original sync plan**: A local planning file was referenced here but was not
+versioned in this repository. It is not an available maintenance guide.
 
-For questions about customizations or sync strategy, refer to the comprehensive plan document.
+For current customizations and sync strategy, use [CUSTOMIZE.md](CUSTOMIZE.md)
+and [UPGRADING.md](UPGRADING.md). The proposed `CUSTOMIZATIONS.md` in the
+historical task list above was not created; it is not a missing setup prerequisite.
 
 ---
 
 _Document created: 2026-02-04_
-_Last updated: 2026-02-04 (Phase 2A completed)_
+_Historical record: 2026-02-04 (Phase 2A completed)_
+_Editorial clarification: 2026-08-31; historical tests were not rerun._
