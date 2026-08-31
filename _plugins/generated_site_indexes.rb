@@ -33,6 +33,7 @@ module GeneratedSiteIndexes
       @sitemap_lastmod_dependencies = site.config.fetch("sitemap_lastmod_dependencies", {})
       @blog_page_cache = {}
       @git_lastmod_cache = {}
+      @source_posts = site.instance_variable_get(:@generated_index_posts)
     end
 
     def posts_by_lang_for_liquid
@@ -200,31 +201,31 @@ module GeneratedSiteIndexes
     end
 
     def source_posts
-      @source_posts ||= Dir[@source.join("_posts", "*", "*.md").to_s].filter_map do |path|
-        build_post(Pathname.new(path))
+      @source_posts ||= @site.posts.docs.filter_map do |document|
+        build_post(document)
       end
     end
 
-    def build_post(path)
-      data, body = parse_source_file(path)
+    def build_post(document)
+      data = document.data
       return nil if data["draft"] == true || data["published"] == false
+      return nil unless @site.publisher.publish?(document)
 
-      lang = path.parent.basename.to_s
-      match = path.basename(".md").to_s.match(/\A(\d{4})-(\d{2})-(\d{2})-(.+)\z/)
-      return nil unless match
-
-      date = parse_time(data["date"]) || Time.utc(match[1].to_i, match[2].to_i, match[3].to_i)
+      lang = data["lang"] || document.relative_path.split("/").find { |part| @languages.include?(part) } || @default_lang
+      date = document.date
       updated = parse_time(data["last_updated"]) || date
       summary = data["description"].to_s.strip
       if summary.empty?
-        summary = plain_text_excerpt(body)
+        summary = plain_text_excerpt(document.content)
       end
       summary = strip_html(summary)
+      url = document.url
+      url = url.gsub(@site.document_url_regex, "/") if @site.respond_to?(:document_url_regex)
 
       {
         :lang => lang,
-        :year => match[1],
-        :url => localized_path(lang, "/blog/#{match[1]}/#{match[4]}/"),
+        :year => date.strftime("%Y"),
+        :url => localized_path(lang, url),
         :title => data["title"].to_s.strip,
         :author => strip_html(data["author"].to_s),
         :date => date,
@@ -268,6 +269,7 @@ module GeneratedSiteIndexes
     def localized_path(lang, path)
       normalized = path.start_with?("/") ? path : "/#{path}"
       return normalized if lang == @default_lang
+      return normalized if normalized == "/#{lang}" || normalized.start_with?("/#{lang}/")
 
       "/#{lang}#{normalized}"
     end
@@ -303,5 +305,16 @@ module GeneratedSiteIndexes
         .gsub(/\s+/, " ")
         .strip[0, 280].to_s
     end
+
+    public :source_posts
   end
+end
+
+# Capture native, publishable documents before Polyglot coordinates translations
+# at normal post_read priority. Each language/read gets a fresh snapshot, so
+# watch rebuilds and the default-language sitemap see the same eligible posts.
+Jekyll::Hooks.register :site, :post_read, :priority => :high do |site|
+  site.instance_variable_set(:@generated_index_posts, nil)
+  posts = GeneratedSiteIndexes::Builder.new(site).source_posts
+  site.instance_variable_set(:@generated_index_posts, posts)
 end

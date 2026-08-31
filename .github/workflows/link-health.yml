@@ -1,98 +1,58 @@
 name: Link health
 
 on:
-  schedule:
-    - cron: "43 18 * * *"
-  push:
-    branches: [main, master]
-    paths:
-      - "assets/**"
-      - "_bibliography/**"
-      - "_data/**"
-      - "_includes/**"
-      - "_layouts/**"
-      - "_news/**"
-      - "_pages/**"
-      - "_plugins/**"
-      - "_posts/**"
-      - "_profiles/**"
-      - "_projects/**"
-      - "_sass/**"
-      - ".github/scripts/**"
-      - ".github/workflows/link-health.yml"
-      - "Gemfile"
-      - "Gemfile.lock"
-      - "package.json"
-      - "package-lock.json"
-      - "requirements-build.txt"
+  workflow_run:
+    workflows: [Deploy site]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
-  group: link-health-${{ github.ref }}
+  group: link-health-main
   cancel-in-progress: true
 
 jobs:
   links:
-    name: Generated site links
+    name: Generated external links
+    # Never download or execute an untrusted pull-request artifact.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event != 'pull_request' &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'master'))
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
-      - name: Checkout
+      - name: Checkout trusted link-checking tools
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          fetch-depth: 0
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
-        with:
-          ruby-version: "3.3.5"
-          bundler-cache: true
-      - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: "22"
-          cache: npm
-      - name: Setup Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
-        with:
-          python-version: "3.13"
-          cache: pip
-          cache-dependency-path: requirements-build.txt
-      - name: Install build dependencies
-        run: |
-          npm ci
-          python3 -m pip install --disable-pip-version-check -r requirements-build.txt
-      - name: Restore responsive image cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
-        with:
-          path: .jekyll-cache/imagemagick
-          key: imagemagick-${{ runner.os }}-${{ hashFiles('assets/img/**', '_config.yml', '_plugins/imagemagick_guard.rb', '_plugins/responsive_images.rb') }}
-          restore-keys: |
-            imagemagick-${{ runner.os }}-
-      - name: Build generated site
+      - name: Select tested site artifact
+        id: site
         env:
-          JEKYLL_ENV: production
-        run: |
-          bash .github/scripts/prepare-jekyll-build-env.sh
-          bundle exec jekyll build
-      - name: Validate sitemap targets
-        run: >-
-          python3 .github/scripts/validate_generated_sitemap.py
-          _site/sitemap.xml
-          _site
-          --origin https://kenji-fukushima-lab.github.io
-      - name: Check generated local links
-        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+          GITHUB_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+        run: python3 .github/scripts/select_site_artifact.py
+      - name: Download tested production site
+        if: steps.site.outputs.found == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
-          fail: true
-          args: >-
-            --offline
-            --root-dir _site
-            --verbose --no-progress --max-retries 3
-            '_site/**/*.html'
-      - name: Check generated external links
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.site.outputs.run_id }}
+          name: ${{ steps.site.outputs.artifact }}
+          path: _site
+      - name: Include every bibliography URL from the same commit
+        if: steps.site.outputs.found == 'true'
+        env:
+          SITE_SHA: ${{ steps.site.outputs.sha }}
+        run: |
+          git fetch --no-tags --depth=1 origin "${SITE_SHA}"
+          git show "${SITE_SHA}:_bibliography/papers.bib" > "${RUNNER_TEMP}/site-papers.bib"
+          python3 .github/scripts/validate_papers_bib.py "${RUNNER_TEMP}/site-papers.bib" --skip-links --export-urls bibliography-links.txt
+      - name: Check external links independently of deployment
+        if: steps.site.outputs.found == 'true'
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           fail: true
@@ -106,5 +66,14 @@ jobs:
             --exclude '^https://(?:www[.])?linkedin[.]com/'
             --exclude '^https://researchmap[.]jp(?:/|$)'
             --exclude '^https://scholar[.]google[.][^/]+/citations'
-            --verbose --no-progress
-            '_site/**/*.html'
+            --format json --output link-health.json
+            --no-progress
+            '_site/**/*.html' bibliography-links.txt
+      - name: Retain link status and timeout diagnostics
+        if: always() && steps.site.outputs.found == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: link-health-${{ steps.site.outputs.sha }}
+          path: link-health.json
+          if-no-files-found: ignore
+          retention-days: 7

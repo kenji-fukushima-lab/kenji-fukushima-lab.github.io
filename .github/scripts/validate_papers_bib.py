@@ -109,8 +109,15 @@ def split_possible_urls(raw: str) -> list[str]:
 
 def find_matching_brace(text: str, start_index: int) -> int:
     depth = 0
+    escaped = False
     for index in range(start_index, len(text)):
         char = text[index]
+        if escaped:
+            escaped = False
+            continue
+        if char == "\\":
+            escaped = True
+            continue
         if char == "{":
             depth += 1
         elif char == "}":
@@ -118,6 +125,12 @@ def find_matching_brace(text: str, start_index: int) -> int:
             if depth == 0:
                 return index
     return -1
+
+
+def syntax_error(content: str, index: int, message: str) -> ValueError:
+    line = content.count("\n", 0, index) + 1
+    column = index - content.rfind("\n", 0, index)
+    return ValueError(f"BibTeX syntax error at line {line}, column {column}: {message}")
 
 
 def parse_bib_entries(content: str) -> list[Entry]:
@@ -129,17 +142,26 @@ def parse_bib_entries(content: str) -> list[Entry]:
             break
         brace_index = content.find("{", at_index)
         if brace_index == -1:
-            break
+            raise syntax_error(content, at_index, "entry is missing an opening brace")
         entry_type = content[at_index + 1 : brace_index].strip().lower()
+        if not re.fullmatch(r"[a-z]+", entry_type):
+            raise syntax_error(content, at_index, "invalid entry type")
         end_index = find_matching_brace(content, brace_index)
         if end_index == -1:
-            break
+            raise syntax_error(content, at_index, f"unclosed @{entry_type} entry")
         body = content[brace_index + 1 : end_index].strip()
         cursor = end_index + 1
-        if "," not in body:
+        if entry_type in {"comment", "preamble", "string"}:
             continue
+        if "," not in body:
+            raise syntax_error(content, at_index, "entry is missing its key/field separator")
         key, fields_blob = body.split(",", 1)
-        fields = parse_fields_blob(fields_blob)
+        if not key.strip():
+            raise syntax_error(content, at_index, "entry key is empty")
+        try:
+            fields = parse_fields_blob(fields_blob)
+        except ValueError as error:
+            raise syntax_error(content, at_index, f"[{key.strip()}] {error}") from error
         entries.append(Entry(entry_type=entry_type, key=key.strip(), fields=fields))
     return entries
 
@@ -159,17 +181,17 @@ def parse_fields_blob(blob: str) -> dict[str, str]:
             cursor += 1
         field_name = blob[field_start:cursor].strip().lower()
         if not field_name:
-            break
+            raise ValueError(f"invalid field near {blob[field_start:field_start + 30]!r}")
 
         while cursor < length and blob[cursor] in " \t\r\n":
             cursor += 1
         if cursor >= length or blob[cursor] != "=":
-            break
+            raise ValueError(f"missing '=' after field {field_name}")
         cursor += 1
         while cursor < length and blob[cursor] in " \t\r\n":
             cursor += 1
         if cursor >= length:
-            break
+            raise ValueError(f"missing value for field {field_name}")
 
         if blob[cursor] == "{":
             value_start = cursor
@@ -193,22 +215,16 @@ def parse_fields_blob(blob: str) -> dict[str, str]:
             cursor += 1
         if cursor < length and blob[cursor] == ",":
             cursor += 1
+        elif cursor < length:
+            raise ValueError(f"missing comma after field {field_name}")
     return fields
 
 
 def consume_braced_value(blob: str, cursor: int) -> int:
-    depth = 0
-    index = cursor
-    while index < len(blob):
-        char = blob[index]
-        if char == "{":
-            depth += 1
-        elif char == "}":
-            depth -= 1
-            if depth == 0:
-                return index + 1
-        index += 1
-    return len(blob)
+    end = find_matching_brace(blob, cursor)
+    if end == -1:
+        raise ValueError("unclosed braced field value")
+    return end + 1
 
 
 def consume_quoted_value(blob: str, cursor: int) -> int:
@@ -223,7 +239,7 @@ def consume_quoted_value(blob: str, cursor: int) -> int:
         elif char == '"':
             return index + 1
         index += 1
-    return len(blob)
+    raise ValueError("unclosed quoted field value")
 
 
 def validate_required_fields(entries: list[Entry]) -> ValidationResult:
@@ -354,14 +370,20 @@ def validate_links(entries: list[Entry]) -> ValidationResult:
         for url in sorted(urls):
             ok, detail = url_status_cache.get(url, (False, "unknown"))
             if not ok:
-                result.errors.append(f"[{entry_key}] dead link: {url} ({detail})")
+                transient = detail in {"timeout", "exception", "unreachable"} or detail in {str(code) for code in RETRYABLE_HTTP_STATUSES}
+                label = "temporarily unavailable" if transient else "broken link"
+                result.errors.append(f"[{entry_key}] {label}: {url} ({detail})")
     return result
 
 
 def run_validation(bib_path: Path, skip_links: bool = False) -> ValidationResult:
     content = bib_path.read_text(encoding="utf-8")
-    entries = parse_bib_entries(content)
     combined = ValidationResult()
+    try:
+        entries = parse_bib_entries(content)
+    except ValueError as error:
+        combined.errors.append(str(error))
+        return combined
     if not entries:
         combined.errors.append("No BibTeX entries could be parsed.")
         return combined
@@ -391,6 +413,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate papers.bib")
     parser.add_argument("bib_path", nargs="?", default="_bibliography/papers.bib")
     parser.add_argument("--skip-links", action="store_true", help="Skip external link checks")
+    parser.add_argument("--export-urls", type=Path, help="Write all bibliography URLs (including DOI links) for independent link monitoring")
     args = parser.parse_args()
 
     bib_path = Path(args.bib_path)
@@ -400,6 +423,10 @@ def main() -> int:
 
     result = run_validation(bib_path, skip_links=args.skip_links)
     print_result(result)
+    if args.export_urls and not result.has_errors():
+        urls_by_entry = collect_urls(parse_bib_entries(bib_path.read_text(encoding="utf-8")))
+        urls = sorted({url for entry_urls in urls_by_entry.values() for url in entry_urls})
+        args.export_urls.write_text("".join(f"{url}\n" for url in urls), encoding="utf-8")
     return 1 if result.has_errors() else 0
 
 

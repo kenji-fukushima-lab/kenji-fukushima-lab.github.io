@@ -1,28 +1,24 @@
-# Contributing to multi-language-al-folio
+# Contributing to the Fukushima Lab website
 
-Thank you for considering contributing to al-folio or its multilingual version! Please check if your contribution is related to the template itself or to the multilingual aspect of it. If it is the former, please consider doing it in the original [al-folio](https://github.com/alshedivat/al-folio/) repository. If it is the latter, follow the instructions below.
+Use the setup in [INSTALL.md](INSTALL.md) and the checks in
+[docs/WORKFLOWS.md](docs/WORKFLOWS.md). Preserve unrelated work and follow
+[AGENTS.md](AGENTS.md) for repository policy.
 
-## Pull Requests
+Keep content changes and their English/Japanese counterparts consistent. For
+behavior changes, add focused regression checks where they exercise a real
+failure, then build and inspect affected pages. Never commit `_site`, generated
+caches, private request logs, or publication-access credentials.
 
-We welcome your pull requests (PRs).
-For minor fixes (e.g., documentation improvements), feel free to submit a PR directly.
-If you would like to implement a new feature or a bug, please make sure you (or someone else) has opened an appropriate issue first; in your PR, please mention the issue it addresses.
+Run `npm run checks:push` before pushing. Frontend or build changes also need a
+production build and the relevant UI/Lighthouse checks. Format with Prettier;
+CI provides a `formatting-diff` artifact when formatting differs. Do not lower
+validation thresholds or exclude links just to turn a failed check green.
 
-Note that since [#2048](https://github.com/alshedivat/al-folio/pull/2048) al-folio uses the [prettier formatter](https://prettier.io/) for its code, meaning all new submitted code must conform to its standard. If you don't have `prettier` installed for your setup and the `prettier` code check fails when submitting a PR, you can check the referred failed action in our repo. In that action there will be an artifact with an HTML diff showing the needed changes.
+When an interface, output path, runtime, or CI selection rule changes, update
+its producers, consumers, tests and documentation together. Keep the top-level
+README short and put operational detail in dedicated documents.
 
-## Issues
-
-We use GitHub issues to track bugs and feature requests.
-Before submitting an issue, please make sure:
-
-1. You have read [the FAQ section](FAQ.md) of the README and your question is NOT addressed there.
-2. You have done your best to ensure that your issue is NOT a duplicate of one of [the previous issues](https://github.com/george-gca/multi-language-al-folio/issues).
-3. Your issue is either a bug (unexpected/undesirable behavior) or a feature request.
-   If it is just a question, please ask it in the [Discussions](https://github.com/george-gca/multi-language-al-folio/discussions) forum.
-
-When submitting an issue, please make sure to use the appropriate template.
-
-## License
-
-By contributing to multi-language-al-folio, you agree that your contributions will be licensed
-under the LICENSE file in the root directory of the source tree.
+Template-only improvements may also be useful upstream in
+[al-folio](https://github.com/alshedivat/al-folio) or
+[multi-language-al-folio](https://github.com/george-gca/multi-language-al-folio).
+Contributions retain the license in [LICENSE](LICENSE).

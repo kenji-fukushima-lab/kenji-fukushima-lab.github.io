@@ -70,6 +70,46 @@ class GeneratedSiteIndexesTest < Minitest::Test
     end
   end
 
+  def test_native_publication_dates_and_permalink_drive_all_indexes
+    Dir.mktmpdir('native-post-indexes') do |dir|
+      posts = File.join(dir, '_posts', 'ja')
+      FileUtils.mkdir_p(posts)
+      File.write(File.join(posts, '2025-01-01-visible.md'), <<~MD)
+        ---
+        title: Visible title
+        date: 2026-08-31 00:00:00 +0900
+        permalink: /custom/visible/
+        ---
+        Visible summary.
+      MD
+      File.write(File.join(posts, '2099-01-01-future.md'), "---\ntitle: Future secret\n---\nFuture summary.\n")
+      File.write(File.join(posts, '2020-01-01-private.md'), "---\ntitle: Private secret\npublished: false\n---\nPrivate summary.\n")
+      configuration = Jekyll.configuration(
+        'source' => dir, 'destination' => File.join(dir, '_site'), 'plugins_dir' => [], 'plugins' => [],
+        'url' => 'https://example.test', 'baseurl' => '', 'default_lang' => 'en-us', 'languages' => %w[en-us ja],
+        'timezone' => 'Asia/Tokyo', 'time' => Time.utc(2026, 8, 30, 15, 0, 1), 'future' => false
+      )
+      site = Jekyll::Site.new(configuration)
+      site.read
+      builder = GeneratedSiteIndexes::Builder.new(site)
+      assert_equal 1, site.posts.docs.length
+      posts_by_language = builder.posts_by_lang_for_liquid
+      assert_equal ['/ja/custom/visible/'], posts_by_language.fetch('ja').map { |post| post['url'] }
+      assert_empty posts_by_language.fetch('en-us')
+      sitemap = builder.send(:build_sitemap_xml)
+      assert_includes sitemap, '/ja/custom/visible/'
+      assert_includes sitemap, '/ja/blog/2026/'
+      refute_includes sitemap, '/2099/'
+      refute_includes posts_by_language.to_s, 'secret'
+
+      # A new read after advancing the publication clock must drop the old snapshot.
+      site.config['time'] = Time.utc(2099, 1, 2)
+      later_site = Jekyll::Site.new(site.config)
+      later_site.read
+      assert_equal 2, GeneratedSiteIndexes::Builder.new(later_site).posts_by_lang_for_liquid.fetch('ja').length
+    end
+  end
+
   private
 
   def builder_for(dir)

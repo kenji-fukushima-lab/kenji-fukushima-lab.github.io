@@ -59,6 +59,7 @@ table.table a {
 .post article li a:not(.btn):not(.citation-badge),
 .post article dd a:not(.btn):not(.citation-badge),
 .post-header .post-description a,
+.post-header .desc a,
 .post-meta a,
 .post-tags a {
   overflow-wrap: anywhere;
@@ -1169,6 +1170,10 @@ footer.sticky-bottom {
   }
 
   .card {
+    .card-body .card-text {
+      color: var(--global-text-color-light);
+    }
+
     img {
       width: 100%;
     }

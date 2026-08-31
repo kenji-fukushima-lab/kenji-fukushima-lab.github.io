@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.7",
   "scripts": {
     "checks:push": "bash .github/scripts/run-local-push-checks.sh",
     "prettier": "prettier . --check",
@@ -10,7 +10,10 @@
     "test:unit:js": "node --test tests/js/*.test.js",
     "test:unit:ruby": "bundle exec ruby -Itest test/run_all.rb",
     "test:lighthouse": "bash .github/scripts/run-lighthouse.sh",
-    "test:ui": "playwright test"
+    "test:ui": "playwright test",
+    "dev": "bash bin/entry_point.sh",
+    "build": "JEKYLL_ENV=production bundle exec jekyll build && npm run css:purge",
+    "css:purge": "node .github/scripts/purge-page-css.cjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",

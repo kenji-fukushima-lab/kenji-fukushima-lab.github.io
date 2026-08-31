@@ -75,6 +75,10 @@
   color: var(--global-text-color);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
   line-height: 1;
 }
 
@@ -156,6 +160,11 @@
 }
 
 @media (max-width: 576px) {
+  .people-social-icons a {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
   .people-card {
     gap: 0.58rem;
     padding: 0.35rem 0;

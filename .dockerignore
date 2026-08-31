@@ -1,3 +1,8 @@
 _site/
 .git/
 assets/
+node_modules/
+.jekyll-cache/
+tmp/
+test-results/
+lighthouse-results-ci/

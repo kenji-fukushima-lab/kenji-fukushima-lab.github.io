@@ -1,14 +1,4 @@
-const allPaths = [
-  "/",
-  "/people/",
-  "/publications/",
-  "/resources/",
-  "/access/",
-  "/research/",
-  "/carnivorous-plant-quiz/",
-  "/ja/blog/",
-  "/ja/research/3_project/",
-];
+const allPaths = require("./.github/ci-paths.json").lighthouse_paths;
 const selectedPaths = (process.env.LHCI_URL_PATHS || allPaths.join(",")).split(",").filter(Boolean);
 const numberOfRuns = Number.parseInt(process.env.LHCI_NUMBER_OF_RUNS || "3", 10);
 
@@ -41,6 +31,10 @@ module.exports = {
         "errors-in-console": "warn",
         "bf-cache": "off",
         "document-title": "error",
+        "color-contrast": "error",
+        "link-in-text-block": "error",
+        "target-size": "error",
+        "label-content-name-mismatch": "error",
       },
     },
     upload: {

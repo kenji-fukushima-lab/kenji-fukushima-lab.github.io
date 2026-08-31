@@ -1,89 +1,37 @@
-FROM ruby:slim
+# Runtime versions match CI. Keep all stages on Debian bookworm.
+FROM ruby:3.3.5-slim-bookworm AS ruby
+FROM node:22-bookworm-slim AS node
+FROM python:3.13-slim-bookworm
 
-# uncomment these if you are having this issue with the build:
-# /usr/local/bundle/gems/jekyll-4.3.4/lib/jekyll/site.rb:509:in `initialize': Permission denied @ rb_sysopen - /srv/jekyll/.jekyll-cache/.gitignore (Errno::EACCES)
-# ARG GROUPID=901
-# ARG GROUPNAME=ruby
-# ARG USERID=901
-# ARG USERNAME=jekyll
+COPY --from=ruby /usr/local/ /usr/local/
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    GEM_HOME=/usr/local/bundle \
+    BUNDLE_FROZEN=true \
+    BUNDLE_SILENCE_ROOT_WARNING=1 \
+    PATH="/usr/local/bundle/bin:${PATH}" \
+    EXECJS_RUNTIME=Node \
+    PAGEFIND_PYTHON=/usr/local/bin/python3 \
+    LANG=C.UTF-8 \
+    JEKYLL_ENV=development
 
-LABEL authors="Amir Pourmand,George Araújo" \
-      description="Docker image for al-folio academic template" \
-      maintainer="George Araújo"
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl git imagemagick librsvg2-bin libyaml-0-2 libgmp10 zlib1g-dev && \
+    rm -rf /var/lib/apt/lists/* && ldconfig && \
+    ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
+    ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
 COPY requirements-build.txt requirements-test.txt /tmp/
+RUN python3 -m pip install --no-cache-dir --disable-pip-version-check \
+    -r /tmp/requirements-build.txt -r /tmp/requirements-test.txt
 
-# uncomment these if you are having this issue with the build:
-# /usr/local/bundle/gems/jekyll-4.3.4/lib/jekyll/site.rb:509:in `initialize': Permission denied @ rb_sysopen - /srv/jekyll/.jekyll-cache/.gitignore (Errno::EACCES)
-# add a non-root user to the image with a specific group and user id to avoid permission issues
-# RUN groupadd -r $GROUPNAME -g $GROUPID && \
-#     useradd -u $USERID -m -g $GROUPNAME $USERNAME
-
-# install system dependencies
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        curl \
-        git \
-        imagemagick \
-        inotify-tools \
-        locales \
-        nodejs \
-        procps \
-        python3-pip \
-        python3-venv \
-        zlib1g-dev && \
-    python3 -m venv /opt/site-python && \
-    /opt/site-python/bin/pip install --no-cache-dir --disable-pip-version-check \
-        -r /tmp/requirements-build.txt \
-        -r /tmp/requirements-test.txt
-
-# Login shells can reset PATH, while the notebook converter invokes `jupyter`
-# by name. Keep that executable available from the system command path.
-RUN ln -sf /opt/site-python/bin/jupyter /usr/local/bin/jupyter
-
-# clean up
-RUN apt-get clean && \
-    apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*  /tmp/*
-
-# set the locale
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
-
-# set environment variables
-ENV EXECJS_RUNTIME=Node \
-    JEKYLL_ENV=production \
-    PAGEFIND_PYTHON=/opt/site-python/bin/python \
-    PATH="/opt/site-python/bin:${PATH}" \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
-
-# create a directory for the jekyll site
-RUN mkdir /srv/jekyll
-
-# copy the Gemfile and Gemfile.lock to the image
-ADD Gemfile.lock /srv/jekyll
-ADD Gemfile /srv/jekyll
-
-# set the working directory
 WORKDIR /srv/jekyll
+COPY Gemfile Gemfile.lock ./
+RUN gem install --no-document bundler -v "$(sed -n '/BUNDLED WITH/{n;s/ //g;p;}' Gemfile.lock)" && \
+    bundle install
 
-# install jekyll and dependencies
-RUN gem install --no-document jekyll bundler
-RUN bundle install --no-cache
-# RUN gem install jekyll-multiple-languages-plugin # * * * * * * * * * * * * [2025.3.6] I guess this is not necessary for NEW multi-language-al-folio * * * * * * * * * * * * 
-
-EXPOSE 8080
-
-COPY bin/entry_point.sh /tmp/entry_point.sh
-
-# uncomment this if you are having this issue with the build:
-# /usr/local/bundle/gems/jekyll-4.3.4/lib/jekyll/site.rb:509:in `initialize': Permission denied @ rb_sysopen - /srv/jekyll/.jekyll-cache/.gitignore (Errno::EACCES)
-# set the ownership of the jekyll site directory to the non-root user
-# USER $USERNAME
-
-CMD ["/tmp/entry_point.sh"]
+COPY bin/ bin/
+EXPOSE 8080 35729
+CMD ["bash", "bin/entry_point.sh"]

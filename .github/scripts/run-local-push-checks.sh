@@ -21,7 +21,7 @@ run_ruby_tests() {
   fi
 
   if command -v docker >/dev/null 2>&1; then
-    docker compose run --rm jekyll sh -lc 'bundle check || bundle install && bundle exec ruby -Itest test/run_all.rb'
+    docker compose run --rm jekyll sh -c 'bundle check || bundle install && bundle exec ruby -Itest test/run_all.rb'
     return
   fi
 
@@ -68,7 +68,7 @@ echo "4/7 Ruby unit tests"
 run_ruby_tests
 
 echo "5/7 Bibliography validation"
-python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib
+python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib --skip-links
 
 echo "6/7 Image budget"
 bash .github/scripts/check-image-budget.sh

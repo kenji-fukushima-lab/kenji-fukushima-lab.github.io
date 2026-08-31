@@ -1,0 +1,55 @@
+{
+  "lighthouse_paths": [
+    "/",
+    "/people/",
+    "/publications/",
+    "/resources/",
+    "/access/",
+    "/research/",
+    "/carnivorous-plant-quiz/",
+    "/ja/blog/",
+    "/ja/research/3_project/"
+  ],
+  "languages": {
+    "en-us": "",
+    "ja": "/ja"
+  },
+  "site_prefixes": [
+    "assets/",
+    "_sass/",
+    "_includes/",
+    "_layouts/",
+    "_plugins/",
+    "_pages/",
+    "_projects/",
+    "_profiles/",
+    "_posts/",
+    "_news/",
+    "_data/",
+    "_bibliography/",
+    "_scheduled/"
+  ],
+  "site_files": [
+    "_config.yml",
+    "Dockerfile",
+    "Gemfile",
+    "Gemfile.lock",
+    "package.json",
+    "package-lock.json",
+    "purgecss.config.js",
+    "requirements.txt",
+    "requirements-build.txt",
+    ".ruby-version",
+    ".node-version",
+    ".python-version",
+    ".lighthouserc.cjs",
+    ".github/ci-paths.json",
+    ".github/lighthouse.config.cjs",
+    ".github/scripts/fetch_repo_stats.py",
+    ".github/scripts/prepare-jekyll-build-env.sh",
+    ".github/scripts/purge-page-css.cjs",
+    ".github/workflows/deploy.yml"
+  ],
+  "root_public_patterns": ["*.html", "*.xml", "robots.txt", "CNAME", ".nojekyll", "favicon.ico", "*.webmanifest"],
+  "global_prefixes": ["assets/", "_sass/", "_includes/", "_layouts/", "_plugins/", "_data/"]
+}

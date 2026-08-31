@@ -39,3 +39,11 @@ test("separates Lighthouse errors from warnings", () => {
   assert.equal(result.failures.length, 1);
   assert.equal(result.warnings.length, 1);
 });
+
+test("accepts genuinely inapplicable audits but still rejects missing results", () => {
+  const measured = report();
+  measured.audits["target-size"] = { score: null, scoreDisplayMode: "notApplicable" };
+  assert.deepEqual(validateReport(measured, { "target-size": "error" }).failures, []);
+  delete measured.audits["target-size"];
+  assert.equal(validateReport(measured, { "target-size": "error" }).failures.length, 1);
+});

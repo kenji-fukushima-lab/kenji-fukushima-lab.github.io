@@ -9,7 +9,7 @@ This is the repository for the website of the [Fukushima Lab](https://kenji-fuku
 The quickest way to run the site locally is with Docker:
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 Then open `http://127.0.0.1:8080/`.
@@ -17,7 +17,7 @@ Then open `http://127.0.0.1:8080/`.
 If you already have a working Ruby and Bundler environment, you can also run:
 
 ```bash
-bundle exec jekyll serve
+npm run dev
 ```
 
 ## Checks
@@ -25,7 +25,7 @@ bundle exec jekyll serve
 Install the repository hooks once:
 
 ```bash
-npm install
+npm ci
 npm run hooks:install
 ```
 
@@ -36,7 +36,7 @@ npm run checks:push
 npm run test:ui
 ```
 
-`npm run checks:push` runs the Python, JavaScript, and Ruby unit suites together with bibliography, image-budget, and formatting checks. Run `npm run test:ui` as an extra browser test for frontend-heavy changes; Playwright starts the local `_site` server automatically.
+`npm run checks:push` runs the Python, JavaScript, and Ruby unit suites together with offline bibliography, image-budget, and formatting checks. Run `npm run test:ui` as an extra browser test for frontend-heavy changes; Playwright starts the local `_site` server automatically.
 
 ## More docs
 

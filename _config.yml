@@ -135,6 +135,7 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # -----------------------------------------------------------------------------
 
 permalink: /blog/:year/:title/
+timezone: Asia/Tokyo
 lsi: false # produce an index for related posts
 
 # Pagination
@@ -221,6 +222,12 @@ kramdown:
 # Includes & excludes
 include: ["_pages"]
 exclude:
+  - AGENTS.md
+  - docs/
+  - test/
+  - requirements.txt
+  - requirements-build.txt
+  - requirements-test.txt
   - automation/
   - assets/html/relativity.html
   - assets/jupyter/

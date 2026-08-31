@@ -38,17 +38,16 @@ if [ -x "./node_modules/.bin/prettier" ] && command -v node >/dev/null 2>&1; the
 fi
 
 if command -v docker >/dev/null 2>&1; then
-  docker run --rm \
-    -v "$repo_root:/work" \
-    -w /work \
-    node:20 \
-    sh -lc 'npm install -g prettier@3.8.1 @shopify/prettier-plugin-liquid@1.4.0 >/tmp/npm.log 2>&1 && prettier --write --ignore-unknown --plugin=@shopify/prettier-plugin-liquid "$@"' sh "${staged_files[@]}"
+  docker compose run --rm jekyll sh -c '
+    if [ ! -x ./node_modules/.bin/prettier ]; then npm ci; fi
+    exec ./node_modules/.bin/prettier --write --ignore-unknown "$@"
+  ' sh "${staged_files[@]}"
   git add -- "${staged_files[@]}"
   exit 0
 fi
 
 cat >&2 <<'EOF'
 Prettier pre-commit formatting could not run.
-Install dependencies with `npm install`, or install Docker so the hook can use the fallback container.
+Install dependencies with `npm ci`, or install Docker so the hook can use the common Compose runtime.
 EOF
 exit 1

@@ -12,6 +12,7 @@ module.exports = defineConfig({
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:8080",
     headless: true,
+    colorScheme: "light",
     viewport: { width: 1440, height: 1400 },
     screenshot: "only-on-failure",
     trace: "retain-on-failure",

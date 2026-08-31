@@ -2,89 +2,14 @@ name: Deploy site
 
 on:
   schedule:
-    - cron: "17 18 * * *"
+    # 08:30 Japan time, including publication of any overdue scheduled posts.
+    - cron: "30 23 * * 1-6"
+    # Weekly full UI/Lighthouse coverage; other days refresh generated data.
+    - cron: "30 23 * * 0"
   push:
     branches: [main, master]
-    paths:
-      - "assets/**"
-      - "_bibliography/**"
-      - "_data/**"
-      - "_includes/**"
-      - "_layouts/**"
-      - "_news/**"
-      - "_pages/**"
-      - "_plugins/**"
-      - "_posts/**"
-      - "_profiles/**"
-      - "_projects/**"
-      - "_sass/**"
-      - "test/**"
-      - "tests/**"
-      - ".github/scripts/**"
-      - ".github/workflows/**"
-      - "**/*.css"
-      - "**/*.html"
-      - "**/*.js"
-      - "**/*.json"
-      - "**/*.liquid"
-      - "**/*.md"
-      - "**/*.mjs"
-      - "**/*.py"
-      - "**/*.rb"
-      - "**/*.scss"
-      - "**/*.yaml"
-      - "**/*.yml"
-      - ".lighthouserc.cjs"
-      - ".github/lighthouse.config.cjs"
-      - "Dockerfile"
-      - "Gemfile"
-      - "Gemfile.lock"
-      - "package.json"
-      - "package-lock.json"
-      - "playwright.config.js"
-      - "purgecss.config.js"
-      - "requirements*.txt"
   pull_request:
     branches: [main, master]
-    paths:
-      - "assets/**"
-      - "_bibliography/**"
-      - "_data/**"
-      - "_includes/**"
-      - "_layouts/**"
-      - "_news/**"
-      - "_pages/**"
-      - "_plugins/**"
-      - "_posts/**"
-      - "_profiles/**"
-      - "_projects/**"
-      - "_sass/**"
-      - "test/**"
-      - "tests/**"
-      - ".github/scripts/**"
-      - ".github/workflows/**"
-      - "**/*.css"
-      - "**/*.html"
-      - "**/*.js"
-      - "**/*.json"
-      - "**/*.liquid"
-      - "**/*.md"
-      - "**/*.mjs"
-      - "**/*.py"
-      - "**/*.rb"
-      - "**/*.scss"
-      - "**/*.yaml"
-      - "**/*.yml"
-      - ".lighthouserc.cjs"
-      - ".github/lighthouse.config.cjs"
-      - "Dockerfile"
-      - "Gemfile"
-      - "Gemfile.lock"
-      - "package.json"
-      - "package-lock.json"
-      - "playwright.config.js"
-      - "purgecss.config.js"
-      - "requirements*.txt"
   workflow_dispatch:
     inputs:
       axe_path:
@@ -104,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
+      checks_required: ${{ steps.changes.outputs.checks_required }}
       site_changed: ${{ steps.changes.outputs.site_changed }}
       build_required: ${{ steps.changes.outputs.build_required }}
       browser_required: ${{ steps.changes.outputs.browser_required }}
@@ -118,6 +44,7 @@ jobs:
         id: changes
         env:
           EVENT_NAME: ${{ github.event_name }}
+          FULL_CHECKS: ${{ github.event.schedule == '30 23 * * 0' }}
           BEFORE_SHA: ${{ github.event.before }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -130,12 +57,15 @@ jobs:
           else
             git ls-files > "${changed_paths}"
           fi
-          python3 .github/scripts/classify_ci_changes.py --event "${EVENT_NAME}" < "${changed_paths}" >> "${GITHUB_OUTPUT}"
+          flags=()
+          if [ "${FULL_CHECKS}" = "true" ]; then flags+=(--full); fi
+          python3 .github/scripts/classify_ci_changes.py --event "${EVENT_NAME}" "${flags[@]}" < "${changed_paths}" >> "${GITHUB_OUTPUT}"
           sed -n '1,200p' "${changed_paths}"
 
   build:
     name: Fast checks and production build
     needs: preflight
+    if: needs.preflight.outputs.checks_required == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -146,17 +76,16 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
         with:
-          ruby-version: "3.3.5"
           bundler-cache: true
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: "22"
+          node-version-file: .node-version
           cache: npm
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
-          python-version: "3.13"
+          python-version-file: .python-version
           cache: pip
           cache-dependency-path: |
             requirements-build.txt
@@ -170,7 +99,7 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
       - name: Validate papers.bib
-        run: python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib
+        run: python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib --skip-links
       - name: Enforce image size threshold
         run: bash .github/scripts/check-image-budget.sh
       - name: Check formatting
@@ -197,7 +126,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .jekyll-cache/imagemagick
-          key: imagemagick-${{ runner.os }}-${{ hashFiles('assets/img/**', '_config.yml', '_plugins/imagemagick_guard.rb', '_plugins/responsive_images.rb') }}
+          key: imagemagick-${{ runner.os }}-${{ hashFiles('assets/img/**', '_config.yml', '_plugins/imagemagick_guard.rb', '_plugins/responsive_images.rb', '_plugins/responsive_image_manifest.rb') }}
           restore-keys: |
             imagemagick-${{ runner.os }}-
       - name: Configure repository metadata
@@ -239,9 +168,12 @@ jobs:
           _site/sitemap.xml
           _site
           --origin https://kenji-fukushima-lab.github.io
+      - name: Validate responsive image dimensions
+        if: needs.preflight.outputs.build_required == 'true'
+        run: python3 .github/scripts/validate_responsive_images.py _site
       - name: Purge unused CSS
         if: needs.preflight.outputs.build_required == 'true'
-        run: npx --no-install purgecss -c purgecss.config.js
+        run: npm run css:purge
       - name: Check generated local links
         if: needs.preflight.outputs.build_required == 'true'
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
@@ -273,7 +205,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: "22"
+          node-version-file: .node-version
           cache: npm
       - name: Install Node.js dependencies
         run: npm ci
@@ -309,7 +241,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: "22"
+          node-version-file: .node-version
           cache: npm
       - name: Install Node.js dependencies
         run: npm ci

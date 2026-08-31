@@ -39,6 +39,9 @@ function validateReport(report, assertions) {
     if (level === "off") {
       continue;
     }
+    if (report.audits?.[assertionId]?.scoreDisplayMode === "notApplicable") {
+      continue;
+    }
 
     const value = measuredValue(report, assertionId);
     let message = null;

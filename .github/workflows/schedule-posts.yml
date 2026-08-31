@@ -1,53 +1,24 @@
-name: Publish posts scheduled for today
+name: Publish due scheduled posts
 
 on:
-  schedule:
-    # Run every day at 23:30 UTC or manually run
-    - cron: "30 23 * * *"
+  # Compatibility entry point for an immediate full publication check.
+  # The daily timer lives in deploy.yml so it builds only once.
   workflow_dispatch:
 
 permissions:
-  contents: write
+  actions: write
+
+concurrency:
+  group: publish-scheduled-posts
+  cancel-in-progress: false
 
 jobs:
   publish_scheduled:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
+    timeout-minutes: 5
     steps:
-      - name: Checkout main branch
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: main
-
-      - name: Get the date for today
-        id: date
-        run: echo "TODAY=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
-
-      - name: Check for scheduled posts and move to posts
+      - name: Request the tested deployment pipeline
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Today is $TODAY"
-          mkdir -p _scheduled
-          shopt -s nullglob globstar
-          found_posts=0
-          for file in _scheduled/**/"${TODAY}"-*.md; do
-            found_posts=1
-            echo "Found scheduled: $file"
-            parent_dir="$(dirname "$file")"
-            language_dir="$(basename "$parent_dir")"
-            mv "$file" "_posts/$language_dir/"
-            echo "Moved $file to _posts/$language_dir/"
-          done
-          if [ "$found_posts" -eq 0 ]; then
-            echo "No scheduled posts found for $TODAY"
-          fi
-
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add _posts/
-          git add _scheduled/
-          git commit -m "Posted Scheduled Drafts on $TODAY" || echo "No changes to commit"
-          git push
+          gh workflow run deploy.yml --repo "${GITHUB_REPOSITORY}" --ref main

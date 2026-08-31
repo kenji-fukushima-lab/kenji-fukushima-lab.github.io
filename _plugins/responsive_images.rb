@@ -3,6 +3,7 @@
 require "cgi"
 require "nokogiri"
 require "open3"
+require_relative "responsive_image_manifest"
 
 # Enhance local images written directly in Markdown/HTML. Images emitted by
 # figure.liquid already have responsive <picture> markup, so its marker limits
@@ -10,43 +11,17 @@ require "open3"
 module ResponsiveImages
   module_function
 
-  @dimension_cache = {}
-
   def image_dimensions(path)
-    return @dimension_cache[path] if @dimension_cache.key?(path)
-
-    output, status = Open3.capture2("identify", "-format", "%w %h", path)
-    dimensions = status.success? ? output.split.map(&:to_i) : []
-    @dimension_cache[path] = dimensions.length == 2 && dimensions.all?(&:positive?) ? dimensions : nil
-  rescue Errno::ENOENT
-    @dimension_cache[path] = nil
+    ResponsiveImageManifest.dimensions(path)
   end
 
   def source_path(site, src)
-    path = src.split(/[?#]/, 2).first
-    return if path.nil? || path.empty? || path.start_with?("//")
-    return if path.match?(%r{\A[a-z][a-z0-9+.-]*:}i)
-
-    baseurl = site.baseurl.to_s.sub(%r{/\z}, "")
-    path = path.delete_prefix(baseurl) unless baseurl.empty?
-    relative_path = CGI.unescape(path.sub(%r{\A/+}, ""))
-    absolute_path = File.expand_path(relative_path, site.source)
-    source_root = File.expand_path(site.source)
-    return unless absolute_path.start_with?("#{source_root}/") && File.file?(absolute_path)
-
-    [path, absolute_path]
+    ResponsiveImageManifest.resolve(site, src)
   end
 
   def responsive_candidates(path, natural_width, widths)
-    stem = path.sub(/\.[^.\/]+\z/, "")
-    selected = widths.select { |width| natural_width.nil? || width <= natural_width }
-    selected << widths.find { |width| natural_width && width > natural_width } if natural_width && selected.length < widths.length
-    selected = [widths.first].compact if selected.empty?
-
-    selected.map do |width|
-      descriptor = natural_width && width > natural_width ? natural_width : width
-      "#{stem}-#{width}.webp #{descriptor}w"
-    end.uniq.join(", ")
+    ResponsiveImageManifest.candidates(path, natural_width, widths)
+      .map { |candidate| "#{candidate['path']} #{candidate['width']}w" }.join(", ")
   end
 
   def enhance(item)
@@ -117,9 +92,6 @@ module ResponsiveImages
       image["data-responsive-image"] = ""
       first_responsive_image = false
       fragment.to_html
-    rescue StandardError => e
-      Jekyll.logger.warn("ResponsiveImages", "skipped #{src}: #{e.message}")
-      tag
     end
   end
 end

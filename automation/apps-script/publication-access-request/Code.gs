@@ -105,22 +105,16 @@ function doPost(e) {
       const token = createToken_();
       const expiresAt = new Date(now.getTime() + CONFIG.TOKEN_VALID_HOURS * 60 * 60 * 1000);
 
-      sheet.appendRow([
-        now,
-        today,
-        request.name,
-        request.affiliation,
-        request.email,
-        sha256_(request.email),
-        sha256_(token),
-        expiresAt,
-        "",
-        "",
-        "verification_pending",
-      ]);
+      sheet.appendRow([now, today, "", "", "", sha256_(request.email), sha256_(token), expiresAt, "", "", "verification_pending"]);
       const rowNumber = sheet.getLastRow();
 
       try {
+        // Value-writing APIs interpret leading '=' as a formula. Public input
+        // only enters the sheet through the literal-text API, never appendRow.
+        const textValues = [request.name, request.affiliation, request.email].map((value) =>
+          SpreadsheetApp.newRichTextValue().setText(value).build()
+        );
+        sheet.getRange(rowNumber, COL.NAME, 1, textValues.length).setRichTextValues([textValues]);
         sendVerificationEmail_(request, token);
         sheet.getRange(rowNumber, COL.STATUS).setValue("verification_sent");
       } catch (error) {
