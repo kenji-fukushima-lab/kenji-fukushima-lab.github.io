@@ -16,7 +16,9 @@ validation thresholds or exclude links just to turn a failed check green.
 
 When an interface, output path, runtime, or CI selection rule changes, update
 its producers, consumers, tests and documentation together. Keep the top-level
-README short and put operational detail in dedicated documents.
+README short, retain useful visuals inline, and put operational detail in
+dedicated documents. Keep submission form help and Wiki guidance consistent
+with the versioned guides when changing form behavior.
 
 Template-only improvements may also be useful upstream in
 [al-folio](https://github.com/alshedivat/al-folio) or

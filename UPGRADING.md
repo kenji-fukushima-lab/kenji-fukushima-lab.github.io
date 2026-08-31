@@ -1,6 +1,21 @@
-# Upgrading
+# Upgrading the lab site
 
-As of Jan 15, 2024, the [jekyll-multiple-languages-plugin](https://github.com/kurtsson/jekyll-multiple-languages-plugin) repository has been archived by its owner and is now read-only, meaning it will not receive further updates. As discussed in [#17](https://github.com/george-gca/multi-language-al-folio/issues/17), one possible solution was to replace the plugin with [jekyll-polyglot](https://github.com/untra/polyglot). This change has been implemented as of version 1.11.0 of this theme.
+For current dependency or theme updates, follow the
+[development upgrade procedure](INSTALL.md#upgrading-from-a-previous-version)
+and [validation guide](docs/WORKFLOWS.md). Review selected upstream changes
+against this customized site, update manifests and locks together, and keep
+runtime version files and Docker configuration consistent. Follow [AGENTS.md](AGENTS.md)
+for branch and version-bump policy; template release numbers below are not this
+repository's `VERSION` or npm package version.
+
+## Historical Polyglot migration
+
+The remainder records the upstream template's migration from the old `_i18n`
+layout. This repository already uses Polyglot and `_data/<language>/strings.yml`.
+Do not repeat the file moves or treat these historical examples as the current
+source of truth; use [CUSTOMIZE.md](CUSTOMIZE.md) for the active layout.
+
+The upstream migration followed the January 15, 2024 archival of [jekyll-multiple-languages-plugin](https://github.com/kurtsson/jekyll-multiple-languages-plugin). As discussed in [#17](https://github.com/george-gca/multi-language-al-folio/issues/17), the template replaced it with [jekyll-polyglot](https://github.com/untra/polyglot) in upstream version 1.11.0.
 
 ## Project changes
 

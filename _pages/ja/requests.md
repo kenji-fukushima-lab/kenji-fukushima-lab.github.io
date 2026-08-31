@@ -167,7 +167,7 @@ lang-exclusive: ["ja"]
       </details>
       <details>
         <summary>実施日まで1か月を切っています。</summary>
-        <p>柔軟に対応可能ですので、まずはご相談ください。</p>
+        <p>まずはご相談ください。事前の承諾が必要なため、ご希望の日程に対応できるとは限りません。</p>
       </details>
       <details>
         <summary>どちらの様式を使うか分かりません。</summary>

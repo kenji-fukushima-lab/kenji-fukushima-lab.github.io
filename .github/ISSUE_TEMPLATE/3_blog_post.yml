@@ -9,10 +9,14 @@ body:
         以下のフォームを入力して投稿申請してください。
         Please fill out the form below to submit a blog post request.
 
+        - この Issue と添付画像は公開されます。非公開情報や公開解禁前の内容は記入しないでください。
+          This issue and its attachments are public. Do not include private or embargoed material.
+        - 本文には Markdown を使ってください。任意の HTML・Liquid・埋め込みコードは使えません。
+          Use Markdown in the body. Arbitrary HTML, Liquid, and embed code are not accepted.
         - 画像は「本文」欄にドラッグ&ドロップで添付できます。
           You can drag and drop images into the "本文 / Body" field.
-        - 添付画像は自動で `assets/img/posts/` に保存され、本文リンクも自動で置換されます。
-          Attached images are automatically saved to `assets/img/posts/`, and links in the post body are rewritten automatically.
+        - 取得できた GitHub 添付画像は `assets/img/posts/` に保存され、本文リンクも置換されます。PR の警告も確認してください。
+          Downloaded GitHub image attachments are saved to `assets/img/posts/` and their links rewritten. Check any PR warnings.
         - メンテナ以外からの投稿は、管理者レビュー後に公開されます。
           Submissions from non-maintainers are published only after maintainer review and approval.
         - Issue のタイトルは送信後に自動更新されます。記事タイトルには `記事タイトル / Post Title` が使われます。
@@ -34,7 +38,7 @@ body:
     id: post_date
     attributes:
       label: 記事日付 / Article Date (YYYY-MM-DD)
-      description: 記事ページに表示される日付です（公開日ではありません） / Date shown on the post page (this is not the publication date)
+      description: 記事の表示日付です。未来の日付は、その日（日本時間）以降の正常なデプロイまで公開されません。 / Displayed article date; future dates delay visibility until a successful deployment on or after that date in Japan time.
       placeholder: "2026-03-04"
     validations:
       required: true

@@ -1,63 +1,86 @@
 # KFLAB Publication Access Request
 
-Google Apps Script backend for the publication-access form on the Fukushima Lab
-website.
+This directory contains the Google Apps Script backend source for the lab's
+publication-access form. It is deployed separately from the website.
 
-## Workflow
+## Source behavior and deployment status
 
-1. A visitor submits their name, affiliation, and email address.
-2. The service accepts at most one request per address per Japan-calendar day.
-3. A verification link valid for 24 hours is emailed to the submitted address.
-4. Opening the link sends the researchmap URL and the shared download password.
-5. Request state is recorded in a private Google Sheet owned by the deploying
-   account. Records are retained so that suspected misuse can be investigated.
+The repository implementation:
 
-Public name, affiliation, and email values are written with
-`Range.setRichTextValues`, so leading `=` (or other spreadsheet-like text) stays
-literal. The formula-capable `appendRow` call receives only server-generated
-metadata and empty placeholders. A text-write or mail failure records
-`verification_error` and releases the reservation. Existing records are not
-rewritten by this change.
+1. Accepts a visitor's name, affiliation, and email address.
+2. Limits requests to one per address per Japan-calendar day, with a configured
+   total cap of 45 requests per day and additional mail-quota checks.
+3. Emails a verification link valid for 24 hours.
+4. Sends the researchmap URL and shared download password after verification.
+5. Records request state in a private Google Sheet; the source does not
+   automatically delete old records.
 
-Outgoing messages intentionally do not set `Reply-To`.
+Name, affiliation, and email values are written using `Range.setRichTextValues`,
+so spreadsheet-like input remains literal text. The formula-capable `appendRow`
+call receives server-generated metadata and empty placeholders. A text-write or
+verification-mail failure records `verification_error` and releases the
+reservation. Existing records are not rewritten. Outgoing messages do not set
+`Reply-To`.
 
-## Deployment
+**Last deployment check: 2026-08-31.** The repository source and local tests were
+checked, but access to the project behind the configured production deployment
+was not available. The deployed version and its use of the literal-text fix
+remain unverified. Passing GitHub CI is not evidence that Apps Script was updated.
 
-1. Create an Apps Script project owned by `kflab52@gmail.com`.
-2. Add `Code.gs` and use the settings from `appsscript.json`.
-3. In Project Settings, add the script property `DOWNLOAD_PASSWORD`. Keep its
-   value out of this public repository.
-4. Run `setup()` once and authorize access to Google Sheets and email.
-5. Deploy as a web app:
-   - Execute as: the deploying account
-   - Who has access: anyone
-6. Put the `/exec` deployment URL in the website form action.
+The website's configured endpoint is the `web_app_url` in
+[\_data/publication_access.yml](../../../_data/publication_access.yml).
+Use that deployment ID to identify the existing Apps Script project; a similarly
+named project or the GitHub source alone does not establish which code is live.
 
-The request log spreadsheet ID is kept in the script property
-`REQUEST_SPREADSHEET_ID`. The download password is read from
-`DOWNLOAD_PASSWORD`; it is not stored in the repository.
+## Updating the existing service
 
-To open the request log from Apps Script, run `setup()` and follow the URL shown
-in the execution result. The current log is also in the deploying account's
-Google Drive under `KFLAB Publication Access Requests`.
+1. Open the Apps Script project that owns the configured deployment, using an
+   account authorized to edit it. Confirm its deployment ID before changing code.
+2. Preserve the existing `DOWNLOAD_PASSWORD` and `REQUEST_SPREADSHEET_ID` script
+   properties, request log, execute-as account, and access settings.
+3. Replace [Code.gs](Code.gs) with the reviewed source and compare project
+   settings with [appsscript.json](appsscript.json).
+4. Choose **Deploy → Manage deployments → Edit → New version → Deploy** for the
+   existing deployment. Keep its ID and `/exec` URL.
+5. Record the deployed source revision/version and verify the non-submitting
+   status page. A status page alone does not verify email delivery or log writes.
 
-## Updating an existing deployment
+Do not create a replacement project or spreadsheet just because the existing
+one is inaccessible. Obtain the production editor URL/access from its owner.
+Do not send test requests through the public form or copy private log values
+into Git, issues, screenshots, or CI artifacts.
 
-GitHub Actions tests `Code.gs`, but a GitHub push does not publish Apps Script.
-Replace the existing project's `Code.gs` with the reviewed repository version,
-then choose **Deploy → Manage deployments → Edit → New version → Deploy**.
-Keep the existing deployment ID, script properties, spreadsheet, and access
-settings. Do not create a new log or copy its data into Git.
+## Initial setup for a new service
 
-Before publication, a disposable test spreadsheet can confirm that names such
-as `=1+1` have empty `getFormulas()` results and unchanged displayed text. Local
-Node tests exercise literal writes, verification, expiry, quota and delivery
-failures without sending real email. Do not send test mail through the public
-form or inspect private request values unnecessarily.
+Only use this procedure when intentionally creating a new service, not when
+updating the existing deployment. The intended service account is
+`kflab52@gmail.com`; verify ownership and deployment access before setup.
 
-The literal-text API is documented in the
+1. Create the project in the intended account and add `Code.gs` and manifest settings.
+2. Set the private `DOWNLOAD_PASSWORD` script property.
+3. Run `setup()` and authorize the required access. With no
+   `REQUEST_SPREADSHEET_ID`, it creates a private spreadsheet titled
+   `KFLAB Publication Access Requests` and stores its ID. With an existing ID,
+   it opens that spreadsheet instead; confirm the property before running it.
+4. Deploy a web app executing as the deploying account, with access for anyone.
+5. Update `web_app_url` in the website data file and validate/deploy the website.
+
+`setup()` returns the spreadsheet URL. To locate an existing log, use the
+`REQUEST_SPREADSHEET_ID` property in the correct project rather than guessing
+from a Drive filename. Never commit the password or private log contents.
+
+## Validation
+
+Local Node tests exercise literal writes, verification, expiry, quotas, and
+mail failures without sending real email:
+
+```bash
+npm run test:unit:js
+```
+
+Run this from the repository root after `npm ci`. Before an Apps Script release,
+a disposable test project/spreadsheet can check that names such as `=1+1` have
+empty `getFormulas()` results and unchanged displayed text. Use test recipients
+only when a delivery test is explicitly intended and authorized. The literal-text
+API is documented in the
 [Apps Script Range reference](https://developers.google.com/apps-script/reference/spreadsheet/range#setrichtextvaluesvalues).
-
-Current production web app:
-
-<https://script.google.com/macros/s/AKfycbzZgmU-msHncbv54IT0B034oEoUJYVUTbhrT2I8guNRq1VUf_pVKedw-AzzCRc25r03/exec>

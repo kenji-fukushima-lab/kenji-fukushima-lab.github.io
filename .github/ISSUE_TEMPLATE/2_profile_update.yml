@@ -9,6 +9,8 @@ body:
         自分のプロフィール更新用フォームです。
         This form creates a pull request to update your own profile markdown file.
 
+        - この Issue と添付画像は公開されます。公開してよい情報だけを入力してください。
+          This issue and its attachments are public. Include only information that may be published.
         - 通常は GitHub ユーザー名とプロフィールの `github:` フィールドの一致で対象ファイルを自動判定します。
           The target profile file is usually detected from your GitHub username and the profile's `github:` field.
         - 自分のプロフィールかどうかは自動判定されます。確認用チェック項目は不要です。
@@ -19,6 +21,8 @@ body:
           Fields you leave blank are not changed.
         - 値を消したい項目には `CLEAR` と入力してください。
           Enter `CLEAR` if you want to erase a value.
+          役職は選択肢から選びます。GitHub 名の変更・削除はメンテナのみ可能です。
+          Choose a listed role; only maintainers can change or clear the GitHub identity.
         - プロフィール写真を差し替えたい場合は、専用欄に画像を1枚ドラッグ&ドロップしてください。保存先は `assets/img/people/` です。
           To replace your profile photo, drag and drop one image into the profile photo field. It will be saved under `assets/img/people/`.
         - GitHub ユーザー名は、通常はこの Issue を送信した GitHub アカウントと一致している必要があります。

@@ -25,12 +25,19 @@ entry point to the same runtime; there is no separate slim environment to drift.
 Stop with Ctrl-C or `docker compose down`. Do not add `-v` unless you intend to
 remove the reusable bundle cache. Rebuild after runtime/Dockerfile changes.
 
-For host-side formatting and browser tests, install Node 22, then:
+For host-side formatting and browser tests, install Node 22 and Python 3.13,
+then install the Node dependencies and hooks:
 
 ```bash
 npm ci
 npm run hooks:install
 ```
+
+The push checks also need host Python test packages. Create a host virtual
+environment and install `requirements-test.txt` as shown in the native setup;
+Ruby checks can use Docker. See the
+[container production-build commands](docs/WORKFLOWS.md#production-and-browser-checks)
+before running browser checks.
 
 ## Native setup
 
@@ -55,6 +62,9 @@ uses POSIX signals.
 
 ## Validation and deployment
 
+With the native dependencies above installed, stop any development server on
+port 8080 so Playwright tests the production output:
+
 ```bash
 npm run checks:push
 npm run build
@@ -63,11 +73,18 @@ npm run test:ui
 npm run test:lighthouse
 ```
 
+On Linux, Playwright may also need system libraries; use
+`npx playwright install --with-deps chromium` to install them. Lighthouse uses
+its own Chrome discovery, not Playwright's browser selection. Install Chrome
+or Chromium and set `CHROME_PATH` if needed; see the
+[executable-path examples](docs/WORKFLOWS.md#production-and-browser-checks).
+
 The Docker fallback in the push checks covers Ruby, not host Python or Node;
 install `requirements-test.txt` in your active host Python environment if needed.
 See [docs/WORKFLOWS.md](docs/WORKFLOWS.md) for detailed coverage, image/CSS caching,
-selected-route runs, scheduled publication, and troubleshooting. Main-branch
-pushes publish through the checked GitHub Actions pipeline. Do not publish an
+selected-route runs, scheduled publication, and troubleshooting. Site-affecting
+main-branch pushes publish through the checked GitHub Actions pipeline;
+docs-only and backend-only pushes do not rebuild the site. Do not publish an
 untested `_site` manually.
 
 The publication-access web app has a separate

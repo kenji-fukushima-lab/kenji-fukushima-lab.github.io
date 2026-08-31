@@ -24,6 +24,7 @@ const DEFAULT_PATHS = [
   "/ja/research/3_project/",
   "/ja/carnivorous-plant-quiz/",
   "/ja/blog/",
+  "/ja/requests/",
 ];
 
 function checkedPaths() {
@@ -68,7 +69,7 @@ for (const path of checkedPaths()) {
   });
 }
 
-const representativePaths = ["/", "/people/", "/ja/people/", "/resources/", "/access/", "/research/", "/carnivorous-plant-quiz/"];
+const representativePaths = ["/", "/people/", "/ja/people/", "/resources/", "/access/", "/research/", "/carnivorous-plant-quiz/", "/ja/requests/"];
 for (const [name, width, colorScheme] of [
   ["desktop dark", 1440, "dark"],
   ["mobile light", 390, "light"],

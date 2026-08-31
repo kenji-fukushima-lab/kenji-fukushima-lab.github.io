@@ -12,9 +12,10 @@ The quickest way to run the site locally is with Docker:
 docker compose up --build
 ```
 
-Then open `http://127.0.0.1:8080/`.
+Then open <http://127.0.0.1:8080/>.
 
-If you already have a working Ruby and Bundler environment, you can also run:
+After completing the Ruby, Node, Python, and ImageMagick
+[native setup](INSTALL.md#native-setup), you can also run:
 
 ```bash
 npm run dev
@@ -22,24 +23,24 @@ npm run dev
 
 ## Checks
 
-Install the repository hooks once:
+With Node and the host Python test dependencies installed (see
+[setup](INSTALL.md)), install the repository hooks once and run the fast checks:
 
 ```bash
 npm ci
 npm run hooks:install
-```
-
-Useful local checks:
-
-```bash
 npm run checks:push
-npm run test:ui
 ```
 
-`npm run checks:push` runs the Python, JavaScript, and Ruby unit suites together with offline bibliography, image-budget, and formatting checks. Run `npm run test:ui` as an extra browser test for frontend-heavy changes; Playwright starts the local `_site` server automatically.
+`checks:push` runs unit, bibliography, image-budget, and formatting checks.
+For frontend changes, build the production site and run the
+[browser checks](docs/WORKFLOWS.md#production-and-browser-checks).
+Playwright serves an existing `_site`; it does not build it.
 
 ## More docs
 
 - [INSTALL.md](INSTALL.md) for Docker and local environment setup
 - [docs/WORKFLOWS.md](docs/WORKFLOWS.md) for CI, hooks, and publishing workflows
 - [CUSTOMIZE.md](CUSTOMIZE.md) for site-specific customization notes
+- [FAQ.md](FAQ.md) for troubleshooting
+- [Wiki](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/wiki) for blog and profile submission guides

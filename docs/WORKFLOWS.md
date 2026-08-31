@@ -8,8 +8,10 @@ and the independent `Link health` workflow consume that artifact.
 1. **Changed paths** reads `.github/ci-paths.json` and actual page permalinks.
    Pushes to main and pull requests use the same classification. The workflow
    has no earlier `paths` filter that could silently omit a public root file or
-   an Apps Script `.gs` change. Backend/test-only changes run fast checks without
-   Jekyll; feeds and ownership files are built and published without scoring XML.
+   an Apps Script `.gs` change. Documentation, backend, and unit-test-only changes
+   run fast checks without Jekyll. Changes to `tests/ui/` or `playwright.config.js`
+   also build and run browser tests. Feeds and ownership files are built and
+   published without scoring XML.
 2. **Fast checks and production build** runs Python, JavaScript, and Ruby tests,
    offline bibliography validation, the image budget, and Prettier. ImageMagick
    is installed before the image regression tests, even on test-only runs.
@@ -28,20 +30,24 @@ and the independent `Link health` workflow consume that artifact.
 5. **Deploy** publishes only after all applicable checks pass, never for pull
    requests. It verifies that the public deployment marker serves the expected
    commit. The daily run refreshes data; Sunday's UTC schedule additionally runs
-   the full browser and Lighthouse suites. Manual Deploy runs also use full
-   coverage.
+   the full browser and Lighthouse suites (Monday 08:30 Japan time). Manual
+   Deploy runs also select full coverage; the optional `axe_path` input can
+   narrow the accessibility route sweep.
 6. **Link health** starts after a successful trusted main-branch Deploy run.
-   It downloads the same SHA's artifact and checks generated HTML plus every
-   bibliography URL, including DOI and fields not rendered on a page. It neither
+   When that run produced a site artifact, it downloads the same SHA's artifact
+   and checks generated HTML plus every bibliography URL, including DOI and fields not rendered on a page. It neither
    reinstalls the build toolchain nor rebuilds Jekyll. Its failures remain visible
    in a separate check and do not block publication because a third-party server
    times out. The JSON artifact retains exact statuses, including 404 and
    timeouts; do not hide them by expanding exclusions without investigation.
+   A docs/backend-only run has no artifact, so its following Link health run
+   skips the scan. Its green status is not a new external-link measurement.
 
 Production artifacts are retained for one day. Failure diagnostics and link
 reports are retained for seven days. A manual Link health run selects an
 unexpired successful main artifact; if none exists, run Deploy first. Pull
-request artifacts are never processed by the privileged `workflow_run` job.
+request artifacts are never processed by the `workflow_run` job, whose token
+has only read access to contents and Actions.
 Concurrent superseded site/link runs are cancelled. Feature-branch pushes do
 not duplicate pull-request CI.
 
@@ -73,10 +79,12 @@ rewriting `Gemfile.lock`. For an intentional dependency update, use
 
 ## Production and browser checks
 
-With native dependencies installed:
+With native dependencies installed, stop any development server on port 8080
+before testing so Playwright does not reuse a development build:
 
 ```bash
 npm run build
+npx playwright install chromium
 npm run test:ui
 npm run test:lighthouse
 ```
@@ -90,10 +98,20 @@ npx playwright install chromium
 npm run test:ui
 ```
 
-Playwright manages its local HTTP server. An existing Chrome can be selected:
+Both browser commands need host Python for their HTTP servers. Playwright
+serves existing `_site` output and reuses an existing port-8080 server locally;
+it does not rebuild the site. An existing Chrome can be selected:
 
 ```bash
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run test:ui
+```
+
+Lighthouse separately discovers an installed Chrome/Chromium. If needed, set
+`CHROME_PATH` to its executable; installing Playwright Chromium alone does not
+configure Lighthouse. For example, on macOS with Google Chrome installed:
+
+```bash
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run test:lighthouse
 ```
 
 Lighthouse normally uses three samples. One-sample runs are diagnostic only:
@@ -111,7 +129,8 @@ edit or commit `_site`.
 Responsive image generation, figures, Markdown images, blog thumbnails, and
 preload hints share
 `_plugins/responsive_image_manifest.rb`. Descriptors use actual dimensions;
-only one candidate at or above the source width is generated. Cache keys include
+images are not upscaled, and requested widths that collapse to the same native
+width share one candidate. Cache keys include
 image content, conversion options and the ImageMagick version. Same-name file
 replacement invalidates in-process dimension caches. Keep `.jekyll-cache` for
 normal development; clearing it intentionally measures a cold build.
@@ -121,8 +140,10 @@ including derivatives not loaded in a particular browser viewport.
 ## Scheduled posts
 
 Place dated Markdown in `_scheduled/en-us/` or `_scheduled/ja/`. The filename
-must start with `YYYY-MM-DD`; an ISO `date` in front matter can specify a later
-time or explicit offset. Naive dates use `Asia/Tokyo`, also the site's time zone.
+must be `YYYY-MM-DD-title.md`; a valid ISO `date` in front matter can override
+the filename's date with a timestamp or explicit offset. Naive dates use
+`Asia/Tokyo`, also the site's time zone. Invalid dated Markdown paths or calendar
+dates fail the build; they are not silently retained for an impossible date.
 
 The single daily `Deploy site` run checks at 08:30 Japan time (GitHub may execute
 later). `_plugins/scheduled_posts.rb` reads due and overdue posts through Jekyll's
@@ -138,13 +159,30 @@ main protection does not allow direct `GITHUB_TOKEN` pushes. The manual
 there is no second daily build. A missed run is caught up on the next build.
 
 Future-dated files already in `_posts` remain excluded by Jekyll until eligible;
-the feed and sitemap now use those native documents and their actual permalinks.
+the feed and sitemap use those native documents and their actual permalinks.
+`published: false` suppresses production publication. `_scheduled` also respects
+`draft: true`. Future/draft source committed to this public repository is still
+public even when it is absent from the built site.
+
+## Submission workflows
+
+Blog/profile issue forms create or update reviewable PRs using `GITHUB_TOKEN`.
+The repository must allow Actions to create pull requests; this setting was
+enabled when checked on 2026-08-31. See the
+[blog guide](blog-submission.md) and
+[profile guide](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/wiki/Profile-Update-Instructions).
+
+Under GitHub's current rules, bot-created or updated PRs can have workflows
+waiting for a user with write access to select **Approve workflows to run**.
+Review the diff before approving, and confirm checks ran for the current PR
+revision before merging. A successful submission workflow only confirms PR
+generation, not site validation or publication. See
+[GitHub's workflow-trigger rules](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#triggering-a-workflow-from-a-workflow).
 
 ## Other workflows and troubleshooting
 
 `codeql.yml` scans code and `dependency-audit.yml` audits locked Ruby/Node
-packages. Blog/profile submission workflows create reviewable pull requests.
-The publication-access Apps Script is deployed separately: see its
+packages. The publication-access Apps Script is deployed separately: see its
 [deployment guide](../automation/apps-script/publication-access-request/README.md).
 A GitHub push alone does not update that web app.
 
