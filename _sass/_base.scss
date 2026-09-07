@@ -1534,6 +1534,7 @@ progress::-moz-progress-bar {
 
   &:active .copy,
   &:focus .copy,
+  &:focus-within .copy,
   &:hover .copy {
     color: var(--global-hover-color);
     opacity: 1;

@@ -14,32 +14,43 @@ codeBlocks.forEach(function (codeBlock) {
     var copyButton = document.createElement("button");
     copyButton.className = "copy";
     copyButton.type = "button";
-    copyButton.ariaLabel = "Copy code to clipboard";
-    copyButton.innerText = "Copy";
-    copyButton.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
+    const isJapanese = document.documentElement.lang.startsWith("ja");
+    const copyLabel = isJapanese ? "コードをコピー" : "Copy code to clipboard";
+    const copiedLabel = isJapanese ? "コードをコピーしました。" : "Code copied to clipboard.";
+    const failedLabel = isJapanese
+      ? "コピーできませんでした。コードを選択してコピーしてください。"
+      : "Could not copy. Select the code and copy it manually.";
+    copyButton.ariaLabel = copyLabel;
+    copyButton.title = copyLabel;
+    copyButton.innerHTML = '<i class="fa-solid fa-clipboard" aria-hidden="true"></i>';
+    const copyStatus = document.createElement("span");
+    copyStatus.className = "sr-only";
+    copyStatus.setAttribute("role", "status");
+    let resetTimer = null;
 
-    // get code from code block and copy to clipboard
-    copyButton.addEventListener("click", function () {
-      // check if code block has line numbers
-      // i.e. `kramdown.syntax_highlighter_opts.block.line_numbers` set to true in _config.yml
-      // or using `jekyll highlight` liquid tag with `linenos` option
-      if (codeBlock.querySelector("pre:not(.lineno)")) {
-        // get code from code block ignoring line numbers
-        var code = codeBlock.querySelector("pre:not(.lineno)").innerText.trim();
-      } else {
-        // if (codeBlock.querySelector('code')) {
-        // get code from code block when line numbers are not displayed
-        var code = codeBlock.querySelector("code").innerText.trim();
+    copyButton.addEventListener("click", async function () {
+      window.clearTimeout(resetTimer);
+      copyStatus.textContent = "";
+      copyButton.disabled = true;
+      try {
+        // Keep indentation and trailing newlines; exclude a separate line-number column.
+        const code = (codeBlock.querySelector("pre:not(.lineno)") || codeBlock.querySelector("code")).innerText;
+        await window.navigator.clipboard.writeText(code);
+        copyStatus.textContent = copiedLabel;
+        copyButton.title = copiedLabel;
+        copyButton.innerHTML = '<i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>';
+      } catch {
+        copyStatus.textContent = failedLabel;
+        copyButton.title = failedLabel;
+        copyButton.innerHTML = '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>';
+      } finally {
+        copyButton.disabled = false;
+        resetTimer = window.setTimeout(function () {
+          copyButton.title = copyLabel;
+          copyButton.innerHTML = '<i class="fa-solid fa-clipboard" aria-hidden="true"></i>';
+          copyStatus.textContent = "";
+        }, 3000);
       }
-      window.navigator.clipboard.writeText(code);
-      copyButton.innerText = "Copied";
-      copyButton.innerHTML = '<i class="fa-solid fa-clipboard-check"></i>';
-      var waitFor = 3000;
-
-      setTimeout(function () {
-        copyButton.innerText = "Copy";
-        copyButton.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
-      }, waitFor);
     });
 
     // create wrapper div
@@ -51,5 +62,6 @@ codeBlocks.forEach(function (codeBlock) {
     parent.insertBefore(wrapper, codeBlock);
     wrapper.append(codeBlock);
     wrapper.append(copyButton);
+    wrapper.append(copyStatus);
   }
 });

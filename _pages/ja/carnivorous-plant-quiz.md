@@ -34,7 +34,7 @@ nav: false
       </button>
     </div>
 
-    <p class="cp-quiz-status" data-cp-status>
+    <p class="cp-quiz-status" data-cp-status role="status">
       開始するとiNaturalist APIから写真を読み込みます。
     </p>
 
@@ -60,7 +60,7 @@ nav: false
 
     <div class="cp-quiz-results" data-cp-results hidden>
       <p class="cp-quiz-kicker">結果</p>
-      <h3 data-cp-result-heading>正答率 0%</h3>
+      <h3 data-cp-result-heading tabindex="-1">正答率 0%</h3>
       <p data-cp-result-copy></p>
       <div class="cp-quiz-result-actions">
         <button class="cp-quiz-command" type="button" data-cp-restart>

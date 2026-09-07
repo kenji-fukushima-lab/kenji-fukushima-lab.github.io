@@ -3,15 +3,16 @@
   gap: 1.5rem;
 }
 
-.coauthor-network-toolbar .btn-outline-primary {
-  border-color: #0056b3;
-  color: #0056b3;
+.coauthor-network-toolbar .network-view-button {
+  border: 1px solid var(--global-theme-color);
+  background: var(--global-bg-color);
+  color: var(--global-text-color);
 }
 
-.coauthor-network-toolbar .btn-outline-primary:hover {
-  background: #0056b3;
-  border-color: #0056b3;
-  color: #fff;
+.coauthor-network-toolbar .network-view-button:hover,
+.coauthor-network-toolbar .network-view-button:focus-visible {
+  background: var(--global-theme-color);
+  color: var(--global-button-text-color);
 }
 
 .coauthor-network-intro,
@@ -239,7 +240,7 @@ html[data-theme="dark"] .coauthor-network-year-range-slider input[type="range"]:
 }
 
 .coauthor-network-toolbar-note {
-  color: #64748b;
+  color: var(--global-text-color-light);
   font-size: 0.85rem;
 }
 

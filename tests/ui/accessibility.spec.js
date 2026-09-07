@@ -10,6 +10,8 @@ const DEFAULT_PATHS = [
   "/people/",
   "/access/",
   "/research/",
+  "/research/networks/",
+  "/404.html",
   "/research/3_project/",
   "/carnivorous-plant-quiz/",
   "/blog/",
@@ -21,6 +23,8 @@ const DEFAULT_PATHS = [
   "/ja/people/",
   "/ja/access/",
   "/ja/research/",
+  "/ja/research/networks/",
+  "/ja/404.html",
   "/ja/research/3_project/",
   "/ja/carnivorous-plant-quiz/",
   "/ja/blog/",
@@ -69,7 +73,18 @@ for (const path of checkedPaths()) {
   });
 }
 
-const representativePaths = ["/", "/people/", "/ja/people/", "/resources/", "/access/", "/research/", "/carnivorous-plant-quiz/", "/ja/requests/"];
+const representativePaths = [
+  "/",
+  "/people/",
+  "/ja/people/",
+  "/resources/",
+  "/access/",
+  "/research/",
+  "/research/networks/",
+  "/ja/research/networks/",
+  "/carnivorous-plant-quiz/",
+  "/ja/requests/",
+];
 for (const [name, width, colorScheme] of [
   ["desktop dark", 1440, "dark"],
   ["mobile light", 390, "light"],

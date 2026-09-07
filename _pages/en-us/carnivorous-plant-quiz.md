@@ -34,7 +34,7 @@ nav: false
       </button>
     </div>
 
-    <p class="cp-quiz-status" data-cp-status>
+    <p class="cp-quiz-status" data-cp-status role="status">
       Press start to load photos from the iNaturalist API.
     </p>
 
@@ -60,7 +60,7 @@ nav: false
 
     <div class="cp-quiz-results" data-cp-results hidden>
       <p class="cp-quiz-kicker">Result</p>
-      <h3 data-cp-result-heading>Accuracy 0%</h3>
+      <h3 data-cp-result-heading tabindex="-1">Accuracy 0%</h3>
       <p data-cp-result-copy></p>
       <div class="cp-quiz-result-actions">
         <button class="cp-quiz-command" type="button" data-cp-restart>

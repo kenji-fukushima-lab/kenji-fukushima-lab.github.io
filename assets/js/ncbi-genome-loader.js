@@ -8,6 +8,12 @@
   const scriptSrc = "https://www.ncbi.nlm.nih.gov/projects/sviewer/js/sviewer.js";
   let loadPromise = null;
 
+  const failedDownload = (script, reject) => {
+    script.remove();
+    loadPromise = null;
+    reject(new Error("Failed to load NCBI SeqViewer script"));
+  };
+
   const loadViewerScript = () => {
     if (loadPromise) {
       return loadPromise;
@@ -29,7 +35,7 @@
           },
           { once: true }
         );
-        existing.addEventListener("error", () => reject(new Error("Failed to load NCBI SeqViewer script")), { once: true });
+        existing.addEventListener("error", () => failedDownload(existing, reject), { once: true });
         return;
       }
 
@@ -45,7 +51,7 @@
         },
         { once: true }
       );
-      script.addEventListener("error", () => reject(new Error("Failed to load NCBI SeqViewer script")), { once: true });
+      script.addEventListener("error", () => failedDownload(script, reject), { once: true });
       document.head.appendChild(script);
     });
 

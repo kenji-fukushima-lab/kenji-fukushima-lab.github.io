@@ -39,6 +39,7 @@
       resultCopy: "{total}問中{correct}問正解しました。",
       resultHeading: "正答率 {percentage}%",
       resultStatus: "クイズが終了しました。",
+      resultIncomplete: "追加の写真を読み込めなかったため、{total}問で中断しました。もう一度お試しください。",
       score: "正解 {correct}",
       shareText: "食虫植物 学名クイズで{total}問中{correct}問正解しました（正答率{percentage}%）。",
       showResults: "結果を見る",
@@ -66,6 +67,7 @@
       resultCopy: "{correct} out of {total} correct.",
       resultHeading: "Accuracy {percentage}%",
       resultStatus: "Quiz complete.",
+      resultIncomplete: "The quiz stopped after {total} questions because additional photos could not be loaded. Please try again.",
       score: "Correct {correct}",
       shareText: "I scored {correct} out of {total} on the Carnivorous Plant Scientific Name Quiz ({percentage}% correct).",
       showResults: "Show result",
@@ -718,6 +720,7 @@
       });
 
       preloadUpcomingImages();
+      elements.choices.querySelector("button")?.focus();
     }
 
     function preloadUpcomingImages() {
@@ -804,7 +807,7 @@
     }
 
     function showResults() {
-      const questionTotal = Math.max(1, Math.min(state.questions.length, QUESTION_COUNT));
+      const questionTotal = state.currentIndex + 1;
       const percentage = Math.round((state.correctCount / questionTotal) * 100);
       elements.stage.hidden = true;
       elements.results.hidden = false;
@@ -814,7 +817,8 @@
         total: questionTotal,
       });
       updateShareLinks(percentage, questionTotal);
-      setStatus(strings.resultStatus);
+      setStatus(questionTotal < QUESTION_COUNT ? formatText(strings.resultIncomplete, { total: questionTotal }) : strings.resultStatus);
+      elements.resultHeading.focus();
     }
 
     function updateShareLinks(percentage, questionTotal) {
