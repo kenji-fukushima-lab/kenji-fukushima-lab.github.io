@@ -1,5 +1,8 @@
 // Has to be in the head tag, otherwise a flicker effect will occur.
 
+// Keep the current selection usable even when browser storage is unavailable.
+let currentThemeSetting = null;
+
 // Toggle through light, dark, and system theme settings.
 let toggleThemeSetting = () => {
   let themeSetting = determineThemeSetting();
@@ -14,7 +17,12 @@ let toggleThemeSetting = () => {
 
 // Change the theme setting and apply the theme.
 let setThemeSetting = (themeSetting) => {
-  localStorage.setItem("theme", themeSetting);
+  currentThemeSetting = themeSetting;
+  try {
+    localStorage.setItem("theme", themeSetting);
+  } catch {
+    // Storage restrictions prevent persistence, but should not stop the theme.
+  }
 
   document.documentElement.setAttribute("data-theme-setting", themeSetting);
 
@@ -196,7 +204,14 @@ let transTheme = () => {
 // Determine the expected state of the theme toggle, which can be "dark", "light", or
 // "system". Default is "system".
 let determineThemeSetting = () => {
-  let themeSetting = localStorage.getItem("theme");
+  let themeSetting = currentThemeSetting;
+  if (themeSetting === null) {
+    try {
+      themeSetting = localStorage.getItem("theme");
+    } catch {
+      // Use the system preference when a saved setting cannot be read.
+    }
+  }
   if (themeSetting != "dark" && themeSetting != "light" && themeSetting != "system") {
     themeSetting = "system";
   }

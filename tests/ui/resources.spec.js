@@ -360,3 +360,24 @@ test.describe("resources and research page smoke tests", () => {
     expect(resetScale).toBeGreaterThan(0.6);
   });
 });
+
+for (const pathname of ["/resources/", "/ja/resources/"]) {
+  for (const width of [320, 390, 768]) {
+    test(`repository names and badges fit ${pathname} at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.route("https://api.github.com/**", (route) => route.abort());
+      await page.goto(pathname, { waitUntil: "networkidle" });
+      const overflow = await page.evaluate(() => {
+        const outside = [...document.querySelectorAll(".repo-compact-name, .repo-compact-badges > a")]
+          .filter((element) => {
+            const bounds = element.getBoundingClientRect();
+            const card = element.closest(".repo-compact").getBoundingClientRect();
+            return bounds.left < card.left || bounds.right > card.right;
+          })
+          .map((element) => element.textContent.trim());
+        return { outside, page: document.documentElement.scrollWidth > innerWidth };
+      });
+      expect(overflow).toEqual({ outside: [], page: false });
+    });
+  }
+}

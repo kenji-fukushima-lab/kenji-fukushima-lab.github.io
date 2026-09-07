@@ -54,6 +54,33 @@
   color: color-mix(in srgb, var(--global-text-color) 84%, var(--global-bg-color));
 }
 
+@media (max-width: 980px) {
+  .resources-content .repo-compact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resources-content .repo-compact-main {
+    flex-wrap: wrap;
+  }
+
+  .resources-content .repo-compact-title {
+    flex-shrink: 1;
+  }
+
+  .resources-content .repo-compact-name {
+    flex-shrink: 1;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .resources-content .repo-compact-badges {
+    position: relative;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 680px) {
   .resources-content > h2 {
     padding: 0.5rem 0.68rem;

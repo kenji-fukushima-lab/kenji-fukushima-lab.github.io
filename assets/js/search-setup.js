@@ -56,6 +56,7 @@ const ensurePagefind = () => {
     return pagefindInstance;
   }
 
+  pagefindRoot.replaceChildren();
   pagefindInstance = new PagefindUI({
     element: "#pagefind-search",
     autofocus: true,
@@ -86,7 +87,15 @@ const loadPagefind = () => {
     script.src = "/pagefind/pagefind-ui.js";
     script.async = true;
     script.addEventListener("load", resolve, { once: true });
-    script.addEventListener("error", () => reject(new Error("Pagefind could not be loaded")), { once: true });
+    script.addEventListener(
+      "error",
+      () => {
+        script.remove();
+        pagefindLoadPromise = null;
+        reject(new Error("Pagefind could not be loaded"));
+      },
+      { once: true }
+    );
     document.head.appendChild(script);
   });
 
@@ -192,7 +201,13 @@ const openSearchModal = async () => {
   } catch (error) {
     console.error(error);
     if (pagefindRoot) {
-      pagefindRoot.innerHTML = '<p role="alert">Search is temporarily unavailable. Please try again later.</p>';
+      const message = document.documentElement.lang.startsWith("ja")
+        ? "検索を読み込めませんでした。検索を閉じて、もう一度お試しください。"
+        : "Search could not be loaded. Close search and try again.";
+      const alert = document.createElement("p");
+      alert.setAttribute("role", "alert");
+      alert.textContent = message;
+      pagefindRoot.replaceChildren(alert);
     }
   }
 };
