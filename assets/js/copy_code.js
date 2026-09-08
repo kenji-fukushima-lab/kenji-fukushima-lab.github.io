@@ -29,9 +29,11 @@ codeBlocks.forEach(function (codeBlock) {
     let resetTimer = null;
 
     copyButton.addEventListener("click", async function () {
+      if (copyButton.getAttribute("aria-disabled") === "true") return;
       window.clearTimeout(resetTimer);
       copyStatus.textContent = "";
-      copyButton.disabled = true;
+      // Native disabled blurs the button. Keep focus while blocking repeat activation.
+      copyButton.setAttribute("aria-disabled", "true");
       try {
         // Keep indentation and trailing newlines; exclude a separate line-number column.
         const code = (codeBlock.querySelector("pre:not(.lineno)") || codeBlock.querySelector("code")).innerText;
@@ -44,7 +46,7 @@ codeBlocks.forEach(function (codeBlock) {
         copyButton.title = failedLabel;
         copyButton.innerHTML = '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>';
       } finally {
-        copyButton.disabled = false;
+        copyButton.removeAttribute("aria-disabled");
         resetTimer = window.setTimeout(function () {
           copyButton.title = copyLabel;
           copyButton.innerHTML = '<i class="fa-solid fa-clipboard" aria-hidden="true"></i>';
