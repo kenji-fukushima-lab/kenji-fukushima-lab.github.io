@@ -1,0 +1,68 @@
+# Add another square image here to include it in the rotating home gallery.
+# mobile_src is optional; use it when a smaller mobile-only asset is available.
+desktop_count: 14
+tablet_count: 8
+mobile_count: 6
+initial_delay_ms: 3500
+swap_interval_ms: 2800
+images:
+  - src: /assets/img/home-hero/tile-01.jpg
+    mobile_src: /assets/img/home-hero/tile-01-small.jpg
+  - src: /assets/img/home-hero/tile-02.jpg
+    mobile_src: /assets/img/home-hero/tile-02-small.jpg
+  - src: /assets/img/home-hero/tile-03.jpg
+    mobile_src: /assets/img/home-hero/tile-03-small.jpg
+  - src: /assets/img/home-hero/tile-04.jpg
+    mobile_src: /assets/img/home-hero/tile-04-small.jpg
+  - src: /assets/img/home-hero/tile-05.jpg
+    mobile_src: /assets/img/home-hero/tile-05-small.jpg
+  - src: /assets/img/home-hero/tile-06.jpg
+    mobile_src: /assets/img/home-hero/tile-06-small.jpg
+  - src: /assets/img/home-hero/tile-07.jpg
+    mobile_src: /assets/img/home-hero/tile-07-small.jpg
+  - src: /assets/img/home-hero/tile-08.jpg
+    mobile_src: /assets/img/home-hero/tile-08-small.jpg
+  - src: /assets/img/home-hero/tile-09.jpg
+    mobile_src: /assets/img/home-hero/tile-09-small.jpg
+  - src: /assets/img/home-hero/tile-10.jpg
+    mobile_src: /assets/img/home-hero/tile-10-small.jpg
+  - src: /assets/img/home-hero/tile-11.jpg
+    mobile_src: /assets/img/home-hero/tile-11-small.jpg
+  - src: /assets/img/home-hero/tile-12.jpg
+    mobile_src: /assets/img/home-hero/tile-12-small.jpg
+  - src: /assets/img/home-hero/tile-13.jpg
+    mobile_src: /assets/img/home-hero/tile-13-small.jpg
+  - src: /assets/img/home-hero/tile-14.jpg
+    mobile_src: /assets/img/home-hero/tile-14-small.jpg
+  - src: /assets/img/home-hero/site-arabidopsis.jpg
+    mobile_src: /assets/img/home-hero/site-arabidopsis-small.jpg
+  - src: /assets/img/home-hero/site-bamboo-kikkouchiku.jpg
+    mobile_src: /assets/img/home-hero/site-bamboo-kikkouchiku-small.jpg
+  - src: /assets/img/home-hero/site-bamboo-kurochiku-flower.jpg
+    mobile_src: /assets/img/home-hero/site-bamboo-kurochiku-flower-small.jpg
+  - src: /assets/img/home-hero/site-bench.jpg
+    mobile_src: /assets/img/home-hero/site-bench-small.jpg
+  - src: /assets/img/home-hero/site-cuscuta.jpg
+    mobile_src: /assets/img/home-hero/site-cuscuta-small.jpg
+  - src: /assets/img/home-hero/site-cycas.jpg
+    mobile_src: /assets/img/home-hero/site-cycas-small.jpg
+  - src: /assets/img/home-hero/site-ginkgo.jpg
+    mobile_src: /assets/img/home-hero/site-ginkgo-small.jpg
+  - src: /assets/img/home-hero/site-greenhouse.jpg
+    mobile_src: /assets/img/home-hero/site-greenhouse-small.jpg
+  - src: /assets/img/home-hero/site-hymenasplenium.jpg
+    mobile_src: /assets/img/home-hero/site-hymenasplenium-small.jpg
+  - src: /assets/img/home-hero/site-incubator.jpg
+    mobile_src: /assets/img/home-hero/site-incubator-small.jpg
+  - src: /assets/img/home-hero/site-nicotiana.jpg
+    mobile_src: /assets/img/home-hero/site-nicotiana-small.jpg
+  - src: /assets/img/home-hero/site-office.jpg
+    mobile_src: /assets/img/home-hero/site-office-small.jpg
+  - src: /assets/img/home-hero/site-plant-gene.jpg
+    mobile_src: /assets/img/home-hero/site-plant-gene-small.jpg
+  - src: /assets/img/home-hero/site-tea-room.jpg
+    mobile_src: /assets/img/home-hero/site-tea-room-small.jpg
+  - src: /assets/img/home-hero/site-triphyophyllum.jpg
+    mobile_src: /assets/img/home-hero/site-triphyophyllum-small.jpg
+  - src: /assets/img/publication_preview/fukushimaAdaxialAbaxialPolarity2014.png
+  - src: /assets/img/publication_preview/fukushimaDetectingMacroevolutionaryGenotype2023.png
