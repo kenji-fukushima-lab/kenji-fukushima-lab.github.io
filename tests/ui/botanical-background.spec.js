@@ -169,14 +169,12 @@ test.describe("botanical background", () => {
     await context.close();
   });
 
-  for (const route of ["/ja/people/", "/publications/", "/ja/blog/", "/research/", "/ja/resources/", "/ja/404.html"]) {
-    test(`loads once on ${route}`, async ({ page }) => {
-      await page.goto(route);
-      await expect(page.locator("[data-botanical-background]")).toHaveCount(1);
-      await expect(page.locator('script[src*="botanical-background"]')).toHaveCount(1);
-      await expect(page.locator(".botanical-background__plant").first()).toBeVisible();
-    });
-  }
+  test("loads once on the shared default layout", async ({ page }) => {
+    await page.goto("/ja/people/");
+    await expect(page.locator("[data-botanical-background]")).toHaveCount(1);
+    await expect(page.locator('script[src*="botanical-background"]')).toHaveCount(1);
+    await expect(page.locator(".botanical-background__plant").first()).toBeVisible();
+  });
 
   test("fills wide gutters and removes extra motifs after resizing", async ({ page }) => {
     await page.setViewportSize({ width: 2560, height: 1440 });

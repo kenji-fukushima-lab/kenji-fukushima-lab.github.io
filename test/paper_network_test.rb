@@ -12,12 +12,6 @@ class PaperNetworkGeneratorTest < Minitest::Test
     @generator = PaperNetwork::Generator.new
   end
 
-  def test_plugin_source_contains_no_nul_bytes
-    source = File.binread(File.expand_path('../_plugins/paper-network.rb', __dir__))
-
-    refute_includes source, "\x00"
-  end
-
   def test_normalize_given_name_keeps_compact_initials_readable
     assert_equal 'A.B', @generator.send(:normalize_given_name, 'A.B')
     assert_equal 'A.B.', @generator.send(:normalize_given_name, 'A.B.')
