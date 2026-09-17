@@ -8,7 +8,13 @@ rm -rf -- lighthouse-results-ci .lighthouseci
 mkdir -p lighthouse-results-ci
 
 server_log="lighthouse-results-ci/http-server.log"
-python3 -m http.server 4000 --bind 127.0.0.1 --directory _site >"$server_log" 2>&1 &
+# Browser bursts can exceed the default socket backlog on macOS and drop CSS/JS.
+python3 -u -c '
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+ThreadingHTTPServer.request_queue_size = 128
+ThreadingHTTPServer(("127.0.0.1", 4000), partial(SimpleHTTPRequestHandler, directory="_site")).serve_forever()
+' >"$server_log" 2>&1 &
 server_pid=$!
 cleanup() {
   kill "$server_pid" 2>/dev/null || true
