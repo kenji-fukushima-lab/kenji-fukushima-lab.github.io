@@ -4,13 +4,20 @@ set -eu
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
-for docker_dir in /usr/local/bin /Applications/Docker.app/Contents/Resources/bin; do
-  if [ -x "$docker_dir/docker" ]; then
-    PATH="$docker_dir:$PATH"
-    export PATH
-    break
-  fi
+# Git hooks export repository-local state; isolate temporary repositories in tests.
+for git_env in $(git rev-parse --local-env-vars); do
+  unset "$git_env"
 done
+
+docker_bin=$(command -v docker || true)
+if [ -z "$docker_bin" ]; then
+  for docker_dir in /usr/local/bin /Applications/Docker.app/Contents/Resources/bin; do
+    if [ -x "$docker_dir/docker" ]; then
+      docker_bin="$docker_dir/docker"
+      break
+    fi
+  done
+fi
 
 run_ruby_tests() {
   if command -v ruby >/dev/null 2>&1 && command -v bundle >/dev/null 2>&1; then
@@ -20,8 +27,8 @@ run_ruby_tests() {
     fi
   fi
 
-  if command -v docker >/dev/null 2>&1; then
-    docker compose run --rm jekyll sh -c 'bundle check || bundle install && bundle exec ruby -Itest test/run_all.rb'
+  if [ -n "$docker_bin" ]; then
+    "$docker_bin" compose run --rm jekyll sh -c 'bundle check || bundle install && bundle exec ruby -Itest test/run_all.rb'
     return
   fi
 
@@ -38,11 +45,24 @@ EOF
 if ! command -v python3 >/dev/null 2>&1; then
   cat >&2 <<'EOF'
 Python 3 is required for the local pre-push checks.
-Install Python 3 or push with `--no-verify` if you need to bypass the hook intentionally.
+Install Python 3, then retry the checks.
 EOF
   exit 1
 fi
 
+selected_checks=$(python3 .github/scripts/select_local_checks.py "$@")
+if [ -z "$selected_checks" ]; then
+  echo "No local checks selected."
+  exit 0
+fi
+
+echo "Running local worktree checks: $selected_checks"
+for check in $selected_checks; do
+case "$check" in
+syntax)
+  python3 -m compileall -q .github/scripts
+  ;;
+python)
 if ! python3 -c 'from PIL import Image' >/dev/null 2>&1; then
   cat >&2 <<'EOF'
 The Python unit tests require the dependencies in requirements-test.txt.
@@ -52,28 +72,28 @@ Install them with:
 EOF
   exit 1
 fi
-
-echo "Running local push checks..."
-
-echo "1/7 Python syntax checks"
-find .github/scripts -name '*.py' -exec python3 -m py_compile {} +
-
-echo "2/7 Python unit tests"
 python3 -m unittest discover -s tests
-
-echo "3/7 JavaScript unit tests"
+  ;;
+javascript)
 npm run test:unit:js
-
-echo "4/7 Ruby unit tests"
+  ;;
+ruby)
 run_ruby_tests
-
-echo "5/7 Bibliography validation"
+  ;;
+bibliography)
 python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib --skip-links
-
-echo "6/7 Image budget"
+  ;;
+images)
 bash .github/scripts/check-image-budget.sh
-
-echo "7/7 Formatting"
+  ;;
+formatting)
 npm run prettier
+  ;;
+*)
+  echo "Unknown check: $check" >&2
+  exit 1
+  ;;
+esac
+done
 
-echo "Local push checks passed."
+echo "Selected local worktree checks passed. Remote CI validates the pushed commit."

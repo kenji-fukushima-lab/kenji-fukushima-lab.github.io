@@ -63,12 +63,35 @@ npm run hooks:install
 docker compose up --build
 ```
 
-The pre-commit hook formats staged files. The pre-push hook runs syntax checks,
-all unit suites, offline bibliography validation, the image budget, and Prettier:
+The pre-commit hook formats staged files and protects partially staged files.
+The pre-push hook selects local checks from every outgoing ref's old/new commit
+pair. The selection lives in `.github/scripts/select_local_checks.py`:
+
+| Changed paths                                                         | Local checks                     |
+| --------------------------------------------------------------------- | -------------------------------- |
+| Root contributor documents or Markdown under `docs/`                  | Formatting                       |
+| Python unit-test files                                                | Syntax, Python tests, formatting |
+| JavaScript unit-test files                                            | JavaScript tests, formatting     |
+| Ruby unit-test files                                                  | Ruby tests, formatting           |
+| Runtime source, fixtures, dependencies, build/CI, or any unknown path | All seven checks                 |
+
+Mixed changes take the union. Renames include both paths. Missing history, new
+refs, non-HEAD/tag pushes, or a dirty worktree fall back to all checks. These
+validate the current worktree; remote CI independently validates the pushed
+commit. Deleted or unchanged refs alone need no local suite. No successful-run
+cache is used, so changed inputs cannot reuse a stale result.
+
+Run all syntax/unit, offline bibliography, image-budget and formatting checks:
 
 ```bash
 npm run checks:push
 ```
+
+For a known local comparison base, including staged, unstaged and untracked
+changes, run `npm run checks:push -- --base origin/main`. Inspect selection
+without running checks with `python3 .github/scripts/select_local_checks.py
+--base origin/main --json`. `--full` explicitly selects all checks. Required
+production/browser verification for frontend or build changes is unchanged.
 
 It does not contact bibliography websites. A Ruby installation with the locked
 gems and ImageMagick is used first; otherwise the common Compose image and
