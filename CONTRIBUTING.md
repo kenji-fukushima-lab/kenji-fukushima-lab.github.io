@@ -9,7 +9,11 @@ behavior changes, add focused regression checks where they exercise a real
 failure, then build and inspect affected pages. Never commit `_site`, generated
 caches, private request logs, or publication-access credentials.
 
-Run `npm run checks:push` before pushing. Frontend or build changes also need a
+Use the change-to-check map in [docs/WORKFLOWS.md](docs/WORKFLOWS.md#local-development).
+`npm run checks:push` runs all local checks; `-- --base origin/main` selects
+checks for a known base and local changes. The installed pre-push hook checks
+the outgoing range automatically; a successful unchanged check need not also
+be run manually. Frontend or build changes also need a
 production build and the relevant UI/Lighthouse checks. Format with Prettier;
 CI provides a `formatting-diff` artifact when formatting differs. Do not lower
 validation thresholds or exclude links just to turn a failed check green.
