@@ -1,9 +1,11 @@
+const fs = require("fs");
+const path = require("path");
 const { test, expect } = require("@playwright/test");
-const repoStats = require("../../_data/repo_stats.json");
 
 const PAPER_GRAPH = "#paper-network-graph";
 const COAUTHOR_GRAPH = "#coauthor-network-graph";
-const REPOSITORIES = Object.keys(repoStats.repositories);
+const productionResourcesHtml = fs.readFileSync(path.join(__dirname, "../../_site/resources/index.html"), "utf8");
+const REPOSITORIES = [...productionResourcesHtml.matchAll(/data-repo-repository="([^"]+)"/g)].map(([, repository]) => repository);
 
 async function transformResourceDocument(page, pathname, transform) {
   const escapedPath = pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
