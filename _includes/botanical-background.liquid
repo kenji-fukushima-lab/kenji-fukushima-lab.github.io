@@ -27,12 +27,84 @@
         {% if pitcher_variant == 1 %}
           <!-- A single small pitcher on every third motif, linked by a leaf-tip tendril. -->
           <g transform="translate(211 330)">
-            <g data-botanical-leaf>
+            <g data-botanical-leaf data-botanical-pitcher data-state="ready">
               <path class="botanical-background__leaf" d="M0 0 C16 -19 41 -26 63 -10 C42 -13 20 11 0 0Z" />
               <path class="botanical-background__vein" d="M0 0 Q33 -13 63 -10" />
               <path class="botanical-background__stem" d="M63 -10 C95 10 40 53 68 82 Q80 91 96 84" />
               <path class="botanical-background__leaf" d="M80 40 C81 56 71 68 81 80 C88 92 106 90 113 77 C119 65 108 53 111 37Z" />
               <path class="botanical-background__vein" d="M80 40 C73 32 105 26 113 36 C119 44 91 50 80 40Z M84 38 C85 34 104 32 108 37 Q101 44 84 38Z M111 35 Q116 26 107 20 M107 20 C95 3 75 11 79 21 C85 33 101 28 107 20Z M87 47 Q79 74 91 86 M103 46 Q114 72 101 85" />
+              <g transform="translate(94 15)" data-botanical-insect-target>
+                <g class="botanical-background__insect">
+                  <ellipse cx="0" cy="0" rx="2" ry="3.5" fill="currentColor" />
+                  <circle cx="0" cy="-4" r="1.6" fill="currentColor" />
+                  <path class="botanical-background__vein" d="M-1 -2 Q-8 -7 -6 0 Q-4 3 -1 1 M1 -2 Q8 -7 6 0 Q4 3 1 1 M-2 0 l-4 3 M2 0 l4 3 M-1 2 l-3 4 M1 2 l3 4" />
+                </g>
+              </g>
+            </g>
+          </g>
+        {% elsif pitcher_variant == 2 %}
+          <!-- A flytrap on every third motif, matching the pitcher frequency. -->
+          <g transform="translate(100 167) rotate(140)">
+            <path class="botanical-background__leaf" d="M0 0 C-15 3 -31 -3 -40 -20 C-24 -19 -8 -10 0 0Z" />
+            <path class="botanical-background__vein" d="M0 0 Q-25 -6 -40 -20" />
+            <g transform="translate(-40 -46)" data-botanical-flytrap data-state="open">
+              <g class="botanical-background__trap-lobes">
+                <!-- Two cupped lobes with curved marginal teeth, without trigger hairs. -->
+                <path class="botanical-background__leaf" d="M0 -24 C-8 -31 -25 -25 -29 -11 C-34 7 -19 24 0 26 C-4 10 -4 -10 0 -24Z M0 -24 C8 -31 25 -25 29 -11 C34 7 19 24 0 26 C4 10 4 -10 0 -24Z" />
+                <path class="botanical-background__vein" d="M-5 -26 Q-7 -33 -4 -36 M-12 -27 Q-16 -34 -14 -37 M-20 -23 Q-26 -29 -25 -33 M-26 -17 Q-34 -21 -34 -26 M-29 -9 Q-38 -11 -40 -16 M-30 0 Q-39 1 -43 -3 M-27 9 Q-36 12 -40 9 M-22 16 Q-29 22 -34 21 M-14 22 Q-18 29 -24 30 M-6 25 Q-8 32 -12 34 M5 -26 Q7 -33 4 -36 M12 -27 Q16 -34 14 -37 M20 -23 Q26 -29 25 -33 M26 -17 Q34 -21 34 -26 M29 -9 Q38 -11 40 -16 M30 0 Q39 1 43 -3 M27 9 Q36 12 40 9 M22 16 Q29 22 34 21 M14 22 Q18 29 24 30 M6 25 Q8 32 12 34" />
+                <path class="botanical-background__vein" d="M-3 -20 C-25 -30 -36 7 -4 23 M3 -20 C25 -30 36 7 4 23" />
+              </g>
+              <path class="botanical-background__vein" d="M0 -24 Q-2 0 0 26" />
+            </g>
+          </g>
+        {% else %}
+          <g transform="translate(100 167) rotate(140)">
+            <path class="botanical-background__leaf" d="M0 0 Q-25 -8 -40 -20 Q-29 -22 -22 -20Z" />
+            <g transform="translate(-40 -46)" data-botanical-sundew>
+              <path class="botanical-background__vein" data-sundew-stalk d="M40 46 Q8 43 0 24" />
+              <g data-sundew-leaf>
+                <path class="botanical-background__leaf" d="M0 25 C-7 15 -16 0 -15 -13 C-14 -33 14 -33 15 -13 C16 0 7 15 0 25Z" />
+                <path class="botanical-background__vein" d="M0 23 Q-2 0 0 -24" />
+                <path class="botanical-background__vein" d="M-5 -25 Q-9 -25 -9 -35" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-9" cy="-35" r="2.1" />
+                <path class="botanical-background__vein" d="M5 -25 Q9 -25 9 -35" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="9" cy="-35" r="2.1" />
+                <path class="botanical-background__vein" d="M-12 -20 Q-22 -20 -22 -27" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-22" cy="-27" r="2.1" />
+                <path class="botanical-background__vein" d="M12 -20 Q22 -20 22 -27" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="22" cy="-27" r="2.1" />
+                <path class="botanical-background__vein" d="M-15 -11 Q-28 -11 -28 -15" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-28" cy="-15" r="2.1" />
+                <path class="botanical-background__vein" d="M15 -11 Q28 -11 28 -15" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="28" cy="-15" r="2.1" />
+                <path class="botanical-background__vein" d="M-14 0 Q-27 0 -27 1" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-27" cy="1" r="2.1" />
+                <path class="botanical-background__vein" d="M14 0 Q27 0 27 1" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="27" cy="1" r="2.1" />
+                <path class="botanical-background__vein" d="M-10 10 Q-22 10 -22 16" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-22" cy="16" r="2.1" />
+                <path class="botanical-background__vein" d="M10 10 Q22 10 22 16" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="22" cy="16" r="2.1" />
+                <path class="botanical-background__vein" d="M-5 19 Q-14 19 -14 27" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-14" cy="27" r="2.1" />
+                <path class="botanical-background__vein" d="M5 19 Q14 19 14 27" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="14" cy="27" r="2.1" />
+                <path class="botanical-background__vein" d="M-5 -14 Q-10 -14 -10 -19" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-10" cy="-19" r="2.1" />
+                <path class="botanical-background__vein" d="M5 -14 Q10 -14 10 -19" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="10" cy="-19" r="2.1" />
+                <path class="botanical-background__vein" d="M-5 -3 Q-10 -3 -10 -7" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-10" cy="-7" r="2.1" />
+                <path class="botanical-background__vein" d="M5 -3 Q10 -3 10 -7" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="10" cy="-7" r="2.1" />
+                <path class="botanical-background__vein" d="M-3 8 Q-7 8 -7 5" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="-7" cy="5" r="2.1" />
+                <path class="botanical-background__vein" d="M3 8 Q7 8 7 5" />
+                <circle class="botanical-background__dew-drop" data-sundew-drop cx="7" cy="5" r="2.1" />
+              </g>
+              {% for thread in (1..3) %}
+                <path class="botanical-background__mucilage" data-sundew-thread />
+              {% endfor %}
             </g>
           </g>
         {% endif %}

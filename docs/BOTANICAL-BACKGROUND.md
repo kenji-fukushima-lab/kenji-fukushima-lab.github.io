@@ -1,6 +1,6 @@
 # Botanical background
 
-The shared background uses pale SVG vines, occasional pitchers, local swaying,
+The shared background uses pale SVG vines, occasional pitchers, Venus flytraps and sundews at equal frequency, local swaying,
 and two nearby tendrils that approach the pointer in a shrinking spiral. Growth
 takes 6.5 seconds; target tracking uses a 2.4-second smoothing time constant.
 Reduced-motion and narrow/touch layouts remain static. The drawing is revealed
@@ -10,6 +10,22 @@ The animation caches fixed SVG coordinate transforms until the viewport changes,
 applies stem rotation numerically, and skips unchanged SVG transform writes.
 It stops requesting frames once growth and tracking settle. Moving or leaving
 the pointer restarts it as needed.
+
+Flytraps close after two separate pointer entries (or touch/pen taps) within
+30 seconds and reopen after 8 seconds. Remaining over a trap counts only once;
+mouse clicks do not double-count entry. Hit testing observes global pointer
+input without intercepting page controls, and only responds in the visible
+margins. Reduced motion keeps the explicit closure instant. Resizing resets traps.
+
+Pitcher lids carry a small insect: pointer contact or a tap drops it through the
+mouth, and it returns after 6.5 seconds. Reduced motion hides it immediately.
+Sundew droplets attach to a precise pointer after contact, drawing three mucus
+strands from nearby droplets to the pointer. Attachment follows across the content margin for up to 320 SVG
+units and 8 seconds. The blade follows gently, moving at most 5 units while its
+stalk bends; it returns when the attachment releases. Leaving the window releases
+it; blur, resize, tab hiding and reduced motion clear it. Page controls
+remain unobstructed. Flytrap artwork uses two cupped lobes and curved marginal
+teeth without internal trigger hairs.
 
 ## Reproducible component benchmark
 
@@ -43,3 +59,32 @@ sampled SVG path coordinates differed by less than 0.000000005 SVG units.
 Behavior regression tests are in `tests/ui/botanical-background.spec.js`, including
 initial placement, masking, tangent continuity, spiral convergence, slow pointer
 tracking, retraction, reduced motion, and responsive layouts.
+
+## Carnivorous-plant interaction benchmark
+
+`tests/benchmarks/botanical-interactions.cjs` uses the same built artwork and
+source CSS, with 240 Hz pointer input, 60 Hz animation and 25 simulated seconds.
+The sequence touches and drags a sundew, crosses page content, brushes a flytrap,
+touches a pitcher lid and sweeps the margin. It includes pointer handlers and
+animation callbacks plus a layout flush, virtualizes interaction timers, and
+uses one warmup and three measured runs per width (1440 px tall).
+
+```sh
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="/path/to/chrome" \
+  node tests/benchmarks/botanical-interactions.cjs assets/js/botanical-background.js /tmp/interactions-after.json
+```
+
+On macOS ARM64 with Chrome 152.0.7977.84, replacing per-input SVG geometry reads
+with cached placement and inverse live rotations gave these median totals:
+
+| Width   | Before (ms) | After (ms) | Reduction | Geometry reads before / after |
+| ------- | ----------: | ---------: | --------: | ----------------------------: |
+| 1440 px |       216.4 |      107.5 |     50.3% |                   95,596 / 76 |
+| 2560 px |       676.1 |      224.1 |     66.9% |                 400,760 / 304 |
+
+These are component CPU timings, not whole-page speed or FPS. Geometry counts
+include fixture setup. State snapshots and path structure matched; the largest
+sampled coordinate difference was below 0.00000015 SVG units. Cache entries are
+rebuilt on resize and media-query changes; hidden mobile motifs are excluded.
+Cached placement adds small per-motif metadata, without changing the artwork,
+closure timing, three mucus strands, drag distance or small leaf displacement.

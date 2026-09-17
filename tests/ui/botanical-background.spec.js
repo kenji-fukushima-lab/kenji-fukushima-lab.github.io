@@ -203,3 +203,133 @@ test.describe("botanical background", () => {
     await expect.poll(() => plants.count()).toBeGreaterThan(12);
   });
 });
+
+test("flytraps count separate contacts, forget old touches and reopen", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.clock.install();
+  await page.goto("/ja/");
+  const traps = page.locator("[data-botanical-flytrap]");
+  const point = await traps.evaluateAll((elements) => {
+    for (let index = 0; index < elements.length; index++) {
+      const p = new DOMPoint(0, 0).matrixTransform(elements[index].getScreenCTM());
+      if (p.x > 5 && p.x < 500 && p.y > 100 && p.y < innerHeight - 50) return { index, x: p.x, y: p.y };
+    }
+  });
+  expect(point).toBeTruthy();
+  const trap = traps.nth(point.index);
+  await page.mouse.move(point.x, point.y);
+  await expect(trap).toHaveAttribute("data-state", "open");
+  await page.mouse.move(point.x + 1, point.y + 1);
+  await page.mouse.click(point.x, point.y);
+  await expect(trap).toHaveAttribute("data-state", "open");
+  await page.mouse.move(1280, 600);
+  await page.clock.fastForward(31000);
+  await page.mouse.move(point.x, point.y);
+  await expect(trap).toHaveAttribute("data-state", "open");
+  await page.mouse.move(1280, 600);
+  await page.mouse.move(point.x, point.y);
+  await expect(trap).toHaveAttribute("data-state", "closed");
+  await expect(trap.locator(".botanical-background__trap-lobes")).toHaveCSS("transform", "matrix(0.12, 0, 0, 1, 0, 0)");
+  await page.clock.fastForward(8000);
+  await expect(trap).toHaveAttribute("data-state", "open");
+  // Touch input uses taps, without also counting the preceding pointermove.
+  await page.evaluate(({ x, y }) => {
+    window.dispatchEvent(new PointerEvent("pointermove", { pointerType: "touch", clientX: x, clientY: y }));
+    window.dispatchEvent(new PointerEvent("pointerdown", { pointerType: "touch", clientX: x, clientY: y }));
+  }, point);
+  await expect(trap).toHaveAttribute("data-state", "open");
+  await page.evaluate(({ x, y }) => {
+    window.dispatchEvent(new PointerEvent("pointerdown", { pointerType: "touch", clientX: x, clientY: y }));
+  }, point);
+  await expect(trap).toHaveAttribute("data-state", "closed");
+  await page.setViewportSize({ width: 2400, height: 1400 });
+  await expect(page.locator('[data-botanical-flytrap][data-state="closed"]')).toHaveCount(0);
+});
+
+async function visiblePlantPoint(page, selector, local = { x: 0, y: 0 }) {
+  const result = await page.locator(selector).evaluateAll((elements, point) => {
+    const gutter = parseFloat(document.querySelector("[data-botanical-background]").style.getPropertyValue("--botanical-gutter"));
+    for (let index = 0; index < elements.length; index++) {
+      const p = new DOMPoint(point.x, point.y).matrixTransform(elements[index].getScreenCTM());
+      if (p.x > 40 && p.x < gutter - 40 && p.y > 100 && p.y < innerHeight - 100) return { index, x: p.x, y: p.y };
+    }
+  }, local);
+  expect(result, `${selector} has a reachable point in the margin`).toBeTruthy();
+  return result;
+}
+
+test("pitcher insect falls through the mouth, resets, and respects reduced motion", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.clock.install();
+  await page.goto("/ja/");
+  const point = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  const pitcher = page.locator("[data-botanical-pitcher]").nth(point.index);
+  await page.mouse.move(point.x, point.y);
+  await expect(pitcher).toHaveAttribute("data-state", "fallen");
+  const insect = pitcher.locator(".botanical-background__insect");
+  await page.clock.runFor(700);
+  await expect(insect).toHaveCSS("opacity", "0");
+  await expect(insect).not.toHaveCSS("transform", "none");
+  await page.clock.runFor(6000);
+  await expect(pitcher).toHaveAttribute("data-state", "ready");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const again = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  await page.mouse.move(1280, 600);
+  await page.mouse.move(again.x, again.y);
+  await expect(page.locator("[data-botanical-pitcher]").nth(again.index).locator(".botanical-background__insect")).toHaveCSS(
+    "animation-name",
+    "none"
+  );
+  await expect(page.locator("[data-botanical-pitcher]").nth(again.index)).toHaveAttribute("data-state", "fallen");
+});
+
+test("sundew follows longer drags with three mucus strands and releases", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.goto("/ja/");
+  const point = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  const dew = page.locator("[data-botanical-sundew]").nth(point.index);
+  await page.mouse.move(point.x, point.y);
+  await expect(dew).toHaveAttribute("data-stuck", "true");
+  await page.mouse.move(point.x + 28, point.y + 8);
+  await expect
+    .poll(() =>
+      dew.locator("[data-sundew-leaf]").evaluate((e) => {
+        const matrix = e.transform.baseVal.consolidate()?.matrix;
+        return matrix ? Math.hypot(matrix.e, matrix.f) : 0;
+      })
+    )
+    .toBeGreaterThan(1);
+  const distance = await dew.locator("[data-sundew-leaf]").evaluate((e) => {
+    const matrix = e.transform.baseVal.consolidate().matrix;
+    return Math.hypot(matrix.e, matrix.f);
+  });
+  expect(distance).toBeLessThanOrEqual(5);
+  await page.mouse.move(point.x + 160, point.y + 8);
+  await page.waitForTimeout(2400);
+  await expect(dew).toHaveAttribute("data-stuck", "true");
+  await expect
+    .poll(() =>
+      dew.locator("[data-sundew-leaf]").evaluate((e) => {
+        const matrix = e.transform.baseVal.consolidate()?.matrix;
+        return matrix ? Math.hypot(matrix.e, matrix.f) : 0;
+      })
+    )
+    .toBeGreaterThan(4);
+  const longDragDistance = await dew.locator("[data-sundew-leaf]").evaluate((e) => {
+    const matrix = e.transform.baseVal.consolidate().matrix;
+    return Math.hypot(matrix.e, matrix.f);
+  });
+  expect(longDragDistance).toBeLessThanOrEqual(5);
+  await expect(dew.locator("[data-sundew-thread][d]")).toHaveCount(3);
+  const paths = await dew.locator("[data-sundew-thread]").evaluateAll((elements) => elements.map((element) => element.getAttribute("d")));
+  expect(new Set(paths).size).toBe(3);
+  await page.mouse.move(1280, 600);
+  await expect(dew).not.toHaveAttribute("data-stuck");
+  await expect(dew.locator("[data-sundew-thread][d]")).toHaveCount(0);
+  await expect(dew.locator("[data-sundew-leaf]")).not.toHaveAttribute("transform");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const again = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  await page.mouse.move(again.x, again.y);
+  await expect(page.locator("[data-botanical-sundew][data-stuck]")).toHaveCount(0);
+});

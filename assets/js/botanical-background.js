@@ -12,8 +12,16 @@
   let parts = [];
   let tendrils = [];
   let gutterWidth = 0;
+  let traps = [];
+  let pitchers = [];
+  let sundews = [];
+  let sticky = null;
+  let stickyFrame = 0;
+  let hitGeometry = new WeakMap();
 
   function arrange() {
+    traps.forEach((trap) => clearTimeout(trap.timer));
+    pitchers.forEach((pitcher) => clearTimeout(pitcher.timer));
     background.querySelectorAll("[data-botanical-copy]").forEach((plant) => plant.remove());
     originals.forEach((plant) => plant.removeAttribute("style"));
     const main = document.querySelector('[role="main"]');
@@ -59,15 +67,60 @@
       dx: 0,
       dy: 0,
     }));
+    traps = [...background.querySelectorAll("[data-botanical-flytrap]")].map((element) => {
+      element.dataset.state = "open";
+      return { element, inside: false, touches: 0, lastTouch: -Infinity, timer: 0 };
+    });
+    pitchers = [...background.querySelectorAll("[data-botanical-pitcher]")].map((element) => {
+      element.dataset.state = "ready";
+      return { element, target: element.querySelector("[data-botanical-insect-target]"), timer: 0 };
+    });
+    sundews = [...background.querySelectorAll("[data-botanical-sundew]")].map((element) => ({
+      element,
+      leaf: element.querySelector("[data-sundew-leaf]"),
+      stalk: element.querySelector("[data-sundew-stalk]"),
+      threads: [...element.querySelectorAll("[data-sundew-thread]")],
+      drops: [...element.querySelectorAll("[data-sundew-drop]")].map((drop) => ({
+        x: Number(drop.getAttribute("cx")),
+        y: Number(drop.getAttribute("cy")),
+      })),
+    }));
     parts = [];
     background.querySelectorAll("[data-botanical-stem]").forEach((stem) => {
-      parts.push({ element: stem, origin: "150 0", degrees: 7, angle: 0, impulse: 0 });
+      parts.push({ element: stem, origin: "150 0", degrees: 7, angle: 0, impulse: 0, cos: 1, sin: 0 });
     });
     background.querySelectorAll("[data-botanical-leaf]").forEach((leaf) => {
-      parts.push({ element: leaf, origin: "0 0", degrees: settings.leafDegrees, angle: 0, impulse: 0 });
+      parts.push({ element: leaf, origin: "0 0", degrees: settings.leafDegrees, angle: 0, impulse: 0, cos: 1, sin: 0 });
     });
     tendrils.forEach((tip) => {
       tip.stem = parts.find((part) => part.element === tip.element.parentNode);
+    });
+    cacheHitGeometry();
+  }
+
+  function cacheHitGeometry() {
+    hitGeometry = new WeakMap();
+    const partByElement = new Map(parts.map((part) => [part.element, part]));
+    const roots = new Map();
+    const targets = [...traps.map((trap) => trap.element), ...pitchers.map((pitcher) => pitcher.target), ...sundews.map((dew) => dew.element)];
+    targets.forEach((element) => {
+      if (!element.getClientRects().length) return;
+      const stem = element.closest("[data-botanical-stem]");
+      let root = roots.get(stem);
+      if (!root) {
+        root = { inverse: stem.getScreenCTM().inverse(), part: partByElement.get(stem) };
+        roots.set(stem, root);
+      }
+      const localToStem = root.inverse.multiply(element.getScreenCTM());
+      const leaf = element.closest("[data-botanical-leaf]");
+      const leafMatrix = leaf ? root.inverse.multiply(leaf.getScreenCTM()) : null;
+      hitGeometry.set(element, {
+        root,
+        inverse: localToStem.inverse(),
+        leaf: partByElement.get(leaf),
+        leafX: leafMatrix ? leafMatrix.e : 0,
+        leafY: leafMatrix ? leafMatrix.f : 0,
+      });
     });
   }
 
@@ -94,6 +147,9 @@
   function setTransform(part, value) {
     if (part.transform === value) return;
     part.transform = value;
+    const angle = value === null ? 0 : (Number(part.angle.toFixed(4)) * Math.PI) / 180;
+    part.cos = Math.cos(angle);
+    part.sin = Math.sin(angle);
     if (value === null) part.element.removeAttribute("transform");
     else part.element.setAttribute("transform", value);
   }
@@ -105,6 +161,7 @@
   }
 
   function reset() {
+    clearSticky();
     cancelAnimationFrame(frame);
     frame = 0;
     position = null;
@@ -250,6 +307,157 @@
     return path;
   }
 
+  function clearSticky() {
+    cancelAnimationFrame(stickyFrame);
+    stickyFrame = 0;
+    if (sticky) {
+      sticky.dew.leaf.removeAttribute("transform");
+      sticky.dew.stalk.setAttribute("d", "M40 46 Q8 43 0 24");
+      sticky.dew.threads.forEach((thread) => thread.removeAttribute("d"));
+      sticky.dew.element.removeAttribute("data-stuck");
+      sticky = null;
+    }
+  }
+
+  function localPoint(element, x, y) {
+    const geometry = hitGeometry.get(element);
+    if (!geometry) return null;
+    const { root, inverse, leaf, leafX, leafY } = geometry;
+    const m = root.inverse,
+      stem = root.part;
+    const sx = m.a * x + m.c * y + m.e - 150;
+    const sy = m.b * x + m.d * y + m.f;
+    // Undo only the live rotations; fixed placement is cached until reconfiguration.
+    let px = 150 + sx * stem.cos + sy * stem.sin;
+    let py = -sx * stem.sin + sy * stem.cos;
+    if (leaf) {
+      const dx = px - leafX,
+        dy = py - leafY;
+      px = leafX + dx * leaf.cos + dy * leaf.sin;
+      py = leafY - dx * leaf.sin + dy * leaf.cos;
+    }
+    return { x: inverse.a * px + inverse.c * py + inverse.e, y: inverse.b * px + inverse.d * py + inverse.f };
+  }
+
+  function inMargin(x) {
+    const margin = innerWidth < 768 ? innerWidth * 0.23 : gutterWidth;
+    return x < margin || x > innerWidth - margin;
+  }
+
+  function animateSticky(time) {
+    if (!sticky) return;
+    const dt = Math.min(50, time - sticky.time);
+    sticky.time = time;
+    const { dew, anchor } = sticky;
+    const point = localPoint(dew.element, sticky.x, sticky.y);
+    if (!point) {
+      clearSticky();
+      return;
+    }
+    const dx = point.x - anchor.x,
+      dy = point.y - anchor.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance > 320 || time - sticky.started > 8000) sticky.releasing = true;
+    const scale = sticky.releasing ? 0 : Math.min(1, 260 / Math.max(1, distance));
+    const ease = 1 - Math.exp(-dt / (sticky.releasing ? 130 : 65));
+    sticky.dx += (dx * scale - sticky.dx) * ease;
+    sticky.dy += (dy * scale - sticky.dy) * ease;
+    const extension = Math.hypot(sticky.dx, sticky.dy);
+    // Keep the original small leaf tug even when the mucus stretches much farther.
+    const leafScale = 0.09 * Math.min(1, 55 / Math.max(1, extension));
+    const pullX = sticky.dx * leafScale,
+      pullY = sticky.dy * leafScale;
+    dew.leaf.setAttribute("transform", `translate(${pullX} ${pullY})`);
+    dew.stalk.setAttribute("d", `M40 46 Q${8 + pullX * 0.5} ${43 + pullY * 0.5} ${pullX} ${24 + pullY}`);
+    const spread = Math.min(1, extension / 20);
+    dew.threads.forEach((thread, index) => {
+      const drop = sticky.anchors[index];
+      const ax = drop.x + pullX,
+        ay = drop.y + pullY;
+      // Each strand starts at a different droplet and retracts to that droplet.
+      const ex = ax + (anchor.x + sticky.dx - ax) * spread;
+      const ey = ay + (anchor.y + sticky.dy - ay) * spread;
+      const sag = Math.min(12, extension * 0.08) * (0.7 + index * 0.3);
+      thread.setAttribute("d", `M${ax} ${ay} Q${(ax + ex) / 2} ${(ay + ey) / 2 + sag} ${ex} ${ey}`);
+    });
+    if (sticky.releasing && Math.hypot(sticky.dx, sticky.dy) < 0.2) {
+      clearSticky();
+      return;
+    }
+    stickyFrame = requestAnimationFrame(animateSticky);
+  }
+
+  function touchOtherPlants(event) {
+    if (document.hidden) return;
+    const tapping = event.type === "pointerdown";
+    if (!tapping && (event.pointerType === "touch" || event.pointerType === "pen")) return;
+    const x = event.clientX,
+      y = event.clientY;
+    if (sticky) {
+      sticky.x = x;
+      sticky.y = y;
+    }
+    if (!inMargin(x)) return;
+    pitchers.forEach((pitcher) => {
+      if (pitcher.element.dataset.state !== "ready") return;
+      const point = localPoint(pitcher.target, x, y);
+      if (!point || point.x ** 2 / 17 ** 2 + point.y ** 2 / 12 ** 2 > 1) return;
+      pitcher.element.dataset.state = "fallen";
+      pitcher.timer = setTimeout(() => {
+        pitcher.element.dataset.state = "ready";
+      }, 6500);
+    });
+    if (!enabled || tapping || sticky || event.pointerType === "touch" || event.pointerType === "pen") return;
+    for (const dew of sundews) {
+      const point = localPoint(dew.element, x, y);
+      if (!point) continue;
+      const anchor = dew.drops.find((drop) => Math.hypot(point.x - drop.x, point.y - drop.y) < 7);
+      if (!anchor) continue;
+      const time = performance.now();
+      const anchors = [...dew.drops]
+        .sort((a, b) => Math.hypot(a.x - anchor.x, a.y - anchor.y) - Math.hypot(b.x - anchor.x, b.y - anchor.y))
+        .slice(0, 3);
+      sticky = { dew, anchor, anchors, x, y, dx: 0, dy: 0, started: time, time, releasing: false };
+      dew.element.dataset.stuck = "true";
+      stickyFrame = requestAnimationFrame(animateSticky);
+      break;
+    }
+  }
+
+  // Observe input without intercepting links or scrolling beneath the decoration.
+  function touchTraps(event) {
+    if (document.hidden) return;
+    const tapping = event.type === "pointerdown";
+    if (!tapping && (event.pointerType === "touch" || event.pointerType === "pen")) return;
+    if (tapping && event.pointerType === "mouse") return;
+    const x = event.clientX,
+      y = event.clientY;
+    if (!inMargin(x)) {
+      traps.forEach((trap) => {
+        trap.inside = false;
+      });
+      return;
+    }
+    traps.forEach((trap) => {
+      const local = localPoint(trap.element, x, y);
+      if (!local) return;
+      const inside = local.x ** 2 / 34 ** 2 + local.y ** 2 / 32 ** 2 <= 1;
+      if (inside && (tapping || !trap.inside) && trap.element.dataset.state !== "closed") {
+        const now = performance.now();
+        trap.touches = now - trap.lastTouch > 30000 ? 1 : trap.touches + 1;
+        trap.lastTouch = now;
+        if (trap.touches === 2) {
+          trap.element.dataset.state = "closed";
+          trap.touches = 0;
+          trap.timer = setTimeout(() => {
+            trap.element.dataset.state = "open";
+          }, 8000);
+        }
+      }
+      trap.inside = inside;
+    });
+  }
+
   function move(event) {
     if (!enabled || document.hidden || event.pointerType === "touch") return;
     position = { x: event.clientX, y: event.clientY };
@@ -272,6 +480,10 @@
   }
 
   function leave() {
+    if (sticky) sticky.releasing = true;
+    traps.forEach((trap) => {
+      trap.inside = false;
+    });
     position = null;
     if (!frame && tendrils.some((tip) => tip.progress > 0)) {
       lastTime = performance.now();
@@ -288,6 +500,10 @@
     background.style.visibility = "visible";
   }
 
+  window.addEventListener("pointermove", touchOtherPlants, { passive: true });
+  window.addEventListener("pointerdown", touchOtherPlants, { passive: true });
+  window.addEventListener("pointermove", touchTraps, { passive: true });
+  window.addEventListener("pointerdown", touchTraps, { passive: true });
   window.addEventListener("pointermove", move, { passive: true });
   document.documentElement.addEventListener("pointerleave", leave);
   window.addEventListener("blur", reset);
