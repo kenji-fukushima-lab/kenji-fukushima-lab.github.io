@@ -26,6 +26,7 @@ github_repos:
   #  - mathjax/MathJax
 
   - kfuku52/genegalleon
+  - kfuku52/kfFractBias
   - kfuku52/csubst
   - kfuku52/amalgkit
   - kfuku52/msspack
@@ -37,5 +38,6 @@ github_repos:
   - kfuku52/kftools
   - kfuku52/rkftools
   - kfuku52/kfl1ou
+  - kfuku52/kfbatch
   - mkrg01/genome_assembly_pipeline
   - mkrg01/permucn

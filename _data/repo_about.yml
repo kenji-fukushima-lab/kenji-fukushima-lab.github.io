@@ -1,4 +1,5 @@
 "kfuku52/genegalleon": "Charting evolutionary histories across genes and species"
+"kfuku52/kfFractBias": "Offline Python 3 fractionation-bias analysis with local JCVI and QUOTA-ALIGN"
 "kfuku52/csubst": "Analyzing combinations of codon substitution histories"
 "kfuku52/amalgkit": "RNA-seq data amalgamation for a large-scale evolutionary transcriptomics"
 "kfuku52/msspack": "Build DDBJ MSS submission files from FASTA/GFF inputs"
@@ -10,5 +11,6 @@
 "kfuku52/kftools": "Miscellaneous Python utilities mainly for evolutionary genomics"
 "kfuku52/rkftools": "R utilities for handling data in evolutionary biology"
 "kfuku52/kfl1ou": "An independently maintained fork of l1ou for detecting evolutionary shifts and convergent regimes"
+"kfuku52/kfbatch": "Compact, conservative resource summaries for Slurm and AGE/UGE/SGE batch clusters"
 "mkrg01/genome_assembly_pipeline": "An integrated pipeline for eukaryotic genome assembly and gene annotation"
 "mkrg01/permucn": "A tool to test associations between binary trait transitions and gene-family copy-number evolution from CAFE outputs"
