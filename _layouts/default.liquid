@@ -26,6 +26,7 @@
 
   <!-- Body -->
   <body class="{% if site.navbar_fixed %}fixed-top-nav{% endif %} {% if site.show_footer == false or site.show_footer == 'false' or site.footer_fixed != true %}sticky-bottom-footer{% endif %}">
+    {% include botanical-background.liquid %}
     <!-- Header -->
     {% include header.liquid %}
 
