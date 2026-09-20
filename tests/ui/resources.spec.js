@@ -6,6 +6,7 @@ const PAPER_GRAPH = "#paper-network-graph";
 const COAUTHOR_GRAPH = "#coauthor-network-graph";
 const productionResourcesHtml = fs.readFileSync(path.join(__dirname, "../../_site/resources/index.html"), "utf8");
 const REPOSITORIES = [...productionResourcesHtml.matchAll(/data-repo-repository="([^"]+)"/g)].map(([, repository]) => repository);
+const STATIC_REPOSITORY_COUNT = (productionResourcesHtml.match(/data-repo-static=/g) || []).length;
 
 async function transformResourceDocument(page, pathname, transform) {
   const escapedPath = pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -180,6 +181,7 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/resources/");
+    await expect(page.locator("[data-repo-stats-load]")).toHaveCount(0);
     await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
 
     const forkLink = page.locator('[data-analytics-label="repository_forks"]').first();
@@ -203,6 +205,7 @@ test.describe("resources and research page smoke tests", () => {
     });
 
     await page.goto("/ja/resources/");
+    await expect(page.locator("[data-repo-stats-load]")).toHaveCount(0);
     await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub統計を読み込みました。");
 
     const firstRepo = page.locator(".repo-compact").first();
@@ -234,7 +237,7 @@ test.describe("resources and research page smoke tests", () => {
     await expect(lastCommit).toHaveText("1 hour ago");
   });
 
-  test("uses fresh build-time stats without browser GitHub requests", async ({ page }) => {
+  test("uses fresh build-time stats and refreshes only missing repositories", async ({ page }) => {
     const fetchedAt = "2026-08-22T12:00:00Z";
     await page.clock.install({ time: new Date("2026-08-22T13:00:00Z") });
     await setStaticRepoStatsFetchedAt(page, fetchedAt);
@@ -247,8 +250,9 @@ test.describe("resources and research page smoke tests", () => {
 
     await page.goto("/resources/");
     await expect(page.locator(".repo-compact-stat-stars [data-repo-stat-value]").first()).not.toHaveText("--");
-    await expect(page.locator("[data-repo-stats-status]")).toHaveText("");
-    expect(apiRequests).toBe(0);
+    const missingRepoCount = REPOSITORIES.length - STATIC_REPOSITORY_COUNT;
+    await expect(page.locator("[data-repo-stats-status]")).toHaveText(missingRepoCount ? "Some GitHub statistics could not be loaded." : "");
+    expect(apiRequests).toBe(missingRepoCount);
   });
 
   test("shows stale cached stats while refreshing them in the background", async ({ page }) => {
@@ -275,7 +279,7 @@ test.describe("resources and research page smoke tests", () => {
     await expect(firstStars).toHaveText("11");
   });
 
-  test("keeps fresh browser cache until a manual force refresh", async ({ page }) => {
+  test("keeps fresh browser cache without a manual refresh control", async ({ page }) => {
     const fetchedAt = new Date(Date.now() + 60 * 1000).toISOString();
     await seedRepoCache(page, { fetchedAt, stars: 99 });
 
@@ -289,39 +293,23 @@ test.describe("resources and research page smoke tests", () => {
     await page.goto("/resources/");
     const firstStars = page.locator(".repo-compact-stat-stars [data-repo-stat-value]").first();
     await expect(firstStars).toHaveText("99");
+    await expect(page.locator("[data-repo-stats-load]")).toHaveCount(0);
     expect(apiRequests).toBe(0);
-
-    await page.getByRole("button", { name: "Refresh GitHub statistics", exact: true }).click();
-    await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
-    await expect(firstStars).toHaveText("11");
-    expect(apiRequests).toBe(REPOSITORIES.length);
   });
 
-  test("allows a manual retry after automatic GitHub errors", async ({ page }) => {
+  test("reports automatic GitHub errors without a refresh control", async ({ page }) => {
     await removeStaticRepoStats(page);
-    let shouldFail = true;
     let apiRequests = 0;
     await page.route("https://api.github.com/repos/**", async (route) => {
       apiRequests += 1;
-      if (shouldFail) {
-        await route.fulfill({ status: 503, body: "temporarily unavailable" });
-        return;
-      }
-      const repo = new URL(route.request().url()).pathname.replace(/^\/repos\//, "");
-      await route.fulfill({ contentType: "application/json", body: JSON.stringify(githubRepoPayload(repo)) });
+      await route.fulfill({ status: 503, body: "temporarily unavailable" });
     });
 
     await page.goto("/resources/");
     const status = page.locator("[data-repo-stats-status]");
-    const refreshButton = page.getByRole("button", { name: "Refresh GitHub statistics", exact: true });
     await expect(status).toHaveText("Some GitHub statistics could not be loaded.");
-    await expect(refreshButton).toBeEnabled();
-
-    shouldFail = false;
-    await refreshButton.click();
-    await expect(status).toHaveText("GitHub statistics loaded.");
-    await expect(page.locator(".repo-compact-stat-stars [data-repo-stat-value]").first()).toHaveText("11");
-    expect(apiRequests).toBe(REPOSITORIES.length * 2);
+    await expect(page.locator("[data-repo-stats-load]")).toHaveCount(0);
+    expect(apiRequests).toBe(REPOSITORIES.length);
   });
 
   test("paper network keeps isolates visible and avoids over-zooming out after year reset", async ({ page }) => {

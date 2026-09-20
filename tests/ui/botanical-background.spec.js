@@ -284,6 +284,217 @@ test("pitcher insect falls through the mouth, resets, and respects reduced motio
   await expect(page.locator("[data-botanical-pitcher]").nth(again.index)).toHaveAttribute("data-state", "fallen");
 });
 
+test("sundew mucus transfers from the cursor to a pitcher insect", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.goto("/ja/");
+  const sundewPoint = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  const pitcherPoint = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  const dew = page.locator("[data-botanical-sundew]").nth(sundewPoint.index);
+  const pitcher = page.locator("[data-botanical-pitcher]").nth(pitcherPoint.index);
+  const insect = pitcher.locator(".botanical-background__insect");
+  const initialInsect = await insect.boundingBox();
+  expect(initialInsect).toBeTruthy();
+
+  await page.mouse.move(sundewPoint.x, sundewPoint.y);
+  await expect(dew).toHaveAttribute("data-stuck", "true");
+  await page.mouse.move(pitcherPoint.x, pitcherPoint.y);
+
+  await expect(pitcher).toHaveAttribute("data-state", "ready");
+  await expect
+    .poll(async () => {
+      const box = await insect.boundingBox();
+      return box ? Math.hypot(box.x - initialInsect.x, box.y - initialInsect.y) : 0;
+    })
+    .toBeGreaterThan(40);
+  await expect(insect).toHaveAttribute("data-captured", "true");
+  await expect
+    .poll(async () => {
+      const box = await insect.boundingBox();
+      return box ? Math.hypot(box.x + box.width / 2 - sundewPoint.x, box.y + box.height / 2 - sundewPoint.y) : Infinity;
+    })
+    .toBeLessThan(18);
+});
+
+test("sundew mucus remains attached during a slow trip to a pitcher", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.clock.install();
+  await page.goto("/ja/");
+  const sundewPoint = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  const pitcherPoint = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  const dew = page.locator("[data-botanical-sundew]").nth(sundewPoint.index);
+  const pitcher = page.locator("[data-botanical-pitcher]").nth(pitcherPoint.index);
+  const insect = pitcher.locator(".botanical-background__insect");
+
+  await page.mouse.move(sundewPoint.x, sundewPoint.y);
+  await expect(dew).toHaveAttribute("data-stuck", "true");
+  for (let step = 1; step <= 90; step += 1) {
+    const progress = step / 90;
+    await page.evaluate(({ x, y }) => window.dispatchEvent(new PointerEvent("pointermove", { clientX: x, clientY: y, pointerType: "mouse" })), {
+      x: sundewPoint.x + (pitcherPoint.x - sundewPoint.x) * progress,
+      y: sundewPoint.y + (pitcherPoint.y - sundewPoint.y) * progress,
+    });
+    await page.clock.runFor(100);
+  }
+
+  await expect(pitcher).toHaveAttribute("data-state", "ready");
+  await page.clock.runFor(1200);
+  await expect(insect).toHaveAttribute("data-captured", "true");
+  await expect
+    .poll(async () => {
+      const box = await insect.boundingBox();
+      return box ? Math.hypot(box.x + box.width / 2 - sundewPoint.x, box.y + box.height / 2 - sundewPoint.y) : Infinity;
+    })
+    .toBeLessThan(18);
+});
+
+test("a sundew-captured insect respawns in its pitcher after its capture lifetime", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.clock.install();
+  await page.goto("/ja/");
+  const sundewPoint = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  const pitcherPoint = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  const pitcher = page.locator("[data-botanical-pitcher]").nth(pitcherPoint.index);
+  const insect = pitcher.locator(".botanical-background__insect");
+  const originalBox = await insect.boundingBox();
+  expect(originalBox).toBeTruthy();
+  const originalCenter = { x: originalBox.x + originalBox.width / 2, y: originalBox.y + originalBox.height / 2 };
+
+  await page.mouse.move(sundewPoint.x, sundewPoint.y);
+  await page.mouse.move(pitcherPoint.x, pitcherPoint.y);
+  await page.clock.runFor(1600);
+  await expect(insect).toHaveAttribute("data-captured", "true");
+  await page.clock.runFor(30000);
+  await expect(insect).not.toHaveAttribute("data-captured");
+  await expect(insect).not.toHaveAttribute("data-captured-by");
+  const respawnedBox = await insect.boundingBox();
+  expect(respawnedBox).toBeTruthy();
+  expect(
+    Math.hypot(respawnedBox.x + respawnedBox.width / 2 - originalCenter.x, respawnedBox.y + respawnedBox.height / 2 - originalCenter.y)
+  ).toBeLessThan(18);
+  await expect(pitcher).toHaveAttribute("data-state", "ready");
+});
+
+test("a sundew-captured insect follows the pointer and transfers to a flytrap", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.clock.install();
+  await page.goto("/ja/");
+  const sundewPoint = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  const pitcherPoint = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  const dew = page.locator("[data-botanical-sundew]").nth(sundewPoint.index);
+  const pitcher = page.locator("[data-botanical-pitcher]").nth(pitcherPoint.index);
+  const insect = pitcher.locator(".botanical-background__insect");
+  const originalBox = await insect.boundingBox();
+  expect(originalBox).toBeTruthy();
+  const originalCenter = { x: originalBox.x + originalBox.width / 2, y: originalBox.y + originalBox.height / 2 };
+
+  await page.mouse.move(sundewPoint.x, sundewPoint.y);
+  await page.mouse.move(pitcherPoint.x, pitcherPoint.y);
+  await page.clock.runFor(1600);
+  await expect(insect).toHaveAttribute("data-captured", "true");
+  const capturedBox = await insect.boundingBox();
+  expect(capturedBox).toBeTruthy();
+  const capturedCenter = { x: capturedBox.x + capturedBox.width / 2, y: capturedBox.y + capturedBox.height / 2 };
+
+  await page.mouse.move(capturedCenter.x, capturedCenter.y);
+  await expect(insect).toHaveAttribute("data-captured", "moving");
+  await expect(dew).toHaveAttribute("data-stuck", "true");
+  for (let index = 0; index < 6; index += 1) {
+    await page.clock.runFor(5000);
+    await page.evaluate(({ x, y }) => window.dispatchEvent(new PointerEvent("pointermove", { clientX: x, clientY: y, pointerType: "mouse" })), {
+      x: capturedCenter.x + ((index + 1) % 2),
+      y: capturedCenter.y,
+    });
+  }
+  await expect(insect).toHaveAttribute("data-captured", "moving");
+  const movedTo = { x: capturedCenter.x + 35, y: capturedCenter.y + 20 };
+  await page.mouse.move(movedTo.x, movedTo.y);
+  await page.clock.runFor(100);
+  await expect
+    .poll(async () => {
+      const box = await insect.boundingBox();
+      return box ? Math.hypot(box.x + box.width / 2 - capturedCenter.x, box.y + box.height / 2 - capturedCenter.y) : 0;
+    })
+    .toBeGreaterThan(20);
+
+  const draggedBox = await insect.boundingBox();
+  const draggedCenter = { x: draggedBox.x + draggedBox.width / 2, y: draggedBox.y + draggedBox.height / 2 };
+  const trapPoint = await page.locator("[data-botanical-flytrap]").evaluateAll((elements, origin) => {
+    const gutter = parseFloat(document.querySelector("[data-botanical-background]").style.getPropertyValue("--botanical-gutter"));
+    return elements
+      .map((element, index) => {
+        const point = new DOMPoint(0, 0).matrixTransform(element.getScreenCTM());
+        return { index, x: point.x, y: point.y, distance: Math.hypot(point.x - origin.x, point.y - origin.y) };
+      })
+      .filter((point) => point.x > 40 && point.x < gutter - 40 && point.y > 100 && point.y < innerHeight - 100)
+      .sort((a, b) => a.distance - b.distance)[0];
+  }, draggedCenter);
+  expect(trapPoint).toBeTruthy();
+  const trap = page.locator("[data-botanical-flytrap]").nth(trapPoint.index);
+
+  await page.mouse.move(trapPoint.x, trapPoint.y);
+  await expect(trap).toHaveAttribute("data-state", "open");
+  await page.mouse.move(trapPoint.x + 80, trapPoint.y + 80);
+  await page.clock.runFor(80);
+  await page.mouse.move(trapPoint.x, trapPoint.y);
+  await expect(trap).toHaveAttribute("data-state", "closed");
+  await expect(insect).toHaveAttribute("data-captured", "flytrap");
+  await expect(insect).toHaveAttribute("data-captured-by", "flytrap");
+  await page.clock.runFor(1000);
+  await expect
+    .poll(async () => {
+      const box = await insect.boundingBox();
+      return box ? Math.hypot(box.x + box.width / 2 - trapPoint.x, box.y + box.height / 2 - trapPoint.y) : Infinity;
+    })
+    .toBeLessThan(18);
+  await page.clock.runFor(30000);
+  await expect(insect).not.toHaveAttribute("data-captured");
+  const respawnedBox = await insect.boundingBox();
+  expect(respawnedBox).toBeTruthy();
+  expect(
+    Math.hypot(respawnedBox.x + respawnedBox.width / 2 - originalCenter.x, respawnedBox.y + respawnedBox.height / 2 - originalCenter.y)
+  ).toBeLessThan(18);
+});
+
+test("returns a sundew-captured insect with the mucus after an overpull", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1400 });
+  await page.clock.install();
+  await page.goto("/ja/");
+  const sundewPoint = await visiblePlantPoint(page, "[data-botanical-sundew]", { x: -9, y: -35 });
+  const pitcherPoint = await visiblePlantPoint(page, "[data-botanical-insect-target]");
+  const dew = page.locator("[data-botanical-sundew]").nth(sundewPoint.index);
+  const insect = page.locator("[data-botanical-pitcher]").nth(pitcherPoint.index).locator(".botanical-background__insect");
+
+  await page.mouse.move(sundewPoint.x, sundewPoint.y);
+  await page.mouse.move(pitcherPoint.x, pitcherPoint.y);
+  await page.clock.runFor(1600);
+  await expect(insect).toHaveAttribute("data-captured", "true");
+  const capturedBox = await insect.boundingBox();
+  expect(capturedBox).toBeTruthy();
+  const capturedCenter = { x: capturedBox.x + capturedBox.width / 2, y: capturedBox.y + capturedBox.height / 2 };
+
+  await page.mouse.move(capturedCenter.x, capturedCenter.y);
+  await expect(insect).toHaveAttribute("data-captured", "moving");
+  const nearPoint = { x: capturedCenter.x + 70, y: capturedCenter.y + 30 };
+  await page.mouse.move(nearPoint.x, nearPoint.y);
+  await page.clock.runFor(200);
+  const movedBox = await insect.boundingBox();
+  expect(movedBox).toBeTruthy();
+  expect(Math.hypot(movedBox.x + movedBox.width / 2 - capturedCenter.x, movedBox.y + movedBox.height / 2 - capturedCenter.y)).toBeGreaterThan(20);
+
+  await page.evaluate(({ x, y }) => window.dispatchEvent(new PointerEvent("pointermove", { clientX: x, clientY: y, pointerType: "mouse" })), {
+    x: nearPoint.x - 500,
+    y: nearPoint.y + 300,
+  });
+  await page.clock.runFor(1600);
+
+  await expect(insect).toHaveAttribute("data-captured", "true");
+  await expect(insect).toHaveAttribute("data-captured-by", "sundew");
+  await expect(dew).not.toHaveAttribute("data-stuck");
+  const returnedBox = await insect.boundingBox();
+  expect(returnedBox).toBeTruthy();
+  expect(Math.hypot(returnedBox.x + returnedBox.width / 2 - sundewPoint.x, returnedBox.y + returnedBox.height / 2 - sundewPoint.y)).toBeLessThan(18);
+});
+
 test("sundew follows longer drags with three mucus strands and releases", async ({ page }) => {
   await page.setViewportSize({ width: 2560, height: 1400 });
   await page.goto("/ja/");
@@ -292,35 +503,13 @@ test("sundew follows longer drags with three mucus strands and releases", async 
   await page.mouse.move(point.x, point.y);
   await expect(dew).toHaveAttribute("data-stuck", "true");
   await page.mouse.move(point.x + 28, point.y + 8);
-  await expect
-    .poll(() =>
-      dew.locator("[data-sundew-leaf]").evaluate((e) => {
-        const matrix = e.transform.baseVal.consolidate()?.matrix;
-        return matrix ? Math.hypot(matrix.e, matrix.f) : 0;
-      })
-    )
-    .toBeGreaterThan(1);
-  const distance = await dew.locator("[data-sundew-leaf]").evaluate((e) => {
-    const matrix = e.transform.baseVal.consolidate().matrix;
-    return Math.hypot(matrix.e, matrix.f);
-  });
-  expect(distance).toBeLessThanOrEqual(5);
+  await expect(dew.locator("[data-sundew-leaf]")).not.toHaveAttribute("transform");
+  await expect(dew.locator("[data-sundew-stalk]")).toHaveAttribute("d", "M40 46 Q8 43 0 24");
   await page.mouse.move(point.x + 160, point.y + 8);
   await page.waitForTimeout(2400);
   await expect(dew).toHaveAttribute("data-stuck", "true");
-  await expect
-    .poll(() =>
-      dew.locator("[data-sundew-leaf]").evaluate((e) => {
-        const matrix = e.transform.baseVal.consolidate()?.matrix;
-        return matrix ? Math.hypot(matrix.e, matrix.f) : 0;
-      })
-    )
-    .toBeGreaterThan(4);
-  const longDragDistance = await dew.locator("[data-sundew-leaf]").evaluate((e) => {
-    const matrix = e.transform.baseVal.consolidate().matrix;
-    return Math.hypot(matrix.e, matrix.f);
-  });
-  expect(longDragDistance).toBeLessThanOrEqual(5);
+  await expect(dew.locator("[data-sundew-leaf]")).not.toHaveAttribute("transform");
+  await expect(dew.locator("[data-sundew-stalk]")).toHaveAttribute("d", "M40 46 Q8 43 0 24");
   await expect(dew.locator("[data-sundew-thread][d]")).toHaveCount(3);
   const paths = await dew.locator("[data-sundew-thread]").evaluateAll((elements) => elements.map((element) => element.getAttribute("d")));
   expect(new Set(paths).size).toBe(3);

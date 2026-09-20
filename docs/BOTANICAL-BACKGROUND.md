@@ -18,12 +18,23 @@ input without intercepting page controls, and only responds in the visible
 margins. Reduced motion keeps the explicit closure instant. Resizing resets traps.
 
 Pitcher lids carry a small insect: pointer contact or a tap drops it through the
-mouth, and it returns after 6.5 seconds. Reduced motion hides it immediately.
+mouth, and it returns after 6.5 seconds. If the pointer is already attached to
+sundew mucilage, contact transfers the attachment to the insect: the insect is
+pulled to the sundew and the pitcher remains ready. A second contact with the
+captured insect lets the pointer drag it while the mucus remains within reach.
+Pulling it beyond that reach retracts the mucus and brings the insect back to
+the sundew leaf, keeping the insect captured there.
+During that drag, the second separate entry into a flytrap transfers the insect
+to the trap and closes it. While the pointer is operating a captured insect,
+its respawn timer is paused. Otherwise, a captured insect disappears after 30
+seconds and respawns at its original pitcher; reset and resize also restore it
+immediately.
+Reduced motion hides a pitcher insect immediately.
 Sundew droplets attach to a precise pointer after contact, drawing three mucus
-strands from nearby droplets to the pointer. Attachment follows across the content margin for up to 320 SVG
-units and 8 seconds. The blade follows gently, moving at most 5 units while its
-stalk bends; it returns when the attachment releases. Leaving the window releases
-it; blur, resize, tab hiding and reduced motion clear it. Page controls
+strands from nearby droplets to the pointer or captured insect. Attachment follows across the content margin for up to 320 SVG
+units and releases after 8 seconds without pointer movement. Pulling the mucus
+does not deform the sundew leaf or stalk. Leaving the window releases it; blur,
+resize, tab hiding and reduced motion clear it. Page controls
 remain unobstructed. Flytrap artwork uses two cupped lobes and curved marginal
 teeth without internal trigger hairs.
 

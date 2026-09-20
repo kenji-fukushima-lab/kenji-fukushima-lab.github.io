@@ -7,7 +7,7 @@
   // Keep the static drawing when motion is unwanted or no precise pointer exists.
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const pointer = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)");
-  const settings = { radius: 190, leafDegrees: 11, decayMs: 900, settleMs: 7500 };
+  const settings = { radius: 190, leafDegrees: 11, decayMs: 900, settleMs: 7500, capturedInsectMs: 30000 };
   const originals = [...background.querySelectorAll(".botanical-background__plant")];
   let parts = [];
   let tendrils = [];
@@ -19,9 +19,30 @@
   let stickyFrame = 0;
   let hitGeometry = new WeakMap();
 
+  function restorePitcherInsect(pitcher) {
+    clearTimeout(pitcher.timer);
+    pitcher.timer = 0;
+    clearTimeout(pitcher.capturedTimer);
+    pitcher.capturedTimer = 0;
+    if (pitcher.insect) {
+      if (pitcher.originalInsectTransform === null) pitcher.insect.removeAttribute("transform");
+      else pitcher.insect.setAttribute("transform", pitcher.originalInsectTransform);
+      pitcher.insect.removeAttribute("data-captured");
+      pitcher.insect.removeAttribute("data-captured-by");
+    }
+    pitcher.captured = false;
+    pitcher.capturedBy = null;
+    pitcher.capturedDew = null;
+    pitcher.capturedAnchor = null;
+    pitcher.capturedAnchors = null;
+    pitcher.capturedTrap = null;
+    pitcher.capturedScreenPoint = null;
+    pitcher.element.dataset.state = "ready";
+  }
+
   function arrange() {
     traps.forEach((trap) => clearTimeout(trap.timer));
-    pitchers.forEach((pitcher) => clearTimeout(pitcher.timer));
+    pitchers.forEach(restorePitcherInsect);
     background.querySelectorAll("[data-botanical-copy]").forEach((plant) => plant.remove());
     originals.forEach((plant) => plant.removeAttribute("style"));
     const main = document.querySelector('[role="main"]');
@@ -69,11 +90,27 @@
     }));
     traps = [...background.querySelectorAll("[data-botanical-flytrap]")].map((element) => {
       element.dataset.state = "open";
-      return { element, inside: false, touches: 0, lastTouch: -Infinity, timer: 0 };
+      return { element, inside: false, touches: 0, lastTouch: -Infinity, timer: 0, capturedInsect: null };
     });
     pitchers = [...background.querySelectorAll("[data-botanical-pitcher]")].map((element) => {
       element.dataset.state = "ready";
-      return { element, target: element.querySelector("[data-botanical-insect-target]"), timer: 0 };
+      const target = element.querySelector("[data-botanical-insect-target]");
+      const insect = target?.querySelector(".botanical-background__insect");
+      return {
+        element,
+        target,
+        insect,
+        originalInsectTransform: insect?.getAttribute("transform") ?? null,
+        captured: false,
+        capturedBy: null,
+        capturedDew: null,
+        capturedAnchor: null,
+        capturedAnchors: null,
+        capturedTrap: null,
+        capturedScreenPoint: null,
+        timer: 0,
+        capturedTimer: 0,
+      };
     });
     sundews = [...background.querySelectorAll("[data-botanical-sundew]")].map((element) => ({
       element,
@@ -162,6 +199,7 @@
 
   function reset() {
     clearSticky();
+    pitchers.forEach(restorePitcherInsect);
     cancelAnimationFrame(frame);
     frame = 0;
     position = null;
@@ -201,6 +239,7 @@
       if (Math.abs(part.angle) > 0.003) moving = true;
       setTransform(part, `rotate(${part.angle.toFixed(4)} ${part.origin})`);
     });
+    updateCapturedInsects();
     // Extend only the two nearest tips, in SVG coordinates, from their existing curls.
     const inMargin = position && (position.x < gutterWidth || position.x > innerWidth - gutterWidth);
     let nearest = null;
@@ -344,43 +383,328 @@
     return x < margin || x > innerWidth - margin;
   }
 
+  function screenPoint(element, x = 0, y = 0) {
+    const matrix = element?.getScreenCTM();
+    return matrix ? new DOMPoint(x, y).matrixTransform(matrix) : null;
+  }
+
+  function setInsectScreenPosition(insect, point) {
+    const parentMatrix = insect?.parentElement?.getScreenCTM();
+    if (!parentMatrix) return false;
+    const local = new DOMPoint(point.x, point.y).matrixTransform(parentMatrix.inverse());
+    insect.setAttribute("transform", `translate(${local.x} ${local.y})`);
+    return true;
+  }
+
+  function setTrackedInsectScreenPosition(pitcher, point) {
+    const previous = pitcher.capturedScreenPoint;
+    if (previous && Math.hypot(previous.x - point.x, previous.y - point.y) < 0.05) return true;
+    if (!setInsectScreenPosition(pitcher.insect, point)) return false;
+    pitcher.capturedScreenPoint = { x: point.x, y: point.y };
+    return true;
+  }
+
+  function updateCapturedInsects() {
+    pitchers.forEach((pitcher) => {
+      if (!pitcher.insect || sticky?.pitcher === pitcher) return;
+      let point = null;
+      if (pitcher.capturedBy === "sundew" && pitcher.capturedDew && pitcher.capturedAnchor) {
+        point = screenPoint(pitcher.capturedDew.leaf, pitcher.capturedAnchor.x, pitcher.capturedAnchor.y);
+      } else if (pitcher.capturedBy === "flytrap" && pitcher.capturedTrap) {
+        point = screenPoint(pitcher.capturedTrap.element);
+      }
+      if (point) setTrackedInsectScreenPosition(pitcher, point);
+    });
+  }
+
+  function capturedInsectHit(pitcher, x, y) {
+    if (pitcher.capturedBy !== "sundew" || !pitcher.insect) return false;
+    const box = pitcher.insect.getBoundingClientRect();
+    if (!box.width || !box.height) return false;
+    const centerX = box.left + box.width / 2;
+    const centerY = box.top + box.height / 2;
+    const radiusX = Math.max(12, box.width * 0.85);
+    const radiusY = Math.max(12, box.height * 0.85);
+    return (x - centerX) ** 2 / radiusX ** 2 + (y - centerY) ** 2 / radiusY ** 2 <= 1;
+  }
+
+  function respawnCapturedInsect(pitcher) {
+    if (sticky?.pitcher === pitcher) clearSticky();
+    restorePitcherInsect(pitcher);
+  }
+
+  function scheduleCapturedInsectRespawn(pitcher) {
+    clearTimeout(pitcher.capturedTimer);
+    pitcher.capturedTimer = setTimeout(() => respawnCapturedInsect(pitcher), settings.capturedInsectMs);
+  }
+
+  function pauseCapturedInsectRespawn(pitcher) {
+    clearTimeout(pitcher.capturedTimer);
+    pitcher.capturedTimer = 0;
+  }
+
+  function releaseDraggedInsect(pitcher) {
+    if (!pitcher) return;
+    clearTimeout(pitcher.capturedTimer);
+    pitcher.capturedTimer = 0;
+    pitcher.captured = false;
+    pitcher.capturedBy = null;
+    pitcher.capturedDew = null;
+    pitcher.capturedAnchor = null;
+    pitcher.capturedAnchors = null;
+    pitcher.insect?.removeAttribute("data-captured");
+    pitcher.insect?.removeAttribute("data-captured-by");
+    pitcher.element.dataset.state = "ready";
+  }
+
+  function beginDraggingCapturedInsect(pitcher, x, y) {
+    if (!pitcher.capturedDew || !pitcher.capturedAnchor || !pitcher.insect) return false;
+    const center = screenPoint(pitcher.insect);
+    if (!center) return false;
+    pauseCapturedInsectRespawn(pitcher);
+    const time = performance.now();
+    sticky = {
+      mode: "dragged-insect",
+      dew: pitcher.capturedDew,
+      anchor: pitcher.capturedAnchor,
+      anchors: pitcher.capturedAnchors,
+      x,
+      y,
+      grabOffset: { x: center.x - x, y: center.y - y },
+      insectPosition: { x: center.x, y: center.y },
+      dx: 0,
+      dy: 0,
+      lastMove: time,
+      time,
+      releasing: false,
+      pitcher,
+      insect: pitcher.insect,
+    };
+    pitcher.insect.dataset.captured = "moving";
+    pitcher.insect.dataset.capturedBy = "sundew";
+    pitcher.capturedDew.element.dataset.stuck = "true";
+    stickyFrame = requestAnimationFrame(animateSticky);
+    return true;
+  }
+
+  function transferStickyToInsect(pitcher) {
+    if (!sticky || !pitcher.insect || pitcher.captured) return false;
+    const from = screenPoint(pitcher.insect);
+    const to = screenPoint(sticky.dew.leaf, sticky.anchor.x, sticky.anchor.y);
+    if (!from || !to) return false;
+    pitcher.captured = true;
+    pitcher.capturedBy = "sundew";
+    pitcher.capturedDew = sticky.dew;
+    pitcher.capturedAnchor = sticky.anchor;
+    pitcher.capturedAnchors = sticky.anchors;
+    pitcher.element.dataset.state = "ready";
+    pitcher.insect.dataset.captured = "moving";
+    pitcher.insect.dataset.capturedBy = "sundew";
+    sticky.mode = "insect";
+    sticky.pitcher = pitcher;
+    sticky.insect = pitcher.insect;
+    sticky.insectFrom = { x: from.x, y: from.y };
+    sticky.insectProgress = 0;
+    sticky.insectDuration = Math.max(700, Math.min(1400, Math.hypot(to.x - from.x, to.y - from.y) * 4));
+    sticky.lastMove = performance.now();
+    return true;
+  }
+
+  function captureDraggedInsectWithFlytrap(trap, x, y) {
+    if (!sticky || sticky.mode !== "dragged-insect" || !sticky.pitcher?.insect) return false;
+    const endpoint = { x: x + sticky.grabOffset.x, y: y + sticky.grabOffset.y };
+    const point = localPoint(sticky.dew.element, endpoint.x, endpoint.y);
+    if (!point || Math.hypot(point.x - sticky.anchor.x, point.y - sticky.anchor.y) > 320) return false;
+    const from = screenPoint(sticky.pitcher.insect);
+    const to = screenPoint(trap.element);
+    if (!from || !to) return false;
+    const pitcher = sticky.pitcher;
+    pitcher.capturedBy = "flytrap";
+    pitcher.capturedTrap = trap;
+    trap.capturedInsect = pitcher;
+    pitcher.insect.dataset.captured = "flytrap";
+    pitcher.insect.dataset.capturedBy = "flytrap";
+    sticky.mode = "flytrap";
+    sticky.trap = trap;
+    sticky.insectFrom = { x: from.x, y: from.y };
+    sticky.insectTo = { x: to.x, y: to.y };
+    sticky.insectProgress = 0;
+    sticky.insectDuration = Math.max(450, Math.min(900, Math.hypot(to.x - from.x, to.y - from.y) * 3));
+    sticky.lastMove = performance.now();
+    sticky.releasing = false;
+    return true;
+  }
+
+  function beginCapturedInsectReturn() {
+    if (!sticky || sticky.mode !== "dragged-insect" || sticky.returningInsect) return true;
+    const from = screenPoint(sticky.insect) || sticky.insectPosition;
+    const to = screenPoint(sticky.dew.leaf, sticky.anchor.x, sticky.anchor.y);
+    if (!from || !to) return false;
+    sticky.returningInsect = true;
+    sticky.insectReturnFrom = { x: from.x, y: from.y };
+    sticky.insectReturnProgress = 0;
+    sticky.insectReturnDuration = Math.max(450, Math.min(900, Math.hypot(to.x - from.x, to.y - from.y) * 2.5));
+    return true;
+  }
+
   function animateSticky(time) {
     if (!sticky) return;
     const dt = Math.min(50, time - sticky.time);
     sticky.time = time;
+    let sundewCaptureComplete = false;
+    let flytrapCaptureComplete = false;
+    let endpoint = { x: sticky.x, y: sticky.y };
+    if (sticky.mode === "insect") {
+      const to = screenPoint(sticky.dew.leaf, sticky.anchor.x, sticky.anchor.y);
+      if (!to || !setInsectScreenPosition(sticky.insect, sticky.insectFrom)) {
+        restorePitcherInsect(sticky.pitcher);
+        clearSticky();
+        return;
+      }
+      sticky.insectProgress = Math.min(1, sticky.insectProgress + dt / sticky.insectDuration);
+      const eased = 1 - (1 - sticky.insectProgress) ** 3;
+      const point = {
+        x: sticky.insectFrom.x + (to.x - sticky.insectFrom.x) * eased,
+        y: sticky.insectFrom.y + (to.y - sticky.insectFrom.y) * eased,
+      };
+      setInsectScreenPosition(sticky.insect, point);
+      sticky.x = point.x;
+      sticky.y = point.y;
+      endpoint = point;
+      sundewCaptureComplete = sticky.insectProgress >= 1;
+    } else if (sticky.mode === "dragged-insect") {
+      const desired = { x: sticky.x + sticky.grabOffset.x, y: sticky.y + sticky.grabOffset.y };
+      const desiredPoint = localPoint(sticky.dew.element, desired.x, desired.y);
+      const inReach = desiredPoint && Math.hypot(desiredPoint.x - sticky.anchor.x, desiredPoint.y - sticky.anchor.y) <= 320;
+      if (inReach && time - sticky.lastMove <= 8000 && !sticky.releasing) {
+        if (!setInsectScreenPosition(sticky.insect, desired)) {
+          releaseDraggedInsect(sticky.pitcher);
+          clearSticky();
+          return;
+        }
+        sticky.insectPosition = desired;
+        endpoint = desired;
+      } else {
+        if ((!inReach || time - sticky.lastMove > 8000 || sticky.releasing) && !beginCapturedInsectReturn()) {
+          releaseDraggedInsect(sticky.pitcher);
+          clearSticky();
+          return;
+        }
+        sticky.releasing = true;
+        endpoint = sticky.insectPosition;
+      }
+      if (sticky.returningInsect) {
+        const to = screenPoint(sticky.dew.leaf, sticky.anchor.x, sticky.anchor.y);
+        if (!to || !sticky.insectReturnFrom) {
+          releaseDraggedInsect(sticky.pitcher);
+          clearSticky();
+          return;
+        }
+        sticky.insectReturnProgress = Math.min(1, sticky.insectReturnProgress + dt / sticky.insectReturnDuration);
+        const eased = 1 - (1 - sticky.insectReturnProgress) ** 3;
+        const point = {
+          x: sticky.insectReturnFrom.x + (to.x - sticky.insectReturnFrom.x) * eased,
+          y: sticky.insectReturnFrom.y + (to.y - sticky.insectReturnFrom.y) * eased,
+        };
+        if (!setInsectScreenPosition(sticky.insect, point)) {
+          releaseDraggedInsect(sticky.pitcher);
+          clearSticky();
+          return;
+        }
+        sticky.insectPosition = point;
+        endpoint = point;
+      }
+    } else if (sticky.mode === "flytrap") {
+      const from = sticky.insectFrom;
+      const to = sticky.insectTo;
+      if (!from || !to || !setInsectScreenPosition(sticky.insect, from)) {
+        clearSticky();
+        return;
+      }
+      sticky.insectProgress = Math.min(1, sticky.insectProgress + dt / sticky.insectDuration);
+      const eased = 1 - (1 - sticky.insectProgress) ** 3;
+      endpoint = {
+        x: from.x + (to.x - from.x) * eased,
+        y: from.y + (to.y - from.y) * eased,
+      };
+      setInsectScreenPosition(sticky.insect, endpoint);
+      sticky.x = endpoint.x;
+      sticky.y = endpoint.y;
+      flytrapCaptureComplete = sticky.insectProgress >= 1;
+    }
     const { dew, anchor } = sticky;
-    const point = localPoint(dew.element, sticky.x, sticky.y);
+    const point = localPoint(dew.element, endpoint.x, endpoint.y);
     if (!point) {
+      if (sticky.mode === "insect") restorePitcherInsect(sticky.pitcher);
+      if (sticky.mode === "dragged-insect") releaseDraggedInsect(sticky.pitcher);
       clearSticky();
       return;
     }
     const dx = point.x - anchor.x,
       dy = point.y - anchor.y;
     const distance = Math.hypot(dx, dy);
-    if (distance > 320 || time - sticky.started > 8000) sticky.releasing = true;
+    if ((sticky.mode === "cursor" || sticky.mode === "dragged-insect") && (distance > 320 || time - sticky.lastMove > 8000)) {
+      sticky.releasing = true;
+    }
     const scale = sticky.releasing ? 0 : Math.min(1, 260 / Math.max(1, distance));
     const ease = 1 - Math.exp(-dt / (sticky.releasing ? 130 : 65));
     sticky.dx += (dx * scale - sticky.dx) * ease;
     sticky.dy += (dy * scale - sticky.dy) * ease;
     const extension = Math.hypot(sticky.dx, sticky.dy);
-    // Keep the original small leaf tug even when the mucus stretches much farther.
-    const leafScale = 0.09 * Math.min(1, 55 / Math.max(1, extension));
-    const pullX = sticky.dx * leafScale,
-      pullY = sticky.dy * leafScale;
-    dew.leaf.setAttribute("transform", `translate(${pullX} ${pullY})`);
-    dew.stalk.setAttribute("d", `M40 46 Q${8 + pullX * 0.5} ${43 + pullY * 0.5} ${pullX} ${24 + pullY}`);
+    // Mucus stretches visually, but pulling it does not deform the sundew leaf or stalk.
+    if (dew.leaf.hasAttribute("transform")) dew.leaf.removeAttribute("transform");
+    if (dew.stalk.getAttribute("d") !== "M40 46 Q8 43 0 24") dew.stalk.setAttribute("d", "M40 46 Q8 43 0 24");
     const spread = Math.min(1, extension / 20);
     dew.threads.forEach((thread, index) => {
       const drop = sticky.anchors[index];
-      const ax = drop.x + pullX,
-        ay = drop.y + pullY;
+      const ax = drop.x,
+        ay = drop.y;
       // Each strand starts at a different droplet and retracts to that droplet.
       const ex = ax + (anchor.x + sticky.dx - ax) * spread;
       const ey = ay + (anchor.y + sticky.dy - ay) * spread;
       const sag = Math.min(12, extension * 0.08) * (0.7 + index * 0.3);
       thread.setAttribute("d", `M${ax} ${ay} Q${(ax + ex) / 2} ${(ay + ey) / 2 + sag} ${ex} ${ey}`);
     });
-    if (sticky.releasing && Math.hypot(sticky.dx, sticky.dy) < 0.2) {
+    if (sundewCaptureComplete) {
+      const capturedPitcher = sticky.pitcher;
+      const finalPoint = screenPoint(sticky.dew.leaf, sticky.anchor.x, sticky.anchor.y);
+      if (finalPoint) setTrackedInsectScreenPosition(capturedPitcher, finalPoint);
+      sticky.insect.dataset.captured = "true";
+      sticky.insect.dataset.capturedBy = "sundew";
+      scheduleCapturedInsectRespawn(capturedPitcher);
+      clearSticky();
+      return;
+    }
+    if (flytrapCaptureComplete) {
+      const capturedPitcher = sticky.pitcher;
+      setTrackedInsectScreenPosition(capturedPitcher, sticky.insectTo);
+      sticky.insect.dataset.captured = "flytrap";
+      sticky.insect.dataset.capturedBy = "flytrap";
+      scheduleCapturedInsectRespawn(capturedPitcher);
+      clearSticky();
+      return;
+    }
+    const mucusReturned = Math.hypot(sticky.dx, sticky.dy) < 0.2;
+    const insectReturned = !sticky.returningInsect || sticky.insectReturnProgress >= 1;
+    if ((sticky.mode === "cursor" || sticky.mode === "dragged-insect") && sticky.releasing && mucusReturned && insectReturned) {
+      if (sticky.mode === "dragged-insect") {
+        if (sticky.returningInsect) {
+          const capturedPitcher = sticky.pitcher;
+          const finalPoint = screenPoint(sticky.dew.leaf, sticky.anchor.x, sticky.anchor.y);
+          capturedPitcher.captured = true;
+          capturedPitcher.capturedBy = "sundew";
+          capturedPitcher.capturedDew = sticky.dew;
+          capturedPitcher.capturedAnchor = sticky.anchor;
+          capturedPitcher.capturedAnchors = sticky.anchors;
+          capturedPitcher.element.dataset.state = "ready";
+          if (finalPoint) setTrackedInsectScreenPosition(capturedPitcher, finalPoint);
+          sticky.insect.dataset.captured = "true";
+          sticky.insect.dataset.capturedBy = "sundew";
+          scheduleCapturedInsectRespawn(capturedPitcher);
+        } else {
+          releaseDraggedInsect(sticky.pitcher);
+        }
+      }
       clearSticky();
       return;
     }
@@ -393,20 +717,31 @@
     if (!tapping && (event.pointerType === "touch" || event.pointerType === "pen")) return;
     const x = event.clientX,
       y = event.clientY;
-    if (sticky) {
+    if (sticky?.mode === "cursor" || sticky?.mode === "dragged-insect") {
       sticky.x = x;
       sticky.y = y;
+      sticky.lastMove = performance.now();
     }
     if (!inMargin(x)) return;
-    pitchers.forEach((pitcher) => {
-      if (pitcher.element.dataset.state !== "ready") return;
+    if (!sticky) {
+      const capturedInsect = pitchers.find((pitcher) => capturedInsectHit(pitcher, x, y));
+      if (capturedInsect && beginDraggingCapturedInsect(capturedInsect, x, y)) return;
+    }
+    const pitcherHit = pitchers.find((pitcher) => {
+      if (pitcher.captured || pitcher.element.dataset.state !== "ready") return false;
       const point = localPoint(pitcher.target, x, y);
-      if (!point || point.x ** 2 / 17 ** 2 + point.y ** 2 / 12 ** 2 > 1) return;
-      pitcher.element.dataset.state = "fallen";
-      pitcher.timer = setTimeout(() => {
-        pitcher.element.dataset.state = "ready";
-      }, 6500);
+      return point && point.x ** 2 / 17 ** 2 + point.y ** 2 / 12 ** 2 <= 1;
     });
+    if (pitcherHit) {
+      if (sticky) {
+        if (sticky.mode === "cursor") transferStickyToInsect(pitcherHit);
+        return;
+      }
+      pitcherHit.element.dataset.state = "fallen";
+      pitcherHit.timer = setTimeout(() => {
+        pitcherHit.element.dataset.state = "ready";
+      }, 6500);
+    }
     if (!enabled || tapping || sticky || event.pointerType === "touch" || event.pointerType === "pen") return;
     for (const dew of sundews) {
       const point = localPoint(dew.element, x, y);
@@ -417,7 +752,7 @@
       const anchors = [...dew.drops]
         .sort((a, b) => Math.hypot(a.x - anchor.x, a.y - anchor.y) - Math.hypot(b.x - anchor.x, b.y - anchor.y))
         .slice(0, 3);
-      sticky = { dew, anchor, anchors, x, y, dx: 0, dy: 0, started: time, time, releasing: false };
+      sticky = { mode: "cursor", dew, anchor, anchors, x, y, dx: 0, dy: 0, lastMove: time, time, releasing: false };
       dew.element.dataset.stuck = "true";
       stickyFrame = requestAnimationFrame(animateSticky);
       break;
@@ -449,6 +784,7 @@
         if (trap.touches === 2) {
           trap.element.dataset.state = "closed";
           trap.touches = 0;
+          captureDraggedInsectWithFlytrap(trap, x, y);
           trap.timer = setTimeout(() => {
             trap.element.dataset.state = "open";
           }, 8000);

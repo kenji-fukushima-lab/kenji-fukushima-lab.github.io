@@ -241,13 +241,10 @@
         return fetchedData;
       });
 
-  const fetchRepo = (repo, { force = false } = {}) => {
-    if (!force) {
-      const cached = readRepoCache(repo);
-      if (cached?.fresh) return Promise.resolve(cached.data);
-    }
+  const fetchRepo = (repo) => {
+    const cached = readRepoCache(repo);
+    if (cached?.fresh) return Promise.resolve(cached.data);
 
-    if (force) return requestRepo(repo);
     if (!repoRequestMap.has(repo)) {
       const request = requestRepo(repo).finally(() => repoRequestMap.delete(repo));
       repoRequestMap.set(repo, request);
@@ -256,7 +253,6 @@
   };
 
   const repos = new Set([...repoNodeMap.keys(), ...repoStatNodeMap.keys()]);
-  const loadButton = document.querySelector("[data-repo-stats-load]");
   const loadStatus = document.querySelector("[data-repo-stats-status]");
   const autoRefreshRepos = new Set();
 
@@ -286,19 +282,18 @@
     for (const node of repoStatNodeMap.get(repo) || []) node.classList.toggle("is-loading", loading);
   };
 
-  const loadLiveData = async ({ force = false, repositories = [...repos] } = {}) => {
-    if (!loadButton || !repositories.length) return;
+  const loadLiveData = async ({ repositories = [...repos] } = {}) => {
+    if (!repositories.length) return;
     const targetRepos = [...new Set(repositories)].filter((repo) => repos.has(repo));
     if (!targetRepos.length) return;
 
-    loadButton.disabled = true;
     for (const repo of targetRepos) setRepoLoading(repo, true);
-    if (loadStatus) loadStatus.textContent = loadButton.dataset.loadingLabel || "Loading GitHub statistics…";
+    if (loadStatus) loadStatus.textContent = loadStatus.dataset.loadingLabel || "Loading GitHub statistics…";
 
     const results = await Promise.all(
       targetRepos.map(async (repo) => {
         try {
-          const data = await fetchRepo(repo, { force });
+          const data = await fetchRepo(repo);
           const fallback = repoFallbackMap.get(repo) || "";
           if (repoNodeMap.has(repo) && !fallback) {
             const description = data && typeof data.description === "string" ? data.description : "";
@@ -316,12 +311,10 @@
     const failures = results.filter((result) => !result).length;
     if (loadStatus) {
       loadStatus.textContent = failures
-        ? loadButton.dataset.errorLabel || "Some GitHub statistics could not be loaded."
-        : loadButton.dataset.loadedLabel || "GitHub statistics loaded.";
+        ? loadStatus.dataset.errorLabel || "Some GitHub statistics could not be loaded."
+        : loadStatus.dataset.loadedLabel || "GitHub statistics loaded.";
     }
-    loadButton.disabled = false;
   };
 
-  loadButton?.addEventListener("click", () => loadLiveData({ force: true }));
   if (autoRefreshRepos.size) loadLiveData({ repositories: [...autoRefreshRepos] });
 })();
