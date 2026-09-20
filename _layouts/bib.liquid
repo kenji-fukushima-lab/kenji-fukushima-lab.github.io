@@ -550,7 +550,7 @@
           {% if site.enable_publication_badges.altmetric and entry_has_altmetric_badge %}
             <a
               class="citation-badge citation-badge-altmetric"
-              href="https://www.altmetric.com/details.php?doi={{ doi_value | uri_escape }}"
+              href="https://www.altmetric.com/details/doi/{{ doi_value | uri_escape }}"
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >
