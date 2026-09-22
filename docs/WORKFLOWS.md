@@ -100,6 +100,57 @@ change. Locked gems missing from an existing volume are installed without
 rewriting `Gemfile.lock`. For an intentional dependency update, use
 `BUNDLE_FROZEN=false bundle update <gem>` explicitly, then review the lockfile.
 
+### Choosing verification
+
+Run commands from the repository root after [setup](../INSTALL.md). The local
+selector above is the minimum suite, not a substitute for generated-page checks:
+
+| Change                                                             | Additional verification beyond selected local checks                                                                                                                              |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Contributor docs or agent skills                                   | Check referenced commands/paths; no site build for prose alone                                                                                                                    |
+| Python, JavaScript or Ruby behavior                                | Exercise the affected regression in `tests/`, `tests/js/` or `test/`; use the existing `npm run test:unit:python`, `npm run test:unit:js`, or `npm run test:unit:ruby` entrypoint |
+| Content, templates, browser assets, plugins or build configuration | Production build, generated-output validators below, affected English/Japanese pages, UI and relevant Lighthouse routes                                                           |
+| `tests/ui/` or Playwright configuration                            | Production build and `npm run test:ui`                                                                                                                                            |
+| Publication-access backend                                         | Local unit/digest checks and the [backend guide](../automation/apps-script/publication-access-request/README.md); live deployment is separate                                     |
+
+For the CI route decision, pass changed repository-relative paths, one per line,
+to `.github/scripts/classify_ci_changes.py --event push`. For example:
+
+```bash
+printf '%s\n' _layouts/bib.liquid | python3 .github/scripts/classify_ci_changes.py --event push
+```
+
+Include both sides of renames/deletions and new files. The output gives
+`build_required`, `browser_required`, `lighthouse_required` and `lighthouse_urls`;
+use those URLs for `LHCI_URL_PATHS`. Local and CI selection are intentionally
+separate: an unknown local path runs all local checks but need not build a site.
+There is no configured standalone type checker or general-purpose lint suite;
+Prettier checks formatting, not program behavior.
+
+**Cost and network:** with dependencies installed, `checks:push` uses local
+fixtures and skips external bibliography URLs. A missing Ruby environment may
+invoke Docker and install gems. Image builds, package/browser installation,
+production builds and browser audits are separate work; cold image conversion
+and search indexing can take longer, and pages can load third-party resources.
+External bibliography scanning, dependency audits and GitHub-statistics refresh
+are not prerequisites for a documentation edit. Do not refresh real data or
+submit a live publication-access request as a smoke test.
+
+If host runtimes are unavailable, the existing Compose service can also run the
+whole local suite, not just its automatic Ruby fallback. After building the image
+and installing Node dependencies in the mounted checkout:
+
+```bash
+docker compose build
+docker compose run --rm --no-deps jekyll npm ci
+docker compose run --rm --no-deps jekyll npm run checks:push
+```
+
+These commands run at `/srv/jekyll` in the container. The first two may download
+dependencies; reuse an already prepared environment. A successful suite ends with
+`Selected local worktree checks passed.` and exit status zero. Missing runtimes,
+packages or a Docker daemon are setup failures, not reasons to skip checks.
+
 ## Production and browser checks
 
 With native dependencies installed, build the production output before testing.
@@ -154,6 +205,37 @@ invoked directly. The CSS step keeps dynamic JavaScript states and original
 stylesheet ordering, then writes content-hashed variants for page families.
 Run it after Jekyll; rerunning the CSS step on the same output is safe. Do not
 edit or commit `_site`.
+
+### Isolated production output
+
+With native dependencies installed, this subshell keeps output outside the
+checkout and stops at the first failure. Use the same sequence inside the Compose
+service if using its runtimes; container temporary output disappears on exit.
+
+```bash
+(
+  set -eu
+  site_check_dir=$(mktemp -d)
+  trap 'rm -rf "$site_check_dir"' EXIT
+  JEKYLL_ENV=production bundle exec jekyll build --destination "$site_check_dir"
+  npm run css:purge -- "$site_check_dir"
+  python3 .github/scripts/validate_site_artifact.py "$site_check_dir"
+  python3 .github/scripts/validate_generated_feeds.py "$site_check_dir/feed.xml" "$site_check_dir/ja/feed.xml"
+  python3 .github/scripts/validate_generated_sitemap.py "$site_check_dir/sitemap.xml" "$site_check_dir" --origin https://kenji-fukushima-lab.github.io
+  python3 .github/scripts/validate_responsive_images.py "$site_check_dir"
+  # For changes requiring browser coverage, run these before the directory is removed:
+  # SITE_DIRECTORY="$site_check_dir" npm run test:ui
+  # SITE_DIRECTORY="$site_check_dir" npm run test:lighthouse
+)
+```
+
+Success means Jekyll and CSS processing finish, each validator exits zero, and
+production `build-info.json`, search indexes, feeds and pages were produced.
+This uses normal reusable Jekyll caches but leaves `_site` untouched. Browser
+reports still use `test-results/` and `lighthouse-results-ci/`; the Lighthouse
+runner replaces its previous reports. CI additionally checks generated local
+links with Lychee. Passing these validators alone does not claim UI, Lighthouse,
+external-link or live-deployment verification.
 
 Responsive image generation, figures, Markdown images, blog thumbnails, and
 preload hints share

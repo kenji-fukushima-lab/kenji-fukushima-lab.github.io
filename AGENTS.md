@@ -42,3 +42,52 @@ Repository-specific instructions override these defaults.
   notice that such a push bypassed a pull-request-only rule is expected and is
   not by itself a blocker. This exception does not authorize force pushes,
   branch-protection or ruleset changes, or bypasses for any other actor.
+
+## Start here
+
+- Read [CONTRIBUTING.md](CONTRIBUTING.md), then the relevant section of
+  [INSTALL.md](INSTALL.md) for setup and [docs/WORKFLOWS.md](docs/WORKFLOWS.md#local-development)
+  for checks. All documented commands run from the repository root.
+- This is a bilingual Jekyll website, not a scientific analysis pipeline.
+  [CUSTOMIZE.md](CUSTOMIZE.md) maps content and its conventions. Rendering starts
+  in `_layouts/` and `_includes/`; `_plugins/` owns build-time behavior;
+  `assets/js/` and `_sass/` own browser behavior and styling.
+- For repeatable change validation, use
+  [.agents/skills/validate-site-change/SKILL.md](.agents/skills/validate-site-change/SKILL.md).
+  Use `prepare-github-push` additionally when delivery is requested.
+
+## Run and verify
+
+- Select the checked-in Ruby, Node and Python versions; follow INSTALL for
+  `bundle install`, `npm ci`, Python requirements and ImageMagick. Use `npm run dev`
+  or `docker compose up --build` for the managed development server.
+- `npm run checks:push -- --base origin/main` selects local checks for a known
+  base plus uncommitted changes; `npm run checks:push` runs the full local suite.
+  The [change-to-check guide](docs/WORKFLOWS.md#choosing-verification) specifies
+  when production/browser checks are also needed and how to run without host runtimes.
+- Formatting is `npm run prettier`; format only edited files with
+  `npx prettier path/to/file --write`. There is no separate configured type-check
+  or general lint command. Python syntax checks are part of `checks:push`.
+- `npm run build` produces production `_site`; `npm run test:ui` and
+  `npm run test:lighthouse` consume it. Use the documented isolated-build recipe
+  when a development watcher or existing output must be preserved.
+
+## Preserve site contracts
+
+- Preserve bilingual `page_id`, `lang`, permalinks and shared member records;
+  English is the default and Japanese uses `/ja/`. Preserve BibTeX keys and
+  publication metadata rather than inferring changes to research claims.
+  Scheduling uses `Asia/Tokyo`; see WORKFLOWS before changing publication dates.
+- Do not hand-edit `_site`, `gh-pages`, generated image/CSS/search caches,
+  `node_modules`, or `vendor`. `_data/repo_stats.json` is refreshed by trusted CI;
+  do not refresh it incidentally during validation. Leave `.claude/settings.local.json`
+  and other user-specific settings alone.
+- The publication-access backend has its own
+  [deployment and compatibility guide](automation/apps-script/publication-access-request/README.md).
+  Preserve its endpoint and private properties/logs; a GitHub push does not deploy it.
+- Deploy through the checked workflow. The inherited `bin/deploy` rewrites a
+  deployment branch and force-pushes; it is not the delivery entrypoint.
+  `bin/cibuild` only invokes Jekyll and is not the full verification suite.
+- Before delivery, review the diff and report checks actually run, checks omitted
+  and why, and remaining failures. Bump root `VERSION` for a push (the existing
+  site release sequence); do not synchronize unrelated package/backend versions.
