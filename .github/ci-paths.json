@@ -48,7 +48,10 @@
     ".github/scripts/fetch_repo_stats.py",
     ".github/scripts/prepare-jekyll-build-env.sh",
     ".github/scripts/purge-page-css.cjs",
-    ".github/workflows/deploy.yml"
+    ".github/workflows/deploy.yml",
+    "requirements.lock",
+    ".github/scripts/validate_site_artifact.py",
+    ".github/scripts/serve_site.py"
   ],
   "root_public_patterns": ["*.html", "*.xml", "robots.txt", "CNAME", ".nojekyll", "favicon.ico", "*.webmanifest"],
   "global_prefixes": ["assets/", "_sass/", "_includes/", "_layouts/", "_plugins/", "_data/"]

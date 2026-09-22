@@ -87,3 +87,17 @@ Add the shared include to the reviewed post instead of pasting a script or raw
 The include always renders a direct link as a fallback. The site loads X's
 widget script once, and only when an embed is close to the viewport. Do not use
 an example ID as an actual post; replace it with the intended public post ID.
+
+## Attachment and markup limits
+
+Submission bodies accept Markdown and GitHub attachment image tags with only
+`src`, `alt`, `width`, and `height`. User-supplied Liquid and executable link
+schemes are rejected before generating image includes. Trusted repository content
+can still use the site's existing figure captions and includes.
+
+Attachments must decode as JPEG, PNG, WebP, GIF, BMP, or TIFF images. SVG, video,
+and other non-image attachments are rejected by the automatic image workflow;
+use a normal link for such content. Limits are 20 unique attachments, 15 MB per
+download, 50 MB total downloaded input, and 40 million pixels per image. Raster
+output keeps the existing 900,000-byte budget. Repeated references to one
+attachment reuse the downloaded image.

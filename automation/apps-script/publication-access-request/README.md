@@ -22,10 +22,28 @@ verification-mail failure records `verification_error` and releases the
 reservation. Existing records are not rewritten. Outgoing messages do not set
 `Reply-To`.
 
-**Last deployment check: 2026-08-31.** The repository source and local tests were
-checked, but access to the project behind the configured production deployment
-was not available. The deployed version and its use of the literal-text fix
-remain unverified. Passing GitHub CI is not evidence that Apps Script was updated.
+**Deployment verification status (2026-09-22): pending.** The connected Drive
+account did not return an accessible Apps Script project. The live deployment
+has not yet been matched to this source. GitHub CI checks the local source digest,
+not the deployed web app; GitHub push does not update Apps Script.
+
+The source now supports a read-only `?status=1` response containing only its
+service name and source digest. It never opens the request log or sends mail.
+After changing Code.gs or appsscript.json, stamp the reviewed source:
+
+```bash
+python3 .github/scripts/publication_access_release.py --stamp
+```
+
+After updating the **existing** deployment as described below, verify it:
+
+```bash
+python3 .github/scripts/publication_access_release.py --verify
+```
+
+This compares the live digest with both repository source files. Record the Git
+SHA, Apps Script version, deployment ID, and verification date when successful.
+An old deployment without this status response fails verification explicitly.
 
 The website's configured endpoint is the `web_app_url` in
 [\_data/publication_access.yml](../../../_data/publication_access.yml).
@@ -42,8 +60,9 @@ named project or the GitHub source alone does not establish which code is live.
    settings with [appsscript.json](appsscript.json).
 4. Choose **Deploy → Manage deployments → Edit → New version → Deploy** for the
    existing deployment. Keep its ID and `/exec` URL.
-5. Record the deployed source revision/version and verify the non-submitting
-   status page. A status page alone does not verify email delivery or log writes.
+5. Run the read-only revision verification above and record the Git SHA, Apps
+   Script version, deployment ID, and verification date. This verifies source
+   identity, not email delivery or log writes.
 
 Do not create a replacement project or spreadsheet just because the existing
 one is inaccessible. Obtain the production editor URL/access from its owner.

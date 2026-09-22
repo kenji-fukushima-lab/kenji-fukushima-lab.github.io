@@ -61,6 +61,7 @@ for check in $selected_checks; do
 case "$check" in
 syntax)
   python3 -m compileall -q .github/scripts
+  python3 .github/scripts/publication_access_release.py
   ;;
 python)
 if ! python3 -c 'from PIL import Image' >/dev/null 2>&1; then

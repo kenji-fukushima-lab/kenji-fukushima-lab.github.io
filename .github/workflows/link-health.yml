@@ -51,6 +51,13 @@ jobs:
           git fetch --no-tags --depth=1 origin "${SITE_SHA}"
           git show "${SITE_SHA}:_bibliography/papers.bib" > "${RUNNER_TEMP}/site-papers.bib"
           python3 .github/scripts/validate_papers_bib.py "${RUNNER_TEMP}/site-papers.bib" --skip-links --export-urls bibliography-links.txt
+      - name: Restore previous link diagnostics
+        if: steps.site.outputs.found == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: link-health-history.json
+          key: link-health-history-${{ github.ref }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: link-health-history-${{ github.ref }}-
       - name: Check external links independently of deployment
         if: steps.site.outputs.found == 'true'
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
@@ -72,11 +79,25 @@ jobs:
             --exclude '^https://scholar[.]google[.][^/]+/citations'
             --no-progress
             '_site/**/*.html' bibliography-links.txt
+      - name: Summarize unique failing URLs and domains
+        if: always() && steps.site.outputs.found == 'true' && hashFiles('link-health.json') != ''
+        run: |
+          python3 .github/scripts/summarize_link_health.py link-health.json
+          cat link-health-summary.md >> "${GITHUB_STEP_SUMMARY}"
+      - name: Save diagnostic history even after link failures
+        if: always() && steps.site.outputs.found == 'true' && hashFiles('link-health-history.json') != ''
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: link-health-history.json
+          key: link-health-history-${{ github.ref }}-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Retain link status and timeout diagnostics
         if: always() && steps.site.outputs.found == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: link-health-${{ steps.site.outputs.sha }}
-          path: link-health.json
+          path: |
+            link-health.json
+            link-health-summary.md
+            link-health-history.json
           if-no-files-found: ignore
           retention-days: 7

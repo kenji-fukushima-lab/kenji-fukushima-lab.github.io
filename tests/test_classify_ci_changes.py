@@ -1,6 +1,9 @@
 import importlib.util
 import pathlib
 import unittest
+import tempfile
+import subprocess
+import re
 
 
 SCRIPT = pathlib.Path(__file__).parents[1] / ".github" / "scripts" / "classify_ci_changes.py"
@@ -58,6 +61,40 @@ class ClassifyCiChangesTest(unittest.TestCase):
                 self.assertEqual("true", result["build_required"])
                 self.assertEqual("true", result["site_changed"])
                 self.assertEqual("false", result["lighthouse_required"])
+
+    def test_root_visitor_html_runs_browser_and_lighthouse(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            (root / "landing.html").write_text("<html><title>Landing</title></html>")
+            result = MODULE.classify(["landing.html"], "push", root=root)
+            self.assertEqual("true", result["browser_required"])
+            self.assertEqual("/landing.html", result["lighthouse_urls"])
+            (root / "landing.html").unlink()
+            result = MODULE.classify(["landing.html"], "push", root=root)
+            self.assertEqual(",".join(MODULE.ALL_LIGHTHOUSE_URLS), result["lighthouse_urls"])
+
+    def test_actual_workflow_diff_includes_both_sides_of_renames(self):
+        workflow = (SCRIPT.parents[2] / ".github/workflows/deploy.yml").read_text()
+        options = re.findall(r"git diff (.*?) \"\$\{(?:BASE_SHA|BEFORE_SHA)\}", workflow)
+        self.assertEqual(2, len(options))
+        for source, destination in [("_pages/en-us/demo.md", "docs/demo.md"), ("docs/demo.md", "_pages/en-us/demo.md"), ("_pages/en-us/demo.md", "_pages/ja/demo.md")]:
+            for flags in options:
+                with self.subTest(source=source, destination=destination), tempfile.TemporaryDirectory() as directory:
+                    root = pathlib.Path(directory)
+                    def git(*args):
+                        return subprocess.check_output(["git", "-C", directory, *args], text=True).strip()
+                    git("init", "-q")
+                    (root / source).parent.mkdir(parents=True)
+                    (root / source).write_text("---\npermalink: /demo/\n---\nDemo\n")
+                    git("add", ".")
+                    git("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "initial")
+                    (root / destination).parent.mkdir(parents=True, exist_ok=True)
+                    git("mv", source, destination)
+                    paths = git("diff", *flags.split(), "--cached").splitlines()
+                    self.assertEqual({source, destination}, set(paths))
+                    result = MODULE.classify(paths, "push", root=root)
+                    self.assertEqual("true", result["site_changed"])
+                    self.assertEqual("true", result["build_required"])
 
     def test_apps_script_only_change_keeps_unit_checks(self):
         result = MODULE.classify(["automation/apps-script/publication-access-request/Code.gs"], "push")

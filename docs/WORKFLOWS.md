@@ -102,8 +102,11 @@ rewriting `Gemfile.lock`. For an intentional dependency update, use
 
 ## Production and browser checks
 
-With native dependencies installed, stop any development server on port 8080
-before testing so Playwright does not reuse a development build:
+With native dependencies installed, build the production output before testing.
+Playwright starts a separate port-8081 server and refuses to reuse an existing server.
+Stop the development watcher when building into the shared `_site` directory;
+otherwise choose a separate Jekyll destination and set `SITE_DIRECTORY` for tests.
+The test server checks `build-info.json` and rejects development output:
 
 ```bash
 npm run build
@@ -122,8 +125,11 @@ npm run test:ui
 ```
 
 Both browser commands need host Python for their HTTP servers. Playwright
-serves existing `_site` output and reuses an existing port-8080 server locally;
-it does not rebuild the site. An existing Chrome can be selected:
+serves existing `_site` output on port 8081; it does not rebuild the site.
+`PLAYWRIGHT_BASE_URL=http://127.0.0.1:8097` changes both the target and managed
+server port. `SITE_DIRECTORY` selects an isolated production output directory
+for both Playwright and Lighthouse. Use `PLAYWRIGHT_EXTERNAL_SERVER=1` only to intentionally test a
+separately managed server. An existing Chrome can be selected:
 
 ```bash
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run test:ui
@@ -205,7 +211,7 @@ generation, not site validation or publication. See
 ## Other workflows and troubleshooting
 
 `codeql.yml` scans code and `dependency-audit.yml` audits locked Ruby/Node
-packages. The publication-access Apps Script is deployed separately: see its
+packages and the locked Python dependencies. The publication-access Apps Script is deployed separately: see its
 [deployment guide](../automation/apps-script/publication-access-request/README.md).
 A GitHub push alone does not update that web app.
 
@@ -213,3 +219,22 @@ Start with `npm run checks:push`. Download `formatting-diff`,
 `browser-failure-*`, `lighthouse-failure-*` (JSON), or `link-health-*` as
 appropriate. A link timeout is not evidence of a broken site build. Recheck the
 remote service and distinguish transient failures from a confirmed missing URL.
+
+## Audit regression coverage
+
+CI treats moves as deletion plus addition so both old and new paths affect build
+selection. Root visitor HTML receives browser and Lighthouse checks; XML,
+robots.txt, and `google<hex>.html` ownership files retain lightweight validation.
+Selected Lighthouse URLs are also added to the default axe route sweep.
+
+Production builds reject developer documents and test output with
+`.github/scripts/validate_site_artifact.py`. Direct Jekyll/container builds should
+run this command on their output too. The normal `npm run build` and CI already do.
+
+Link health retains its failure status and original JSON. Its job summary groups
+unique failing URLs by domain and separates timeouts from HTTP errors. Cached
+errors sharing a timeout URL count once as a timeout. A trusted-branch cache
+preserves the first and last observed failure time across runs; cache expiry
+starts a new observation period. An absent URL is removed from this history,
+without claiming it returned HTTP 200. Diagnostics do not change the scan's
+exclusions or pass/fail rules.

@@ -14,10 +14,13 @@ const syncSearchTheme = () => {
 };
 
 const collapseNavbarIfNeeded = () => {
-  const $navbarNav = $("#navbarNav");
-  if ($navbarNav.hasClass("show")) {
-    $navbarNav.collapse("hide");
-  }
+  const navbar = document.getElementById("navbarNav");
+  if (!navbar) return;
+  navbar.classList.remove("show", "collapsing");
+  navbar.classList.add("collapse");
+  navbar.style.height = "";
+  navbarToggleButton?.setAttribute("aria-expanded", "false");
+  navbarToggleButton?.classList.add("collapsed");
 };
 
 const isSearchModalOpen = () => Boolean(pagefindShell && !pagefindShell.hidden && pagefindShell.getAttribute("aria-hidden") === "false");

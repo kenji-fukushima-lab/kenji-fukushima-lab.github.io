@@ -33,13 +33,13 @@ const DEFAULT_PATHS = [
 
 function checkedPaths() {
   if (!process.env.AXE_PATHS) {
-    return DEFAULT_PATHS;
+    return [...new Set([...DEFAULT_PATHS, ...(process.env.AXE_ADDITIONAL_PATHS || "").split(",").filter(Boolean)])];
   }
 
   return process.env.AXE_PATHS.split(",")
     .map((path) => path.trim())
     .filter(Boolean)
-    .map((path) => `/${path.replace(/^\/+|\/+$/g, "")}${path === "/" ? "" : "/"}`.replace("//", "/"));
+    .map((path) => new URL(path, "https://example.invalid/").pathname);
 }
 
 async function checkAccessibility(page, path) {

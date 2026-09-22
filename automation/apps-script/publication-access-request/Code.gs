@@ -1,3 +1,5 @@
+const SOURCE_REVISION = "0adfd50649f5a71871a5cada4c3f55a8875d4aea28b0fa22be16ade1c4260cf2";
+
 const CONFIG = Object.freeze({
   TIME_ZONE: "Asia/Tokyo",
   REQUESTS_SHEET_NAME: "Requests",
@@ -55,6 +57,11 @@ function setup() {
  * Handles verification links and a simple service-status page.
  */
 function doGet(e) {
+  if (e && e.parameter && e.parameter.status === "1") {
+    return ContentService.createTextOutput(JSON.stringify({ service: "kflab-publication-access", source_revision: SOURCE_REVISION })).setMimeType(
+      ContentService.MimeType.JSON
+    );
+  }
   const token = String((e && e.parameter && e.parameter.token) || "").trim();
   if (!token) {
     return renderPage_("Fukushima Lab publication access", "<p>This service verifies email addresses for publication-access requests.</p>");

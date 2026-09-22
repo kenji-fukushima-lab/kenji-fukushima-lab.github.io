@@ -51,9 +51,9 @@ jobs:
         run: |
           changed_paths="${RUNNER_TEMP}/site-ci-changed-paths.txt"
           if [ "${EVENT_NAME}" = "pull_request" ]; then
-            git diff --name-only --diff-filter=ACMRD "${BASE_SHA}...${HEAD_SHA}" > "${changed_paths}"
+            git diff --no-renames --name-only --diff-filter=ACMRD "${BASE_SHA}...${HEAD_SHA}" > "${changed_paths}"
           elif [ "${EVENT_NAME}" = "push" ] && [ -n "${BEFORE_SHA}" ] && [ "${BEFORE_SHA}" != "0000000000000000000000000000000000000000" ]; then
-            git diff --name-only --diff-filter=ACMRD "${BEFORE_SHA}..${HEAD_SHA}" > "${changed_paths}"
+            git diff --no-renames --name-only --diff-filter=ACMRD "${BEFORE_SHA}..${HEAD_SHA}" > "${changed_paths}"
           else
             git ls-files > "${changed_paths}"
           fi
@@ -90,6 +90,7 @@ jobs:
           cache-dependency-path: |
             requirements-build.txt
             requirements-test.txt
+            requirements.lock
       - name: Install Node.js dependencies
         run: npm ci
       - name: Install Python test dependencies
@@ -98,6 +99,8 @@ jobs:
         run: bash .github/scripts/prepare-image-env.sh
       - name: Python syntax checks
         run: find .github/scripts -name '*.py' -exec python3 -m py_compile {} +
+      - name: Verify Apps Script source digest
+        run: python3 .github/scripts/publication_access_release.py
       - name: Unit tests
         run: npm run test:unit
       - name: Validate papers.bib
@@ -173,6 +176,9 @@ jobs:
       - name: Validate responsive image dimensions
         if: needs.preflight.outputs.build_required == 'true'
         run: python3 .github/scripts/validate_responsive_images.py _site
+      - name: Validate public artifact files
+        if: needs.preflight.outputs.build_required == 'true'
+        run: python3 .github/scripts/validate_site_artifact.py _site
       - name: Purge unused CSS
         if: needs.preflight.outputs.build_required == 'true'
         run: npm run css:purge
@@ -220,6 +226,7 @@ jobs:
           path: _site
       - name: Run browser tests
         env:
+          AXE_ADDITIONAL_PATHS: ${{ needs.preflight.outputs.lighthouse_urls }}
           AXE_PATHS: ${{ github.event_name == 'workflow_dispatch' && inputs.axe_path || '' }}
         run: npm run test:ui
       - name: Upload browser failure artifacts

@@ -1,2 +1,2 @@
 -c requirements.lock
-Pillow
+pip-audit

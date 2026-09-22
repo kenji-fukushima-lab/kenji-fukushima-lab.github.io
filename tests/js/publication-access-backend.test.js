@@ -210,3 +210,17 @@ test("exhausted mail quota never creates a pending request", () => {
   assert.equal(backend.mail.verification.length, 0);
   assert.equal(backend.heldLocks(), 0);
 });
+
+test("status exposes only the source revision and never opens the private log or sends mail", () => {
+  const statusContext = {
+    ContentService: {
+      MimeType: { JSON: "json" },
+      createTextOutput: (body) => ({ setMimeType: () => JSON.parse(body) }),
+    },
+  };
+  vm.runInNewContext(backendSource, statusContext);
+  const status = statusContext.doGet({ parameter: { status: "1" } });
+  assert.equal(status.service, "kflab-publication-access");
+  assert.match(status.source_revision, /^[a-f0-9]{64}$/);
+  assert.deepEqual(Object.keys(status).sort(), ["service", "source_revision"]);
+});

@@ -57,8 +57,12 @@ def _lighthouse_urls(paths: list[str], root: Path) -> tuple[str, ...]:
     urls: set[str] = set()
     for path in site_paths:
         if _is_root_public_path(path):
-            # XML, robots.txt and ownership files are checked by the build;
-            # they are not visitor pages to score with Lighthouse.
+            # Only ownership verification HTML is exempt from browser checks.
+            if path.endswith(".html") and not re.fullmatch(r"google[a-f0-9]+\.html", path):
+                source = root / path
+                if not source.is_file():
+                    return ALL_LIGHTHOUSE_URLS
+                urls.add(_page_permalink(path, root) or ("/" if path == "index.html" else "/" + path))
             continue
         if path.startswith(("_bibliography/", "_profiles/", "_news/")):
             for lang in LANGUAGES:

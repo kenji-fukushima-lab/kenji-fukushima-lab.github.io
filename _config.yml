@@ -225,6 +225,11 @@ exclude:
   - AGENTS.md
   - docs/
   - test/
+  - test-results/
+  - playwright-report/
+  - SYNC_HISTORY.md
+  - requirements.lock
+  - requirements-audit.txt
   - requirements.txt
   - requirements-build.txt
   - requirements-test.txt
@@ -244,6 +249,9 @@ exclude:
   - LICENSE
   - lighthouse-results-ci/
   - lighthouse_results/
+  - link-health.json
+  - link-health-summary.md
+  - link-health-history.json
   - package.json
   - package-lock.json
   - playwright.config.js

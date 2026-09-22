@@ -109,6 +109,53 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
         self.assertIn("&#123;&#37;", figure)
         self.assertIn("&quot;quote&quot;", figure)
 
+    def test_original_liquid_and_html_attributes_cannot_bypass_validation(self):
+        for body in [
+            '{% include figure.liquid path="assets/img/posts/sample.jpg" caption="<script>alert(1)</script>" %}',
+            '<img src="https://github.com/user-attachments/assets/abc" onerror="alert(1)">',
+            '[click](java&#115;cript:alert%281%29)',
+            '[click](javascript%3Aalert%281%29)',
+        ]:
+            with self.subTest(body=body), tempfile.TemporaryDirectory() as tmp:
+                with mock.patch.object(MODULE, "IMAGES_ROOT", pathlib.Path(tmp)), mock.patch.object(MODULE, "download_attachment") as download:
+                    with self.assertRaises(MODULE.InputError):
+                        MODULE.replace_attachment_images(body, "2026-09-22", "audit", 1)
+                    download.assert_not_called()
+
+    def test_generated_include_allowlist_rejects_extra_attributes(self):
+        for attribute in ['caption="<script>alert(1)</script>"', 'alt=\'" onerror="alert(1)\'']:
+            with self.subTest(attribute=attribute), self.assertRaises(MODULE.InputError):
+                MODULE.validate_generated_body_markdown('{% include figure.liquid path="assets/img/posts/a.jpg" ' + attribute + ' %}')
+
+    def test_download_is_bounded_even_without_content_length(self):
+        response = mock.MagicMock()
+        response.__enter__.return_value = response
+        response.read.side_effect = [b'x' * 8, b'x' * 3]
+        with mock.patch.object(MODULE, "MAX_DOWNLOAD_BYTES", 10), mock.patch.object(MODULE.urllib.request, "urlopen", return_value=response):
+            with self.assertRaisesRegex(MODULE.InputError, "download limit"):
+                MODULE.download_attachment('https://github.com/user-attachments/assets/example')
+
+    def test_rejects_invalid_svg_and_excessive_pixels(self):
+        for data, extension in [(b'<svg/>', '.svg'), (b'<html/>', '.png')]:
+            with self.subTest(extension=extension), self.assertRaises(MODULE.InputError):
+                MODULE.optimize_image_asset(data, extension, 'test', [])
+        buffer = io.BytesIO()
+        Image.new('RGB', (20, 20)).save(buffer, format='PNG')
+        with mock.patch.object(MODULE, 'MAX_IMAGE_PIXELS', 100):
+            with self.assertRaisesRegex(MODULE.InputError, 'pixels'):
+                MODULE.optimize_image_asset(buffer.getvalue(), '.png', 'test', [])
+
+    def test_attachment_count_and_combined_bytes_are_bounded(self):
+        buffer = io.BytesIO()
+        Image.new('RGB', (16, 16)).save(buffer, format='PNG')
+        data = buffer.getvalue()
+        body = '\n'.join(f'![Image](https://github.com/user-attachments/assets/{i})' for i in range(2))
+        for setting, limit in [('MAX_ATTACHMENTS', 1), ('MAX_ATTACHMENT_BYTES', len(data))]:
+            with self.subTest(setting=setting), tempfile.TemporaryDirectory() as tmp:
+                with mock.patch.object(MODULE, 'IMAGES_ROOT', pathlib.Path(tmp)), mock.patch.object(MODULE, setting, limit), mock.patch.object(MODULE, 'download_attachment', return_value=(data, 'image/png')):
+                    with self.assertRaises(MODULE.InputError):
+                        MODULE.replace_attachment_images(body, '2026-09-22', 'audit', 1)
+
 
 if __name__ == "__main__":
     unittest.main()

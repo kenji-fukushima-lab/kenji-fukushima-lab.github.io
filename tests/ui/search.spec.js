@@ -32,3 +32,19 @@ test("search retries a failed script download when reopened", async ({ page }) =
   await expect(page.locator('#pagefind-search [role="alert"]')).toHaveCount(0);
   expect(attempts).toBe(2);
 });
+
+for (const width of [1440, 390]) {
+  test(`search works without the jQuery CDN at width ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.route("**/jquery@*/**", (route) => route.abort());
+    await page.goto("/");
+    await page.keyboard.press("Control+k");
+    const input = page.locator(".pagefind-ui__search-input");
+    await expect(input).toBeFocused();
+    await input.fill("plant");
+    await expect(page.locator(".pagefind-ui__result").first()).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Search this site" })).not.toBeVisible();
+    await expect(page.locator(width === 390 ? ".navbar-toggler" : "#search-toggle")).toBeFocused();
+  });
+}

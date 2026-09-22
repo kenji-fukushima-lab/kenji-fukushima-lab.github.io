@@ -12,7 +12,7 @@
     "test:lighthouse": "bash .github/scripts/run-lighthouse.sh",
     "test:ui": "playwright test",
     "dev": "bash bin/entry_point.sh",
-    "build": "JEKYLL_ENV=production bundle exec jekyll build && npm run css:purge",
+    "build": "JEKYLL_ENV=production bundle exec jekyll build && npm run css:purge && python3 .github/scripts/validate_site_artifact.py _site",
     "css:purge": "node .github/scripts/purge-page-css.cjs"
   },
   "devDependencies": {

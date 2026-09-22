@@ -62,8 +62,10 @@ uses POSIX signals.
 
 ## Validation and deployment
 
-With the native dependencies above installed, stop any development server on
-port 8080 so Playwright tests the production output:
+With the native dependencies above installed, run the production checks below.
+Playwright starts its own server on port 8081 and refuses to reuse an existing
+server. Stop the development watcher when using the shared `_site` directory;
+use an isolated build destination and `SITE_DIRECTORY` to keep development running.
 
 ```bash
 npm run checks:push
@@ -98,3 +100,20 @@ them; replacing the repository with a new template would discard local features.
 Update dependency manifests and their locks together, rebuild the Docker image
 when its runtime changes, and run the validation commands above. Keep the runtime
 version files, Dockerfile, and documented versions consistent.
+
+## Python dependency updates
+
+`requirements-build.txt`, `requirements-test.txt`, and `requirements-audit.txt`
+share `requirements.lock`, including transitive versions for the supported
+platforms. CI, Docker, and native pip installations consume the same constraints.
+To intentionally update dependencies, install uv and run:
+
+```bash
+bash .github/scripts/lock-python-dependencies.sh
+python3 -m pip install -r requirements-build.txt -r requirements-test.txt -r requirements-audit.txt
+python3 -m pip_audit -r requirements-build.txt -r requirements-test.txt -r requirements-audit.txt
+```
+
+Review the lock diff, rebuild Docker, and run the normal delivery checks. The
+requirement files express the requested packages; the lock records a reproducible
+resolution rather than imposing unsupported upper bounds on those packages.

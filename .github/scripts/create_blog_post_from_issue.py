@@ -20,6 +20,7 @@ import pathlib
 import re
 import sys
 import unicodedata
+import warnings as python_warnings
 import urllib.parse
 import urllib.request
 from typing import Dict, List, Tuple
@@ -40,14 +41,20 @@ HTML_ATTRIBUTE_PATTERN = re.compile(
     r"""(?P<name>[\w:-]+)\s*=\s*(?P<quote>["'])(?P<value>.*?)(?P=quote)""",
     re.IGNORECASE | re.DOTALL,
 )
-SAFE_FIGURE_INCLUDE_PATTERN = re.compile(r"{%\s+include\s+figure\.liquid\s+[^%]*%}")
+SAFE_FIGURE_INCLUDE_PATTERN = re.compile(
+    r'{% include figure\.liquid path="assets/img/posts/[a-zA-Z0-9_-]+\.(?:jpg|jpeg|png|webp|gif)" '
+    r'class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="[^"<>{}%]*" %}'
+)
 MARKDOWN_AUTOLINK_PATTERN = re.compile(r"<(?:https?://|mailto:)[^>\s]+>")
 RAW_HTML_TAG_PATTERN = re.compile(r"<\s*/?\s*[A-Za-z][^>]*>")
 INLINE_EVENT_HANDLER_PATTERN = re.compile(r"\bon[a-z]+\s*=", re.IGNORECASE)
-DANGEROUS_URI_PATTERN = re.compile(r"(?:javascript:|data:text/html)", re.IGNORECASE)
 NO_RESPONSE = "_No response_"
 EXIF_ORIENTATION_TAG = 274
 MAX_IMAGE_BYTES = int(os.environ.get("MAX_IMAGE_BYTES", "900000"))
+MAX_DOWNLOAD_BYTES = 15_000_000
+MAX_ATTACHMENT_BYTES = 50_000_000
+MAX_ATTACHMENTS = 20
+MAX_IMAGE_PIXELS = 40_000_000
 RASTER_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".tif", ".tiff"}
 BUDGETED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 JPEG_QUALITY_STEPS = (90, 85, 80, 75, 70, 65, 60)
@@ -160,6 +167,24 @@ def validate_plain_text_submission_value(field_label: str, value: str) -> str:
     return normalized
 
 
+def validate_submission_body(markdown: str) -> None:
+    """Validate original input before introducing any trusted Liquid includes."""
+    if any(token in markdown for token in ("{{", "}}", "{%", "%}")):
+        raise InputError("Body (Markdown) must not include Liquid markup.")
+
+    def image_only(match: re.Match) -> str:
+        raw = match.group("attrs")
+        attributes = parse_html_attributes(raw)
+        residue = HTML_ATTRIBUTE_PATTERN.sub("", raw).strip().rstrip("/").strip()
+        if residue or set(attributes) - {"src", "alt", "width", "height"}:
+            raise InputError("Image HTML may only contain src, alt, width, and height attributes.")
+        if not is_github_attachment_url(attributes.get("src", "")):
+            raise InputError("Image HTML must use a GitHub attachment URL.")
+        return ""
+
+    validate_generated_body_markdown(HTML_IMAGE_TAG_PATTERN.sub(image_only, markdown))
+
+
 def validate_generated_body_markdown(markdown: str) -> None:
     # Allow the exact figure include syntax that this automation generated, but reject
     # any remaining raw HTML or Liquid syntax from the issue body.
@@ -168,8 +193,11 @@ def validate_generated_body_markdown(markdown: str) -> None:
 
     if "{{" in sanitized or "}}" in sanitized or "{%" in sanitized or "%}" in sanitized:
         raise InputError("Body (Markdown) must not include Liquid markup.")
-    if DANGEROUS_URI_PATTERN.search(sanitized):
-        raise InputError("Body (Markdown) must not include javascript: or HTML data URLs.")
+    # Decode HTML entities and URL escapes before checking Markdown link schemes.
+    decoded = html.unescape(urllib.parse.unquote(sanitized))
+    decoded = re.sub(r"[\x00-\x20\x7f]", "", decoded)
+    if re.search(r"(?:javascript|vbscript|data):", decoded, re.IGNORECASE):
+        raise InputError("Body (Markdown) must not include executable or data URL schemes.")
     if INLINE_EVENT_HANDLER_PATTERN.search(sanitized):
         raise InputError("Body (Markdown) must not include inline HTML event handlers.")
     if RAW_HTML_TAG_PATTERN.search(sanitized):
@@ -213,6 +241,8 @@ def build_author_html(issue_user_login: str) -> str:
 
 def is_github_attachment_url(url: str) -> bool:
     parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https":
+        return False
     host = parsed.netloc.lower()
     if host == "github.com" and parsed.path.startswith("/user-attachments/assets/"):
         return True
@@ -289,7 +319,14 @@ def download_attachment(url: str) -> tuple[bytes, str]:
         },
     )
     with urllib.request.urlopen(req, timeout=60) as response:
-        return response.read(), response.headers.get("Content-Type", "")
+        chunks = []
+        size = 0
+        while chunk := response.read(min(65536, MAX_DOWNLOAD_BYTES + 1 - size)):
+            size += len(chunk)
+            if size > MAX_DOWNLOAD_BYTES:
+                raise InputError(f"Attachment exceeds the {MAX_DOWNLOAD_BYTES}-byte download limit")
+            chunks.append(chunk)
+        return b"".join(chunks), response.headers.get("Content-Type", "")
 
 
 def image_has_alpha(image: Image.Image) -> bool:
@@ -388,15 +425,26 @@ def optimize_image_asset(data: bytes, extension: str, source_url: str, warnings:
     extension = extension.lower()
 
     if extension not in RASTER_IMAGE_EXTENSIONS:
-        if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
-            raise InputError(f"Attachment exceeds {MAX_IMAGE_BYTES} bytes and cannot be optimized automatically: {source_url}")
-        return data, extension
-
+        raise InputError("Attachments must be raster images (JPEG, PNG, WebP, GIF, BMP, or TIFF).")
     if Image is None or ImageOps is None:
-        if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
-            raise InputError(f"Attachment exceeds {MAX_IMAGE_BYTES} bytes but Pillow is unavailable: {source_url}")
-        warnings.append(f"Skipped image optimization for {source_url} (Pillow is unavailable)")
-        return data, extension
+        raise InputError("Pillow is required to validate image attachments.")
+
+    # Validate actual bytes, dimensions, and decoding before accepting originals.
+    try:
+        with python_warnings.catch_warnings():
+            python_warnings.simplefilter("error", Image.DecompressionBombWarning)
+            with Image.open(io.BytesIO(data)) as probe:
+                if probe.width * probe.height > MAX_IMAGE_PIXELS:
+                    raise InputError(f"Attachment exceeds {MAX_IMAGE_PIXELS} pixels")
+                detected = {"JPEG": ".jpg", "PNG": ".png", "WEBP": ".webp", "GIF": ".gif", "BMP": ".bmp", "TIFF": ".tiff"}.get(probe.format)
+                if not detected:
+                    raise InputError("Unsupported image format")
+                probe.verify()
+            extension = detected
+    except InputError:
+        raise
+    except Exception as exc:
+        raise InputError("Attachment is not a valid supported image") from exc
 
     try:
         with Image.open(io.BytesIO(data)) as image:
@@ -442,11 +490,8 @@ def optimize_image_asset(data: bytes, extension: str, source_url: str, warnings:
                 normalized.close()
     except InputError:
         raise
-    except Exception as exc:  # pragma: no cover
-        warnings.append(f"Skipped image optimization for {source_url} ({exc})")
-        if extension in BUDGETED_IMAGE_EXTENSIONS and len(data) > MAX_IMAGE_BYTES:
-            raise InputError(f"Attachment could not be processed under {MAX_IMAGE_BYTES} bytes: {source_url}") from exc
-        return data, extension
+    except Exception as exc:
+        raise InputError(f"Attachment could not be safely processed: {source_url}") from exc
 
     raise InputError(f"Attachment could not be reduced below {MAX_IMAGE_BYTES} bytes automatically: {source_url}")
 
@@ -457,15 +502,17 @@ def replace_attachment_images(
     slug: str,
     issue_number: int,
 ) -> Tuple[str, List[str], List[str]]:
+    validate_submission_body(markdown)
     IMAGES_ROOT.mkdir(parents=True, exist_ok=True)
 
     replaced_files: List[str] = []
     warnings: List[str] = []
     cache: Dict[str, str] = {}
     counter = 0
+    total_bytes = 0
 
     def localize_attachment(url: str, alt: str) -> str | None:
-        nonlocal counter
+        nonlocal counter, total_bytes
 
         if not is_github_attachment_url(url):
             return None
@@ -474,14 +521,21 @@ def replace_attachment_images(
             return build_figure_include(cache[url], alt.strip() or "Image")
 
         counter += 1
+        if counter > MAX_ATTACHMENTS:
+            raise InputError(f"At most {MAX_ATTACHMENTS} attachments are allowed")
         basename = f"{date_str}_{slug}_issue{issue_number}_{counter:02d}"
 
         try:
             data, content_type = download_attachment(url)
+        except InputError:
+            raise
         except Exception as exc:  # pragma: no cover
             warnings.append(f"Failed to download attachment: {url} ({exc})")
             return None
 
+        total_bytes += len(data)
+        if total_bytes > MAX_ATTACHMENT_BYTES:
+            raise InputError(f"Attachments exceed the {MAX_ATTACHMENT_BYTES}-byte total limit")
         extension = guess_extension(url, content_type)
         if extension == ".bin":
             extension = guess_extension_from_bytes(data)
