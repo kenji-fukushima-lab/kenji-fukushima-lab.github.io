@@ -42,7 +42,8 @@ before running browser checks.
 ## Native setup
 
 Use a Ruby/Node/Python version manager to select the checked-in version files.
-Install ImageMagick (including SVG support), create a Python virtual environment,
+Install ImageMagick (including SVG support and the `convert` and `identify`
+commands used by the checks), create a Python virtual environment,
 and install the locked Ruby and Node dependencies plus the Python requirements:
 
 ```bash
@@ -53,6 +54,12 @@ bundle install
 npm ci
 npm run dev
 ```
+
+Keep the virtual environment active for subsequent builds and checks. Search
+indexing probes `PAGEFIND_PYTHON` first, then `python3`, `/usr/bin/python3`, and
+`python`, using the first interpreter that can run `-m pagefind --version`.
+`PAGEFIND_PYTHON` is an executable path, not a shell command with arguments.
+Production builds fail if Pagefind is unavailable or indexing fails.
 
 The development server runs on port 8080. Content changes use Jekyll's watcher;
 `_config.yml` replacement or edits restart only the managed server process.

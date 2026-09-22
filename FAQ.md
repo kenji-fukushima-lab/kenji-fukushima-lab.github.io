@@ -40,8 +40,11 @@ problems. See the [native setup](INSTALL.md#native-setup) and
 
 Install the dependencies in [INSTALL.md](INSTALL.md), build `_site`, and install
 Playwright's Chromium with `npx playwright install chromium`. Playwright starts
-an HTTP server but does not build the site. Stop the development server on port
-8080 first so the tests do not reuse a different build.
+an HTTP server on port 8081 but does not build the site. Stop the development
+watcher before rebuilding the shared `_site`, so it cannot overwrite production
+output. You can keep development running with an
+[isolated production output](docs/WORKFLOWS.md#isolated-production-output) and
+`SITE_DIRECTORY`; port 8080 itself does not conflict with the test server.
 
 Lighthouse also needs host Python and an installed Chrome/Chromium executable.
 Installing Playwright's browser alone does not configure Lighthouse. Use

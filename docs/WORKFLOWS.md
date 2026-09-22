@@ -67,13 +67,16 @@ The pre-commit hook formats staged files and protects partially staged files.
 The pre-push hook selects local checks from every outgoing ref's old/new commit
 pair. The selection lives in `.github/scripts/select_local_checks.py`:
 
-| Changed paths                                                         | Local checks                     |
-| --------------------------------------------------------------------- | -------------------------------- |
-| Root contributor documents or Markdown under `docs/`                  | Formatting                       |
-| Python unit-test files                                                | Syntax, Python tests, formatting |
-| JavaScript unit-test files                                            | JavaScript tests, formatting     |
-| Ruby unit-test files                                                  | Ruby tests, formatting           |
-| Runtime source, fixtures, dependencies, build/CI, or any unknown path | All seven checks                 |
+| Changed paths                                                                                   | Local checks                     |
+| ----------------------------------------------------------------------------------------------- | -------------------------------- |
+| `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `INSTALL.md`, `LICENSE`, or Markdown under `docs/` | Formatting                       |
+| Python unit-test files                                                                          | Syntax, Python tests, formatting |
+| JavaScript unit-test files                                                                      | JavaScript tests, formatting     |
+| Ruby unit-test files                                                                            | Ruby tests, formatting           |
+| Runtime source, fixtures, dependencies, build/CI, or any unknown path                           | All seven checks                 |
+
+`FAQ.md`, `CUSTOMIZE.md`, agent skills, and `VERSION` are not in the local
+document allowlist and currently select all seven checks.
 
 Mixed changes take the union. Renames include both paths. Missing history, new
 refs, non-HEAD/tag pushes, or a dirty worktree fall back to all checks. These
@@ -178,7 +181,8 @@ npm run test:ui
 Both browser commands need host Python for their HTTP servers. Playwright
 serves existing `_site` output on port 8081; it does not rebuild the site.
 `PLAYWRIGHT_BASE_URL=http://127.0.0.1:8097` changes both the target and managed
-server port. `SITE_DIRECTORY` selects an isolated production output directory
+server port. Keep the managed base URL at the server root (no path prefix).
+`SITE_DIRECTORY` selects an isolated production output directory
 for both Playwright and Lighthouse. Use `PLAYWRIGHT_EXTERNAL_SERVER=1` only to intentionally test a
 separately managed server. An existing Chrome can be selected:
 
@@ -194,14 +198,29 @@ configure Lighthouse. For example, on macOS with Google Chrome installed:
 CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run test:lighthouse
 ```
 
-Lighthouse normally uses three samples. One-sample runs are diagnostic only:
+Lighthouse requires `curl` and an available port 4000 for its own loopback
+server; `PLAYWRIGHT_BASE_URL` does not change that port. `LHCI_URL_PATHS` is a
+comma-separated list of site paths starting with `/`, defaulting to the
+`lighthouse_paths` list in `.github/ci-paths.json`.
+
+Lighthouse normally uses three samples per path. Each JSON report is checked
+individually against `.lighthouserc.cjs`; passing is not based on an average or
+median across runs. Category scores are fractions from 0 to 1, LCP is in
+milliseconds, and resource budgets use transferred bytes and request counts.
+`error` assertions fail the command; `warn` assertions only print warnings.
+Reports are `lighthouse-results-ci/<path-slug>-<run>.json` (`home` for `/`),
+with server output in `http-server.log` in that directory. Each invocation
+deletes previous `lighthouse-results-ci/` and `.lighthouseci/` results.
+
+One-sample runs are diagnostic only:
 
 ```bash
 LHCI_URL_PATHS=/ja/people/ LHCI_NUMBER_OF_RUNS=1 npm run test:lighthouse
 ```
 
 Build before browser checks and always run `npm run css:purge` if Jekyll was
-invoked directly. The CSS step keeps dynamic JavaScript states and original
+invoked directly. `css:purge` accepts an optional positional output directory after `--` and
+defaults to `_site`; it does not read `SITE_DIRECTORY`. The CSS step keeps dynamic JavaScript states and original
 stylesheet ordering, then writes content-hashed variants for page families.
 Run it after Jekyll; rerunning the CSS step on the same output is safe. Do not
 edit or commit `_site`.
