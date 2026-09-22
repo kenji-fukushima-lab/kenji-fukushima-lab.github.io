@@ -17,6 +17,30 @@ def sitemap(*urls: str) -> str:
 
 
 class ValidateGeneratedSitemapTest(unittest.TestCase):
+    def test_rejects_paths_outside_generated_site(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            site_dir = root / "_site"
+            site_dir.mkdir()
+            (root / "outside.html").write_text("not deployed")
+            (site_dir / "linked.html").symlink_to(root / "outside.html")
+            for path in ("../outside.html", "%2e%2e/outside.html", "linked.html"):
+                with self.subTest(path=path):
+                    sitemap_path = site_dir / "sitemap.xml"
+                    sitemap_path.write_text(sitemap(f"https://example.test/{path}"))
+                    errors = MODULE.validate_sitemap(sitemap_path, site_dir, "https://example.test")
+                    self.assertEqual(1, len(errors))
+                    self.assertIn("escapes the generated site", errors[0])
+
+    def test_accepts_encoded_local_paths(self):
+        with tempfile.TemporaryDirectory() as directory:
+            site_dir = Path(directory)
+            (site_dir / "日本語").mkdir()
+            (site_dir / "日本語" / "index.html").write_text("ok")
+            sitemap_path = site_dir / "sitemap.xml"
+            sitemap_path.write_text(sitemap("https://example.test/%E6%97%A5%E6%9C%AC%E8%AA%9E/"))
+            self.assertEqual([], MODULE.validate_sitemap(sitemap_path, site_dir, "https://example.test"))
+
     def test_accepts_urls_with_matching_generated_files(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -855,8 +855,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const initializeFromHash = () => {
-    const hashValue = decodeURIComponent(window.location.hash.replace(/^#/, ""));
-    if (hashValue) {
+    const hashValue = window.location.hash.replace(/^#/, "");
+    try {
+      searchInput.value = decodeURIComponent(hashValue);
+    } catch (error) {
+      if (!(error instanceof URIError)) throw error;
+      // A malformed percent escape is still a literal search query.
       searchInput.value = hashValue;
     }
   };

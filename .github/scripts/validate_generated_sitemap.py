@@ -24,7 +24,11 @@ def output_path_for_url(site_dir: Path, url: str, expected_origin: str) -> Path:
     relative = urllib.parse.unquote(parsed.path).lstrip("/")
     if not relative or parsed.path.endswith("/"):
         relative = f"{relative}index.html"
-    return site_dir / relative
+    root = site_dir.resolve()
+    output = (root / relative).resolve()
+    if not output.is_relative_to(root):
+        raise ValueError("URL path escapes the generated site")
+    return output
 
 
 def validate_sitemap(sitemap_path: Path, site_dir: Path, expected_origin: str) -> list[str]:
