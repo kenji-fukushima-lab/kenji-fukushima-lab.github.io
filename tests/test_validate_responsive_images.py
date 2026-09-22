@@ -45,3 +45,31 @@ class ResponsiveImageValidationTest(unittest.TestCase):
             self.assertEqual(1, checked)
             self.assertEqual(1, len(errors))
             self.assertIn("duplicate width descriptor", errors[0])
+
+    def test_widths_are_independent_for_each_attribute_and_tag(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.site(root, '<img srcset="/small.webp 200w" imagesrcset="/small.webp 200w">'
+                      '<img srcset="/small.webp 200w">')
+            self.assertEqual(([], 3), MODULE.validate_site(root))
+
+    def test_failed_candidates_keep_widths_and_error_order(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.site(root, '<img srcset="/small.webp 240w, /small.webp 240w, /small.webp 200w"'
+                      ' imagesrcset="/small.webp 0w, /small.webp 200w">')
+            self.assertEqual(([
+                "blog/index.html: /small.webp: declares 240w but generated width is 200px",
+                "blog/index.html: /small.webp: invalid or duplicate width descriptor 240w",
+                "blog/index.html: /small.webp: invalid or duplicate width descriptor 0w",
+            ], 2), MODULE.validate_site(root))
+
+    def test_skips_data_external_and_non_width_candidates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.site(root, '<img srcset="data:image/png;base64,ignored 200w">'
+                      '<img srcset="https://example.invalid/a.webp 200w, '
+                      '//example.invalid/b.webp 200w, /small.webp 2x, '
+                      '/small.webp, /small.webp 200w extra, /small.webp 200w">'
+                      '<img srcset="" imagesrcset><img>')
+            self.assertEqual(([], 1), MODULE.validate_site(root))

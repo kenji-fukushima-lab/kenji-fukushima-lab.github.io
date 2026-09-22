@@ -23,34 +23,37 @@ class ImageValidator(HTMLParser):
         attributes = dict(attrs)
         for attribute in ("srcset", "imagesrcset"):
             source = attributes.get(attribute) or ""
-            if source.startswith("data:"):
+            self._validate_srcset(source)
+
+    def _validate_srcset(self, source):
+        if source.startswith("data:"):
+            return
+        widths = set()
+        for candidate in source.split(","):
+            parts = candidate.split()
+            if len(parts) != 2 or not parts[1].endswith("w"):
                 continue
-            widths = set()
-            for candidate in source.split(","):
-                parts = candidate.split()
-                if len(parts) != 2 or not parts[1].endswith("w"):
-                    continue
-                url = urlsplit(parts[0])
-                if url.scheme or url.netloc:
-                    continue
-                try:
-                    width = int(parts[1][:-1])
-                    if width <= 0 or width in widths:
-                        raise ValueError(f"invalid or duplicate width descriptor {parts[1]}")
-                    widths.add(width)
-                    decoded = unquote(url.path)
-                    image = ((self.root / decoded.lstrip("/")) if decoded.startswith("/") else (self.page.parent / decoded)).resolve()
-                    if not image.is_relative_to(self.root):
-                        raise ValueError("image path escapes the generated site")
-                    if image not in self.dimensions:
-                        with Image.open(image) as opened:
-                            self.dimensions[image] = opened.width
-                    actual = self.dimensions[image]
-                    if actual != width:
-                        raise ValueError(f"declares {width}w but generated width is {actual}px")
-                    self.checked += 1
-                except (OSError, ValueError) as error:
-                    self.errors.append(f"{self.page.relative_to(self.root)}: {parts[0]}: {error}")
+            url = urlsplit(parts[0])
+            if url.scheme or url.netloc:
+                continue
+            try:
+                width = int(parts[1][:-1])
+                if width <= 0 or width in widths:
+                    raise ValueError(f"invalid or duplicate width descriptor {parts[1]}")
+                widths.add(width)
+                decoded = unquote(url.path)
+                image = ((self.root / decoded.lstrip("/")) if decoded.startswith("/") else (self.page.parent / decoded)).resolve()
+                if not image.is_relative_to(self.root):
+                    raise ValueError("image path escapes the generated site")
+                if image not in self.dimensions:
+                    with Image.open(image) as opened:
+                        self.dimensions[image] = opened.width
+                actual = self.dimensions[image]
+                if actual != width:
+                    raise ValueError(f"declares {width}w but generated width is {actual}px")
+                self.checked += 1
+            except (OSError, ValueError) as error:
+                self.errors.append(f"{self.page.relative_to(self.root)}: {parts[0]}: {error}")
 
 
 def validate_site(root):
