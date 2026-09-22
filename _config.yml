@@ -228,7 +228,7 @@ exclude:
   - test-results/
   - playwright-report/
   - SYNC_HISTORY.md
-  - requirements.lock
+  - requirements-lock.txt
   - requirements-audit.txt
   - requirements.txt
   - requirements-build.txt

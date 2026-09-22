@@ -90,7 +90,7 @@ jobs:
           cache-dependency-path: |
             requirements-build.txt
             requirements-test.txt
-            requirements.lock
+            requirements-lock.txt
       - name: Install Node.js dependencies
         run: npm ci
       - name: Install Python test dependencies

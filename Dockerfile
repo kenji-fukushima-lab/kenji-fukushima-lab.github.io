@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
     ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
-COPY requirements-build.txt requirements-test.txt requirements.lock /tmp/
+COPY requirements-build.txt requirements-test.txt requirements-lock.txt /tmp/
 RUN python3 -m pip install --no-cache-dir --disable-pip-version-check \
     -r /tmp/requirements-build.txt -r /tmp/requirements-test.txt
 

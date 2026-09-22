@@ -49,7 +49,7 @@
     ".github/scripts/prepare-jekyll-build-env.sh",
     ".github/scripts/purge-page-css.cjs",
     ".github/workflows/deploy.yml",
-    "requirements.lock",
+    "requirements-lock.txt",
     ".github/scripts/validate_site_artifact.py",
     ".github/scripts/serve_site.py"
   ],

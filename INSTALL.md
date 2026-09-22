@@ -104,7 +104,7 @@ version files, Dockerfile, and documented versions consistent.
 ## Python dependency updates
 
 `requirements-build.txt`, `requirements-test.txt`, and `requirements-audit.txt`
-share `requirements.lock`, including transitive versions for the supported
+share `requirements-lock.txt`, including transitive versions for the supported
 platforms. CI, Docker, and native pip installations consume the same constraints.
 To intentionally update dependencies, install uv and run:
 

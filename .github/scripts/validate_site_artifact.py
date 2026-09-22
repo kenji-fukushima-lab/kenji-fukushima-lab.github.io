@@ -6,7 +6,7 @@ from pathlib import Path
 FORBIDDEN = {
     'AGENTS.md', 'SYNC_HISTORY.md', 'README.md', 'INSTALL.md', 'CONTRIBUTING.md',
     'Dockerfile', 'Gemfile', 'Gemfile.lock', 'package.json', 'package-lock.json',
-    'requirements.lock', 'requirements.txt', 'requirements-build.txt',
+    'requirements-lock.txt', 'requirements.txt', 'requirements-build.txt',
     'requirements-test.txt', 'requirements-audit.txt', 'playwright.config.js',
 }
 FORBIDDEN_DIRECTORIES = {

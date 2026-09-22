@@ -1,2 +1,2 @@
--c requirements.lock
+-c requirements-lock.txt
 pip-audit
