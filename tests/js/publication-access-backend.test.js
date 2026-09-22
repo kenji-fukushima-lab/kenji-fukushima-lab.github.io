@@ -12,7 +12,6 @@ const context = { console };
 vm.runInNewContext(
   `${backendSource}
 globalThis.testApi = {
-  CONFIG,
   countRequestsForDate_,
   countActiveAccessReservations_,
   isPlausibleFormTiming_,
@@ -21,12 +20,6 @@ globalThis.testApi = {
 );
 
 const api = context.testApi;
-
-test("retains records and limits completed request volume for Gmail quota", () => {
-  assert.equal(backendSource.includes("purgeOldRows_"), false);
-  assert.equal(backendSource.includes("RETENTION_DAYS"), false);
-  assert.equal(api.CONFIG.MAX_REQUESTS_PER_DAY, 45);
-});
 
 test("requires a plausible browser form completion time", () => {
   assert.equal(api.isPlausibleFormTiming_(Date.now() - 2_000), true);

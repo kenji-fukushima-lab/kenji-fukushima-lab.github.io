@@ -38,13 +38,6 @@ test("code copy reports clipboard rejection, retries, and preserves whitespace",
   expect(errors).toEqual([]);
 });
 
-test("code copy button is visible when reached by keyboard focus", async ({ page }) => {
-  await page.goto("/ja/blog/2024/newcomer/");
-  const button = page.locator("button.copy").first();
-  await button.focus();
-  await expect(button).toHaveCSS("opacity", "1");
-});
-
 test("pending copy retains focus, ignores repeat activation, and does not steal moved focus", async ({ page }) => {
   await page.addInitScript(() => {
     window.copyAttempts = 0;
@@ -64,6 +57,7 @@ test("pending copy retains focus, ignores repeat activation, and does not steal 
   const wrapper = page.locator(".code-display-wrapper").filter({ has: page.locator("#copy-fixture") });
   const button = wrapper.locator("button.copy");
   await button.focus();
+  await expect(button).toHaveCSS("opacity", "1");
   await page.keyboard.press("Enter");
   await expect(button).toHaveAttribute("aria-disabled", "true");
   await expect(button).toBeFocused();

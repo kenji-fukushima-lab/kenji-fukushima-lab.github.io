@@ -12,12 +12,6 @@ class PaperNetworkGeneratorTest < Minitest::Test
     @generator = PaperNetwork::Generator.new
   end
 
-  def test_normalize_given_name_keeps_compact_initials_readable
-    assert_equal 'A.B', @generator.send(:normalize_given_name, 'A.B')
-    assert_equal 'A.B.', @generator.send(:normalize_given_name, 'A.B.')
-    assert_equal 'A. B.', @generator.send(:normalize_given_name, 'A B')
-  end
-
   def test_generate_builds_expected_network_data
     build_site_with_bibliography(<<~BIB) do |site|
       @article{paper-a,
@@ -36,7 +30,7 @@ class PaperNetworkGeneratorTest < Minitest::Test
 
       @article{paper-c,
         title = {Isolated paper},
-        author = {Fukushima, Kenji and Wang, Li},
+        author = {Fukushima, Kenji and Wang, A.B.},
         year = {2022}
       }
     BIB
@@ -61,6 +55,7 @@ class PaperNetworkGeneratorTest < Minitest::Test
       assert_equal 'https://doi.org/10.1000/example-a', paper_a['url']
       assert_equal 'https://example.com/paper-b', paper_b['url']
       assert_equal true, paper_c['isolated']
+      assert_includes paper_c['authors'], 'A.B. Wang'
     end
   end
 

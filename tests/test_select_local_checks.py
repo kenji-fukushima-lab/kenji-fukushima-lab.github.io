@@ -22,9 +22,6 @@ class LocalCheckSelectionTest(unittest.TestCase):
     def test_combines_language_test_lanes(self):
         self.assertEqual(MODULE.select(["tests/test_example.py", "tests/js/a.test.js"]), ("syntax", "python", "javascript", "formatting"))
 
-    def test_rename_removes_runtime_even_when_destination_is_documentation(self):
-        self.assertEqual(MODULE.select(["assets/js/old.js", "docs/new.md"]), MODULE.ALL)
-
     def test_real_git_range_and_dirty_fallback(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

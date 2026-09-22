@@ -22,6 +22,7 @@ test("search retries a failed script download when reopened", async ({ page }) =
     else await route.continue();
   });
   await page.goto("/ja/");
+  expect(attempts).toBe(0);
   await page.locator("#search-toggle").click();
   await expect(page.locator('#pagefind-search [role="alert"]')).toBeVisible();
   await expect(page.locator('#pagefind-search [role="alert"]')).toContainText("検索を読み込めませんでした");

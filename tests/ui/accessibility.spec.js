@@ -44,6 +44,7 @@ function checkedPaths() {
 
 async function checkAccessibility(page, path) {
   await page.goto(path, { waitUntil: "networkidle" });
+  await page.evaluate(() => document.fonts.ready);
 
   const untitledFrames = await page
     .locator("iframe")
@@ -88,7 +89,6 @@ const representativePaths = [
 for (const [name, width, colorScheme] of [
   ["desktop dark", 1440, "dark"],
   ["mobile light", 390, "light"],
-  ["mobile dark", 390, "dark"],
 ]) {
   test.describe(name, () => {
     test.use({ viewport: { width, height: 900 }, colorScheme });

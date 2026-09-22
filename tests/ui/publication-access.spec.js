@@ -51,14 +51,4 @@ test.describe("publication access request", () => {
     await expect(page.getByRole("dialog")).not.toContainText("365");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
-
-  test("loads the Pagefind search interface only when requested", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.locator('script[src="/pagefind/pagefind-ui.js"]')).toHaveCount(0);
-
-    await page.getByRole("button", { name: "Search this site" }).click();
-    await expect(page.getByRole("dialog", { name: "Search this site" })).toBeVisible();
-    await expect(page.locator(".pagefind-ui__search-input")).toBeVisible();
-    await expect(page.locator('link[href="/pagefind/pagefind-ui.css"]')).toHaveCount(1);
-  });
 });

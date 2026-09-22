@@ -9,6 +9,6 @@ for (const pathname of ["/404.html", "/ja/404.html"]) {
     const href = await home.getAttribute("href");
     expect(new URL(href, page.url()).pathname).toBe(pathname.startsWith("/ja/") ? "/ja/" : "/");
     await home.click();
-    await expect(page).toHaveURL(new RegExp(pathname.startsWith("/ja/") ? "/ja/$" : ":8080/$"));
+    await expect(page).toHaveURL((url) => url.pathname === (pathname.startsWith("/ja/") ? "/ja/" : "/"));
   });
 }

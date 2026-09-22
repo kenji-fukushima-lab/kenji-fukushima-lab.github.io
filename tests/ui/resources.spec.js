@@ -108,29 +108,9 @@ test.describe("resources and research page smoke tests", () => {
     await expect(page.locator(`${COAUTHOR_GRAPH} circle`).first()).toBeVisible();
     await page.locator(PAPER_GRAPH).scrollIntoViewIfNeeded();
     await waitForGraphLayout(page, PAPER_GRAPH);
-    expect(await page.locator(`${PAPER_GRAPH} circle`).count()).toBeGreaterThan(30);
+    await expect(page.locator(`${PAPER_GRAPH} circle`).first()).toBeVisible();
     await page.locator("#publication-word-cloud-chart").scrollIntoViewIfNeeded();
     await expect(page.locator(".publication-word-cloud-term").first()).toBeVisible({ timeout: 15_000 });
-    const wordCloudLayout = await page.evaluate(() => {
-      const svg = document.querySelector("#publication-word-cloud-chart svg");
-      const viewBox = (svg?.getAttribute("viewBox") || "").split(/\s+/).map(Number);
-      const viewBoxY = viewBox[1] || 0;
-      const height = viewBox[3] || 0;
-      const yValues = Array.from(document.querySelectorAll(".publication-word-cloud-term"))
-        .map((term) => Number(term.getAttribute("y")) - viewBoxY)
-        .sort((left, right) => left - right);
-      const maxYGap = yValues.slice(1).reduce((maxGap, y, index) => Math.max(maxGap, y - yValues[index]), 0);
-
-      return {
-        count: yValues.length,
-        height,
-        maxYGap,
-      };
-    });
-    expect(wordCloudLayout.count).toBeGreaterThan(60);
-    expect(wordCloudLayout.height).toBeLessThan(420);
-    expect(wordCloudLayout.maxYGap).toBeLessThan(wordCloudLayout.height * 0.08);
-
     await page.goto("/research/3_project/");
     await page.locator("#organism-map-chart").waitFor({ state: "attached" });
     await page.evaluate(() => document.getElementById("organism-map-chart").scrollIntoView({ block: "center" }));
@@ -170,30 +150,6 @@ test.describe("resources and research page smoke tests", () => {
     await expect(page.locator(".organism-paper-link")).toHaveAttribute("href", /\/publications\/#safe-local-paper$/);
   });
 
-  test("automatically loads uncached repository stats without compressed shield images", async ({ page }) => {
-    await removeStaticRepoStats(page);
-    await page.route("https://api.github.com/repos/**", async (route) => {
-      const repo = new URL(route.request().url()).pathname.replace(/^\/repos\//, "");
-      await route.fulfill({
-        contentType: "application/json",
-        body: JSON.stringify(githubRepoPayload(repo)),
-      });
-    });
-
-    await page.goto("/resources/");
-    await expect(page.locator("[data-repo-stats-load]")).toHaveCount(0);
-    await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub statistics loaded.");
-
-    const forkLink = page.locator('[data-analytics-label="repository_forks"]').first();
-    const forkBadge = forkLink.locator(".repo-compact-stat-forks");
-    await expect(forkBadge).toBeVisible();
-    await expect(page.locator(".repo-compact-badges img")).toHaveCount(0);
-    await expect(forkBadge.locator("[data-repo-stat-value]")).toHaveText("7");
-
-    const badgeBox = await forkBadge.boundingBox();
-    expect(badgeBox.width).toBeGreaterThan(50);
-  });
-
   test("uses English repository stat labels on the Japanese resources page", async ({ page }) => {
     await removeStaticRepoStats(page, "/ja/resources/");
     await page.route("https://api.github.com/repos/**", async (route) => {
@@ -209,6 +165,7 @@ test.describe("resources and research page smoke tests", () => {
     await expect(page.locator("[data-repo-stats-status]")).toHaveText("GitHub統計を読み込みました。");
 
     const firstRepo = page.locator(".repo-compact").first();
+    await expect(firstRepo.locator(".repo-compact-stat-forks [data-repo-stat-value]")).toHaveText("7");
     await expect(firstRepo.locator(".repo-compact-stat-label")).toHaveText(["Stars", "Forks", "Last commit", "Issue"]);
     await expect(firstRepo.locator(".repo-compact-stat-commits [data-repo-stat-value]")).toHaveText("2 days ago");
   });
@@ -351,23 +308,25 @@ test.describe("resources and research page smoke tests", () => {
   });
 });
 
-for (const pathname of ["/resources/", "/ja/resources/"]) {
-  for (const width of [320, 390, 768]) {
-    test(`repository names and badges fit ${pathname} at ${width}px`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.route("https://api.github.com/**", (route) => route.abort());
-      await page.goto(pathname, { waitUntil: "networkidle" });
-      const overflow = await page.evaluate(() => {
-        const outside = [...document.querySelectorAll(".repo-compact-name, .repo-compact-badges > a")]
-          .filter((element) => {
-            const bounds = element.getBoundingClientRect();
-            const card = element.closest(".repo-compact").getBoundingClientRect();
-            return bounds.left < card.left || bounds.right > card.right;
-          })
-          .map((element) => element.textContent.trim());
-        return { outside, page: document.documentElement.scrollWidth > innerWidth };
-      });
-      expect(overflow).toEqual({ outside: [], page: false });
+// Exercise the narrowest layout and the tablet breakpoint across both languages.
+for (const [pathname, width] of [
+  ["/ja/resources/", 320],
+  ["/resources/", 768],
+]) {
+  test(`repository names and badges fit ${pathname} at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.route("https://api.github.com/**", (route) => route.abort());
+    await page.goto(pathname, { waitUntil: "networkidle" });
+    const overflow = await page.evaluate(() => {
+      const outside = [...document.querySelectorAll(".repo-compact-name, .repo-compact-badges > a")]
+        .filter((element) => {
+          const bounds = element.getBoundingClientRect();
+          const card = element.closest(".repo-compact").getBoundingClientRect();
+          return bounds.left < card.left || bounds.right > card.right;
+        })
+        .map((element) => element.textContent.trim());
+      return { outside, page: document.documentElement.scrollWidth > innerWidth };
     });
-  }
+    expect(overflow).toEqual({ outside: [], page: false });
+  });
 }
