@@ -106,7 +106,7 @@ class ClassifyCiChangesTest(unittest.TestCase):
         self.assertEqual(",".join(MODULE.ALL_LIGHTHOUSE_URLS), result["lighthouse_urls"])
 
     def test_weekly_schedule_keeps_full_browser_coverage(self):
-        result = MODULE.classify([], "schedule", full=True)
+        result = MODULE.classify(["assets/js/theme.js", "tests/ui/resources.spec.js", "playwright.config.js"], "schedule", full=True)
         self.assertEqual("true", result["browser_required"])
         self.assertEqual(",".join(MODULE.ALL_LIGHTHOUSE_URLS), result["lighthouse_urls"])
 
@@ -115,7 +115,7 @@ class ClassifyCiChangesTest(unittest.TestCase):
         self.assertNotIn("    paths:", workflow)
 
     def test_scheduled_stats_refresh_skips_expensive_browser_jobs(self):
-        result = MODULE.classify([], "schedule")
+        result = MODULE.classify(["assets/js/theme.js", "tests/ui/resources.spec.js", "playwright.config.js"], "schedule")
 
         self.assertEqual("true", result["site_changed"])
         self.assertEqual("true", result["build_required"])

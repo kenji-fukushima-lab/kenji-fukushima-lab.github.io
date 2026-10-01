@@ -96,7 +96,8 @@ def classify(paths: list[str], event: str, *, full: bool = False, root: Path = R
     scheduled = event == "schedule"
     full = full or event == "workflow_dispatch"
     site_changed = scheduled or full or any(_is_site_path(path) for path in normalized)
-    ui_changed = any(path == "playwright.config.js" or path.startswith("tests/ui/") for path in normalized)
+    # Scheduled workflows enumerate the repository, rather than changed files.
+    ui_changed = not scheduled and any(path == "playwright.config.js" or path.startswith("tests/ui/") for path in normalized)
     urls = ALL_LIGHTHOUSE_URLS if full else (() if scheduled else _lighthouse_urls(normalized, root))
     return {
         "checks_required": str(scheduled or full or any(path not in {"AGENTS.md", "VERSION"} for path in normalized)).lower(),

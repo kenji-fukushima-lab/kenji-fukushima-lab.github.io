@@ -114,6 +114,10 @@ html[data-theme="dark"] {
   --global-danger-block-text: #600;
   --global-danger-block-title: #c00;
 
+  code {
+    color: var(--global-text-color);
+  }
+
   .only-light {
     display: none;
   }

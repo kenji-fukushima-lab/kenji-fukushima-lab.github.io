@@ -61,6 +61,8 @@ jobs:
       - name: Check external links independently of deployment
         if: steps.site.outputs.found == 'true'
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        # kflab is intentionally private and linked for invited lab members.
+        # GitHub returns 404 to the anonymous checker; public repositories stay checked.
         with:
           fail: true
           format: json
@@ -74,6 +76,7 @@ jobs:
             --accept 100..=103,200..=299,302,403,429
             --user-agent curl/7.54
             --exclude '^https://kenji-fukushima-lab[.]github[.]io(?:/|$)'
+            --exclude '^https://github[.]com/kfuku52/kflab(?:/|$)'
             --exclude '^https://(?:www[.])?linkedin[.]com/'
             --exclude '^https://researchmap[.]jp(?:/|$)'
             --exclude '^https://scholar[.]google[.][^/]+/citations'

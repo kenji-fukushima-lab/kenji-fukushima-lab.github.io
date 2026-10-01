@@ -4,9 +4,9 @@ const { test, expect } = require("@playwright/test");
 
 const PAPER_GRAPH = "#paper-network-graph";
 const COAUTHOR_GRAPH = "#coauthor-network-graph";
-const productionResourcesHtml = fs.readFileSync(path.join(__dirname, "../../_site/resources/index.html"), "utf8");
+const siteDirectory = process.env.SITE_DIRECTORY || path.join(__dirname, "../../_site");
+const productionResourcesHtml = fs.readFileSync(path.join(siteDirectory, "resources/index.html"), "utf8");
 const REPOSITORIES = [...productionResourcesHtml.matchAll(/data-repo-repository="([^"]+)"/g)].map(([, repository]) => repository);
-const STATIC_REPOSITORY_COUNT = (productionResourcesHtml.match(/data-repo-static=/g) || []).length;
 
 async function transformResourceDocument(page, pathname, transform) {
   const escapedPath = pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -20,8 +20,15 @@ async function removeStaticRepoStats(page, pathname = "/resources/") {
   await transformResourceDocument(page, pathname, (html) => html.replace(/\s+data-repo-static=(?:"[^"]*"|'[^']*')/g, ""));
 }
 
-async function setStaticRepoStatsFetchedAt(page, fetchedAt, pathname = "/resources/") {
-  await transformResourceDocument(page, pathname, (html) => html.replace(/("fetched_at":")[^"]+(")/g, `$1${fetchedAt}$2`));
+async function seedStaticRepoStats(page, fetchedAt, missingRepositories) {
+  await transformResourceDocument(page, "/resources/", (html) =>
+    html.replace(/\s+data-repo-static=(?:"[^"]*"|'[^']*')/g, "").replace(/data-repo-repository="([^"]+)"/g, (attribute, repository) => {
+      if (missingRepositories.includes(repository)) return attribute;
+      const data = githubRepoPayload(repository, { fetched_at: fetchedAt, pushed_at: fetchedAt });
+      const escaped = JSON.stringify(data).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+      return `${attribute} data-repo-static="${escaped}"`;
+    })
+  );
 }
 
 async function seedRepoCache(page, { fetchedAt, stars }) {
@@ -194,23 +201,25 @@ test.describe("resources and research page smoke tests", () => {
     await expect(lastCommit).toHaveText("1 hour ago");
   });
 
-  test("uses fresh build-time stats and refreshes only missing repositories", async ({ page }) => {
-    const fetchedAt = "2026-08-22T12:00:00Z";
-    await page.clock.install({ time: new Date("2026-08-22T13:00:00Z") });
-    await setStaticRepoStatsFetchedAt(page, fetchedAt);
+  for (const missingRepoCount of [0, 1]) {
+    test(`uses fresh build-time stats and refreshes ${missingRepoCount} missing repositories`, async ({ page }) => {
+      const fetchedAt = "2026-08-22T12:00:00Z";
+      await page.clock.install({ time: new Date("2026-08-22T13:00:00Z") });
+      const missingRepositories = missingRepoCount ? REPOSITORIES.slice(-missingRepoCount) : [];
+      await seedStaticRepoStats(page, fetchedAt, missingRepositories);
 
-    let apiRequests = 0;
-    await page.route("https://api.github.com/repos/**", async (route) => {
-      apiRequests += 1;
-      await route.abort();
+      let apiRequests = 0;
+      await page.route("https://api.github.com/repos/**", async (route) => {
+        apiRequests += 1;
+        await route.abort();
+      });
+
+      await page.goto("/resources/");
+      await expect(page.locator(".repo-compact-stat-stars [data-repo-stat-value]").first()).toHaveText("11");
+      await expect(page.locator("[data-repo-stats-status]")).toHaveText(missingRepoCount ? "Some GitHub statistics could not be loaded." : "");
+      expect(apiRequests).toBe(missingRepoCount);
     });
-
-    await page.goto("/resources/");
-    await expect(page.locator(".repo-compact-stat-stars [data-repo-stat-value]").first()).not.toHaveText("--");
-    const missingRepoCount = REPOSITORIES.length - STATIC_REPOSITORY_COUNT;
-    await expect(page.locator("[data-repo-stats-status]")).toHaveText(missingRepoCount ? "Some GitHub statistics could not be loaded." : "");
-    expect(apiRequests).toBe(missingRepoCount);
-  });
+  }
 
   test("shows stale cached stats while refreshing them in the background", async ({ page }) => {
     const fetchedAt = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString();
@@ -316,7 +325,9 @@ for (const [pathname, width] of [
   test(`repository names and badges fit ${pathname} at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.route("https://api.github.com/**", (route) => route.abort());
-    await page.goto(pathname, { waitUntil: "networkidle" });
+    await page.goto(pathname, { waitUntil: "domcontentloaded" });
+    await expect(page.locator(".repo-compact")).toHaveCount(REPOSITORIES.length);
+    await page.evaluate(() => document.fonts.ready);
     const overflow = await page.evaluate(() => {
       const outside = [...document.querySelectorAll(".repo-compact-name, .repo-compact-badges > a")]
         .filter((element) => {

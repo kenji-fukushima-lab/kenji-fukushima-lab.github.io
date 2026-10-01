@@ -28,6 +28,7 @@ const DEFAULT_PATHS = [
   "/ja/research/3_project/",
   "/ja/carnivorous-plant-quiz/",
   "/ja/blog/",
+  "/ja/blog/2024/newcomer/",
   "/ja/requests/",
 ];
 
@@ -43,7 +44,9 @@ function checkedPaths() {
 }
 
 async function checkAccessibility(page, path) {
-  await page.goto(path, { waitUntil: "networkidle" });
+  // Remote badges and embedded players can keep requests open after the page is ready.
+  await page.goto(path, { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("main")).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
 
   const untitledFrames = await page
@@ -74,6 +77,25 @@ for (const path of checkedPaths()) {
   });
 }
 
+for (const [path, resource] of [
+  ["/", "https://img.shields.io/**"],
+  ["/outreach/", "https://www.youtube.com/embed/**"],
+]) {
+  test(`audits ${path} while third-party requests remain pending`, async ({ page }) => {
+    const pendingRequests = [];
+    await page.route(resource, (route) => {
+      pendingRequests.push(route);
+    });
+
+    try {
+      await checkAccessibility(page, path);
+      expect(pendingRequests.length).toBeGreaterThan(0);
+    } finally {
+      await Promise.all(pendingRequests.map((route) => route.abort()));
+    }
+  });
+}
+
 const representativePaths = [
   "/",
   "/people/",
@@ -85,6 +107,7 @@ const representativePaths = [
   "/ja/research/networks/",
   "/carnivorous-plant-quiz/",
   "/ja/requests/",
+  "/ja/blog/2024/newcomer/",
 ];
 for (const [name, width, colorScheme] of [
   ["desktop dark", 1440, "dark"],

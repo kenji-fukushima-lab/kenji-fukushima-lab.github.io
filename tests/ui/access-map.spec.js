@@ -11,7 +11,8 @@ test("access map defers Google Maps until the visitor requests it", async ({ pag
     route.fulfill({ status: 200, contentType: "text/html", body: "<!doctype html><title>Map</title>" })
   );
 
-  await page.goto("/access/", { waitUntil: "networkidle" });
+  await page.goto("/access/", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("button", { name: /load interactive map/i })).toBeVisible();
   await expect(page.locator(".access-map-wrap iframe")).toHaveCount(0);
   expect(mapRequests).toEqual([]);
 
