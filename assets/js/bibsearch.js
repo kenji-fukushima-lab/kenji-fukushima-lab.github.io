@@ -16,8 +16,6 @@ const parseNumber = (value) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-const uniqueSorted = (items) => [...new Set(items.filter(Boolean))].sort((a, b) => a.localeCompare(b));
-
 const splitDelimited = (value) =>
   normalize(value)
     .split("||")
@@ -277,10 +275,14 @@ document.addEventListener("DOMContentLoaded", () => {
         populateFacet(facet.id, [], facet.labeler, facet.fixedOptions, facet.defaultLabel || i18n.all);
         return;
       }
-      const values = facet.isList
-        ? uniqueSorted(entries.flatMap((entry) => entry[facet.key]))
-        : uniqueSorted(entries.map((entry) => (facet.key === "year" ? entry.year.toString() : entry[facet.key])));
-      const sortableValues = facet.key === "year" ? values.sort((a, b) => Number.parseInt(b, 10) - Number.parseInt(a, 10)) : values;
+      const items = facet.isList
+        ? entries.flatMap((entry) => entry[facet.key])
+        : entries.map((entry) => (facet.key === "year" ? entry.year.toString() : entry[facet.key]));
+      const values = [...new Set(items.filter(Boolean))];
+      // Years need only numeric order. Avoid initializing the browser's locale
+      // collator for a string sort that would immediately be overwritten.
+      const sortableValues =
+        facet.key === "year" ? values.sort((a, b) => Number.parseInt(b, 10) - Number.parseInt(a, 10)) : values.sort((a, b) => a.localeCompare(b));
       populateFacet(facet.id, sortableValues, facet.labeler, [], facet.defaultLabel || i18n.all);
     });
   };

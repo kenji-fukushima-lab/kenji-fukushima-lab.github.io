@@ -1,6 +1,24 @@
 const { test, expect } = require("@playwright/test");
 
 for (const path of ["/publications/", "/ja/publications/"]) {
+  test(`keeps year options newest first and filters by year at ${path}`, async ({ page }) => {
+    await page.goto(path);
+    const publications = page.locator("#publications-results .publication-entry");
+    await expect.poll(() => publications.count()).toBeGreaterThan(25);
+    const originalCount = await publications.count();
+    const years = await page.locator("#facet-year option").evaluateAll((options) => options.map((option) => option.value).filter(Boolean));
+    expect(years.length).toBeGreaterThan(1);
+    expect(new Set(years).size).toBe(years.length);
+    expect(years.every((year, index) => index === 0 || Number(years[index - 1]) > Number(year))).toBe(true);
+    const oldestYear = years.at(-1);
+    await page.locator("#facet-year").selectOption(oldestYear);
+    await expect.poll(() => publications.count()).toBeGreaterThan(0);
+    await expect.poll(() => publications.evaluateAll((entries) => [...new Set(entries.map((entry) => entry.dataset.year))])).toEqual([oldestYear]);
+    await expect(page.locator("#publications-results h2.bibliography")).toHaveText(oldestYear);
+    await page.locator("#pub-reset-filters").click();
+    await expect(publications).toHaveCount(originalCount);
+  });
+
   test(`keeps publication search usable with malformed URL fragments at ${path}`, async ({ page }) => {
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
