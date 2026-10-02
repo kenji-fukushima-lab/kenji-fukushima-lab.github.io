@@ -55,10 +55,10 @@
         "
       {% endif %}
       {% if include.alt %}
-        alt="{{ include.alt }}"
+        alt="{{ include.alt | escape_once }}"
       {% endif %}
       {% if include.title %}
-        title="{{ include.title }}"
+        title="{{ include.title | escape_once }}"
       {% endif %}
       {% if include.zoomable %}
         data-zoomable

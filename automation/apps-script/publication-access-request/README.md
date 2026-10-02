@@ -22,10 +22,22 @@ verification-mail failure records `verification_error` and releases the
 reservation. Existing records are not rewritten. Outgoing messages do not set
 `Reply-To`.
 
-**Deployment verification status (2026-09-22): pending.** The connected Drive
-account did not return an accessible Apps Script project. The live deployment
-has not yet been matched to this source. GitHub CI checks the local source digest,
-not the deployed web app; GitHub push does not update Apps Script.
+**Deployment verification status (2026-10-02): verified.** The existing project
+was identified in the deploying account and its configured deployment updated
+from version 4 to version 5. The read-only live status matches the reviewed source.
+GitHub CI checks the local source digest, not the deployed web app; GitHub push
+does not update Apps Script.
+
+- Reviewed backend Git SHA: `2c4136dec777e59a1b3fb15b4936cde9d75d5840`
+- Apps Script project: `1MPNDZ_b_ooWvRGRpNxYrtdlTSb-_1GrZERJwyhKz1p-OuzVLc6zyEs4B`
+- Apps Script version: `5` (2026-10-02, Asia/Tokyo)
+- Deployment ID: `AKfycbzZgmU-msHncbv54IT0B034oEoUJYVUTbhrT2I8guNRq1VUf_pVKedw-AzzCRc25r03`
+- Verified source digest: `0adfd50649f5a71871a5cada4c3f55a8875d4aea28b0fa22be16ade1c4260cf2`
+
+The endpoint, deploying account, public access settings, script properties, and
+private request log were preserved. Verification used `--verify`; it did not
+submit a public form, send email, or read request-log rows. Email delivery and log
+writes are covered by local tests, not a live delivery test.
 
 The source now supports a read-only `?status=1` response containing only its
 service name and source digest. It never opens the request log or sends mail.

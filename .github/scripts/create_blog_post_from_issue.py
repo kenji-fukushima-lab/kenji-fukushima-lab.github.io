@@ -34,7 +34,23 @@ except ImportError:  # pragma: no cover
 REPO_ROOT = pathlib.Path(".").resolve()
 POSTS_ROOT = REPO_ROOT / "_posts"
 IMAGES_ROOT = REPO_ROOT / "assets" / "img" / "posts"
-SECTION_PATTERN = re.compile(r"^###\s+(.+?)\s*\n([\s\S]*?)(?=^###\s+|\Z)", re.MULTILINE)
+SECTION_HEADING_PATTERN = re.compile(r"^###[ \t]+([^\r\n]+)\r?\n", re.MULTILINE)
+FIELD_TITLES = {
+    "title": ["記事タイトル / Post Title", "投稿タイトル", "Post title"],
+    "date": [
+        "記事日付 / Article Date (YYYY-MM-DD)",
+        "記事日付/Article Date (YYYY-MM-DD)",
+        "投稿日 (YYYY-MM-DD)",
+        "Post date (YYYY-MM-DD)",
+    ],
+    "lang": ["言語 / Language", "言語", "Language"],
+    "slug": [
+        "URLスラッグ / URL Slug（英数字とハイフン、任意 / optional）",
+        "URLスラッグ（英数字とハイフン、任意）",
+        "URL slug (optional)",
+    ],
+    "body": ["本文 / Body (Markdown)", "本文（Markdown）", "Body (Markdown)"],
+}
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<url>https?://[^\s)]+)\)")
 HTML_IMAGE_TAG_PATTERN = re.compile(r"<img\b(?P<attrs>[^>]*)/?>", re.IGNORECASE)
 HTML_ATTRIBUTE_PATTERN = re.compile(
@@ -91,21 +107,33 @@ def load_issue_from_event() -> dict:
 
 
 def parse_sections(body: str) -> Dict[str, str]:
+    # The body is the form's final field. Everything after its label belongs to
+    # the article, including headings that happen to match a form label.
+    body = body.replace("\r\n", "\n").replace("\r", "\n")
+    known_titles = {title for titles in FIELD_TITLES.values() for title in titles}
+    headings = [match for match in SECTION_HEADING_PATTERN.finditer(body) if match.group(1).strip() in known_titles]
     sections: Dict[str, str] = {}
-    for match in SECTION_PATTERN.finditer(body):
+    for index, match in enumerate(headings):
         title = match.group(1).strip()
-        value = match.group(2).strip()
-        if value == NO_RESPONSE:
+        is_body = title in FIELD_TITLES["body"]
+        end = len(body) if is_body or index + 1 == len(headings) else headings[index + 1].start()
+        raw_value = body[match.end():end]
+        value = raw_value.strip("\n") if is_body else raw_value.strip()
+        if value.strip() == NO_RESPONSE:
             value = ""
         sections[title] = value
+        if is_body:
+            break
     return sections
 
 
-def first_non_empty(sections: Dict[str, str], candidates: List[str], required: bool = False) -> str:
+def first_non_empty(
+    sections: Dict[str, str], candidates: List[str], required: bool = False, preserve_whitespace: bool = False
+) -> str:
     for key in candidates:
-        value = sections.get(key, "").strip()
-        if value:
-            return value
+        value = sections.get(key, "")
+        if value.strip():
+            return value if preserve_whitespace else value.strip()
     if required:
         raise InputError(f"Missing required field. Tried keys: {', '.join(candidates)}")
     return ""
@@ -636,39 +664,31 @@ def main() -> int:
         "Post title",
         first_non_empty(
             sections,
-            ["記事タイトル / Post Title", "投稿タイトル", "Post title"],
+            FIELD_TITLES["title"],
             required=True,
         ),
     )
     date_str = parse_iso_date(
         first_non_empty(
             sections,
-            [
-                "記事日付 / Article Date (YYYY-MM-DD)",
-                "記事日付/Article Date (YYYY-MM-DD)",
-                "投稿日 (YYYY-MM-DD)",
-                "Post date (YYYY-MM-DD)",
-            ],
+            FIELD_TITLES["date"],
             required=True,
         )
     )
     lang = normalize_language(
-        first_non_empty(sections, ["言語 / Language", "言語", "Language"], required=False) or "ja"
+        first_non_empty(sections, FIELD_TITLES["lang"], required=False) or "ja"
     )
     author = build_author_html(issue_user)
     requested_slug = first_non_empty(
         sections,
-        [
-            "URLスラッグ / URL Slug（英数字とハイフン、任意 / optional）",
-            "URLスラッグ（英数字とハイフン、任意）",
-            "URL slug (optional)",
-        ],
+        FIELD_TITLES["slug"],
         required=False,
     )
     content = first_non_empty(
         sections,
-        ["本文 / Body (Markdown)", "本文（Markdown）", "Body (Markdown)"],
+        FIELD_TITLES["body"],
         required=True,
+        preserve_whitespace=True,
     )
 
     slug = normalize_slug(requested_slug) if requested_slug else slugify(title)

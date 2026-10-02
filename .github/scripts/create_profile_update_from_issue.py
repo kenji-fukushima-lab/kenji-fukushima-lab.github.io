@@ -357,8 +357,16 @@ def normalize_position_key(raw_value: str) -> str | None:
 
 
 def is_valid_http_url(value: str) -> bool:
-  parsed = urlparse(value)
-  return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+  if any(character.isspace() or ord(character) < 32 or ord(character) == 127 or character in '<>"' for character in value):
+    return False
+  if any(token in value for token in ("{{", "}}", "{%", "%}")):
+    return False
+  try:
+    parsed = urlparse(value)
+    # Accessing these properties also rejects malformed IPv6 hosts and ports.
+    return parsed.scheme in {"http", "https"} and bool(parsed.hostname) and (parsed.port is None or parsed.port > 0)
+  except ValueError:
+    return False
 
 
 def normalize_service_url(field: str, value: str) -> str:

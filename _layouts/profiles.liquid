@@ -74,7 +74,7 @@ layout: page
           </h2>
 
           {% assign position = site.data[lang].strings.positions[profile.position_key] %}
-          {% assign profile_name = profile.name | strip_html | strip %}
+          {% assign profile_name = profile.name | strip_html | strip | escape_once %}
           {% assign has_social_links = false %}
           {% if profile.email
             or profile.website
@@ -84,6 +84,9 @@ layout: page
             or profile.linkedin
             or profile.twitter
             or profile.researchgate
+            or profile.instagram
+            or profile.facebook
+            or profile.youtube
             or profile.amazon
             or profile.amazon_author
             or profile.researchmap
@@ -100,7 +103,7 @@ layout: page
               <div class="social-icons people-social-icons">
                 {% if profile.email -%}
                   <a
-                    href="mailto:{{ profile.email }}"
+                    href="mailto:{{ profile.email | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ email_tooltip }}"
                     aria-label="Email {{ profile_name }}"
@@ -109,7 +112,7 @@ layout: page
                 {%- endif %}
                 {% if profile.website -%}
                   <a
-                    href="{{ profile.website }}"
+                    href="{{ profile.website | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ website_tooltip }}"
                     aria-label="Website of {{ profile_name }}"
@@ -118,7 +121,7 @@ layout: page
                 {%- endif %}
                 {% if profile.orcid -%}
                   <a
-                    href="{{ profile.orcid }}"
+                    href="{{ profile.orcid | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ orcid_tooltip }}"
                     aria-label="ORCID profile of {{ profile_name }}"
@@ -127,7 +130,7 @@ layout: page
                 {%- endif %}
                 {% if profile.google_scholar -%}
                   <a
-                    href="{{ profile.google_scholar }}"
+                    href="{{ profile.google_scholar | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ google_scholar_tooltip }}"
                     aria-label="Google Scholar profile of {{ profile_name }}"
@@ -136,7 +139,7 @@ layout: page
                 {%- endif %}
                 {% if profile.github -%}
                   <a
-                    href="https://github.com/{{ profile.github }}"
+                    href="https://github.com/{{ profile.github | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ github_tooltip }}"
                     aria-label="GitHub profile of {{ profile_name }}"
@@ -145,7 +148,7 @@ layout: page
                 {%- endif %}
                 {% if profile.linkedin -%}
                   <a
-                    href="{{ profile.linkedin }}"
+                    href="{{ profile.linkedin | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ linkedin_tooltip }}"
                     aria-label="LinkedIn profile of {{ profile_name }}"
@@ -154,16 +157,43 @@ layout: page
                 {%- endif %}
                 {% if profile.twitter -%}
                   <a
-                    href="{{ profile.twitter }}"
+                    href="{{ profile.twitter | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ x_tooltip }}"
                     aria-label="X profile of {{ profile_name }}"
                     ><i class="fab fa-x-twitter" aria-hidden="true"></i
                   ></a>
                 {%- endif %}
+                {% if profile.instagram -%}
+                  <a
+                    href="{{ profile.instagram | escape_once }}"
+                    class="people-social-link"
+                    data-tooltip="Instagram"
+                    aria-label="Instagram profile of {{ profile_name }}"
+                    ><i class="fab fa-instagram" aria-hidden="true"></i
+                  ></a>
+                {%- endif %}
+                {% if profile.facebook -%}
+                  <a
+                    href="{{ profile.facebook | escape_once }}"
+                    class="people-social-link"
+                    data-tooltip="Facebook"
+                    aria-label="Facebook profile of {{ profile_name }}"
+                    ><i class="fab fa-facebook" aria-hidden="true"></i
+                  ></a>
+                {%- endif %}
+                {% if profile.youtube -%}
+                  <a
+                    href="{{ profile.youtube | escape_once }}"
+                    class="people-social-link"
+                    data-tooltip="YouTube"
+                    aria-label="YouTube profile of {{ profile_name }}"
+                    ><i class="fab fa-youtube" aria-hidden="true"></i
+                  ></a>
+                {%- endif %}
                 {% if profile.researchgate -%}
                   <a
-                    href="{{ profile.researchgate }}"
+                    href="{{ profile.researchgate | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ researchgate_tooltip }}"
                     aria-label="ResearchGate profile of {{ profile_name }}"
@@ -172,7 +202,7 @@ layout: page
                 {%- endif %}
                 {% if profile.amazon -%}
                   <a
-                    href="{{ profile.amazon }}"
+                    href="{{ profile.amazon | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ amazon_tooltip }}"
                     aria-label="Amazon profile of {{ profile_name }}"
@@ -180,7 +210,7 @@ layout: page
                   ></a>
                 {%- elsif profile.amazon_author -%}
                   <a
-                    href="{{ profile.amazon_author }}"
+                    href="{{ profile.amazon_author | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ amazon_author_tooltip }}"
                     aria-label="Amazon author page of {{ profile_name }}"
@@ -189,7 +219,7 @@ layout: page
                 {%- endif %}
                 {% if profile.researchmap -%}
                   <a
-                    href="{{ profile.researchmap }}"
+                    href="{{ profile.researchmap | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ researchmap_tooltip }}"
                     aria-label="researchmap profile of {{ profile_name }}"
@@ -205,7 +235,7 @@ layout: page
                 {%- endif %}
                 {% if profile.tayo -%}
                   <a
-                    href="{{ profile.tayo }}"
+                    href="{{ profile.tayo | escape_once }}"
                     class="people-social-link"
                     data-tooltip="{{ tayo_tooltip }}"
                     aria-label="Tayo profile of {{ profile_name }}"

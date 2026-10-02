@@ -18,6 +18,38 @@ SPEC.loader.exec_module(MODULE)
 
 
 class CreateBlogPostFromIssueTests(unittest.TestCase):
+    def test_main_preserves_body_headings_code_and_whitespace(self) -> None:
+        body = '    indented code\n\nOpening paragraph  \n\n### Results\nImportant result\n\n```markdown\n### Post title\nexample title\n### Body (Markdown)\nexample body\n```\n\n### Conclusion\nImportant conclusion  '
+        for body_label in MODULE.FIELD_TITLES["body"]:
+            with self.subTest(body_label=body_label), tempfile.TemporaryDirectory() as tmpdir:
+                root = pathlib.Path(tmpdir)
+                issue = {
+                    "number": 123,
+                    "user": {"login": "author"},
+                    "body": f'### Post title\n\nOriginal title\n\n### Post date (YYYY-MM-DD)\n\n2026-10-02\n\n### Language\n\nen-us\n\n### URL slug (optional)\n\n_No response_\n\n### {body_label}\n\n{body}\n',
+                }
+                with (
+                    mock.patch.object(MODULE, "REPO_ROOT", root),
+                    mock.patch.object(MODULE, "POSTS_ROOT", root / "_posts"),
+                    mock.patch.object(MODULE, "load_issue_from_event", return_value=issue),
+                    mock.patch.object(MODULE, "set_output"),
+                ):
+                    self.assertEqual(MODULE.main(), 0)
+                post = (root / "_posts/en-us/2026-10-02-original-title.md").read_text()
+                self.assertIn('title: "Original title"', post)
+                self.assertEqual(post.split("---\n", 2)[2], f"\n{body}\n")
+
+    def test_parse_sections_handles_current_labels_and_missing_body(self) -> None:
+        issue_body = "\r\n\r\n".join(
+            f"### {MODULE.FIELD_TITLES[field][0]}\r\n\r\n{value}"
+            for field, value in [("title", "記事"), ("date", "2026-10-02"), ("lang", "ja"), ("slug", "_No response_"), ("body", "_No response_")]
+        ) + "\r\n"
+        sections = MODULE.parse_sections(issue_body)
+        self.assertEqual(MODULE.first_non_empty(sections, MODULE.FIELD_TITLES["title"], required=True), "記事")
+        self.assertEqual(MODULE.first_non_empty(sections, MODULE.FIELD_TITLES["slug"]), "")
+        with self.assertRaisesRegex(MODULE.InputError, "Missing required field"):
+            MODULE.first_non_empty(sections, MODULE.FIELD_TITLES["body"], required=True, preserve_whitespace=True)
+
     def test_build_markdown_uses_prettier_friendly_front_matter(self) -> None:
         markdown = MODULE.build_markdown(
             title="春探し",

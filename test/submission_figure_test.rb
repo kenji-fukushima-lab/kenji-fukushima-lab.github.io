@@ -40,4 +40,15 @@ class SubmissionFigureTest < Minitest::Test
     assert_nil document.at_css('img')['onload']
     assert_includes document.at_css('img')['alt'], '<script>bad</script>'
   end
+
+  def test_unencoded_alt_and_title_remain_attribute_text
+    value = 'Alice" onmouseover="window.auditProof=true" data-audit="'
+    template = Liquid::Template.parse(File.read('_includes/figure.liquid'))
+    output = template.render!({'include' => {'path' => 'photo.jpg', 'alt' => value, 'title' => value}, 'site' => {}}, filters: [Filters])
+    image = Nokogiri::HTML.fragment(output).at_css('img')
+    assert_equal value, image['alt']
+    assert_equal value, image['title']
+    assert_nil image['onmouseover']
+    assert_nil image['data-audit']
+  end
 end

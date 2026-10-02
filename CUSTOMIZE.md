@@ -68,6 +68,10 @@ into `_profiles/current_members/` using a stable filename. Set the member's
 other than `github`. The issue automation normalizes supported IDs/handles;
 editing Markdown directly does not run that normalization.
 
+The people cards display populated profile links, including Instagram, Facebook,
+and YouTube. Names may contain quotes; link URLs must use URL encoding for raw
+double quotes or whitespace.
+
 - Choose `position_key` from `positions` in both
   [\_data/en-us/strings.yml](_data/en-us/strings.yml) and
   [\_data/ja/strings.yml](_data/ja/strings.yml). The ordering is in each language's

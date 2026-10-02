@@ -32,6 +32,8 @@ image markup can be converted to the site's own figure include. Do not paste
 scripts, arbitrary includes, or embed HTML into the form. Put an X post URL in
 the issue for a maintainer to embed later.
 
+Headings and code blocks in the body are preserved, including `###` headings.
+
 Recognized GitHub image attachments are downloaded into `assets/img/posts/`
 and rewritten to local figures. Ordinary external Markdown image URLs remain
 remote. Check warnings in the PR: a failed download can leave the original
@@ -73,6 +75,9 @@ warnings, and publication rights. Check the rendered page and applicable checks
 before merging. An issue edit can regenerate the PR, so coordinate direct PR
 edits with the submitter. See [submission CI notes](WORKFLOWS.md#submission-workflows)
 if a bot-created PR has no automatic check run.
+
+Keep the Markdown body as the form's final field; the parser treats everything
+after its label as article content.
 
 ## Embedding an X post
 
