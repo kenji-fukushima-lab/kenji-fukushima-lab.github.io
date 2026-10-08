@@ -71,6 +71,11 @@ Repository-specific instructions override these defaults.
 - `npm run build` produces production `_site`; `npm run test:ui` and
   `npm run test:lighthouse` consume it. Use the documented isolated-build recipe
   when a development watcher or existing output must be preserved.
+- Monitor remote CI every 300 seconds by default, or every 600 seconds for
+  long-running builds and test suites. Use one watcher per run and avoid duplicate
+  status queries while it is active. Temporarily shorten the interval only during
+  active failure diagnosis, then restore the normal cadence. See
+  [Monitoring remote CI](docs/WORKFLOWS.md#monitoring-remote-ci).
 
 ## Preserve site contracts
 

@@ -51,6 +51,20 @@ has only read access to contents and Actions.
 Concurrent superseded site/link runs are cancelled. Feature-branch pushes do
 not duplicate pull-request CI.
 
+### Monitoring remote CI
+
+Use one watcher per run, polling every five minutes (300 seconds) by default:
+
+```bash
+gh run watch RUN_ID --exit-status --interval 300
+```
+
+For long-running builds and test suites, use `--interval 600` (ten minutes).
+While a watcher is active, reuse its output instead of also querying
+`gh run view` or `gh pr checks`. Fetch the relevant failure log after a failed
+job completes. During active failure diagnosis, a shorter interval may be used
+temporarily; restore the normal cadence afterward.
+
 ## Local development
 
 See [INSTALL.md](../INSTALL.md) for the common Docker/Dev Container runtime and
