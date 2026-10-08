@@ -296,6 +296,14 @@ public even when it is absent from the built site.
 
 ## Submission workflows
 
+New member registration uses an
+[approval-gated form](member-registration.md): `kfuku52` must comment
+`/approve-member` before a profile PR is generated. After review and merge,
+`_plugins/scheduled_profiles.rb` excludes the profile until `publish_on` at
+00:00 Japan time. The same daily Deploy run publishes due profiles; no additional
+schedule or bot push is needed. Submission issues and attachments are public
+immediately, even before the website publication date.
+
 Blog/profile issue forms create or update reviewable PRs using `GITHUB_TOKEN`.
 The repository must allow Actions to create pull requests; this setting was
 enabled when checked on 2026-08-31. See the

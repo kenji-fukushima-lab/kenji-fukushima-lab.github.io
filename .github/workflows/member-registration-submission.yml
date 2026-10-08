@@ -1,0 +1,174 @@
+name: Register a member after Kenji's approval
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  awaiting-approval:
+    if: >-
+      github.event_name == 'issues' &&
+      contains(github.event.issue.body || '', '### 公開希望日 / Publication Date (YYYY-MM-DD, Asia/Tokyo)')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout trusted default-branch code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          sparse-checkout: .github/scripts
+
+      - name: Explain the approval and publication steps
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          script: |
+            const { acknowledgeRegistration } = require('./.github/scripts/member_registration_issue.cjs');
+            await acknowledgeRegistration({ github, context });
+
+  create-registration-pr:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      !github.event.issue.pull_request &&
+      github.event.issue.state == 'open' &&
+      github.event.comment.user.login == 'kfuku52' &&
+      contains(github.event.comment.body, '/approve-member') &&
+      contains(github.event.issue.body || '', '### 公開希望日 / Publication Date (YYYY-MM-DD, Asia/Tokyo)')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: member-registration-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout trusted default-branch code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Verify the latest approval is still valid
+        id: approval
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          script: |
+            const { verifyCurrentApproval } = require('./.github/scripts/member_registration_issue.cjs');
+            core.setOutput('approved', await verifyCurrentApproval({ github, context, core }));
+
+      - name: Setup Python
+        if: steps.approval.outputs.approved == 'true'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version-file: .python-version
+
+      - name: Setup Node.js
+        if: steps.approval.outputs.approved == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install locked dependencies
+        if: steps.approval.outputs.approved == 'true'
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-test.txt
+          npm ci
+
+      - name: Generate the approved registration
+        if: steps.approval.outputs.approved == 'true'
+        id: generate
+        continue-on-error: true
+        env:
+          MAX_IMAGE_BYTES: "900000"
+        run: python .github/scripts/create_member_registration_from_issue.py
+
+      - name: Explain invalid registration input
+        if: steps.generate.outcome == 'failure'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          INPUT_ERROR: ${{ steps.generate.outputs.error_message }}
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: `登録PRを作成できませんでした。 / Registration could not be generated.\n\n${process.env.INPUT_ERROR}\n\n入力を修正後、@kfuku52 が新しい /approve-member コメントで再承認してください。`,
+            });
+
+      - name: Stop after invalid input
+        if: steps.generate.outcome == 'failure'
+        run: exit 1
+
+      - name: Format the generated profile
+        if: steps.generate.outcome == 'success'
+        env:
+          GENERATED_PROFILE: ${{ steps.generate.outputs.generated_profile }}
+        run: npx prettier "$GENERATED_PROFILE" --write
+
+      - name: Recheck approval immediately before writing the PR
+        if: steps.generate.outcome == 'success'
+        id: current-approval
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          script: |
+            const { verifyCurrentApproval } = require('./.github/scripts/member_registration_issue.cjs');
+            core.setOutput('approved', await verifyCurrentApproval({ github, context, core }));
+
+      - name: Update issue title
+        if: steps.current-approval.outputs.approved == 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          ISSUE_TITLE: ${{ steps.generate.outputs.issue_title }}
+        with:
+          script: |
+            await github.rest.issues.update({ ...context.repo, issue_number: context.issue.number, title: process.env.ISSUE_TITLE });
+
+      - name: Create a reviewable registration PR
+        if: steps.current-approval.outputs.approved == 'true'
+        id: cpr
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: ${{ steps.generate.outputs.commit_message }}
+          title: ${{ steps.generate.outputs.pr_title }}
+          body: ${{ steps.generate.outputs.pr_body }}
+          branch: ${{ steps.generate.outputs.branch_name }}
+          base: ${{ github.event.repository.default_branch }}
+          add-paths: ${{ steps.generate.outputs.add_paths }}
+          delete-branch: true
+          assignees: kfuku52
+
+      - name: Request Kenji's review
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+        with:
+          script: |
+            await github.rest.pulls.requestReviewers({ ...context.repo, pull_number: Number(process.env.PR_NUMBER), reviewers: ['kfuku52'] });
+
+      - name: Link the approved PR
+        if: steps.cpr.outputs.pull-request-url != ''
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        with:
+          script: |
+            const body = `<!-- member-registration-automation -->\n福島さんの承認を確認し、登録PRを作成・更新しました。\n${process.env.PR_URL}\n\nPRの確認・マージと公開日の両方を満たした後、次の正常なビルドで掲載されます。\n\nKenji's approval was verified. After this PR is reviewed and merged, the next successful build on or after the requested date will publish the profile.`;
+            const parameters = { ...context.repo, issue_number: context.issue.number };
+            const comments = await github.paginate(github.rest.issues.listComments, parameters);
+            const existing = comments.find(comment => comment.user?.type === 'Bot' && comment.body?.includes('<!-- member-registration-automation -->'));
+            if (existing) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...parameters, body });
+            }

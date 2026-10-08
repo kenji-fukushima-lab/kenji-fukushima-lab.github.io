@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   create-profile-update-pr:
-    if: contains(github.event.issue.body || '', '### 役職 / Position Key')
+    if: contains(github.event.issue.body || '', '### 役職 / Position Key') && !contains(github.event.issue.body || '', '### 公開希望日 / Publication Date (YYYY-MM-DD, Asia/Tokyo)')
     runs-on: ubuntu-latest
     concurrency:
       group: profile-update-${{ github.event.issue.number }}

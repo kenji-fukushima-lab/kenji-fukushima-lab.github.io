@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 test.beforeEach(async ({ page }) => {
-  await page.route("**/ja/blog/2024/newcomer/", async (route) => {
+  await page.route("**/ja/join/new-members/", async (route) => {
     const response = await route.fetch();
     const body = (await response.text()).replace("</article>", '<pre id="copy-fixture"><code>    indented line\n\n</code></pre></article>');
     await route.fulfill({ response, body });
@@ -24,7 +24,7 @@ test("code copy reports clipboard rejection, retries, and preserves whitespace",
       },
     });
   });
-  await page.goto("/ja/blog/2024/newcomer/");
+  await page.goto("/ja/join/new-members/");
   const wrapper = page.locator(".code-display-wrapper").filter({ has: page.locator("#copy-fixture") });
   const button = wrapper.locator("button.copy");
   await button.click();
@@ -53,7 +53,7 @@ test("pending copy retains focus, ignores repeat activation, and does not steal 
       },
     });
   });
-  await page.goto("/ja/blog/2024/newcomer/");
+  await page.goto("/ja/join/new-members/");
   const wrapper = page.locator(".code-display-wrapper").filter({ has: page.locator("#copy-fixture") });
   const button = wrapper.locator("button.copy");
   await button.focus();

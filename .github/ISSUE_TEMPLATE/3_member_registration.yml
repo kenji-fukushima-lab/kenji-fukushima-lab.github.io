@@ -1,0 +1,207 @@
+name: "👤 New member registration / 新規メンバー登録"
+description: "メンバー情報・写真・公開希望日を登録し、福島の承認後に掲載します / Register after Kenji's approval"
+title: "New member registration"
+labels: ["member-registration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        研究室への参加が決まった方の新規登録フォームです。
+        Use this form once you have agreed to join the lab.
+
+        - 氏名・役職・GitHubユーザー名・公開希望日は必須です。その他は公開したい情報だけ入力してください。
+          Name, role, GitHub username, and publication date are required. Include only the other information you wish to publish.
+        - **このIssueと添付画像は投稿時点で公開されます。公開希望日はウェブサイトへの掲載日です。**
+          **This issue and its attachments are public immediately. The publication date controls listing on the lab website.**
+        - **福島（@kfuku52）が `/approve-member` とコメントして承認するまで、登録PRは作成されません。**
+          **A registration PR is created only after Kenji (@kfuku52) approves with `/approve-member`.**
+        - PRの確認・マージと公開希望日の両方を満たした後、次の正常なビルドで掲載されます。
+          The profile appears after review and merge, on the first successful build on or after the requested date.
+          定期ビルドは毎日08:30（日本時間）に開始予定ですが、遅れる場合があります。
+          The daily build normally starts at 08:30 Japan time and may run later.
+        - 送信後に内容を修正した場合も、福島の新しい承認コメントが必要です。
+          Revised content requires a new approval comment from Kenji.
+        - GitHubユーザー名は、Issueを送信するアカウントのユーザー名を入力してください。この申請をもとに福島が研究室のプライベートリポジトリ kflab に招待します。
+          Enter the GitHub username of the account submitting this issue. Kenji will use this application to invite you to the lab's private kflab repository.
+        - 既存プロフィールの更新は別のフォームを使用してください。
+          Use the separate profile update form for existing members.
+        - 写真は専用欄に1枚ドラッグ&ドロップしてください。省略すると既定の画像を使います。
+          Drag and drop one profile photo into the photo field, or leave it blank to use the default image.
+        - ORCID、X / Twitter、ResearchGate、researchmap はIDでも指定できます。その他のリンクは完全なURLを入力してください。
+          Supported services accept IDs or handles; use full URLs for other links.
+
+  - type: input
+    id: publish_on
+    attributes:
+      label: 公開希望日 / Publication Date (YYYY-MM-DD, Asia/Tokyo)
+      description: ウェブサイトに掲載してよい日を日本時間で指定してください。過去の日付なら承認・マージ後の次回ビルドで掲載します。 / Earliest date to list your profile, in Japan time. A past date means the next build after approval and merge.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+
+  - type: textarea
+    id: profile_photo
+    attributes:
+      label: プロフィール写真 / Profile Photo (drag and drop one image, optional)
+      description: 公開したい写真・イラストを1枚添付してください。空欄なら既定の画像を使います。 / Attach one photo or illustration to publish, or leave blank to use the default image.
+      placeholder: |
+        公開したい画像を1枚ドラッグ&ドロップしてください。
+        Drag and drop one image you would like to publish.
+    validations:
+      required: false
+
+  - type: input
+    id: name
+    attributes:
+      label: 氏名 / Name
+      placeholder: 例) Kenji Fukushima
+    validations:
+      required: true
+
+  - type: input
+    id: name_native
+    attributes:
+      label: 母語表記の氏名 / Native Script Name
+      placeholder: 例) 福島 健児（ふくしま けんじ）
+    validations:
+      required: false
+
+  - type: dropdown
+    id: position_key
+    attributes:
+      label: 役職 / Position Key
+      description: 参加時の役職を選んでください。 / Choose your role when joining the lab.
+      options:
+        - professor
+        - associate_professor
+        - assistant_professor
+        - lecturer
+        - tech_staff
+        - lab_manager
+        - postdoc
+        - researcher
+        - phd
+        - master
+        - intern
+        - undergraduate
+        - technician
+        - secretary
+        - staff
+        - visiting
+        - collaborator
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: email
+    attributes:
+      label: メールアドレス / Email
+      placeholder: 例) your.name@nig.ac.jp
+    validations:
+      required: false
+
+  - type: input
+    id: website
+    attributes:
+      label: ウェブサイト / Website
+      placeholder: 例) https://example.com
+    validations:
+      required: false
+
+  - type: input
+    id: orcid
+    attributes:
+      label: ORCID
+      placeholder: 例) https://orcid.org/0000-0002-2353-9274
+    validations:
+      required: false
+
+  - type: input
+    id: google_scholar
+    attributes:
+      label: Google Scholar
+      placeholder: 例) https://scholar.google.com/citations?user=XXXX
+    validations:
+      required: false
+
+  - type: input
+    id: github
+    attributes:
+      label: GitHub ユーザー名 / GitHub Username
+      description: Issueを送信するアカウントのユーザー名を入力してください。福島がこのアカウントを kflab に招待します。別のアカウントを指定できるのは福島のみです。 / Enter the submitting account's username. Kenji will invite this account to kflab; only Kenji may register another account.
+      placeholder: 例) kfuku52
+    validations:
+      required: true
+
+  - type: input
+    id: linkedin
+    attributes:
+      label: LinkedIn
+      placeholder: 例) https://www.linkedin.com/in/your-name
+    validations:
+      required: false
+
+  - type: input
+    id: twitter
+    attributes:
+      label: X / Twitter
+      placeholder: 例) https://x.com/your_account
+    validations:
+      required: false
+
+  - type: input
+    id: researchgate
+    attributes:
+      label: ResearchGate
+      placeholder: 例) https://www.researchgate.net/profile/Your-Name
+    validations:
+      required: false
+
+  - type: input
+    id: amazon_author
+    attributes:
+      label: Amazon Author
+      placeholder: 例) https://www.amazon.co.jp/stores/...
+    validations:
+      required: false
+
+  - type: input
+    id: instagram
+    attributes:
+      label: Instagram
+      placeholder: 例) https://www.instagram.com/your_account
+    validations:
+      required: false
+
+  - type: input
+    id: facebook
+    attributes:
+      label: Facebook
+      placeholder: 例) https://www.facebook.com/your_account
+    validations:
+      required: false
+
+  - type: input
+    id: youtube
+    attributes:
+      label: YouTube
+      placeholder: 例) https://www.youtube.com/@your_channel
+    validations:
+      required: false
+
+  - type: input
+    id: researchmap
+    attributes:
+      label: researchmap
+      placeholder: 例) https://researchmap.jp/kenji_fukushima
+    validations:
+      required: false
+
+  - type: input
+    id: tayo
+    attributes:
+      label: Tayo
+      placeholder: 例) https://tayo.jp/users/XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    validations:
+      required: false

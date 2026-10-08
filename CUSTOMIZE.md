@@ -43,6 +43,12 @@ update its front matter and content. Navigation uses `nav` and `nav_order`;
 research entries are rendered under `/research/`. Check both language versions,
 internal links, language switching, and search after changing a permalink.
 
+The `page` layout applies the shared section-heading style to Markdown `##`,
+`###`, and `####` headings by default; the `join` layout uses the same style.
+These defaults live in [\_sass/\_base.scss](_sass/_base.scss). Nested components
+retain their own heading styles. A front-matter `description` appears below the
+page title; omit it when a visible subtitle is unnecessary.
+
 Use [\_config.yml](_config.yml) for shared settings. The current public site has
 `url: https://kenji-fukushima-lab.github.io` and an empty `baseurl`. The managed
 server started by `npm run dev` or Compose restarts when `_config.yml` changes;
@@ -56,6 +62,12 @@ news or social-links block. Trace a setting to its layout before assuming it
 changes a visible page.
 
 ## Member profiles
+
+For a new member, use the
+[registration form](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/issues/new?template=3_member_registration.yml).
+It supports a publication date in Japan time and creates a PR only after Kenji
+approves the issue with `/approve-member`. See the
+[registration guide](docs/member-registration.md) for approval and scheduling.
 
 For an existing member, use the
 [profile update form](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/issues/new?template=2_profile_update.yml)

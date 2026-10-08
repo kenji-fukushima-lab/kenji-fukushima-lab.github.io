@@ -7,6 +7,7 @@ const DEFAULT_PATHS = [
   "/resources/",
   "/outreach/",
   "/join/",
+  "/join/new-members/",
   "/people/",
   "/access/",
   "/research/",
@@ -20,6 +21,7 @@ const DEFAULT_PATHS = [
   "/ja/resources/",
   "/ja/outreach/",
   "/ja/join/",
+  "/ja/join/new-members/",
   "/ja/people/",
   "/ja/access/",
   "/ja/research/",
@@ -28,7 +30,6 @@ const DEFAULT_PATHS = [
   "/ja/research/3_project/",
   "/ja/carnivorous-plant-quiz/",
   "/ja/blog/",
-  "/ja/blog/2024/newcomer/",
   "/ja/requests/",
 ];
 
@@ -107,7 +108,8 @@ const representativePaths = [
   "/ja/research/networks/",
   "/carnivorous-plant-quiz/",
   "/ja/requests/",
-  "/ja/blog/2024/newcomer/",
+  "/join/new-members/",
+  "/ja/join/new-members/",
 ];
 for (const [name, width, colorScheme] of [
   ["desktop dark", 1440, "dark"],

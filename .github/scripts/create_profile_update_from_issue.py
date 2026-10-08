@@ -9,6 +9,7 @@ import pathlib
 import re
 import sys
 import traceback
+import uuid
 from typing import Dict, List, Tuple
 from urllib.parse import urlparse
 
@@ -139,8 +140,11 @@ def write_output(name: str, value: str) -> None:
   output_path = os.environ.get("GITHUB_OUTPUT")
   if not output_path:
     return
+  delimiter = "__EOF__"
+  while delimiter in value.splitlines():
+    delimiter = f"__EOF_{uuid.uuid4().hex}__"
   with open(output_path, "a", encoding="utf-8") as fh:
-    fh.write(f"{name}<<__EOF__\n{value}\n__EOF__\n")
+    fh.write(f"{name}<<{delimiter}\n{value}\n{delimiter}\n")
 
 
 def classify_input_error_message(message: str) -> str:

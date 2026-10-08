@@ -57,3 +57,7 @@ We announce open postdoc positions through various channels, including the [NIG 
 If you are interested in starting new research in our lab, we advise you to consider fellowship schemes such as [JSPS Research Fellowships (PD)](https://www.jsps.go.jp/english/e-pd/index.html), [JSPS Postdoctoral Fellowships for Research in Japan](https://www.jsps.go.jp/english/e-fellow/application.html) for overseas candidates, [HFSP Postdoctoral Fellowships](https://www.hfsp.org/funding/hfsp-funding/postdoctoral-fellowships), or the [latest openings at NIG](https://www.nig.ac.jp/en/career/). We will provide support during the application process.
 
 Should your research interests align with Kenji's areas of interest, there is a possibility that Kenji can seek research funding. However, please note that this process, from initial preparation to funding acceptance, typically takes more than a year.
+
+## For incoming members
+
+If you have agreed to join the lab, please follow [Getting started as a new member]({{ '/join/new-members/' | relative_url }}) to prepare your GitHub account, member information, and profile photo. These steps also apply to visitors staying for approximately one month or longer, and you may complete them before your start date.

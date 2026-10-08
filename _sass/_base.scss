@@ -29,6 +29,42 @@ hr {
   border-top: 1px solid var(--global-divider-color);
 }
 
+// Standard Markdown headings for pages and the recruitment layout.
+.page-content {
+  --page-heading-surface: color-mix(in srgb, var(--global-bg-color) 94%, var(--global-theme-color));
+
+  > h2 {
+    margin: 0.65rem 0 0;
+    padding: 0.66rem 0.86rem;
+    border-radius: 0.78rem;
+    border: 1px solid var(--global-divider-color);
+    background: linear-gradient(125deg, color-mix(in srgb, var(--global-theme-color) 14%, var(--global-bg-color)) 0%, var(--global-bg-color) 100%);
+    font-size: clamp(1.03rem, 1.8vw, 1.22rem);
+  }
+
+  > h3 {
+    margin: 0.82rem 0 0;
+    padding: 0.52rem 0.76rem;
+    border-left: 4px solid var(--global-theme-color);
+    border-radius: 0.58rem;
+    background: var(--page-heading-surface);
+    font-size: clamp(0.98rem, 1.45vw, 1.08rem);
+  }
+
+  > h4 {
+    margin: 1rem 0 0;
+    padding: 0.55rem 0.78rem;
+    border-left: 4px solid var(--global-theme-color);
+    border-radius: 0.56rem;
+    background: var(--page-heading-surface);
+    font-size: 0.98rem;
+  }
+
+  > :is(h2, h3, h4) + * {
+    margin-top: 0.56rem;
+  }
+}
+
 table {
   td,
   th {
