@@ -25,6 +25,7 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           sparse-checkout: .github/scripts
+          persist-credentials: false
 
       - name: Explain the approval and publication steps
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
@@ -55,6 +56,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.repository.default_branch }}
+          # The PR action configures its own Git authentication.
+          persist-credentials: false
 
       - name: Verify the latest approval is still valid
         id: approval

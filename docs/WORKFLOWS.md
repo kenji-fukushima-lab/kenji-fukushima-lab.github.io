@@ -310,6 +310,13 @@ enabled when checked on 2026-08-31. See the
 [blog guide](blog-submission.md) and
 [profile guide](https://github.com/kenji-fukushima-lab/kenji-fukushima-lab.github.io/wiki/Profile-Update-Instructions).
 
+Submission jobs set Checkout's `persist-credentials: false` and let the PR action
+configure Git authentication from its explicit token. Checkout v6+ stores credentials
+in a separate included file, which `create-pull-request` v6 does not remove; keeping
+both credentials produces duplicate Authorization headers and HTTP 400 errors.
+Preserve this setting when updating either action, and verify PR creation after
+authentication changes. See [Checkout's credential behavior](https://github.com/actions/checkout#checkout-v6).
+
 Under GitHub's current rules, bot-created or updated PRs can have workflows
 waiting for a user with write access to select **Approve workflows to run**.
 Review the diff before approving, and confirm checks ran for the current PR
