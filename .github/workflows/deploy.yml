@@ -228,6 +228,7 @@ jobs:
         env:
           AXE_ADDITIONAL_PATHS: ${{ needs.preflight.outputs.lighthouse_urls }}
           AXE_PATHS: ${{ github.event_name == 'workflow_dispatch' && inputs.axe_path || '' }}
+          AXE_EXTENDED: ${{ (github.event_name == 'workflow_dispatch' || github.event.schedule == '30 23 * * 0') && '1' || '' }}
         run: npm run test:ui
       - name: Upload browser failure artifacts
         if: failure()
@@ -262,7 +263,7 @@ jobs:
       - name: Run Lighthouse assertions
         env:
           LHCI_URL_PATHS: ${{ needs.preflight.outputs.lighthouse_urls }}
-          LHCI_NUMBER_OF_RUNS: "3"
+          LHCI_NUMBER_OF_RUNS: ${{ (github.event_name == 'workflow_dispatch' || github.event.schedule == '30 23 * * 0') && '3' || '1' }}
         run: npm run test:lighthouse
       - name: Upload Lighthouse failure reports
         if: failure()

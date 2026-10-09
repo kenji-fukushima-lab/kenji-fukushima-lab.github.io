@@ -18,11 +18,13 @@ and the independent `Link health` workflow consume that artifact.
    Deployable runs refresh GitHub statistics, restore responsive-image caches, build Jekyll,
    validate feeds, sitemap targets and image dimensions, optimize CSS, and
    validate local links.
-3. **UI and accessibility** tests the artifact with Playwright and axe. The full
-   English/Japanese desktop route list is retained, plus representative mobile
-   and dark-mode combinations. Target size and visible/accessibility-name
-   agreement are explicitly tested.
-4. **Lighthouse** measures affected content routes three times. Global changes
+3. **UI and accessibility** tests the artifact with Playwright and axe. Every
+   listed English/Japanese route is checked on the default desktop viewport.
+   Regular push and pull-request runs pair representative routes with mobile or
+   dark mode; the weekly and manual runs check both modes on the extended route
+   set. Target size and visible/accessibility-name agreement are explicitly tested.
+4. **Lighthouse** measures affected content routes once on pushes and pull
+   requests, and three times on weekly and manual runs. Global changes
    use the full baseline in the shared manifest; unknown/deleted page mappings
    also fall back to that set. A selected Japanese page is measured in Japanese.
    Known contrast, link styling, target-size, and accessible-name audits are
@@ -194,6 +196,8 @@ npm run test:ui
 
 Both browser commands need host Python for their HTTP servers. Playwright
 serves existing `_site` output on port 8081; it does not rebuild the site.
+`AXE_EXTENDED=1 npm run test:ui` runs the weekly/manual mobile and dark-mode
+route sweep locally. `AXE_PATHS` still narrows the axe sweep to selected paths.
 `PLAYWRIGHT_BASE_URL=http://127.0.0.1:8097` changes both the target and managed
 server port. Keep the managed base URL at the server root (no path prefix).
 `SITE_DIRECTORY` selects an isolated production output directory
@@ -217,16 +221,17 @@ server; `PLAYWRIGHT_BASE_URL` does not change that port. `LHCI_URL_PATHS` is a
 comma-separated list of site paths starting with `/`, defaulting to the
 `lighthouse_paths` list in `.github/ci-paths.json`.
 
-Lighthouse normally uses three samples per path. Each JSON report is checked
-individually against `.lighthouserc.cjs`; passing is not based on an average or
-median across runs. Category scores are fractions from 0 to 1, LCP is in
+The local Lighthouse command defaults to three samples per path; CI uses one
+sample on pushes and pull requests, and three on weekly and manual runs. Each
+JSON report is checked individually against `.lighthouserc.cjs`; passing is not
+based on an average or median across runs. Category scores are fractions from 0 to 1, LCP is in
 milliseconds, and resource budgets use transferred bytes and request counts.
 `error` assertions fail the command; `warn` assertions only print warnings.
 Reports are `lighthouse-results-ci/<path-slug>-<run>.json` (`home` for `/`),
 with server output in `http-server.log` in that directory. Each invocation
 deletes previous `lighthouse-results-ci/` and `.lighthouseci/` results.
 
-One-sample runs are diagnostic only:
+To reproduce the faster push/PR coverage locally, run:
 
 ```bash
 LHCI_URL_PATHS=/ja/people/ LHCI_NUMBER_OF_RUNS=1 npm run test:lighthouse

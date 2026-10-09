@@ -97,7 +97,7 @@ for (const [path, resource] of [
   });
 }
 
-const representativePaths = [
+const extendedPaths = [
   "/",
   "/people/",
   "/ja/people/",
@@ -111,13 +111,14 @@ const representativePaths = [
   "/join/new-members/",
   "/ja/join/new-members/",
 ];
-for (const [name, width, colorScheme] of [
-  ["desktop dark", 1440, "dark"],
-  ["mobile light", 390, "light"],
-]) {
+const modeCases = [
+  ["desktop dark", 1440, "dark", ["/", "/people/", "/resources/", "/research/networks/", "/carnivorous-plant-quiz/", "/ja/requests/"]],
+  ["mobile light", 390, "light", ["/", "/ja/people/", "/access/", "/ja/research/networks/", "/join/new-members/", "/ja/join/new-members/"]],
+];
+for (const [name, width, colorScheme, routinePaths] of modeCases) {
   test.describe(name, () => {
     test.use({ viewport: { width, height: 900 }, colorScheme });
-    for (const path of process.env.AXE_PATHS ? checkedPaths() : representativePaths) {
+    for (const path of process.env.AXE_PATHS ? checkedPaths() : process.env.AXE_EXTENDED ? extendedPaths : routinePaths) {
       test(`has no automated accessibility violations on ${path}`, async ({ page }) => {
         await checkAccessibility(page, path);
         await expect(page.locator("html")).toHaveAttribute("data-theme", colorScheme);
