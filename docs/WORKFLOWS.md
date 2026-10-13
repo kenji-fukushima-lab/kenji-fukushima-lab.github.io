@@ -350,6 +350,12 @@ packages and the locked Python dependencies. The publication-access Apps Script 
 [deployment guide](../automation/apps-script/publication-access-request/README.md).
 A GitHub push alone does not update that web app.
 
+PurgeCSS 7 removes the vulnerable `fast-glob` → `micromatch` → `braces` dependency
+path introduced in PurgeCSS 8. Its scoped `postcss-selector-parser` override selects
+the corrected 7.1.6 parser; generated CSS and browser checks verify compatibility.
+Remove this override and upgrade PurgeCSS when its supported dependency graph
+passes the dependency audit and the same site checks.
+
 Start with `npm run checks:push`. Download `formatting-diff`,
 `browser-failure-*`, `lighthouse-failure-*` (JSON), or `link-health-*` as
 appropriate. A link timeout is not evidence of a broken site build. Recheck the
