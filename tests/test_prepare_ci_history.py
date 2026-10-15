@@ -20,6 +20,8 @@ class PrepareCiHistoryTest(unittest.TestCase):
             source = root / "source"
             source.mkdir()
             self.git(source, "init", "-q")
+            self.git(source, "config", "maintenance.auto", "false")
+            self.git(source, "config", "gc.auto", "0")
             self.git(source, "config", "user.name", "Test")
             self.git(source, "config", "user.email", "test@example.invalid")
             for i in range(40):
@@ -40,6 +42,10 @@ class PrepareCiHistoryTest(unittest.TestCase):
             for event in ("push", "pull_request"):
                 clone = root / event
                 self.git(root, "clone", "-q", "--depth=1", "--branch=feature", source.as_uri(), str(clone))
+                # Fetch can otherwise leave background maintenance writing into
+                # this disposable repository while TemporaryDirectory removes it.
+                self.git(clone, "config", "maintenance.auto", "false")
+                self.git(clone, "config", "gc.auto", "0")
                 MODULE.prepare_history(event, head=head, base=base, before=base, root=clone)
                 revision = f"{base}...{head}" if event == "pull_request" else f"{base}..{head}"
                 self.assertEqual(self.git(source, "diff", "--name-only", revision), self.git(clone, "diff", "--name-only", revision))
