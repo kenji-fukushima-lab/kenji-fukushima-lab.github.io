@@ -468,6 +468,22 @@ Warm full-build probes made zero Terser compile calls, one Git query instead
 of 31, and one YouTube request instead of two. These component measurements
 do not establish an end-to-end or remote CI speedup.
 
+The publication dashboard renders its final bars immediately; filtering does not
+start another chart animation. Compare startup CPU work while checking chart
+values, colors, dimensions and publication ordering with:
+
+```bash
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  node tests/benchmarks/publications-startup.cjs f7f7765ea
+```
+
+This uses the same served production page, a 390×844 viewport, fourfold CPU
+throttling, one warmup per variant and five alternating samples. Chrome
+155.0.8059.40 on macOS ARM64 measured median main-thread task time of 809 ms
+before and 605 ms after; script time was 337 ms and 183 ms. All compared chart
+data, colors, dimensions and publication ordering matched. This component
+measurement does not predict a particular Lighthouse score on another machine.
+
 ## Audit regression coverage
 
 CI treats moves as deletion plus addition so both old and new paths affect build

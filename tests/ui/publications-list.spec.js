@@ -1,6 +1,24 @@
 const { test, expect } = require("@playwright/test");
 
 for (const path of ["/publications/", "/ja/publications/"]) {
+  test(`year chart keeps the same totals as the filtered publications at ${path}`, async ({ page }) => {
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+    const chartTotal = () =>
+      page.evaluate(() => {
+        const chart = window.Chart?.getChart(document.getElementById("pub-chart-year"));
+        return chart ? chart.data.datasets.reduce((sum, dataset) => sum + dataset.data.reduce((total, count) => total + count, 0), 0) : -1;
+      });
+    const publications = page.locator("#publications-results .publication-entry");
+    await expect.poll(chartTotal).toBe(await publications.count());
+    const allCount = await publications.count();
+    const oldestYear = await page.locator("#facet-year option").last().getAttribute("value");
+    await page.locator("#facet-year").selectOption(oldestYear);
+    await expect.poll(chartTotal).toBe(await publications.count());
+    expect(await chartTotal()).toBeLessThan(allCount);
+    await page.locator("#pub-reset-filters").click();
+    await expect.poll(chartTotal).toBe(allCount);
+  });
+
   test(`keeps year options newest first and filters by year at ${path}`, async ({ page }) => {
     await page.goto(path);
     const publications = page.locator("#publications-results .publication-entry");
