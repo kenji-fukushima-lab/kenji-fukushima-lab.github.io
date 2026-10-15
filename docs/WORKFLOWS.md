@@ -350,6 +350,58 @@ Start with `npm run checks:push`. Download `formatting-diff`,
 appropriate. A link timeout is not evidence of a broken site build. Recheck the
 remote service and distinguish transient failures from a confirmed missing URL.
 
+## Build efficiency measurements
+
+Cache-busting digests are shared within one site read and cleared by Jekyll's
+`after_reset` hook. Watch rebuilds therefore see changed assets and edited,
+added or removed `_sass` files, including replacements with preserved timestamps. Each site
+owns its cache. The URL format and MD5 content hashes remain compatible.
+
+CSS processing extracts each HTML/JavaScript file once, reusing tokens for the
+global and page-family passes. It retains dynamic states, translation grouping,
+stylesheet ordering and content hashes. The image-budget check lets `find`
+select oversized files before invoking `stat`; the byte limit is unchanged.
+
+Reproduce measurements using fresh Jekyll output **before** CSS processing:
+
+```bash
+JEKYLL_ENV=production bundle exec jekyll build --destination tmp/perf-raw
+bundle exec ruby tests/benchmarks/cache-bust.rb tmp/perf-raw
+node tests/benchmarks/purge-page-css.cjs tmp/perf-raw
+bash .github/scripts/check-image-budget.sh
+```
+
+The cache benchmark uses actual generated asset references, one warmup and five
+measured samples. It accepts an optional saved plugin path for comparison.
+The CSS benchmark uses one warmup and three measured subprocesses, copying the
+same HTML/JS/CSS inputs to a fresh temporary directory each time. It reports a
+SHA-256 fingerprint of every output file. Its optional second argument selects
+another CSS runner; keep that runner's configuration at its expected relative
+paths. Compare medians and output fingerprints with identical inputs/runtimes.
+
+On 2026-10-15, against `ece340dfa`, the 157-page production output contained
+2,925 cache-busted references. Local results were:
+
+| Workload                                                                                | Before  | After   | Equivalence                                                      |
+| --------------------------------------------------------------------------------------- | ------- | ------- | ---------------------------------------------------------------- |
+| Cache-busting, Ruby 3.3.5 in the ARM64 Compose runtime                                  | 12.22 s | 0.075 s | All generated URLs have the same fingerprint                     |
+| Image budget, macOS ARM64, Bash, repository images, one warmup + three samples          | 3.88 s  | 0.015 s | Same acceptance and diagnostics, including exact byte boundaries |
+| CSS peak RSS, macOS ARM64, Node 22.17.0, three alternating runs with `/usr/bin/time -l` | 208 MiB | 189 MiB | All 285 HTML/JS/CSS output files have the same fingerprint       |
+
+CSS wall-time samples overlapped; these measurements support reduced memory
+use, without establishing a CSS speedup or an end-to-end/CI speedup. Shared
+digest storage is bounded by the assets referenced in one build. CSS retains
+page HTML and token sets while processing families, but no joined script copy.
+
+The repository review also covered bibliography/sitemap generators, responsive
+images, browser scripts, local verification, Actions and submission/backend
+automation. Existing image caches, lazy external widgets, request deduplication,
+single-build CI artifacts and scheduled-build sharing were retained. Repeated
+BibTeX parsing took 0.11–0.14 s for six reads in a local Compose probe, so no
+shared mutable bibliography cache was introduced. Git history remains available
+for sitemap timestamps, and required test coverage is unchanged. Live service
+latency, external-link health and remote runner timings require separate checks.
+
 ## Audit regression coverage
 
 CI treats moves as deletion plus addition so both old and new paths affect build

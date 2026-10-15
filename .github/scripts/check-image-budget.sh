@@ -29,7 +29,8 @@ while IFS= read -r -d '' file_path; do
   if (( file_size > max_bytes )); then
     violations+=("${file_size}|${file_path}")
   fi
-done < <(find "${root_dir}" -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \) -print0)
+# find already reads file metadata. Only launch stat for actual violations.
+done < <(find "${root_dir}" -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \) -size "+${max_bytes}c" -print0)
 
 if (( ${#violations[@]} == 0 )); then
   echo "Image budget check passed (${max_bytes} bytes max per image)."

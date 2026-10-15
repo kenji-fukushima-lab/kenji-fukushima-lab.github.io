@@ -34,32 +34,49 @@ async function main() {
     if (/\.page-[a-f0-9]{16}\.css$/.test(file)) await fs.unlink(path.join(cssDirectory, file));
   }
 
+  // Extract each source once, sharing the tokens between the whole-site pass
+  // and the page-family passes. Do not retain a joined copy of every script.
+  const scriptTokens = new Set();
+  const globalTokens = new Set();
+  const groups = new Map();
+  for (const file of await filesBelow(site)) {
+    const relative = path.relative(site, file);
+    const script = file.endsWith(".js");
+    const page = file.endsWith(".html") && !relative.startsWith(`assets${path.sep}`);
+    if (!script && !page) continue;
+
+    const content = await fs.readFile(file, "utf8");
+    const tokens = defaultOptions.defaultExtractor(content);
+    // Match the global pass's glob behavior, which excludes dotfiles.
+    const visible = !relative.split(path.sep).some((segment) => segment.startsWith("."));
+    if (visible) for (const token of tokens) globalTokens.add(token);
+    if (script) {
+      for (const token of tokens) scriptTokens.add(token);
+    } else {
+      const family = pageFamily(relative);
+      if (!groups.has(family)) groups.set(family, { pages: [], tokens: new Set() });
+      const group = groups.get(family);
+      group.pages.push({ file, html: content });
+      for (const token of tokens) group.tokens.add(token);
+    }
+  }
+
   // Preserve the existing whole-site pass for component styles and fonts.
   const globalResults = await new PurgeCSS().purge({
     ...config,
-    content: [path.join(site, "**/*.html"), path.join(site, "**/*.js")],
+    content: [{ raw: "", extension: "html" }],
+    defaultExtractor: () => [...globalTokens],
     css: [path.join(cssDirectory, "*.css")],
-    skippedContentGlobs: [path.join(site, "assets/**/*.html")],
   });
   for (const result of globalResults) await fs.writeFile(result.file, result.css);
   const styles = globalResults.filter((result) => BASE_STYLES.has(path.basename(result.file)));
 
-  const files = await filesBelow(site);
-  const scripts = (await Promise.all(files.filter((file) => file.endsWith(".js")).map((file) => fs.readFile(file, "utf8")))).join("\n");
-  const scriptTokens = [...new Set(defaultOptions.defaultExtractor(scripts))];
-  const groups = new Map();
-  for (const file of files.filter((candidate) => candidate.endsWith(".html") && !candidate.startsWith(path.join(site, "assets") + path.sep))) {
-    const family = pageFamily(path.relative(site, file));
-    if (!groups.has(family)) groups.set(family, []);
-    groups.get(family).push({ file, html: await fs.readFile(file, "utf8") });
-  }
-
   const generated = new Set();
-  for (const pages of groups.values()) {
+  for (const { pages, tokens: pageTokens } of groups.values()) {
     // Keep JS-created states from the same scripts the old global pass scanned.
     // Group translations and blog posts to avoid hundreds of nearly identical
     // CSS parses/files, while excluding components unique to other page types.
-    const tokens = [...new Set([...scriptTokens, ...pages.flatMap(({ html }) => defaultOptions.defaultExtractor(html))])];
+    const tokens = [...new Set([...scriptTokens, ...pageTokens])];
     const results = await new PurgeCSS().purge({
       content: [{ raw: "", extension: "html" }],
       defaultExtractor: () => tokens,
@@ -86,7 +103,7 @@ async function main() {
           return replacement ? `href=${quote}/assets/css/${replacement}${quote}` : attribute;
         })
       );
-      await fs.writeFile(page.file, html);
+      if (html !== page.html) await fs.writeFile(page.file, html);
     }
   }
   console.log(`Purged CSS for ${groups.size} page families; wrote ${generated.size} content-hashed stylesheets.`);
