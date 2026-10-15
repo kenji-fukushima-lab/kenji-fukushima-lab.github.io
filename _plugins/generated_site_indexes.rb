@@ -2,6 +2,8 @@
 
 require "cgi"
 require "date"
+require "fileutils"
+require "json"
 require "jekyll/page_without_a_file"
 require "nokogiri"
 require "open3"
@@ -82,6 +84,7 @@ module GeneratedSiteIndexes
         lines << %(  </url>)
       end
       lines << %(</urlset>)
+      persist_git_lastmod_cache
       lines.join("\n")
     end
 
@@ -119,6 +122,7 @@ module GeneratedSiteIndexes
       return nil unless expanded_path.file?
 
       relative_path = expanded_path.relative_path_from(@source.expand_path).to_s
+      load_git_lastmod_cache unless @git_cache_loaded
       return @git_lastmod_cache[relative_path] if @git_lastmod_cache.key?(relative_path)
 
       output, status = Open3.capture2e(
@@ -134,6 +138,53 @@ module GeneratedSiteIndexes
       @git_lastmod_cache[relative_path] = status.success? ? parse_time(output.lines.first) : nil
     rescue Errno::ENOENT, ArgumentError
       nil
+    end
+
+    # Reuse exact per-path Git answers. For an ancestor cache, invalidate every
+    # path touched by any intervening commit, even if its final content reverted.
+    # This preserves git log -1's path/merge semantics rather than approximating
+    # them with a combined multi-path history traversal.
+    def load_git_lastmod_cache
+      @git_cache_loaded = true
+      @git_cache_path = @source.join(@site.config.fetch("cache_dir", ".jekyll-cache"), "sitemap-lastmod.json")
+      head, status = Open3.capture2e("git", "-C", @source.to_s, "rev-parse", "HEAD")
+      return unless status.success?
+
+      @git_head = head.strip
+      return unless @git_cache_path.file?
+
+      cached = JSON.parse(@git_cache_path.read)
+      return unless cached.is_a?(Hash) && cached["version"] == 1 && cached["head"].to_s.match?(/\A[a-f0-9]{40,64}\z/) && cached["values"].is_a?(Hash)
+
+      changed = []
+      if cached["head"] != @git_head
+        _, ancestor = Open3.capture2e("git", "-C", @source.to_s, "merge-base", "--is-ancestor", cached["head"], @git_head)
+        return unless ancestor.success?
+
+        output, history = Open3.capture2e("git", "-C", @source.to_s, "log", "--full-history", "-m", "--no-renames", "--format=", "--name-status", "-z", "#{cached['head']}..#{@git_head}")
+        return unless history.success?
+
+        changed = output.split("\0").each_slice(2).map(&:last)
+      end
+      cached["values"].each do |path, value|
+        next if changed.include?(path)
+        next unless value.nil? || (value.is_a?(String) && parse_time(value))
+
+        @git_lastmod_cache[path] = parse_time(value)
+      end
+    rescue JSON::ParserError, TypeError
+      # An absent or invalid performance cache does not replace Git history.
+      @git_lastmod_cache = {}
+    end
+
+    def persist_git_lastmod_cache
+      return unless @git_head
+
+      FileUtils.mkdir_p(@git_cache_path.dirname)
+      values = @git_lastmod_cache.transform_values { |value| value&.utc&.iso8601 }
+      temporary = "#{@git_cache_path}.#{Process.pid}.tmp"
+      File.write(temporary, JSON.generate("version" => 1, "head" => @git_head, "values" => values))
+      File.rename(temporary, @git_cache_path)
     end
 
     def news_entries

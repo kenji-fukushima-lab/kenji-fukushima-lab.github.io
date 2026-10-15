@@ -47,3 +47,23 @@ test("accepts genuinely inapplicable audits but still rejects missing results", 
   delete measured.audits["target-size"];
   assert.equal(validateReport(measured, { "target-size": "error" }).failures.length, 1);
 });
+
+test("the CLI validates a single report immediately and rejects an empty directory", () => {
+  const fs = require("node:fs");
+  const os = require("node:os");
+  const path = require("node:path");
+  const { spawnSync } = require("node:child_process");
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "lighthouse-report-"));
+  const validator = path.resolve(__dirname, "../../.github/scripts/validate-lighthouse-results.cjs");
+  try {
+    assert.notEqual(spawnSync(process.execPath, [validator, directory]).status, 0);
+    const file = path.join(directory, "failing.json");
+    fs.writeFileSync(file, JSON.stringify(report({ performance: 0 })));
+    const result = spawnSync(process.execPath, [validator, file], { encoding: "utf8" });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /performance.*below/);
+    assert.doesNotMatch(result.stderr, /ENOTDIR/);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});

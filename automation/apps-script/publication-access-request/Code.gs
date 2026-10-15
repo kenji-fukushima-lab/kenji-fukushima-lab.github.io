@@ -1,4 +1,4 @@
-const SOURCE_REVISION = "0adfd50649f5a71871a5cada4c3f55a8875d4aea28b0fa22be16ade1c4260cf2";
+const SOURCE_REVISION = "4be0ed6f62705a6800613d21646effca7d09473136985839291b103bbc39a6e7";
 
 const CONFIG = Object.freeze({
   TIME_ZONE: "Asia/Tokyo",
@@ -97,15 +97,14 @@ function doPost(e) {
     try {
       const sheet = getRequestSheet_();
 
-      const today = formatRequestDate_(new Date());
-      const existingCounts = countRequestsForDate_(sheet, today, request.email);
+      const now = new Date();
+      const today = formatRequestDate_(now);
+      const existingCounts = requestUsage_(sheet, today, request.email, now);
       if (existingCounts.forAddress >= CONFIG.MAX_REQUESTS_PER_ADDRESS_PER_DAY || existingCounts.total >= CONFIG.MAX_REQUESTS_PER_DAY) {
         return renderRequestAccepted_();
       }
 
-      const now = new Date();
-      const pendingAccessReservations = countActiveAccessReservations_(sheet, now);
-      if (MailApp.getRemainingDailyQuota() < pendingAccessReservations + 2) {
+      if (MailApp.getRemainingDailyQuota() < existingCounts.pendingAccessReservations + 2) {
         return renderRequestAccepted_();
       }
 
@@ -327,45 +326,37 @@ function getRequestSheet_() {
   return sheet;
 }
 
-function countRequestsForDate_(sheet, requestDate, email) {
+function requestUsage_(sheet, requestDate, email, now) {
   const lastRow = sheet.getLastRow();
+  const counts = { total: 0, forAddress: 0, pendingAccessReservations: 0 };
   if (lastRow < 2) {
-    return { total: 0, forAddress: 0 };
+    return counts;
   }
 
-  const values = sheet.getRange(2, COL.REQUEST_DATE, lastRow - 1, COL.STATUS - COL.REQUEST_DATE + 1).getDisplayValues();
-  let total = 0;
-  let forAddress = 0;
+  // One snapshot under the script lock keeps rate limits and mail reservations
+  // consistent without transferring the same rows twice.
+  const values = sheet.getRange(2, COL.REQUEST_DATE, lastRow - 1, COL.STATUS - COL.REQUEST_DATE + 1).getValues();
   values.forEach((row) => {
     const status = String(row[COL.STATUS - COL.REQUEST_DATE]).trim();
-    if (row[0] !== requestDate || status === "verification_error") {
+    const expiresAt = new Date(row[COL.TOKEN_EXPIRES_AT - COL.REQUEST_DATE]);
+    const reservesAccessEmail = status === "verification_pending" || status === "verification_sent" || status === "sending_access";
+    if (reservesAccessEmail && !Number.isNaN(expiresAt.getTime()) && expiresAt > now) {
+      counts.pendingAccessReservations += 1;
+    }
+    const date = Object.prototype.toString.call(row[0]) === "[object Date]" ? formatRequestDate_(row[0]) : String(row[0]);
+    if (date !== requestDate || status === "verification_error") {
       return;
     }
-    total += 1;
+    counts.total += 1;
     if (
       String(row[COL.EMAIL - COL.REQUEST_DATE])
         .trim()
         .toLowerCase() === email
     ) {
-      forAddress += 1;
+      counts.forAddress += 1;
     }
   });
-  return { total, forAddress };
-}
-
-function countActiveAccessReservations_(sheet, now) {
-  const lastRow = sheet.getLastRow();
-  if (lastRow < 2) {
-    return 0;
-  }
-
-  const values = sheet.getRange(2, COL.TOKEN_EXPIRES_AT, lastRow - 1, COL.STATUS - COL.TOKEN_EXPIRES_AT + 1).getValues();
-  return values.reduce((count, row) => {
-    const expiresAt = new Date(row[0]);
-    const status = String(row[COL.STATUS - COL.TOKEN_EXPIRES_AT]).trim();
-    const reservesAccessEmail = status === "verification_pending" || status === "verification_sent" || status === "sending_access";
-    return reservesAccessEmail && !Number.isNaN(expiresAt.getTime()) && expiresAt > now ? count + 1 : count;
-  }, 0);
+  return counts;
 }
 
 function findRowByTokenHash_(sheet, tokenHash) {

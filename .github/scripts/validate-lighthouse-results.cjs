@@ -65,10 +65,13 @@ function validateReport(report, assertions) {
 
 function main() {
   const resultsDirectory = path.resolve(process.argv[2] || "lighthouse-results-ci");
-  const resultFiles = fs
-    .readdirSync(resultsDirectory)
-    .filter((name) => name.endsWith(".json"))
-    .sort();
+  const singleReport = fs.statSync(resultsDirectory).isFile();
+  const resultFiles = singleReport
+    ? [path.basename(resultsDirectory)]
+    : fs
+        .readdirSync(resultsDirectory)
+        .filter((name) => name.endsWith(".json"))
+        .sort();
   if (resultFiles.length === 0) {
     throw new Error(`No Lighthouse JSON reports found in ${resultsDirectory}`);
   }
@@ -76,7 +79,7 @@ function main() {
   const assertions = config.ci.assert.assertions;
   let failureCount = 0;
   for (const resultFile of resultFiles) {
-    const report = JSON.parse(fs.readFileSync(path.join(resultsDirectory, resultFile), "utf8"));
+    const report = JSON.parse(fs.readFileSync(singleReport ? resultsDirectory : path.join(resultsDirectory, resultFile), "utf8"));
     const { failures, warnings } = validateReport(report, assertions);
     for (const warning of warnings) {
       console.warn(`WARNING ${resultFile}: ${warning}`);

@@ -226,27 +226,68 @@
   };
 
   const repoRequestMap = new Map();
+  const retryTimes = new Map();
+  const retryTime = (key) => {
+    try {
+      return Math.max(retryTimes.get(key) || 0, Number(window.localStorage.getItem(`repo-meta-retry:${key}`)) || 0);
+    } catch {
+      return retryTimes.get(key) || 0;
+    }
+  };
+  const deferRetry = (key, until) => {
+    retryTimes.set(key, Math.max(retryTime(key), until));
+    try {
+      window.localStorage.setItem(`repo-meta-retry:${key}`, String(retryTimes.get(key)));
+    } catch {
+      // The in-memory cooldown still applies when storage is unavailable.
+    }
+  };
 
-  const requestRepo = (repo) =>
-    fetch(`https://api.github.com/repos/${repo}`, { headers })
-      .then((response) => {
+  const requestRepo = async (repo) => {
+    const controller = new AbortController();
+    let timer;
+    try {
+      const timeout = new Promise((_, reject) => {
+        timer = window.setTimeout(() => {
+          controller.abort();
+          reject(new Error("GitHub statistics request timed out"));
+        }, 8000);
+      });
+      const request = (async () => {
+        const response = await fetch(`https://api.github.com/repos/${repo}`, { headers, signal: controller.signal });
         if (!response.ok) {
+          if (response.status === 403 || response.status === 429) {
+            const retryHeader = response.headers.get("Retry-After");
+            const seconds = Number(retryHeader);
+            const retryAfter = Number.isFinite(seconds) ? Date.now() + seconds * 1000 : Date.parse(retryHeader) || 0;
+            const reset = Number(response.headers.get("X-RateLimit-Reset")) * 1000 || 0;
+            deferRetry("github", Math.min(Date.now() + cacheTtlMs, Math.max(Date.now() + 5 * 60_000, retryAfter, reset)));
+          }
           throw new Error(`GitHub API returned ${response.status}`);
         }
-        return response.json();
-      })
-      .then((data) => {
+        const data = await response.json();
         const fetchedData = { ...data, fetched_at: new Date().toISOString() };
         writeRepoCache(repo, fetchedData);
         return fetchedData;
-      });
+      })();
+      return await Promise.race([request, timeout]);
+    } finally {
+      window.clearTimeout(timer);
+    }
+  };
 
   const fetchRepo = (repo) => {
     const cached = readRepoCache(repo);
     if (cached?.fresh) return Promise.resolve(cached.data);
+    if (Math.max(retryTime("github"), retryTime(repo)) > Date.now()) return Promise.reject(new Error("GitHub statistics retry is deferred"));
 
     if (!repoRequestMap.has(repo)) {
-      const request = requestRepo(repo).finally(() => repoRequestMap.delete(repo));
+      const request = requestRepo(repo)
+        .catch((error) => {
+          deferRetry(repo, Date.now() + 60_000);
+          throw error;
+        })
+        .finally(() => repoRequestMap.delete(repo));
       repoRequestMap.set(repo, request);
     }
     return repoRequestMap.get(repo);
@@ -290,20 +331,25 @@
     for (const repo of targetRepos) setRepoLoading(repo, true);
     if (loadStatus) loadStatus.textContent = loadStatus.dataset.loadingLabel || "Loading GitHub statistics…";
 
-    const results = await Promise.all(
-      targetRepos.map(async (repo) => {
-        try {
-          const data = await fetchRepo(repo);
-          const fallback = repoFallbackMap.get(repo) || "";
-          if (repoNodeMap.has(repo) && !fallback) {
-            const description = data && typeof data.description === "string" ? data.description : "";
-            applyDescription(repo, description);
+    const results = [];
+    let cursor = 0;
+    await Promise.all(
+      Array.from({ length: Math.min(3, targetRepos.length) }, async () => {
+        while (cursor < targetRepos.length) {
+          const repo = targetRepos[cursor++];
+          try {
+            const data = await fetchRepo(repo);
+            const fallback = repoFallbackMap.get(repo) || "";
+            if (repoNodeMap.has(repo) && !fallback) {
+              const description = data && typeof data.description === "string" ? data.description : "";
+              applyDescription(repo, description);
+            }
+            if (repoStatNodeMap.has(repo)) applyRepoStats(repo, data);
+            results.push(true);
+          } catch (_err) {
+            setRepoLoading(repo, false);
+            results.push(false);
           }
-          if (repoStatNodeMap.has(repo)) applyRepoStats(repo, data);
-          return true;
-        } catch (_err) {
-          setRepoLoading(repo, false);
-          return false;
         }
       })
     );

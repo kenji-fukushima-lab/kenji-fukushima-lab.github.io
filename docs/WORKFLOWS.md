@@ -12,10 +12,11 @@ and the independent `Link health` workflow consume that artifact.
    run fast checks without Jekyll. Changes to `tests/ui/` or `playwright.config.js`
    also build and run browser tests. Feeds and ownership files are built and
    published without scoring XML.
-2. **Fast checks and production build** runs Python, JavaScript, and Ruby tests,
-   offline bibliography validation, the image budget, and Prettier. ImageMagick
-   is installed before the image regression tests, even on test-only runs.
-   Deployable runs refresh GitHub statistics, restore responsive-image caches, build Jekyll,
+2. **Fast checks and production build** uses the same conservative selector as
+   local checks: documentation selects Prettier, isolated unit tests select their
+   runtime, and runtime/build/unknown changes select every local check. Ruby,
+   Python, and ImageMagick setup follows the selected checks and build needs.
+   Deployable runs refresh GitHub statistics, restore build caches, build Jekyll,
    validate feeds, sitemap targets and image dimensions, optimize CSS, and
    validate local links.
 3. **UI and accessibility** tests the artifact with Playwright and axe. Every
@@ -230,6 +231,8 @@ milliseconds, and resource budgets use transferred bytes and request counts.
 Reports are `lighthouse-results-ci/<path-slug>-<run>.json` (`home` for `/`),
 with server output in `http-server.log` in that directory. Each invocation
 deletes previous `lighthouse-results-ci/` and `.lighthouseci/` results.
+The runner checks each sample immediately and stops on its first failed assertion;
+successful runs still collect every configured sample.
 
 To reproduce the faster push/PR coverage locally, run:
 
@@ -350,6 +353,13 @@ packages and the locked Python dependencies. The publication-access Apps Script 
 [deployment guide](../automation/apps-script/publication-access-request/README.md).
 A GitHub push alone does not update that web app.
 
+Preflight and deployment use shallow checkouts. Preflight fetches exact push
+endpoints or enough PR history to establish the merge base; production builds
+retain full history for sitemap timestamps. Missing history fails classification.
+Build metadata caches persist compiled JavaScript, taxonomy decisions and sitemap
+Git answers between runs. Each build saves an updated cache; it does not freeze
+time-sensitive records under an immutable source-only key.
+
 PurgeCSS 7 removes the vulnerable `fast-glob` → `micromatch` → `braces` dependency
 path introduced in PurgeCSS 8. Its scoped `postcss-selector-parser` override selects
 the corrected 7.1.6 parser; generated CSS and browser checks verify compatibility.
@@ -412,6 +422,51 @@ BibTeX parsing took 0.11–0.14 s for six reads in a local Compose probe, so no
 shared mutable bibliography cache was introduced. Git history remains available
 for sitemap timestamps, and required test coverage is unchanged. Live service
 latency, external-link health and remote runner timings require separate checks.
+
+Additional caches preserve the underlying producers and formats:
+
+- Terser keys include source content, options, compiler/wrapper hashes, Node and
+  Ruby versions. Cached output is checked against its digest; compile failures
+  stop the build. Watch rebuilds compare content even when timestamps match.
+- Taxonomy decisions expire after 30 days, including negative results. Legacy
+  boolean caches retain their actual file age on migration. API failures are
+  not persisted as taxonomy decisions.
+- Sitemap caches retain exact per-file Git answers. Changes in every intervening
+  commit invalidate affected paths, including reverted changes and merges.
+- YouTube archive data is fetched once per bilingual build and refreshed on
+  each watch rebuild.
+
+Browser GitHub statistics use three workers, eight-second timeouts, a one-minute
+failure cooldown, and a shared rate-limit cooldown of at least five minutes
+(respecting response retry/reset headers). Existing successful metadata remains
+visible. Crossref uses four workers and eight-second timeouts; successful counts,
+including zero, persist for 24 hours, while failures defer retries for one minute.
+Unavailable local storage still permits in-memory caching and normal operation.
+The Apps Script request handler reads one sheet snapshot for daily limits and
+pending mail reservations, under the existing script lock; stored rows and the
+public endpoint remain compatible.
+
+Reproduce the additional component benchmarks against the same production data:
+
+```bash
+bundle exec ruby tests/benchmarks/terser-cache.rb tmp/perf-raw
+python3 .github/scripts/serve_site.py --directory tmp/perf-raw --port 8099
+# In another terminal, select an installed Chrome if needed:
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  node tests/benchmarks/network-search.cjs dd3f3eb06
+```
+
+The Terser benchmark uses one warmup and five measured samples for the same 39
+static scripts and checks all compiled bytes against uncached output and the
+optional built directory. On the ARM64 Compose runtime (Ruby 3.3.5, Node 22.23.2),
+median compile time was 5.106 s uncached and 0.0036 s with a warm disk cache.
+The network benchmark uses Chrome on macOS ARM64, a 1440×1400 viewport, one
+warmup and three runs of 30 alternating searches. On the same 245-node,
+2,725-edge graph, median synchronous search time fell from 16.5 to 4.9 ms
+(p95 19.6 to 5.5 ms), with identical node/edge search emphasis.
+Warm full-build probes made zero Terser compile calls, one Git query instead
+of 31, and one YouTube request instead of two. These component measurements
+do not establish an end-to-end or remote CI speedup.
 
 ## Audit regression coverage
 

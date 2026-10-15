@@ -7,13 +7,12 @@ const crypto = require("node:crypto");
 
 const backendPath = path.resolve(__dirname, "../../automation/apps-script/publication-access-request/Code.gs");
 const backendSource = fs.readFileSync(backendPath, "utf8");
-const context = { console };
+const context = { console, Utilities: { formatDate: (date) => date.toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" }) } };
 
 vm.runInNewContext(
   `${backendSource}
 globalThis.testApi = {
-  countRequestsForDate_,
-  countActiveAccessReservations_,
+  requestUsage_,
   isPlausibleFormTiming_,
 };`,
   context
@@ -37,10 +36,10 @@ test("does not rate-limit an address when its verification email failed", () => 
   ];
   const sheet = {
     getLastRow: () => rows.length + 1,
-    getRange: () => ({ getDisplayValues: () => rows }),
+    getRange: () => ({ getValues: () => rows }),
   };
 
-  const counts = api.countRequestsForDate_(sheet, "2026-07-23", "reader@example.org");
+  const counts = api.requestUsage_(sheet, "2026-07-23", "reader@example.org", new Date());
   assert.equal(counts.total, 2);
   assert.equal(counts.forAddress, 1);
 });
@@ -50,17 +49,47 @@ test("reserves quota only for active access emails", () => {
   const future = new Date("2026-07-23T13:00:00Z");
   const past = new Date("2026-07-23T11:00:00Z");
   const rows = [
-    [future, "", "", "verification_sent"],
-    [past, "", "", "verification_sent"],
-    [future, "", "", "sending_access"],
-    [future, "", "", "access_sent"],
+    ["2026-07-22", "", "", "reader@example.org", "", "", future, "", "", "verification_sent"],
+    ["2026-07-23", "", "", "reader@example.org", "", "", past, "", "", "verification_sent"],
+    ["2026-07-23", "", "", "reader@example.org", "", "", future, "", "", "sending_access"],
+    ["2026-07-23", "", "", "reader@example.org", "", "", future, "", "", "access_sent"],
   ];
+  let reads = 0;
   const sheet = {
     getLastRow: () => rows.length + 1,
-    getRange: () => ({ getValues: () => rows }),
+    getRange: (row, column, height, width) => {
+      assert.deepEqual([row, column, height, width], [2, 2, 4, 10]);
+      return {
+        getValues: () => {
+          reads++;
+          return rows;
+        },
+      };
+    },
   };
 
-  assert.equal(api.countActiveAccessReservations_(sheet, now), 2);
+  const counts = api.requestUsage_(sheet, "2026-07-23", "reader@example.org", now);
+  assert.equal(counts.pendingAccessReservations, 2);
+  assert.equal(counts.total, 3);
+  assert.equal(counts.forAddress, 3);
+  assert.equal(reads, 1);
+});
+
+test("empty request logs require no range read", () => {
+  const counts = api.requestUsage_({ getLastRow: () => 1 }, "2026-07-23", "reader@example.org", new Date());
+  assert.equal(counts.total + counts.forAddress + counts.pendingAccessReservations, 0);
+});
+
+test("legacy date cells are interpreted in the service timezone", () => {
+  const rows = [[new Date("2026-07-22T16:00:00Z"), "", "", " READER@EXAMPLE.ORG ", "", "", "", "", "", "access_sent"]];
+  const counts = api.requestUsage_(
+    { getLastRow: () => 2, getRange: () => ({ getValues: () => rows }) },
+    "2026-07-23",
+    "reader@example.org",
+    new Date()
+  );
+  assert.equal(counts.total, 1);
+  assert.equal(counts.forAddress, 1);
 });
 
 function backendHarness() {
@@ -208,6 +237,21 @@ test("exhausted mail quota never creates a pending request", () => {
   backend.submit();
   assert.equal(backend.rows.length, 0);
   assert.equal(backend.mail.verification.length, 0);
+  assert.equal(backend.heldLocks(), 0);
+});
+
+test("daily address limits and pending mail reservations share the locked snapshot", () => {
+  const backend = backendHarness();
+  backend.mail.quota = 2;
+  backend.submit();
+  backend.submit();
+  backend.submit({ email: "another@example.invalid" });
+  assert.equal(backend.rows.length, 1);
+  assert.equal(backend.mail.verification.length, 1);
+  backend.mail.quota = 3;
+  backend.submit({ email: "another@example.invalid" });
+  assert.equal(backend.rows.length, 2);
+  assert.equal(backend.mail.verification.length, 2);
   assert.equal(backend.heldLocks(), 0);
 });
 

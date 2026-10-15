@@ -46,7 +46,8 @@ module OrganismMap
     GBIF_SEARCH_API_URL = 'https://api.gbif.org/v1/species/search?rank=GENUS&limit=5&q='.freeze
     NCBI_TAXONOMY_ESEARCH_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='.freeze
     GBIF_SPECIES_SEARCH_API_URL = 'https://api.gbif.org/v1/species/search?rank=SPECIES&limit=5&q='.freeze
-    TAXONOMY_CACHE_VERSION = 1
+    TAXONOMY_CACHE_VERSION = 2
+    TAXONOMY_CACHE_TTL = 30 * 24 * 60 * 60
 
     safe true
     priority :low
@@ -142,9 +143,11 @@ module OrganismMap
     private
 
     def initialize_taxonomy_cache(site)
+      @validated_genus_cache = {}
+      @validated_species_cache = {}
       cache_dir = site.config['cache_dir'].to_s
       cache_dir = '.jekyll-cache' if cache_dir.empty?
-      @taxonomy_cache_path = File.join(site.source, cache_dir, 'organism-map-taxonomy.json')
+      @taxonomy_cache_path = File.join(File.expand_path(cache_dir, site.source), 'organism-map-taxonomy.json')
       @taxonomy_cache_dirty = false
       @taxonomy_cache = {
         'version' => TAXONOMY_CACHE_VERSION,
@@ -155,10 +158,16 @@ module OrganismMap
       return unless File.file?(@taxonomy_cache_path)
 
       stored_cache = JSON.parse(File.read(@taxonomy_cache_path))
-      return unless stored_cache.is_a?(Hash) && stored_cache['version'] == TAXONOMY_CACHE_VERSION
+      return unless stored_cache.is_a?(Hash) && [1, TAXONOMY_CACHE_VERSION].include?(stored_cache['version'])
 
-      @taxonomy_cache['genus'] = stored_cache['genus'] if stored_cache['genus'].is_a?(Hash)
-      @taxonomy_cache['species'] = stored_cache['species'] if stored_cache['species'].is_a?(Hash)
+      %w[genus species].each do |kind|
+        next unless stored_cache[kind].is_a?(Hash)
+
+        @taxonomy_cache[kind] = stored_cache[kind].transform_values do |value|
+          # Migrate legacy booleans using their actual file age, not today's date.
+          [true, false].include?(value) ? { 'value' => value, 'checked_at' => File.mtime(@taxonomy_cache_path).to_i } : value
+        end
+      end
     rescue StandardError => e
       Jekyll.logger.warn('Organism map taxonomy cache:', e.message)
     end
@@ -167,7 +176,13 @@ module OrganismMap
       bucket = @taxonomy_cache && @taxonomy_cache[kind]
       return [false, nil] unless bucket.is_a?(Hash) && bucket.key?(name)
 
-      [true, bucket[name]]
+      entry = bucket[name]
+      return [false, nil] unless entry.is_a?(Hash) && [true, false].include?(entry['value'])
+
+      checked_at = entry['checked_at']
+      return [false, nil] unless checked_at.is_a?(Numeric) && (Time.now.to_i - checked_at).between?(0, TAXONOMY_CACHE_TTL)
+
+      [true, entry['value']]
     end
 
     def store_taxonomy_value(kind, name, value)
@@ -177,7 +192,7 @@ module OrganismMap
         'species' => {}
       }
       @taxonomy_cache[kind] ||= {}
-      @taxonomy_cache[kind][name] = !!value
+      @taxonomy_cache[kind][name] = { 'value' => !!value, 'checked_at' => Time.now.to_i }
       @taxonomy_cache_dirty = true
       value
     end
@@ -186,7 +201,9 @@ module OrganismMap
       return unless @taxonomy_cache_path && @taxonomy_cache_dirty
 
       FileUtils.mkdir_p(File.dirname(@taxonomy_cache_path))
-      File.write(@taxonomy_cache_path, JSON.pretty_generate(@taxonomy_cache))
+      temporary = "#{@taxonomy_cache_path}.#{Process.pid}.tmp"
+      File.write(temporary, JSON.pretty_generate(@taxonomy_cache))
+      File.rename(temporary, @taxonomy_cache_path)
     rescue StandardError => e
       Jekyll.logger.warn('Organism map taxonomy cache:', e.message)
     end

@@ -41,6 +41,7 @@ for path in "${paths[@]}"; do
       --output=json \
       --output-path="$output_path" \
       --quiet
+    node .github/scripts/validate-lighthouse-results.cjs "$output_path"
   done
 done
 

@@ -13,6 +13,23 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ClassifyCiChangesTest(unittest.TestCase):
+    def test_documentation_only_selects_formatting_without_runtime_suites(self):
+        result = MODULE.classify(["docs/WORKFLOWS.md"], "push")
+        for check in MODULE.ALL_LOCAL_CHECKS:
+            self.assertEqual("true" if check == "formatting" else "false", result[f"{check}_required"])
+        self.assertEqual("false", result["build_required"])
+
+    def test_scheduled_checks_keep_every_local_suite(self):
+        result = MODULE.classify([], "schedule")
+        for check in MODULE.ALL_LOCAL_CHECKS:
+            self.assertEqual("true", result[f"{check}_required"])
+
+    def test_mixed_languages_keep_the_union_of_required_checks(self):
+        result = MODULE.classify(["test/cache_bust_test.rb", "tests/js/home-hero.test.js"], "pull_request")
+        self.assertEqual("true", result["ruby_required"])
+        self.assertEqual("true", result["javascript_required"])
+        self.assertEqual("false", result["python_required"])
+
     def test_unit_test_only_change_skips_site_jobs(self):
         result = MODULE.classify(["tests/js/analytics-events.test.js"], "pull_request")
 

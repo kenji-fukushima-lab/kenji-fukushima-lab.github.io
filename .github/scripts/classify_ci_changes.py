@@ -16,6 +16,8 @@ ALL_LIGHTHOUSE_URLS = tuple(MANIFEST["lighthouse_paths"])
 SITE_PREFIXES = tuple(MANIFEST["site_prefixes"])
 SITE_FILES = set(MANIFEST["site_files"])
 LANGUAGES = MANIFEST["languages"]
+sys.path.insert(0, str(ROOT / ".github/scripts"))
+from select_local_checks import ALL as ALL_LOCAL_CHECKS, select as select_local_checks
 
 
 def _is_root_public_path(path: str) -> bool:
@@ -99,7 +101,8 @@ def classify(paths: list[str], event: str, *, full: bool = False, root: Path = R
     # Scheduled workflows enumerate the repository, rather than changed files.
     ui_changed = not scheduled and any(path == "playwright.config.js" or path.startswith("tests/ui/") for path in normalized)
     urls = ALL_LIGHTHOUSE_URLS if full else (() if scheduled else _lighthouse_urls(normalized, root))
-    return {
+    selected = ALL_LOCAL_CHECKS if scheduled or full else select_local_checks(normalized)
+    result = {
         "checks_required": str(scheduled or full or any(path not in {"AGENTS.md", "VERSION"} for path in normalized)).lower(),
         "site_changed": str(site_changed).lower(),
         "build_required": str(site_changed or ui_changed).lower(),
@@ -107,6 +110,8 @@ def classify(paths: list[str], event: str, *, full: bool = False, root: Path = R
         "lighthouse_required": str(bool(urls)).lower(),
         "lighthouse_urls": ",".join(urls),
     }
+    result.update({f"{check}_required": str(check in selected).lower() for check in ALL_LOCAL_CHECKS})
+    return result
 
 
 def main() -> None:

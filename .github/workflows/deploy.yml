@@ -35,11 +35,18 @@ jobs:
       browser_required: ${{ steps.changes.outputs.browser_required }}
       lighthouse_required: ${{ steps.changes.outputs.lighthouse_required }}
       lighthouse_urls: ${{ steps.changes.outputs.lighthouse_urls }}
+      syntax_required: ${{ steps.changes.outputs.syntax_required }}
+      python_required: ${{ steps.changes.outputs.python_required }}
+      javascript_required: ${{ steps.changes.outputs.javascript_required }}
+      ruby_required: ${{ steps.changes.outputs.ruby_required }}
+      bibliography_required: ${{ steps.changes.outputs.bibliography_required }}
+      images_required: ${{ steps.changes.outputs.images_required }}
+      formatting_required: ${{ steps.changes.outputs.formatting_required }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Classify changed paths
         id: changes
         env:
@@ -49,6 +56,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
+          python3 .github/scripts/prepare_ci_history.py --event "${EVENT_NAME}" --head "${HEAD_SHA}" --base "${BASE_SHA}" --before "${BEFORE_SHA}"
           changed_paths="${RUNNER_TEMP}/site-ci-changed-paths.txt"
           if [ "${EVENT_NAME}" = "pull_request" ]; then
             git diff --no-renames --name-only --diff-filter=ACMRD "${BASE_SHA}...${HEAD_SHA}" > "${changed_paths}"
@@ -72,8 +80,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ needs.preflight.outputs.build_required == 'true' && '0' || '1' }}
       - name: Setup Ruby
+        if: needs.preflight.outputs.ruby_required == 'true' || needs.preflight.outputs.build_required == 'true'
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
         with:
           bundler-cache: true
@@ -83,6 +92,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - name: Setup Python
+        if: needs.preflight.outputs.syntax_required == 'true' || needs.preflight.outputs.python_required == 'true' || needs.preflight.outputs.bibliography_required == 'true' || needs.preflight.outputs.build_required == 'true'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version-file: .python-version
@@ -94,20 +104,34 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
       - name: Install Python test dependencies
+        if: needs.preflight.outputs.python_required == 'true'
         run: python3 -m pip install --disable-pip-version-check -r requirements-test.txt
       - name: Prepare image test dependencies
+        if: needs.preflight.outputs.python_required == 'true' || needs.preflight.outputs.ruby_required == 'true'
         run: bash .github/scripts/prepare-image-env.sh
       - name: Python syntax checks
+        if: needs.preflight.outputs.syntax_required == 'true'
         run: find .github/scripts -name '*.py' -exec python3 -m py_compile {} +
       - name: Verify Apps Script source digest
+        if: needs.preflight.outputs.syntax_required == 'true'
         run: python3 .github/scripts/publication_access_release.py
-      - name: Unit tests
-        run: npm run test:unit
+      - name: Python unit tests
+        if: needs.preflight.outputs.python_required == 'true'
+        run: npm run test:unit:python
+      - name: JavaScript unit tests
+        if: needs.preflight.outputs.javascript_required == 'true'
+        run: npm run test:unit:js
+      - name: Ruby unit tests
+        if: needs.preflight.outputs.ruby_required == 'true'
+        run: npm run test:unit:ruby
       - name: Validate papers.bib
+        if: needs.preflight.outputs.bibliography_required == 'true'
         run: python3 .github/scripts/validate_papers_bib.py _bibliography/papers.bib --skip-links
       - name: Enforce image size threshold
+        if: needs.preflight.outputs.images_required == 'true'
         run: bash .github/scripts/check-image-budget.sh
       - name: Check formatting
+        if: needs.preflight.outputs.formatting_required == 'true'
         id: prettier
         continue-on-error: true
         run: npm run prettier
@@ -126,6 +150,17 @@ jobs:
       - name: Fail on formatting differences
         if: steps.prettier.outcome == 'failure'
         run: exit 1
+      - name: Restore build metadata caches
+        if: needs.preflight.outputs.build_required == 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: |
+            .jekyll-cache/terser
+            .jekyll-cache/organism-map-taxonomy.json
+            .jekyll-cache/sitemap-lastmod.json
+          key: build-metadata-${{ runner.os }}-${{ hashFiles('Gemfile.lock', '_plugins/terser_cache.rb', '_plugins/organism-map.rb', '_plugins/generated_site_indexes.rb') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            build-metadata-${{ runner.os }}-${{ hashFiles('Gemfile.lock', '_plugins/terser_cache.rb', '_plugins/organism-map.rb', '_plugins/generated_site_indexes.rb') }}-
       - name: Restore responsive image cache
         if: needs.preflight.outputs.build_required == 'true'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
@@ -293,7 +328,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Download tested production site
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:

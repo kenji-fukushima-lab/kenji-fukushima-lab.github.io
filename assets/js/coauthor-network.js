@@ -442,21 +442,67 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
+    let query = "";
+    let matchedIds = new Set();
+    let highlightedNodeIds = new Set();
+    let highlightedEdgeKeys = new Set();
+
+    function matchSearch(graph) {
+      query = state.search.trim().toLowerCase();
+      matchedIds = new Set(graph.nodes.filter((node) => !query || node.name.toLowerCase().includes(query)).map((node) => node.id));
+      highlightedNodeIds = query ? matchedIds : new Set();
+      highlightedEdgeKeys = new Set(
+        query
+          ? graph.links
+              .filter((link) => highlightedNodeIds.has(link.source.id || link.source) || highlightedNodeIds.has(link.target.id || link.target))
+              .map(edgeKey)
+          : []
+      );
+    }
+
+    function positionSearchView(graph, layoutId) {
+      const matchedNode = query ? firstMatchedNode(graph, matchedIds) : null;
+      if (matchedNode) {
+        centerNode(matchedNode, 1, () => completeLayout(layoutId));
+      } else {
+        fitGraphToView(48, () => completeLayout(layoutId));
+      }
+    }
+
+    function renderSearch() {
+      const graph = state.currentGraph;
+      if (!graph) return;
+      if (!graph.nodes.length) {
+        completeLayout(beginLayout());
+        return;
+      }
+      matchSearch(graph);
+      // Search changes emphasis and the view, while graph topology, positions,
+      // the author table and simulation remain valid.
+      linkLayer
+        .selectAll("line")
+        .attr("stroke-width", (link) => edgeStrokeWidth(link, highlightedEdgeKeys))
+        .attr("stroke", (link) => edgeStroke(link, highlightedEdgeKeys))
+        .attr("stroke-opacity", (link) => edgeOpacity(link, highlightedEdgeKeys));
+      nodeLayer
+        .selectAll("circle")
+        .attr("opacity", (node) => (!query || matchedIds.has(node.id) ? 1 : 0.25))
+        .attr("stroke", (node) => nodeStroke(node, highlightedNodeIds))
+        .attr("stroke-width", (node) => nodeStrokeWidth(node, highlightedNodeIds));
+      labelLayer.selectAll("text").attr("opacity", (node) => {
+        if (node.id === focusId || node.paper_count >= 3) return !query || matchedIds.has(node.id) ? 1 : 0.2;
+        return 0;
+      });
+      refreshSelection(null, state.selectedNodeId);
+      positionSearchView(graph, beginLayout());
+    }
+
     function render() {
       const layoutId = beginLayout();
       const graph = filteredGraph();
       state.currentGraph = graph;
       state.currentNodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
-      const query = state.search.trim().toLowerCase();
-      const matchedIds = new Set(graph.nodes.filter((node) => !query || node.name.toLowerCase().includes(query)).map((node) => node.id));
-      const highlightedNodeIds = query ? matchedIds : new Set();
-      const highlightedEdgeKeys = new Set(
-        query
-          ? graph.links
-              .filter((link) => highlightedNodeIds.has(link.source) || highlightedNodeIds.has(link.target))
-              .map((link) => `${link.source}-${link.target}`)
-          : []
-      );
+      matchSearch(graph);
 
       const links = linkLayer.selectAll("line").data(graph.links, (link) => `${link.source}-${link.target}`);
       links.exit().remove();
@@ -856,7 +902,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (searchInput) {
       searchInput.addEventListener("input", () => {
         state.search = searchInput.value || "";
-        render();
+        renderSearch();
       });
     }
 

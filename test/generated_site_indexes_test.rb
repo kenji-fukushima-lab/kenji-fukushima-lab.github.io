@@ -10,6 +10,52 @@ require 'tmpdir'
 require_relative '../_plugins/generated_site_indexes'
 
 class GeneratedSiteIndexesTest < Minitest::Test
+  def test_cache_reuses_exact_git_answers_and_invalidates_reverted_changes
+    Dir.mktmpdir do |dir|
+      path = File.join(dir, 'tracked.md')
+      File.write(path, 'original')
+      File.write(File.join(dir, '.gitignore'), ".jekyll-cache/\n")
+      initialize_git_repository(dir)
+      commit_all(dir, '2026-01-01T00:00:00Z', 'initial')
+      builder = builder_for(dir)
+      expected = builder.send(:git_last_modified, path)
+      builder.send(:persist_git_lastmod_cache)
+      warm = builder_for(dir)
+      warm.send(:load_git_lastmod_cache)
+      assert_equal expected, warm.instance_variable_get(:@git_lastmod_cache)['tracked.md']
+      assert_equal expected, warm.send(:git_last_modified, path)
+      File.write(path, 'modified')
+      commit_all(dir, '2026-02-01T00:00:00Z', 'modify')
+      File.write(path, 'original')
+      commit_all(dir, '2026-03-01T00:00:00Z', 'revert contents')
+      assert_equal Time.utc(2026, 3, 1), builder_for(dir).send(:git_last_modified, path)
+    end
+  end
+
+  def test_cache_invalidates_merge_changes_and_renames
+    Dir.mktmpdir do |dir|
+      path = File.join(dir, 'tracked.md')
+      File.write(path, 'original')
+      File.write(File.join(dir, '.gitignore'), ".jekyll-cache/\n")
+      initialize_git_repository(dir)
+      commit_all(dir, '2026-01-01T00:00:00Z', 'initial')
+      original = `git -C #{dir} rev-parse --abbrev-ref HEAD`.strip
+      builder = builder_for(dir)
+      builder.send(:git_last_modified, path)
+      builder.send(:persist_git_lastmod_cache)
+      run_git(dir, 'checkout', '-qb', 'feature')
+      File.write(path, 'branch contents')
+      commit_all(dir, '2026-02-01T00:00:00Z', 'branch update')
+      run_git(dir, 'checkout', '-q', original)
+      run_git(dir, 'merge', '--no-ff', '-qm', 'merge', 'feature')
+      expected = Time.parse(`git -C #{dir} log -1 --format=%cI -- tracked.md`.strip)
+      assert_equal expected, builder_for(dir).send(:git_last_modified, path)
+      run_git(dir, 'mv', 'tracked.md', 'renamed.md')
+      commit_all(dir, '2026-04-01T00:00:00Z', 'rename')
+      assert_equal Time.utc(2026, 4, 1), builder_for(dir).send(:git_last_modified, File.join(dir, 'renamed.md'))
+    end
+  end
+
   def test_page_lastmod_uses_latest_dependency_commit
     Dir.mktmpdir('generated-site-indexes-test') do |dir|
       page_path = File.join(dir, '_pages', 'en-us', 'publications.md')

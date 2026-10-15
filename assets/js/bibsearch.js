@@ -753,45 +753,93 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(firstBadgeRow);
   };
 
+  const citationCache = new Map();
+  const readCitationCache = (doi) => {
+    try {
+      const value = citationCache.get(doi) || JSON.parse(window.localStorage.getItem(`crossref-count:v1:${doi}`) || "null");
+      if (!value || !Number.isFinite(value.expiresAt) || value.expiresAt > Date.now() + 24 * 60 * 60_000) return null;
+      if (value.count !== null && (!Number.isInteger(value.count) || value.count < 0)) return null;
+      return value;
+    } catch {
+      return citationCache.get(doi) || null;
+    }
+  };
+  const writeCitationCache = (doi, count) => {
+    const value = { count, expiresAt: Date.now() + (count === null ? 60_000 : 24 * 60 * 60_000) };
+    citationCache.set(doi, value);
+    try {
+      window.localStorage.setItem(`crossref-count:v1:${doi}`, JSON.stringify(value));
+    } catch {
+      // Continue with the page's in-memory result when storage is unavailable.
+    }
+  };
   const fetchCrossrefCitationCount = async (doi) => {
-    const response = await fetch(`${CROSSREF_WORKS_ENDPOINT}/${encodeURIComponent(doi)}?mailto=${encodeURIComponent(CONTACT_EMAIL)}`);
-    if (!response.ok) return null;
-    const payload = await response.json();
-    const count = Number.parseInt(payload?.message?.["is-referenced-by-count"], 10);
-    return Number.isFinite(count) ? count : null;
+    const controller = new AbortController();
+    let timer;
+    try {
+      const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          controller.abort();
+          reject(new Error("Crossref request timed out"));
+        }, 8000);
+      });
+      const request = (async () => {
+        const response = await fetch(`${CROSSREF_WORKS_ENDPOINT}/${encodeURIComponent(doi)}?mailto=${encodeURIComponent(CONTACT_EMAIL)}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`Crossref returned ${response.status}`);
+        const payload = await response.json();
+        const count = Number.parseInt(payload?.message?.["is-referenced-by-count"], 10);
+        if (!Number.isFinite(count) || count < 0) throw new Error("Crossref count is missing");
+        writeCitationCache(doi, count);
+        return count;
+      })();
+      return await Promise.race([request, timeout]);
+    } catch (error) {
+      writeCitationCache(doi, null);
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
   const hydrateCitationCounts = async () => {
-    await seedCitationCountsFromStatic();
     if (citationHydrationPromise) return citationHydrationPromise;
-    const candidates = entries.filter((entry) => entry.doi && entry.citationCount <= 0);
-    if (!candidates.length) return Promise.resolve();
+    citationHydrationPromise = (async () => {
+      await seedCitationCountsFromStatic();
+      const candidates = entries.filter((entry) => {
+        if (!entry.doi) return false;
+        const cached = readCitationCache(entry.doi);
+        if (cached && cached.count !== null) entry.citationCount = Math.max(entry.citationCount, cached.count);
+        if (cached && cached.expiresAt > Date.now()) return false;
+        return Boolean(cached) || entry.citationCount <= 0;
+      });
+      if (!candidates.length) return;
+      let cursor = 0;
+      setBadgeStatus(badgeState, i18n.citationHydrating);
+      await Promise.all(
+        Array.from({ length: Math.min(4, candidates.length) }, async () => {
+          while (cursor < candidates.length) {
+            const currentIndex = cursor;
+            cursor += 1;
+            const target = candidates[currentIndex];
+            try {
+              let nextCount = target.citationCount;
+              const crossrefCount = await fetchCrossrefCitationCount(target.doi);
+              if (Number.isFinite(crossrefCount) && crossrefCount > nextCount) {
+                nextCount = crossrefCount;
+              }
 
-    const workers = 4;
-    let cursor = 0;
-    setBadgeStatus(badgeState, i18n.citationHydrating);
-    citationHydrationPromise = Promise.all(
-      Array.from({ length: workers }).map(async () => {
-        while (cursor < candidates.length) {
-          const currentIndex = cursor;
-          cursor += 1;
-          const target = candidates[currentIndex];
-          try {
-            let nextCount = target.citationCount;
-            const crossrefCount = await fetchCrossrefCitationCount(target.doi);
-            if (Number.isFinite(crossrefCount) && crossrefCount > nextCount) {
-              nextCount = crossrefCount;
+              if (nextCount > target.citationCount) {
+                target.citationCount = nextCount;
+              }
+            } catch {
+              // Ignore individual DOI fetch failures and continue.
             }
-
-            if (nextCount > target.citationCount) {
-              target.citationCount = nextCount;
-            }
-          } catch {
-            // Ignore individual DOI fetch failures and continue.
           }
-        }
-      })
-    ).finally(() => {
+        })
+      );
+    })().finally(() => {
       setBadgeStatus(badgeState, i18n.citationHydrated);
     });
     return citationHydrationPromise;
