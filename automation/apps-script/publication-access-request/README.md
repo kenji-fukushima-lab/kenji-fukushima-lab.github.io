@@ -22,17 +22,22 @@ verification-mail failure records `verification_error` and releases the
 reservation. Existing records are not rewritten. Outgoing messages do not set
 `Reply-To`.
 
-**Deployment verification status (2026-10-02): verified.** The existing project
+The request handler obtains daily counts and pending mail reservations from one
+sheet snapshot under the script lock. Accepted requests transfer ten cells per
+stored row instead of fourteen across two reads. Rate limits, mail quotas,
+literal input storage and verification status transitions are preserved.
+
+**Deployment verification status (2026-10-15): verified.** The existing project
 was identified in the deploying account and its configured deployment updated
-from version 4 to version 5. The read-only live status matches the reviewed source.
+from version 5 to version 6. The read-only live status matches the reviewed source.
 GitHub CI checks the local source digest, not the deployed web app; GitHub push
 does not update Apps Script.
 
-- Reviewed backend Git SHA: `2c4136dec777e59a1b3fb15b4936cde9d75d5840`
+- Reviewed backend Git SHA: `0d1c0e7ab87967e2192368497acf3f10d18b39ed`
 - Apps Script project: `1MPNDZ_b_ooWvRGRpNxYrtdlTSb-_1GrZERJwyhKz1p-OuzVLc6zyEs4B`
-- Apps Script version: `5` (2026-10-02, Asia/Tokyo)
+- Apps Script version: `6` (2026-10-15, Asia/Tokyo)
 - Deployment ID: `AKfycbzZgmU-msHncbv54IT0B034oEoUJYVUTbhrT2I8guNRq1VUf_pVKedw-AzzCRc25r03`
-- Verified source digest: `0adfd50649f5a71871a5cada4c3f55a8875d4aea28b0fa22be16ade1c4260cf2`
+- Verified source digest: `4be0ed6f62705a6800613d21646effca7d09473136985839291b103bbc39a6e7`
 
 The endpoint, deploying account, public access settings, script properties, and
 private request log were preserved. Verification used `--verify`; it did not
