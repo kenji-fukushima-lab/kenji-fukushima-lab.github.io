@@ -1,6 +1,28 @@
 const { test, expect } = require("@playwright/test");
 
+async function seedStaleRepoStats(page) {
+  // CI refreshes generated statistics before building. Exercise the stale-data
+  // branch explicitly rather than depending on the age of the checkout's data.
+  await page.route("**/resources/", async (route) => {
+    const response = await route.fetch();
+    const body = (await response.text())
+      .replace(/\s+data-repo-static=(?:"[^"]*"|'[^']*')/g, "")
+      .replace(/data-repo-repository="([^"]+)"/g, (attribute) => {
+        const data = JSON.stringify({
+          fetched_at: "2000-01-01T00:00:00Z",
+          pushed_at: "2000-01-01T00:00:00Z",
+          stargazers_count: 17,
+          forks_count: 2,
+          open_issues_count: 4,
+        }).replace(/"/g, "&quot;");
+        return `${attribute} data-repo-static="${data}"`;
+      });
+    await route.fulfill({ response, body });
+  });
+}
+
 test("GitHub rate limits stop the queue and survive reload without replacing saved statistics", async ({ page }) => {
+  await seedStaleRepoStats(page);
   await page.clock.install();
   let calls = 0;
   await page.route("https://api.github.com/repos/**", async (route) => {
@@ -14,6 +36,7 @@ test("GitHub rate limits stop the queue and survive reload without replacing sav
   expect(calls).toBeLessThanOrEqual(3);
   const initialCalls = calls;
   const statistics = await page.locator("[data-repo-stat-value]").allTextContents();
+  expect(statistics).toContain("17");
   await page.reload({ waitUntil: "domcontentloaded" });
   await expect(status).toContainText(/could not|読み込/);
   expect(calls).toBe(initialCalls);
@@ -24,6 +47,7 @@ test("GitHub rate limits stop the queue and survive reload without replacing sav
 });
 
 test("GitHub refresh uses at most three concurrent requests and caches successful responses", async ({ page }) => {
+  await seedStaleRepoStats(page);
   let active = 0;
   let peak = 0;
   let calls = 0;
