@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'jekyll'
+require_relative 'publication-bibliography'
 require 'json'
 require 'nokogiri'
 require 'set'
@@ -100,7 +101,7 @@ module PublicationWordCloud
       paper_count = 0
       years = []
 
-      BibTeX.open(bibliography_path).each do |entry|
+      PublicationBibliography.read(site, bibliography_path).each do |entry|
         next unless entry[:author]
 
         author_names = entry.author.map { |author| canonicalize_name(author.to_s, alias_lookup) }.reject(&:empty?).uniq

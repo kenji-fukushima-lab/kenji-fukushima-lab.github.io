@@ -46,3 +46,27 @@ test.describe("home hero gallery", () => {
     expect(sources.every((source) => source.includes("-small.jpg") || source.includes("/publication_preview/"))).toBe(true);
   });
 });
+
+test("home hero pauses offscreen and resumes when visible", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 667 });
+  await page.goto("/ja/", { waitUntil: "domcontentloaded" });
+  const hero = page.locator("[data-home-hero]");
+  await expectSquareTiles(page, 6);
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await expect(hero).not.toBeInViewport();
+  const before = await imageSources(page);
+  await page.waitForTimeout(9500);
+  expect(await imageSources(page)).toEqual(before);
+
+  await hero.scrollIntoViewIfNeeded();
+  await expect(hero).toBeInViewport();
+  await page.waitForFunction(
+    (previousSources) => {
+      const images = [...document.querySelectorAll("[data-home-hero] img")];
+      return images.some((image, index) => image.src !== previousSources[index]);
+    },
+    before,
+    { timeout: 10000 }
+  );
+});

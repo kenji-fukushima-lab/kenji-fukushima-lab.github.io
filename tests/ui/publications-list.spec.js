@@ -1,6 +1,38 @@
 const { test, expect } = require("@playwright/test");
 
 for (const path of ["/publications/", "/ja/publications/"]) {
+  test(`keeps result groups and updates highlights when different searches match the same publications at ${path}`, async ({ page }) => {
+    await page.goto(path);
+    const publications = page.locator("#publications-results .publication-entry");
+    await expect.poll(() => publications.count()).toBeGreaterThan(25);
+    const queries = await publications.evaluateAll((entries) =>
+      [..."abcdefghijklmnopqrstuvwxyz"].filter((letter) => entries.every((entry) => entry.textContent.toLowerCase().includes(letter))).slice(0, 2)
+    );
+    expect(queries).toHaveLength(2);
+    const heading = await page.locator("#publications-results h2.bibliography").first().elementHandle();
+    const list = await page.locator("#publications-results ol.bibliography").first().elementHandle();
+    const originalOrder = await publications.evaluateAll((entries) => entries.map((entry) => entry.dataset.key));
+
+    for (const query of queries) {
+      await page.locator("#bibsearch").fill(query);
+      await expect
+        .poll(() =>
+          page.evaluate((search) => {
+            const ranges = [...(CSS.highlights.get("search") || [])];
+            return ranges.length > 0 && ranges.every((range) => range.toString().toLowerCase() === search);
+          }, query)
+        )
+        .toBe(true);
+      expect(await heading.evaluate((node) => node.isConnected)).toBe(true);
+      expect(await list.evaluate((node) => node.isConnected)).toBe(true);
+      expect(await publications.evaluateAll((entries) => entries.map((entry) => entry.dataset.key))).toEqual(originalOrder);
+    }
+
+    await page.locator("#pub-sort").selectOption("dimensions-citations");
+    await expect(page.locator("#publications-results .pub-sorted-heading")).toContainText("Dimensions");
+    expect(await heading.evaluate((node) => node.isConnected)).toBe(false);
+  });
+
   test(`year chart keeps the same totals as the filtered publications at ${path}`, async ({ page }) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     const chartTotal = () =>

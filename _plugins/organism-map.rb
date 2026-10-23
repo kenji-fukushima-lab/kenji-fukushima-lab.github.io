@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'jekyll'
+require_relative 'publication-bibliography'
 require 'json'
 require 'nokogiri'
 require 'set'
@@ -66,14 +67,13 @@ module OrganismMap
 
       initialize_taxonomy_cache(site)
       focus_name = focus_author_name(site)
-      known_catalog = build_taxon_catalog(bibliography_path, focus_name)
+      entries = PublicationBibliography.read(site, bibliography_path).select { |entry| focus_author_entry?(entry, focus_name) }
+      known_catalog = build_taxon_catalog(entries)
       genera = {}
       years = []
       paper_count = 0
 
-      BibTeX.open(bibliography_path).each do |entry|
-        next unless focus_author_entry?(entry, focus_name)
-
+      entries.each do |entry|
         year = extract_year(entry)
         years << year if year
         paper_count += 1
@@ -230,13 +230,11 @@ module OrganismMap
       entry.author.map { |author| canonicalize_name(author.to_s) }.uniq.include?(focus_name)
     end
 
-    def build_taxon_catalog(bibliography_path, focus_name)
+    def build_taxon_catalog(entries)
       genera = Set.new
       species = Set.new
 
-      BibTeX.open(bibliography_path).each do |entry|
-        next unless focus_author_entry?(entry, focus_name)
-
+      entries.each do |entry|
         title_taxa = extract_catalog_taxa(entry[:title].to_s)
         abstract_taxa = extract_validated_abstract_taxa(entry[:abstract].to_s)
 

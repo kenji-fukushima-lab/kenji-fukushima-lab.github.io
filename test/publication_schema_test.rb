@@ -52,4 +52,25 @@ class PublicationSchemaGeneratorTest < Minitest::Test
       assert_equal 'Plant Evolution', article.dig('isPartOf', 'name')
     end
   end
+
+  def test_strip_markup_preserves_plain_text_and_parser_normalization
+    generator = PublicationSchema::Generator.new
+    cases = {
+      nil => '',
+      'plain text' => 'plain text',
+      'a>b' => 'a>b',
+      '<i>pitcher plants</i> &amp; ferns' => 'pitcher plants & ferns',
+      '&#65; &madeup;' => 'A &madeup;',
+      '\\textit{Nepenthes}' => 'Nepenthes',
+      "e\u0301 ı 姓 名" => 'é i 姓 名',
+      "a\uFFFEb\uFFFFc" => 'abc'
+    }
+    (0..31).each do |character|
+      text = "a#{character.chr(Encoding::UTF_8)}b"
+      cases[text] = [0, 9, 10, 13].include?(character) ? 'a b' : 'ab'
+    end
+    cases.each do |value, expected|
+      assert_equal expected, generator.send(:strip_markup, value), value.inspect
+    end
+  end
 end

@@ -2,6 +2,7 @@
 
 const crypto = require("node:crypto");
 const fs = require("node:fs/promises");
+const { readFileSync } = require("node:fs");
 const path = require("node:path");
 const { PurgeCSS, defaultOptions } = require("purgecss");
 const config = require("../../purgecss.config.js");
@@ -45,7 +46,7 @@ async function main() {
     const page = file.endsWith(".html") && !relative.startsWith(`assets${path.sep}`);
     if (!script && !page) continue;
 
-    const content = await fs.readFile(file, "utf8");
+    const content = readFileSync(file, "utf8");
     const tokens = defaultOptions.defaultExtractor(content);
     // Match the global pass's glob behavior, which excludes dotfiles.
     const visible = !relative.split(path.sep).some((segment) => segment.startsWith("."));

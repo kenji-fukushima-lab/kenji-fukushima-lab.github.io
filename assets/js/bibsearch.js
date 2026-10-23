@@ -847,6 +847,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   let lastRenderedEntries = [...entries];
+  let lastRenderedSort = null;
 
   const applyFiltersAndRender = () => {
     const searchTerm = normalize(searchInput.value);
@@ -854,7 +855,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const filtered = entries.filter((entry) => matchesFilters(entry, searchTerm, filters));
     const sorted = sortEntries(filtered);
 
-    renderResultGroups(sorted);
+    const resultsChanged =
+      currentSort !== lastRenderedSort ||
+      sorted.length !== lastRenderedEntries.length ||
+      sorted.some((entry, index) => entry !== lastRenderedEntries[index]);
+    if (resultsChanged) renderResultGroups(sorted);
     updateActiveCount(sorted.length);
     highlightSearch(searchTerm);
     updateDashboard(sorted);
@@ -867,6 +872,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     lastRenderedEntries = sorted;
+    lastRenderedSort = currentSort;
   };
 
   const syncHashWithSearch = () => {

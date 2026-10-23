@@ -118,6 +118,18 @@
     let pendingSlots = new Set();
     let renderGeneration = 0;
     let isMobile = mobileMedia.matches;
+    let isInViewport = true;
+
+    if (typeof window.IntersectionObserver === "function") {
+      const observer = new window.IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target === root) {
+            isInViewport = entry.isIntersecting;
+          }
+        }
+      });
+      observer.observe(root);
+    }
 
     function imageCount() {
       if (mobileMedia.matches) {
@@ -148,7 +160,7 @@
     }
 
     function swapOneTile() {
-      if (document.hidden || displayedImages.length === 0) {
+      if (document.hidden || !isInViewport || displayedImages.length === 0) {
         return;
       }
 

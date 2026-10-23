@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'jekyll'
+require_relative 'publication-bibliography'
 require 'nokogiri'
 
 begin
@@ -26,7 +27,7 @@ module PublicationSchema
         return
       end
 
-      articles = BibTeX.open(bibliography_path).filter_map do |entry|
+      articles = PublicationBibliography.read(site, bibliography_path).filter_map do |entry|
         scholarly_article(site, entry.convert(:latex))
       end
 
@@ -135,13 +136,17 @@ module PublicationSchema
     end
 
     def strip_markup(value)
-      Nokogiri::HTML::DocumentFragment.parse(value.to_s).text
-             .gsub(/\\[a-zA-Z]+\*?(?:\[[^\]]*\])?(?:\{([^{}]*)\})?/) { Regexp.last_match(1).to_s }
-             .gsub(/[{}]/, '')
-             .gsub(/\s+/, ' ')
-             .strip
-             .tr("\u0131", 'i')
-             .unicode_normalize(:nfc)
+      text = value.to_s
+      # Plain ASCII without markup or controls needs no HTML parsing.
+      if text.encoding != Encoding::UTF_8 || !text.ascii_only? || text.match?(/[<&\x00-\x08\x0b\x0c\x0e-\x1f]/)
+        text = Nokogiri::HTML::DocumentFragment.parse(text).text
+      end
+      text.gsub(/\\[a-zA-Z]+\*?(?:\[[^\]]*\])?(?:\{([^{}]*)\})?/) { Regexp.last_match(1).to_s }
+          .gsub(/[{}]/, '')
+          .gsub(/\s+/, ' ')
+          .strip
+          .tr("\u0131", 'i')
+          .unicode_normalize(:nfc)
     end
   end
 end

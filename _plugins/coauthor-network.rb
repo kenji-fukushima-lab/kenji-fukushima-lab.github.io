@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'jekyll'
+require_relative 'publication-bibliography'
 require 'json'
 require 'nokogiri'
 require 'time'
@@ -34,12 +35,13 @@ module CoauthorNetwork
       focus_name = focus_author_name(site)
       focus_key = normalize_key(focus_name)
 
+      author_keys = {}
       nodes = {}
       links = {}
       years = []
       papers_count = 0
 
-      BibTeX.open(bibliography_path).each do |entry|
+      PublicationBibliography.read(site, bibliography_path).each do |entry|
         next unless entry[:author]
 
         author_names = entry.author.map do |author|
@@ -56,7 +58,7 @@ module CoauthorNetwork
         cofirst_names = split_name_field(entry[:cofirst_authors], alias_lookup)
 
         author_names.each do |name|
-          key = normalize_key(name)
+          key = author_keys[name] ||= normalize_key(name)
           node = nodes[key] ||= build_node(name, key, focus_key, profile_lookup, coauthor_lookup)
           node['paper_count'] += 1
           node['focus_paper_count'] += 1 if key != focus_key
@@ -74,8 +76,8 @@ module CoauthorNetwork
         end
 
         author_names.combination(2) do |left_name, right_name|
-          left_key = normalize_key(left_name)
-          right_key = normalize_key(right_name)
+          left_key = author_keys.fetch(left_name)
+          right_key = author_keys.fetch(right_name)
           edge_key = [left_key, right_key].sort.join('::')
           link = links[edge_key] ||= build_link(left_name, right_name, left_key, right_key, profile_lookup)
           link['weight'] += 1
