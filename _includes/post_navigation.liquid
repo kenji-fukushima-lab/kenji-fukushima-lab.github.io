@@ -5,13 +5,7 @@
     {% assign current_post_nav_url = current_post_nav_url | prepend: site.active_lang | prepend: '/' %}
   {% endif %}
 
-  {% assign current_post_index = -1 %}
-  {% for post_entry in localized_posts %}
-    {% if post_entry.url == current_post_nav_url %}
-      {% assign current_post_index = forloop.index0 %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
+  {% assign current_post_index = site.data.generated_post_indexes_by_lang[site.active_lang][current_post_nav_url] | default: -1 %}
 
   {% if current_post_index != -1 %}
     {% assign previous_post_index = current_post_index | plus: 1 %}

@@ -253,6 +253,8 @@
       return sorted;
     };
 
+    let hasRenderedVisibility = false;
+    let lastOrderedPageEntries = null;
     let searchDebounceTimer = null;
     const render = (resetPage = false, preserveOrder = false) => {
       if (resetPage) currentPage = 1;
@@ -267,12 +269,21 @@
 
       entries.forEach((entry) => {
         const visible = visibleIndexSet.has(entry.index);
-        entry.card.hidden = !visible;
-        entry.card.style.display = visible ? "" : "none";
+        const display = visible ? "" : "none";
+        if (!hasRenderedVisibility || entry.card.hidden !== !visible) entry.card.hidden = !visible;
+        if (!hasRenderedVisibility || entry.card.style.display !== display) entry.card.style.display = display;
       });
 
+      hasRenderedVisibility = true;
       if (!preserveOrder) {
-        pageEntries.forEach((entry) => list.appendChild(entry.card));
+        if (
+          !lastOrderedPageEntries ||
+          pageEntries.length !== lastOrderedPageEntries.length ||
+          pageEntries.some((entry, index) => entry !== lastOrderedPageEntries[index])
+        ) {
+          pageEntries.forEach((entry) => list.appendChild(entry.card));
+        }
+        lastOrderedPageEntries = pageEntries;
       }
 
       emptyState.hidden = sorted.length > 0;

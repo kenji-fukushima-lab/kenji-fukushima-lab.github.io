@@ -10,6 +10,26 @@ require 'tmpdir'
 require_relative '../_plugins/generated_site_indexes'
 
 class GeneratedSiteIndexesTest < Minitest::Test
+  def test_post_indexes_are_language_scoped_and_keep_the_first_matching_url
+    Dir.mktmpdir do |dir|
+      builder = builder_for(dir)
+      posts = {
+        'en-us' => [{ 'url' => '/blog/shared/' }, { 'url' => '/blog/older/' }],
+        'ja' => [{ 'url' => '/ja/blog/shared/' }, { 'url' => '/ja/blog/older/' }, { 'url' => '/ja/blog/shared/' }],
+        'empty' => []
+      }
+      builder.define_singleton_method(:posts_by_lang_for_liquid) { posts }
+      assert_equal({ '/blog/shared/' => 0, '/blog/older/' => 1 }, builder.post_indexes_by_lang_for_liquid['en-us'])
+      assert_equal({ '/ja/blog/shared/' => 0, '/ja/blog/older/' => 1 }, builder.post_indexes_by_lang_for_liquid['ja'])
+      assert_empty builder.post_indexes_by_lang_for_liquid['empty']
+      assert_nil builder.post_indexes_by_lang_for_liquid['ja']['/blog/shared/']
+      posts['ja'].reverse!
+      assert_equal 0, builder.post_indexes_by_lang_for_liquid['ja']['/ja/blog/shared/']
+      posts['ja'].unshift({ 'url' => '/ja/blog/new/' })
+      assert_equal 1, builder.post_indexes_by_lang_for_liquid['ja']['/ja/blog/shared/']
+    end
+  end
+
   def test_cache_reuses_exact_git_answers_and_invalidates_reverted_changes
     Dir.mktmpdir do |dir|
       path = File.join(dir, 'tracked.md')

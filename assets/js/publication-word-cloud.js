@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return boxes.some((placed) => !(box.x2 < placed.x1 || box.x1 > placed.x2 || box.y2 < placed.y1 || box.y1 > placed.y2));
   }
 
-  function wordBox(text, fontSize, x, y, fontFamily) {
+  function wordDimensions(text, fontSize, fontFamily) {
     if (!measureContext) {
       measureContext = document.createElement("canvas").getContext("2d");
     }
@@ -74,14 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const width = Math.max(fontSize * 1.6, metrics.width + Math.max(6, fontSize * 0.24));
     const height =
       (metrics.actualBoundingBoxAscent || fontSize * 0.78) + (metrics.actualBoundingBoxDescent || fontSize * 0.22) + Math.max(3, fontSize * 0.15);
-    return {
-      x1: x - width / 2,
-      x2: x + width / 2,
-      y1: y - height / 2,
-      y2: y + height / 2,
-      width,
-      height,
-    };
+    return { width, height };
   }
 
   function inside(box, width, height) {
@@ -93,13 +86,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const centerX = width / 2;
     const centerY = height * 0.52;
     const goldenAngle = 2.399963229728653;
+    const { width: wordWidth, height: wordHeight } = wordDimensions(term.text, fontSize, fontFamily);
 
     for (let step = 0; step < 3000; step += 1) {
       const radius = 3.25 * Math.sqrt(step) + index * 0.16;
       const angle = step * goldenAngle + index * 0.19;
       const x = centerX + Math.cos(angle) * radius * 1.65;
       const y = centerY + Math.sin(angle) * radius * 0.9;
-      const box = wordBox(term.text, fontSize, x, y, fontFamily);
+      const box = {
+        x1: x - wordWidth / 2,
+        x2: x + wordWidth / 2,
+        y1: y - wordHeight / 2,
+        y2: y + wordHeight / 2,
+        width: wordWidth,
+        height: wordHeight,
+      };
       if (inside(box, width, height) && !overlaps(box, boxes)) {
         return { x, y, box };
       }

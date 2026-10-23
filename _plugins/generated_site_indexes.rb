@@ -19,6 +19,7 @@ module GeneratedSiteIndexes
     def generate(site)
       builder = Builder.new(site)
       site.data["generated_posts_by_lang"] = builder.posts_by_lang_for_liquid
+      site.data["generated_post_indexes_by_lang"] = builder.post_indexes_by_lang_for_liquid
       site.pages << builder.sitemap_page if site.active_lang == site.default_lang
     end
   end
@@ -63,6 +64,14 @@ module GeneratedSiteIndexes
       page.data["lang"] = @default_lang
       page.data["permalink"] = "/sitemap.xml"
       page
+    end
+
+    def post_indexes_by_lang_for_liquid
+      posts_by_lang_for_liquid.transform_values do |posts|
+        posts.each_with_index.each_with_object({}) do |(post, index), lookup|
+          lookup[post.fetch("url")] ||= index
+        end
+      end
     end
 
     private
