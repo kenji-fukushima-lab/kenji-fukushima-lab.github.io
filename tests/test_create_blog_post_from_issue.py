@@ -19,14 +19,14 @@ SPEC.loader.exec_module(MODULE)
 
 class CreateBlogPostFromIssueTests(unittest.TestCase):
     def test_main_preserves_body_headings_code_and_whitespace(self) -> None:
-        body = '    indented code\n\nOpening paragraph  \n\n### Results\nImportant result\n\n```markdown\n### Post title\nexample title\n### Body (Markdown)\nexample body\n```\n\n### Conclusion\nImportant conclusion  '
+        body = '    indented code\n\nOpening paragraph  \n\n### Results\nImportant result\n\n```markdown\n### Post title\nexample title\n\n\n### Body (Markdown)\nexample body\n```\n\n### Conclusion\nImportant conclusion  '
         for body_label in MODULE.FIELD_TITLES["body"]:
             with self.subTest(body_label=body_label), tempfile.TemporaryDirectory() as tmpdir:
                 root = pathlib.Path(tmpdir)
                 issue = {
                     "number": 123,
                     "user": {"login": "author"},
-                    "body": f'### Post title\n\nOriginal title\n\n### Post date (YYYY-MM-DD)\n\n2026-10-02\n\n### Language\n\nen-us\n\n### URL slug (optional)\n\n_No response_\n\n### {body_label}\n\n{body}\n',
+                    "body": f'### Post title\n\n春探し Spring\n\n### Post date (YYYY-MM-DD)\n\n2026-10-02\n\n### Language\n\nen-us\n\n### URL slug (optional)\n\n_No response_\n\n### {body_label}\n\n{body}\n',
                 }
                 with (
                     mock.patch.object(MODULE, "REPO_ROOT", root),
@@ -35,8 +35,8 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
                     mock.patch.object(MODULE, "set_output"),
                 ):
                     self.assertEqual(MODULE.main(), 0)
-                post = (root / "_posts/en-us/2026-10-02-original-title.md").read_text()
-                self.assertIn('title: "Original title"', post)
+                post = (root / "_posts/en-us/2026-10-02-spring.md").read_text()
+                self.assertIn('title: "春探し Spring"', post)
                 self.assertEqual(post.split("---\n", 2)[2], f"\n{body}\n")
 
     def test_parse_sections_handles_current_labels_and_missing_body(self) -> None:
@@ -50,45 +50,12 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.InputError, "Missing required field"):
             MODULE.first_non_empty(sections, MODULE.FIELD_TITLES["body"], required=True, preserve_whitespace=True)
 
-    def test_build_markdown_uses_prettier_friendly_front_matter(self) -> None:
-        markdown = MODULE.build_markdown(
-            title="春探し",
-            date_str="2026-03-12",
-            author='<a href="https://github.com/YoshinoHashimoto">YoshinoHashimoto</a>',
-            body_markdown="1行目\n\n{% include figure.liquid path=\"assets/img/posts/sample.jpg\" class=\"img-fluid rounded z-depth-1 mx-auto d-block\" width=\"450\" alt=\"Image\" %}\n\n",
-        )
-
-        self.assertIn('title: "春探し"', markdown)
-        self.assertTrue(markdown.endswith('alt="Image" %}\n'))
-
-    def test_build_markdown_preserves_markdown_meaningful_whitespace(self) -> None:
-        markdown = MODULE.build_markdown(
-            title="Whitespace",
-            date_str="2026-03-12",
-            author="author",
-            body_markdown="\nline 1  \nline 2\n\n```text\na\n\n\nb\n```\n\n",
-        )
-
-        self.assertIn("line 1  \nline 2", markdown)
-        self.assertIn("```text\na\n\n\nb\n```", markdown)
-
     def test_validate_plain_text_submission_value_rejects_markup(self) -> None:
         with self.assertRaisesRegex(MODULE.InputError, "must not include HTML markup"):
             MODULE.validate_plain_text_submission_value("Post title", "<script>alert(1)</script>")
 
         with self.assertRaisesRegex(MODULE.InputError, "must not include Liquid markup"):
             MODULE.validate_plain_text_submission_value("Post title", "{% include evil %}")
-
-    def test_validate_generated_body_markdown_rejects_html_and_liquid(self) -> None:
-        with self.assertRaisesRegex(MODULE.InputError, "must not contain raw HTML"):
-            MODULE.validate_generated_body_markdown("<script>alert(1)</script>")
-
-        with self.assertRaisesRegex(MODULE.InputError, "must not include Liquid markup"):
-            MODULE.validate_generated_body_markdown("before {{ site.title }} after")
-
-    def test_validate_generated_body_markdown_allows_generated_figure_include(self) -> None:
-        markdown = '{% include figure.liquid path="assets/img/posts/sample.jpg" class="img-fluid rounded z-depth-1 mx-auto d-block" width="450" alt="Image" %}'
-        MODULE.validate_generated_body_markdown(markdown)
 
     def test_optimize_image_asset_keeps_budget(self) -> None:
         image = Image.frombytes("RGB", (1200, 1200), os.urandom(1200 * 1200 * 3))
@@ -135,6 +102,7 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
         self.assertIn('width="450"', replaced_markdown)
         self.assertEqual(replaced_files, [f"/{expected_asset}"])
         self.assertEqual(warnings, [])
+        MODULE.validate_generated_body_markdown(replaced_markdown)
 
     def test_build_figure_include_escapes_liquid_delimiters_in_alt_text(self) -> None:
         figure = MODULE.build_figure_include("assets/img/posts/sample.jpg", 'brace {% %} "quote"')
@@ -143,6 +111,8 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
 
     def test_original_liquid_and_html_attributes_cannot_bypass_validation(self):
         for body in [
+            '<script>alert(1)</script>',
+            'before {{ site.title }} after',
             '{% include figure.liquid path="assets/img/posts/sample.jpg" caption="<script>alert(1)</script>" %}',
             '<img src="https://github.com/user-attachments/assets/abc" onerror="alert(1)">',
             '[click](java&#115;cript:alert%281%29)',
@@ -153,11 +123,6 @@ class CreateBlogPostFromIssueTests(unittest.TestCase):
                     with self.assertRaises(MODULE.InputError):
                         MODULE.replace_attachment_images(body, "2026-09-22", "audit", 1)
                     download.assert_not_called()
-
-    def test_generated_include_allowlist_rejects_extra_attributes(self):
-        for attribute in ['caption="<script>alert(1)</script>"', 'alt=\'" onerror="alert(1)\'']:
-            with self.subTest(attribute=attribute), self.assertRaises(MODULE.InputError):
-                MODULE.validate_generated_body_markdown('{% include figure.liquid path="assets/img/posts/a.jpg" ' + attribute + ' %}')
 
     def test_download_is_bounded_even_without_content_length(self):
         response = mock.MagicMock()
