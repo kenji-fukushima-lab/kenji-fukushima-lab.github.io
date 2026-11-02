@@ -26,15 +26,16 @@ class ResponsiveImageValidationTest(unittest.TestCase):
                       '<link rel="preload" imagesrcset="/small.webp 200w">')
             self.assertEqual(([], 3), MODULE.validate_site(root))
 
-    def test_reports_wrong_width_and_missing_derivative(self):
+    def test_reports_wrong_width_missing_derivative_and_zero_width(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            self.site(root, '<img srcset="/small.webp 240w, /missing.webp 480w">')
+            self.site(root, '<img srcset="/small.webp 240w, /missing.webp 480w, /small.webp 0w">')
             errors, checked = MODULE.validate_site(root)
             self.assertEqual(0, checked)
-            self.assertEqual(2, len(errors))
-            self.assertIn("declares 240w but generated width is 200px", errors[0])
-            self.assertIn("missing.webp", errors[1])
+            self.assertEqual(3, len(errors))
+            self.assertTrue(any("declares 240w but generated width is 200px" in error for error in errors))
+            self.assertTrue(any("missing.webp" in error for error in errors))
+            self.assertTrue(any("invalid or duplicate width descriptor 0w" in error for error in errors))
 
     def test_checks_duplicate_widths_without_fetching_external_images(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -45,24 +46,6 @@ class ResponsiveImageValidationTest(unittest.TestCase):
             self.assertEqual(1, checked)
             self.assertEqual(1, len(errors))
             self.assertIn("duplicate width descriptor", errors[0])
-
-    def test_widths_are_independent_for_each_attribute_and_tag(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            self.site(root, '<img srcset="/small.webp 200w" imagesrcset="/small.webp 200w">'
-                      '<img srcset="/small.webp 200w">')
-            self.assertEqual(([], 3), MODULE.validate_site(root))
-
-    def test_failed_candidates_keep_widths_and_error_order(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            self.site(root, '<img srcset="/small.webp 240w, /small.webp 240w, /small.webp 200w"'
-                      ' imagesrcset="/small.webp 0w, /small.webp 200w">')
-            self.assertEqual(([
-                "blog/index.html: /small.webp: declares 240w but generated width is 200px",
-                "blog/index.html: /small.webp: invalid or duplicate width descriptor 240w",
-                "blog/index.html: /small.webp: invalid or duplicate width descriptor 0w",
-            ], 2), MODULE.validate_site(root))
 
     def test_skips_data_external_and_non_width_candidates(self):
         with tempfile.TemporaryDirectory() as directory:

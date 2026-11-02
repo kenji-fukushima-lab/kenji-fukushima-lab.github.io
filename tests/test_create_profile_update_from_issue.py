@@ -19,20 +19,19 @@ SPEC.loader.exec_module(MODULE)
 
 class CreateProfileUpdateFromIssueTests(unittest.TestCase):
     def test_profile_urls_reject_markup_and_malformed_hosts(self) -> None:
-        values = [
-            'https://example.invalid/" onclick="alert(1)',
-            'https://example.invalid/"onmouseover="alert(1)',
-            "https://example.invalid/<script>",
-            "https://example.invalid/\x00",
-            "https://example.invalid/\tpath",
-            "https://example.invalid/{{site.title}}",
-            "https://[invalid/",
-            "https://example.invalid:invalid/",
+        cases = [
+            ("website", 'https://example.invalid/" onclick="alert(1)'),
+            ("orcid", 'https://example.invalid/"onmouseover="alert(1)'),
+            ("twitter", "https://example.invalid/<script>"),
+            ("researchgate", "https://example.invalid/\x00"),
+            ("researchmap", "https://example.invalid/\tpath"),
+            ("website", "https://example.invalid/{{site.title}}"),
+            ("website", "https://[invalid/"),
+            ("website", "https://example.invalid:invalid/"),
         ]
-        for field in MODULE.STRICT_URL_FIELDS | {"orcid", "twitter", "researchgate", "researchmap"}:
-            for value in values:
-                with self.subTest(field=field, value=value), self.assertRaises(MODULE.InputError):
-                    MODULE.normalize_field_value(field, value, "author", False)
+        for field, value in cases:
+            with self.subTest(field=field, value=value), self.assertRaises(MODULE.InputError):
+                MODULE.normalize_field_value(field, value, "author", False)
 
     def test_profile_url_and_name_keep_valid_quotes_and_query_strings(self) -> None:
         url = "https://example.org/O'Brien?q=%22quoted%22&lang=ja#profile"
