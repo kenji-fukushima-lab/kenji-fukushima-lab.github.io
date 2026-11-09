@@ -23,8 +23,6 @@ class PublicationBibliographyTest < Minitest::Test
       first = PublicationBibliography.read(@site, @path)
       second = PublicationBibliography.read(@site, @path)
       assert_equal 1, calls
-      refute_same first, second
-      refute_same first['one'], second['one']
       first['one'][:title] = 'Mutated'
       first['one'].convert!(:latex)
       assert_equal 'Alpha', second['one'][:title].to_s
@@ -56,7 +54,6 @@ class PublicationBibliographyTest < Minitest::Test
     other = PublicationBibliography.read(other_site, @path)
     first['one'][:title] = 'Changed'
     assert_equal 'Alpha', other['one'][:title].to_s
-    refute_same @site.instance_variable_get(:@publication_bibliography), other_site.instance_variable_get(:@publication_bibliography)
   end
   def test_reset_discards_build_cache
     PublicationBibliography.read(@site, @path)

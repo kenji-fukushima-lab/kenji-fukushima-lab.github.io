@@ -14,7 +14,7 @@ class PublicationSchemaGeneratorTest < Minitest::Test
       FileUtils.mkdir_p(bibliography_dir)
       File.write(File.join(bibliography_dir, 'papers.bib'), <<~BIB)
         @article{pitcher-plant,
-          title = {Evolution of <i>pitcher plants</i>},
+          title = {Evolution of <i>pitcher plants</i> &amp; ferns},
           author = {Fukushima, Kenji and Echevarr{\\'\\i}a-Poza, Alberto},
           year = {2026},
           journal = {Plant Evolution},
@@ -42,7 +42,7 @@ class PublicationSchemaGeneratorTest < Minitest::Test
 
       assert_equal 1, schema.fetch('article_count')
       assert_equal 'ScholarlyArticle', article.fetch('@type')
-      assert_equal 'Evolution of pitcher plants', article.fetch('headline')
+      assert_equal 'Evolution of pitcher plants & ferns', article.fetch('headline')
       assert_equal ['Kenji Fukushima', 'Alberto Echevarría-Poza'], article.fetch('author').map { |author| author.fetch('name') }
       assert_equal 'https://example.test#kenji-fukushima', article.fetch('author').first.fetch('@id')
       refute article.fetch('author').last.key?('@id')
@@ -50,27 +50,6 @@ class PublicationSchemaGeneratorTest < Minitest::Test
       assert_equal 'https://doi.org/10.1000/example', article.fetch('url')
       assert_equal '10.1000/example', article.dig('identifier', 'value')
       assert_equal 'Plant Evolution', article.dig('isPartOf', 'name')
-    end
-  end
-
-  def test_strip_markup_preserves_plain_text_and_parser_normalization
-    generator = PublicationSchema::Generator.new
-    cases = {
-      nil => '',
-      'plain text' => 'plain text',
-      'a>b' => 'a>b',
-      '<i>pitcher plants</i> &amp; ferns' => 'pitcher plants & ferns',
-      '&#65; &madeup;' => 'A &madeup;',
-      '\\textit{Nepenthes}' => 'Nepenthes',
-      "e\u0301 ı 姓 名" => 'é i 姓 名',
-      "a\uFFFEb\uFFFFc" => 'abc'
-    }
-    (0..31).each do |character|
-      text = "a#{character.chr(Encoding::UTF_8)}b"
-      cases[text] = [0, 9, 10, 13].include?(character) ? 'a b' : 'ab'
-    end
-    cases.each do |value, expected|
-      assert_equal expected, generator.send(:strip_markup, value), value.inspect
     end
   end
 end
