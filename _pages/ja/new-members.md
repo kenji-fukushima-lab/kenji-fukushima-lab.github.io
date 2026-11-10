@@ -4,7 +4,7 @@ layout: page
 permalink: /join/new-members/
 lang: ja
 title: 新メンバーにお願いしたい手続き
-last_updated: 2026-10-08
+last_updated: 2026-11-10
 nav: false
 ---
 
@@ -23,5 +23,9 @@ nav: false
 Issueフォームの投稿後、福島（GitHub: `kfuku52`）がIssueに `/approve-member` とコメントして承認し、登録用のプルリクエスト（PR）が作成されます。承認前には登録PRは作成されず、ウェブサイトにも掲載されません。
 
 PRの内容を確認してマージした後、公開希望日以降の最初の正常なビルドで[メンバーページ]({{ '/people/' | relative_url }})に掲載されます。定期ビルドは毎日08:30（日本時間）に開始予定ですが、遅れる場合があります。公開希望日が過ぎてから承認・マージされた場合は、その後の最初の正常なビルドで掲載されます。Issueの内容を修正した場合も、福島の新しい承認コメントが必要です。
+
+## 遺伝研のメールアドレス
+
+遺伝研では、末尾が `@nig.ac.jp` のメールアドレスが発行されます。アドレスを決める際は、`kenji.fukushima@nig.ac.jp` のように、ローマ字の名と姓をピリオドでつないだ `FIRSTNAME.LASTNAME@nig.ac.jp` の形式をおすすめします。
 
 [メンバー募集の案内に戻る]({{ '/join/' | relative_url }})

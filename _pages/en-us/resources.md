@@ -54,7 +54,8 @@ nav_order: 5
 </div>
 
 <div class="repositories repo-list-compact d-flex flex-column align-items-stretch">
-  {% for repo in site.data.repositories.github_repos %}
+  {% assign sorted_repos = site.data.repositories.github_repos | sort_natural %}
+  {% for repo in sorted_repos %}
     {% include repository/repo.liquid repository=repo %}
   {% endfor %}
 </div>
