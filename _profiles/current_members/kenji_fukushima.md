@@ -8,7 +8,7 @@ content:
 image_circular: false # crops the image to make it circular
 more_info:
 email: kenji.fukushima@nig.ac.jp
-website: https://sites.google.com/site/kfuku52/
+website: https://sites.google.com/site/kfuku52/home
 orcid: https://orcid.org/0000-0002-2353-9274
 google_scholar: https://scholar.google.co.jp/citations?sortby=pubdate&hl=en&user=YrrVuIEAAAAJ
 github: kfuku52
