@@ -61,6 +61,12 @@ indexing probes `PAGEFIND_PYTHON` first, then `python3`, `/usr/bin/python3`, and
 `PAGEFIND_PYTHON` is an executable path, not a shell command with arguments.
 Production builds fail if Pagefind is unavailable or indexing fails.
 
+`npm run build` uses GitHub statistics cached locally for up to 24 hours.
+For a refresh, run `gh auth login` or set `GITHUB_TOKEN`/`GH_TOKEN`.
+The build reads an isolated data copy and preserves checked-in
+`_data/repo_stats.json`. Before building in Compose, run
+`npm run repo-stats:prepare` on the host so the container can reuse that cache.
+
 The development server runs on port 8080. Content changes use Jekyll's watcher;
 `_config.yml` replacement or edits restart only the managed server process.
 An unexpected Jekyll exit is reported instead of being silently retried forever.

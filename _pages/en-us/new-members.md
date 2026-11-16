@@ -4,7 +4,7 @@ layout: page
 permalink: /join/new-members/
 lang: en-us
 title: Getting started as a new member
-last_updated: 2026-10-08
+last_updated: 2026-11-10
 nav: false
 ---
 
@@ -23,5 +23,9 @@ Drag and drop one approximately square photo into the registration form's profil
 After you submit the issue form, Kenji (GitHub: `kfuku52`) approves the issue by commenting `/approve-member`, and a registration pull request (PR) is created. Before approval, no registration PR is created and your profile is not listed on the website.
 
 After the PR is reviewed and merged, your profile will appear on the [members page]({{ '/people/' | relative_url }}) in the first successful build on or after the requested date. The daily build normally starts at 08:30 Japan time and may run later. If the date has already passed when the PR is approved and merged, the next successful build will publish the profile. Revised issue content requires a new approval comment from Kenji.
+
+## NIG email address
+
+NIG issues email addresses ending in `@nig.ac.jp`. When choosing your address, we recommend the format `FIRSTNAME.LASTNAME@nig.ac.jp`, with your given name followed by a period and your family name, as in `kenji.fukushima@nig.ac.jp`.
 
 [Back to information about joining the lab]({{ '/join/' | relative_url }})

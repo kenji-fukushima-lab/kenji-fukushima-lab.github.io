@@ -322,11 +322,11 @@ for (const [pathname, width] of [
   ["/ja/resources/", 320],
   ["/resources/", 768],
 ]) {
-  test(`repository names and badges fit ${pathname} at ${width}px`, async ({ page }) => {
+  test(`repository names are alphabetized and badges fit ${pathname} at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.route("https://api.github.com/**", (route) => route.abort());
     await page.goto(pathname, { waitUntil: "domcontentloaded" });
-    await expect(page.locator(".repo-compact")).toHaveCount(REPOSITORIES.length);
+    await expect(page.locator(".repo-compact-name")).toHaveText(REPOSITORIES.map((name) => name.toLowerCase()).toSorted(), { ignoreCase: true });
     await page.evaluate(() => document.fonts.ready);
     const overflow = await page.evaluate(() => {
       const outside = [...document.querySelectorAll(".repo-compact-name, .repo-compact-badges > a")]
