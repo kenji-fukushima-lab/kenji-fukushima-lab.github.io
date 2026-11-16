@@ -189,11 +189,18 @@ npm run test:lighthouse
 Or build with the common container and run browser tests using the host Node:
 
 ```bash
-docker compose run --rm -e JEKYLL_ENV=production jekyll bundle exec jekyll build
-npm run css:purge
+npm run repo-stats:prepare
+docker compose run --rm --no-deps jekyll npm run build
 npx playwright install chromium
 npm run test:ui
 ```
+
+Run `repo-stats:prepare` on the host so Compose can reuse authenticated
+repository statistics from `.jekyll-cache/local-repo-stats.json`. The native
+`npm run build` prepares this cache automatically. It reuses data for 24 hours,
+also accepting a fresh checked-in snapshot. A refresh uses
+`GITHUB_TOKEN`, `GH_TOKEN`, or the active `gh auth login` account. Concurrent
+local builds share one refresh. Build failure leaves tracked data intact.
 
 Both browser commands need host Python for their HTTP servers. Playwright
 serves existing `_site` output on port 8081; it does not rebuild the site.
@@ -258,9 +265,7 @@ service if using its runtimes; container temporary output disappears on exit.
   set -eu
   site_check_dir=$(mktemp -d)
   trap 'rm -rf "$site_check_dir"' EXIT
-  JEKYLL_ENV=production bundle exec jekyll build --destination "$site_check_dir"
-  npm run css:purge -- "$site_check_dir"
-  python3 .github/scripts/validate_site_artifact.py "$site_check_dir"
+  npm run build -- --destination "$site_check_dir"
   python3 .github/scripts/validate_generated_feeds.py "$site_check_dir/feed.xml" "$site_check_dir/ja/feed.xml"
   python3 .github/scripts/validate_generated_sitemap.py "$site_check_dir/sitemap.xml" "$site_check_dir" --origin https://kenji-fukushima-lab.github.io
   python3 .github/scripts/validate_responsive_images.py "$site_check_dir"

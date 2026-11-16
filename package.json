@@ -12,7 +12,8 @@
     "test:lighthouse": "bash .github/scripts/run-lighthouse.sh",
     "test:ui": "playwright test",
     "dev": "bash bin/entry_point.sh",
-    "build": "JEKYLL_ENV=production bundle exec jekyll build && npm run css:purge && python3 .github/scripts/validate_site_artifact.py _site",
+    "build": "python3 .github/scripts/build_site.py",
+    "repo-stats:prepare": "python3 .github/scripts/build_site.py --prepare-only",
     "css:purge": "node .github/scripts/purge-page-css.cjs"
   },
   "devDependencies": {
