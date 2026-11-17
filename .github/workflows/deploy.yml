@@ -74,7 +74,8 @@ jobs:
     name: Fast checks and production build
     needs: preflight
     if: needs.preflight.outputs.checks_required == 'true'
-    runs-on: ubuntu-latest
+    # This image has a prebuilt Ruby for the version in .ruby-version.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -240,7 +241,7 @@ jobs:
     name: UI and accessibility
     needs: [preflight, build]
     if: needs.preflight.outputs.browser_required == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -251,9 +252,9 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - name: Install Node.js dependencies
-        run: npm ci
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: npm ci --no-audit
+      - name: Install Chromium headless shell
+        run: npx playwright install --with-deps chromium --only-shell
       - name: Download production site
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -278,7 +279,7 @@ jobs:
     name: Lighthouse
     needs: [preflight, build]
     if: needs.preflight.outputs.lighthouse_required == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -289,7 +290,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - name: Install Node.js dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Download production site
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
