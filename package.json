@@ -22,7 +22,7 @@
     "@shopify/prettier-plugin-liquid": "1.4.0",
     "lighthouse": "^13.4.1",
     "prettier": "3.8.1",
-    "purgecss": "^7.0.2"
+    "purgecss": "^9.1.0"
   },
   "overrides": {
     "tmp": "^0.2.6",
