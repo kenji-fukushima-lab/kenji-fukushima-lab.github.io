@@ -133,11 +133,15 @@ and supported buttons are defined in [\_layouts/bib.liquid](_layouts/bib.liquid)
 - Validate bibliography structure with `npm run checks:push`. The independent
   Link health workflow additionally checks external bibliography URLs.
 
-Resource selection is in [\_data/repositories.yml](_data/repositories.yml), with
+Repository selection is in [\_data/repositories.yml](_data/repositories.yml), with
 lab-specific descriptions in [\_data/repo_about.yml](_data/repo_about.yml).
-The resources layout consumes cached statistics from `_data/repo_stats.json`;
-trusted production builds refresh those statistics. Do not put API tokens in
-these data files.
+Trusted production builds refresh the statistics from `_data/repo_stats.json`.
+Resources pages reuse the embedded values for up to 48 hours. The browser
+fetches missing or older statistics when its own 24-hour cache has expired.
+Do not put API tokens in these data files.
+
+Genome assemblies and the representative sequences shown on both language
+versions of Resources are listed in [\_data/genomes.yml](_data/genomes.yml).
 
 ## Styles, images, and removing content
 

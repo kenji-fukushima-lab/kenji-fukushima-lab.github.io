@@ -1,0 +1,51 @@
+{% assign japanese = false %}
+{% if site.active_lang == 'ja' %}
+  {% assign japanese = true %}
+{% endif %}
+{% for genome in site.data.genomes %}
+  {% assign viewer_id = genome.id | prepend: 'ncbi-sv-' %}
+  <div class="ncbi-genome-embed">
+    <h3>
+      {% capture genome_links %}
+        <a href="https://www.ncbi.nlm.nih.gov/datasets/genome/{{ genome.assembly }}/" target="_blank" rel="noopener noreferrer">
+          {%- if japanese %}NCBI Genome: {{ genome.assembly }}{% else %}NCBI{% endif -%}
+        </a>
+        {% if genome.bioproject %}
+          / <a href="https://www.ncbi.nlm.nih.gov/bioproject/{{ genome.bioproject }}" target="_blank" rel="noopener noreferrer">BioProject</a>
+        {% endif %}
+        {% if genome.coge %}
+          /
+          <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid={{ genome.coge }}" target="_blank" rel="noopener noreferrer">
+            CoGe{% if japanese %}: {{ genome.coge }}{% endif -%}
+          </a>
+        {% endif %}
+        {% if genome.publication_url %}
+          /
+          <a href="{{ genome.publication_url }}" target="_blank" rel="noopener noreferrer">
+            Publication{% if japanese %}: {{ genome.publication_citation }}{% endif -%}
+          </a>
+        {% endif %}
+      {% endcapture %}
+      {% if japanese %}
+        {{ genome.species }}: {{ genome.sequence }} （{{ genome_links | strip }}）
+      {% else %}
+        {{ genome.species }} ({{ genome_links | strip }})
+      {% endif %}
+    </h3>
+    <div class="ncbi-genome-actions">
+      <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="{{ viewer_id }}">
+        {% if japanese %}インタラクティブビューアを読み込む{% else %}Load interactive viewer{% endif %}
+      </button>
+      <span class="ncbi-genome-status" data-ncbi-error hidden>
+        {% if japanese %}
+          ビューアを読み込めませんでした。上のNCBIリンクをご利用ください。
+        {% else %}
+          Viewer could not be loaded. Please use the NCBI link above.
+        {% endif %}
+      </span>
+    </div>
+    <div id="{{ viewer_id }}" class="SeqViewerApp" hidden>
+      <a href="?embedded=true&id={{ genome.sequence }}&assm_context={{ genome.assembly }}&appname=kenji_fukushima_lab&noviewheader=true"></a>
+    </div>
+  </div>
+{% endfor %}
