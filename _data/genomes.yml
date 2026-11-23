@@ -1,0 +1,29 @@
+- id: cephalotus
+  species: Cephalotus follicularis
+  assembly: GCA_001972305.1
+  sequence: BDDD01000001.1
+  coge: 29002
+  publication_url: https://www.nature.com/articles/s41559-016-0059
+  publication_citation: Fukushima et al. (2017)
+- id: nepenthes
+  species: Nepenthes gracilis
+  assembly: GCA_033239525.1
+  sequence: BSYO01000001.1
+  coge: 61566
+  publication_url: https://www.nature.com/articles/s41477-023-01562-2
+  publication_citation: Saul et al. (2023)
+- id: triphyophyllum
+  species: Triphyophyllum peltatum
+  assembly: GCA_059738685.1
+  sequence: BAAHMP010000001.1
+  bioproject: PRJDB15739
+- id: ancistrocladus
+  species: Ancistrocladus abbreviatus
+  assembly: GCA_054771515.1
+  sequence: BAAHMO010000001.1
+  bioproject: PRJDB15740
+- id: dionaea
+  species: Dionaea muscipula
+  assembly: GCA_054771495.1
+  sequence: BAAGIJ010000001.1
+  bioproject: PRJDB15741

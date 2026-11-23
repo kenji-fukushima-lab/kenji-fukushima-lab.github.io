@@ -26,10 +26,10 @@ github_repos:
   #  - mathjax/MathJax
 
   - kfuku52/genegalleon
-  - kfuku52/kfFractBias
   - kfuku52/csubst
   - kfuku52/amalgkit
   - kfuku52/msspack
+  - kfuku52/locuskit
   - kfuku52/RADTE
   - kfuku52/cdskit
   - kfuku52/nwkit

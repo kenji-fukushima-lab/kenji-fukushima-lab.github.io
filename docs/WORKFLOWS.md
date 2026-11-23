@@ -21,6 +21,7 @@ and the independent `Link health` workflow consume that artifact.
    validate local links.
 3. **UI and accessibility** tests the artifact with Playwright and axe. Every
    listed English/Japanese route is checked on the default desktop viewport.
+   The CI job installs the Chromium headless shell and its system dependencies.
    Regular push and pull-request runs pair representative routes with mobile or
    dark mode; the weekly and manual runs check both modes on the extended route
    set. Target size and visible/accessibility-name agreement are explicitly tested.
@@ -73,6 +74,11 @@ temporarily; restore the normal cadence afterward.
 See [INSTALL.md](../INSTALL.md) for the common Docker/Dev Container runtime and
 native setup. Ruby 3.3.5, Node 22, and Python 3.13 are specified in version files;
 keep those files, Docker stages, and CI consistent when upgrading runtimes.
+The production build, browser checks, and Dependency Audit use `ubuntu-24.04`.
+Before changing the runner image or Ruby version, confirm that
+[ruby-builder](https://github.com/ruby/ruby-builder/releases) publishes the
+matching Ubuntu x64 archive and verify the build and browser checks on the
+target image.
 
 ```bash
 npm ci
@@ -354,7 +360,11 @@ generation, not site validation or publication. See
 ## Other workflows and troubleshooting
 
 `codeql.yml` scans code and `dependency-audit.yml` audits locked Ruby/Node
-packages and the locked Python dependencies. The publication-access Apps Script is deployed separately: see its
+packages and the locked Python dependencies. The Ruby audit reads `Gemfile.lock`
+directly, so only the audit tool is installed. The build job's `npm ci` reports
+Node advisories. Its downstream Playwright and Lighthouse jobs install the same
+lockfile with `--no-audit` to avoid repeat registry requests.
+The publication-access Apps Script is deployed separately: see its
 [deployment guide](../automation/apps-script/publication-access-request/README.md).
 A GitHub push alone does not update that web app.
 

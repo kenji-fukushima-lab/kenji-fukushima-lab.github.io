@@ -167,6 +167,7 @@
   }
 
   const cacheTtlMs = 24 * 60 * 60 * 1000;
+  const buildStatsMaxAgeMs = 2 * cacheTtlMs;
 
   const dataSource = (data, fallbackTimestamp = NaN) => {
     if (!data || typeof data !== "object") return null;
@@ -303,7 +304,8 @@
       applyDescription(repo, fallback);
     }
 
-    const source = newestSource(readRepoCache(repo), staticRepoMap.get(repo));
+    const buildSource = staticRepoMap.get(repo);
+    const source = newestSource(readRepoCache(repo), buildSource);
     if (source) {
       if (!fallback) {
         const description = typeof source.data.description === "string" ? source.data.description : "";
@@ -316,7 +318,9 @@
       applyRepoStats(repo, null);
     }
 
-    if (repoStatNodeMap.has(repo) && !source?.fresh) autoRefreshRepos.add(repo);
+    // Daily deployments refresh these statistics. Allow one missed refresh before falling back to the API.
+    const buildStatsFresh = buildSource && Date.now() - buildSource.timestamp <= buildStatsMaxAgeMs;
+    if (repoStatNodeMap.has(repo) && !source?.fresh && !buildStatsFresh) autoRefreshRepos.add(repo);
   }
 
   const setRepoLoading = (repo, loading) => {
