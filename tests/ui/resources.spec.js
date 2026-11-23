@@ -201,10 +201,14 @@ test.describe("resources and research page smoke tests", () => {
     await expect(lastCommit).toHaveText("1 hour ago");
   });
 
-  for (const missingRepoCount of [0, 1]) {
-    test(`uses fresh build-time stats and refreshes ${missingRepoCount} missing repositories`, async ({ page }) => {
+  for (const [snapshotAgeHours, missingRepoCount] of [
+    [1, 0],
+    [1, 1],
+    [25, 1],
+  ]) {
+    test(`uses ${snapshotAgeHours}-hour-old build-time stats and fetches ${missingRepoCount} missing repositories`, async ({ page }) => {
       const fetchedAt = "2026-08-22T12:00:00Z";
-      await page.clock.install({ time: new Date("2026-08-22T13:00:00Z") });
+      await page.clock.install({ time: new Date(Date.parse(fetchedAt) + snapshotAgeHours * 60 * 60 * 1000) });
       const missingRepositories = missingRepoCount ? REPOSITORIES.slice(-missingRepoCount) : [];
       await seedStaticRepoStats(page, fetchedAt, missingRepositories);
 

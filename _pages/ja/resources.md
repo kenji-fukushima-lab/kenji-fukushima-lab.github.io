@@ -5,8 +5,8 @@ permalink: /resources/
 title: リソース
 description: 国立遺伝学研究所 植物進化研究室で提供している研究リソースの一覧です。
 seo_title: 進化解析ソフトウェア・食虫植物ゲノム | 国立遺伝学研究所 植物進化研究室
-seo_description: csubst、genegalleon、amalgkitなどの進化・ゲノム解析ソフトウェアと、Cephalotus・Nepenthesの食虫植物ゲノム、研究データ、GitHubリポジトリを公開しています。
-keywords: csubst, genegalleon, amalgkit, 食虫植物ゲノム, 収斂進化, ゲノム解析, バイオインフォマティクス
+seo_description: csubst、genegalleon、amalgkit、locuskitなどの進化・ゲノム解析ソフトウェアと、食虫植物およびその近縁種のゲノムアセンブリを掲載しています。
+keywords: csubst, genegalleon, amalgkit, locuskit, 食虫植物ゲノム, 収斂進化, ゲノム解析, バイオインフォマティクス
 schema_type: CollectionPage
 nav: true
 nav_order: 5
@@ -69,43 +69,9 @@ nav_order: 5
 
 ## ゲノム
 
-<p>NCBIの埋め込みAPIを使って各ゲノムの代表 scaffold を表示できます。</p>
+<p>各アセンブリの代表配列をNCBI Sequence Viewerで表示できます。</p>
 
-<div class="ncbi-genome-embed">
-  <h3>
-    Cephalotus follicularis: BDDD01000001.1
-    （<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001972305.1/" target="_blank" rel="noopener noreferrer">NCBI Genome: GCA_001972305.1</a>
-    / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=29002" target="_blank" rel="noopener noreferrer">CoGe: 29002</a>
-    / <a href="https://www.nature.com/articles/s41559-016-0059" target="_blank" rel="noopener noreferrer">Publication: Fukushima et al. (2017)</a>）
-  </h3>
-  <div class="ncbi-genome-actions">
-    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-cephalotus">
-      インタラクティブビューアを読み込む
-    </button>
-    <span class="ncbi-genome-status" data-ncbi-error hidden>ビューアを読み込めませんでした。上のNCBIリンクをご利用ください。</span>
-  </div>
-  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" hidden>
-    <a href="?embedded=true&id=BDDD01000001.1&assm_context=GCA_001972305.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
-  </div>
-</div>
-
-<div class="ncbi-genome-embed">
-  <h3>
-    Nepenthes gracilis: BSYO01000001.1
-    （<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_033239525.1/" target="_blank" rel="noopener noreferrer">NCBI Genome: GCA_033239525.1</a>
-    / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=61566" target="_blank" rel="noopener noreferrer">CoGe: 61566</a>
-    / <a href="https://www.nature.com/articles/s41477-023-01562-2" target="_blank" rel="noopener noreferrer">Publication: Saul et al. (2023)</a>）
-  </h3>
-  <div class="ncbi-genome-actions">
-    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-nepenthes">
-      インタラクティブビューアを読み込む
-    </button>
-    <span class="ncbi-genome-status" data-ncbi-error hidden>ビューアを読み込めませんでした。上のNCBIリンクをご利用ください。</span>
-  </div>
-  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" hidden>
-    <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
-  </div>
-</div>
+{% include genome-viewers.liquid %}
 
 ## 内部リソース
 

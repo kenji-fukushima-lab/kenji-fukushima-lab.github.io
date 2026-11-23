@@ -5,7 +5,7 @@ permalink: /resources/
 title: resources
 description: List of research resources developed by the Fukushima Lab
 seo_title: Evolutionary Analysis Software and Carnivorous Plant Genomes | Fukushima Lab
-seo_description: Research software including csubst, genegalleon, and amalgkit, plus carnivorous plant genome resources for Cephalotus and Nepenthes from the Fukushima Lab.
+seo_description: Research software including csubst, genegalleon, amalgkit, and locuskit, plus genome assemblies for carnivorous plants and their relatives from the Fukushima Lab.
 schema_type: CollectionPage
 nav: true
 nav_order: 5
@@ -68,43 +68,9 @@ nav_order: 5
 
 ## Genomes
 
-<p>The viewers below use NCBI's official API to display representative scaffolds for each assembly.</p>
+<p>Each viewer displays a representative sequence from the assembly using NCBI Sequence Viewer.</p>
 
-<div class="ncbi-genome-embed">
-  <h3>
-    Cephalotus follicularis
-    (<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001972305.1/" target="_blank" rel="noopener noreferrer">NCBI</a>
-    / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=29002" target="_blank" rel="noopener noreferrer">CoGe</a>
-    / <a href="https://www.nature.com/articles/s41559-016-0059" target="_blank" rel="noopener noreferrer">Publication</a>)
-  </h3>
-  <div class="ncbi-genome-actions">
-    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-cephalotus">
-      Load interactive viewer
-    </button>
-    <span class="ncbi-genome-status" data-ncbi-error hidden>Viewer could not be loaded. Please use the NCBI link above.</span>
-  </div>
-  <div id="ncbi-sv-cephalotus" class="SeqViewerApp" hidden>
-    <a href="?embedded=true&id=BDDD01000001.1&assm_context=GCA_001972305.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
-  </div>
-</div>
-
-<div class="ncbi-genome-embed">
-  <h3>
-    Nepenthes gracilis
-    (<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_033239525.1/" target="_blank" rel="noopener noreferrer">NCBI</a>
-    / <a href="https://genomevolution.org/coge/GenomeInfo.pl?gid=61566" target="_blank" rel="noopener noreferrer">CoGe</a>
-    / <a href="https://www.nature.com/articles/s41477-023-01562-2" target="_blank" rel="noopener noreferrer">Publication</a>)
-  </h3>
-  <div class="ncbi-genome-actions">
-    <button type="button" class="btn btn-sm z-depth-0 ncbi-genome-load-btn" data-ncbi-load="ncbi-sv-nepenthes">
-      Load interactive viewer
-    </button>
-    <span class="ncbi-genome-status" data-ncbi-error hidden>Viewer could not be loaded. Please use the NCBI link above.</span>
-  </div>
-  <div id="ncbi-sv-nepenthes" class="SeqViewerApp" hidden>
-    <a href="?embedded=true&id=BSYO01000001.1&assm_context=GCA_033239525.1&appname=kenji_fukushima_lab&noviewheader=true"></a>
-  </div>
-</div>
+{% include genome-viewers.liquid %}
 
 ## Internal Resources
 
